@@ -30,7 +30,6 @@ public class TalkDetail  extends BaseTimeEntity {
 
     private LocalDateTime deleteAt;
 
-    @Column(nullable = false)
     @JoinColumn(name = "talk_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Talk talk;

@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Talk  extends BaseTimeEntity {
+public class Talk extends BaseTimeEntity {
 
     @Id
     @Column(name = "talk_id")
@@ -23,12 +23,11 @@ public class Talk  extends BaseTimeEntity {
 
     private LocalDateTime deleteAt;
 
-    @Column(nullable = false)
     @JoinColumn(name = "member_npc_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private MemberNPC memberNPC;
 
-    @OneToMany(mappedBy = "talk_detail",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "talk", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<TalkDetail> talkDetailList = new ArrayList<>();
 
 }

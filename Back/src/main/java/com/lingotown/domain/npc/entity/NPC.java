@@ -37,7 +37,6 @@ public class NPC {
     @Enumerated(EnumType.STRING)
     private NPCAge ageGroup;
 
-    @Column(nullable = false)
     @JoinColumn(name="world_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private World world;
