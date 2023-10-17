@@ -20,7 +20,6 @@ public class Object {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     @JoinColumn(name = "world_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private World world;

@@ -27,16 +27,14 @@ public class MemberNPC {
     @ColumnDefault("0")
     private int intimacy;
 
-    @Column(nullable = false)
     @JoinColumn(name = "member_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false)
     @JoinColumn(name = "npc_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private NPC npc;
 
-    @OneToMany(mappedBy = "talk",cascade = CascadeType.ALL)
-    List<Talk> talkList = new ArrayList<>();
+    @OneToMany(mappedBy = "memberNPC", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Talk> talkList = new ArrayList<>();
 }

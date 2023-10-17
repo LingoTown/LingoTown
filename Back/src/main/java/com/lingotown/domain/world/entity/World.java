@@ -1,10 +1,11 @@
 package com.lingotown.domain.world.entity;
 
 import com.lingotown.domain.npc.entity.NPC;
+import com.lingotown.global.data.Theme;
+import com.lingotown.global.data.Language;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.ui.context.Theme;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,6 +29,6 @@ public class World {
     @Enumerated(EnumType.STRING)
     private Language language;
 
-    @OneToMany(mappedBy = "npc", cascade = CascadeType.ALL)
-    List<NPC> npcList = new ArrayList<>();
+    @OneToMany(mappedBy = "world", cascade = CascadeType.ALL)
+    private List<NPC> npcList = new ArrayList<>();
 }
