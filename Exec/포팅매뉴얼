@@ -192,6 +192,24 @@ cd /var/run
 sudo chmod 777 docker.sock
 ```
 
+**방화벽**
+```bash
+// 방화벽 설정
+sudo ufw status // Status : inactive
+
+// ufw 활성화
+sudo ufw enable
+
+// 사용할 포트 허용
+sudo ufw allow [포트번호] 
+
+// ufw 상태 및 등록된 rule 확인
+sudo ufw status numbered
+
+// 등록한 포트 삭제
+sudo ufw delete [번호]
+```
+
 **Nginx**
 
 ```bash
@@ -260,7 +278,19 @@ server {
 # Jenkins 이미지 PULL
 $ sudo docker pull jenkins/jenkins:jdk11 
 # Jenkins 컨테이너 실행
-$ sudo docker run -d -p 8888:8080 --name jenkins jenkins/jenkins:jdk11
+$ sudo docker run -d -p 8888:8080 --user root --name jenkins jenkins/jenkins:jdk11
+```
+
+```bash
+// 1. Jenkins 컨테이너 접속
+docker exec -it jenkins /bin/bash
+
+// 2. Jenkins 비밀번호 확인
+cat var/jenkins_home/secrets/initialAdminPassword
+
+// 3. 웹 페이지에서 Jenkins 접속
+ID : admin
+PWD : 2번에서 얻은 값
 ```
 
 ### 4. 배포
