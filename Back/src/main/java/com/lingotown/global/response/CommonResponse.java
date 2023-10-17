@@ -1,13 +1,16 @@
 package com.lingotown.global.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Setter
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CommonResponse {
 
-    private String code;
+    private int code;
     private String message;
 }

@@ -1,0 +1,32 @@
+package com.lingotown.domain.member.controller;
+
+import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
+import com.lingotown.domain.member.service.SocialLoginService;
+import com.lingotown.global.response.DataResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+@RestController
+@RequestMapping("/api/login")
+@RequiredArgsConstructor
+public class LoginController {
+
+    private final SocialLoginService socialLoginService;
+
+    @PostMapping("/kakao")
+    public DataResponse<HashMap<String, Object>> kakaoLogin(@RequestBody SocialLoginRequestDto requestDto) throws IOException {
+        return socialLoginService.kakaoLogin(requestDto);
+    }
+
+    @PostMapping("/google")
+    public DataResponse<HashMap<String, Object>> googleLogin(@RequestBody SocialLoginRequestDto requestDto) throws IOException {
+        return socialLoginService.googleLogin(requestDto);
+    }
+
+}
