@@ -1,4 +1,4 @@
-package com.lingotown.config.sercurity;
+package com.lingotown.global.config.sercurity;
 
 import com.google.gson.Gson;
 import javax.servlet.ServletException;

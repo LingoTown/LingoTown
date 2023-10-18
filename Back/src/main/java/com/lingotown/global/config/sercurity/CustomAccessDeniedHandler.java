@@ -1,4 +1,4 @@
-package com.lingotown.config.sercurity;
+package com.lingotown.global.config.sercurity;
 
 
 import javax.servlet.ServletException;
