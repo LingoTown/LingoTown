@@ -1,12 +1,13 @@
 package com.lingotown.domain.member.controller;
 
+import com.lingotown.domain.member.dto.request.PutNicknameReqDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberService;
+import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -21,7 +22,19 @@ public class MemberController {
     public DataResponse<MemberInfoResponseDto> getUserInfo(Principal principal) {
         Long userId = Long.parseLong(principal.getName());
         MemberInfoResponseDto responseDto = memberService.getMemberInfo(userId);
-        return new DataResponse<>(200, "유저 정보 조회 성공", responseDto);
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), responseDto);
     }
+
+    @PutMapping("/nickname")
+    public CommonResponse putNickname(Principal principal, PutNicknameReqDto putNicknameReqDto) {
+        Long userId = Long.parseLong(principal.getName());
+
+        memberService.editNickname(userId, putNicknameReqDto);
+
+        return new CommonResponse(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage());
+    }
+
+    //@DeleteMapping("/leave")
+
 
 }

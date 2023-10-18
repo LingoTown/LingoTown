@@ -19,7 +19,7 @@ import java.util.List;
 public class MemberNPC {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_npc_id")
     private Long id;
 

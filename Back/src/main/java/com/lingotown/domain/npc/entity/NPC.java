@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class NPC {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "npc_id")
     private Long id;
 

@@ -8,8 +8,9 @@ import lombok.RequiredArgsConstructor;
 public enum ResponseStatus {
 
     /* 공통 */
-    RESPONSE_SUCCESS("200", "요청에 성공했습니다.");
+    RESPONSE_SUCCESS(200, "요청에 성공했습니다."),
+    CREATED_SUCCESS(201, "요청에 성공되어 데이터가 생성되었습니다");
 
-    private final String code;
+    private final int code;
     private final String message;
 }

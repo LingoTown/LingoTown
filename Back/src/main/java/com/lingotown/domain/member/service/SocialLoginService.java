@@ -192,7 +192,7 @@ public class SocialLoginService {
         }
 
         Member member = memberRepository.findByLoginIdAndLoginType(userInfo.get("loginId").toString(), loginType)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
 
         HashMap<String, Object> result = new HashMap<>();
 

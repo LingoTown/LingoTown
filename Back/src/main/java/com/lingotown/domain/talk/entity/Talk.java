@@ -18,6 +18,7 @@ import java.util.List;
 public class Talk extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "talk_id")
     private Long id;
 
