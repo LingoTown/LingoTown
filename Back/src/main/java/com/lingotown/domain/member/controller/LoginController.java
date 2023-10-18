@@ -1,6 +1,7 @@
 package com.lingotown.domain.member.controller;
 
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
+import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.service.SocialLoginService;
 import com.lingotown.global.response.DataResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +21,12 @@ public class LoginController {
     private final SocialLoginService socialLoginService;
 
     @PostMapping("/kakao")
-    public DataResponse<HashMap<String, Object>> kakaoLogin(@RequestBody SocialLoginRequestDto requestDto) throws IOException {
+    public DataResponse<LoginResponseDto> kakaoLogin(@RequestBody SocialLoginRequestDto requestDto) throws IOException {
         return socialLoginService.kakaoLogin(requestDto);
     }
 
     @PostMapping("/google")
-    public DataResponse<HashMap<String, Object>> googleLogin(@RequestBody SocialLoginRequestDto requestDto) throws IOException {
+    public DataResponse<LoginResponseDto> googleLogin(@RequestBody SocialLoginRequestDto requestDto) throws IOException {
         return socialLoginService.googleLogin(requestDto);
     }
 
