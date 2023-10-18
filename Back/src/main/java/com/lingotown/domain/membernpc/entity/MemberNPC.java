@@ -2,7 +2,7 @@ package com.lingotown.domain.membernpc.entity;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.npc.npc.entity.NPC;
-import com.lingotown.domain.talk.talk.entity.Talk;
+import com.lingotown.domain.talk.entity.Talk;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

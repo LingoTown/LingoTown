@@ -3,6 +3,7 @@ package com.lingotown.domain.npc.npc.entity;
 import com.lingotown.domain.world.world.entity.World;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.NPCAge;
+import com.lingotown.global.data.NPCRole;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,10 @@ public class NPC {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private GenderType genderType;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private NPCRole npcRole;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

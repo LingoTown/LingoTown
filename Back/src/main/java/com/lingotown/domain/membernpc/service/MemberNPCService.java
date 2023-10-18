@@ -6,18 +6,17 @@ import com.lingotown.domain.membernpc.dto.response.GetMemberNPCResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
 import com.lingotown.domain.npc.npc.entity.NPC;
-import com.lingotown.domain.talk.talk.entity.Talk;
-import com.lingotown.domain.talk.talk.repository.TalkRepository;
+import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.membernpc.dto.response.GetTalkListResDto;
 import com.lingotown.domain.world.world.entity.World;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +41,11 @@ public class MemberNPCService {
 
             NPC npc =  memberNPC.getNpc();
             World world = npc.getWorld();
+
             List<Talk> talkList = talkRepository.findTalkList(npc.getId());
             int count = talkList.size();
+
+            if(count==0)  continue;
 
             GetMemberNPCResDto memberNPCResDto = new GetMemberNPCResDto(memberNPC.getId(),
                     memberNPC.getIntimacy(), count,
@@ -71,15 +73,10 @@ public class MemberNPCService {
         return talkListResDtoList;
     }
 
-
-
-
-
     private MemberNPC getMemberNPCEntity(Long memberNPCId){
         MemberNPC memberNPC = memberNPCRepository.findById(memberNPCId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
 
         return memberNPC;
     }
-
 }

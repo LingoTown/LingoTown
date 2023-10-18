@@ -1,7 +1,6 @@
-package com.lingotown.domain.talk.talk.entity;
+package com.lingotown.domain.talk.entity;
 
 import com.lingotown.domain.membernpc.entity.MemberNPC;
-import com.lingotown.domain.talk.talkDetail.entity.TalkDetail;
 import com.lingotown.global.baseTimeEntity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,4 +30,9 @@ public class Talk extends BaseTimeEntity {
     @OneToMany(mappedBy = "talk", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<TalkDetail> talkDetailList = new ArrayList<>();
 
+
+    //대화 기록 삭제
+    public void deleteTalkHistory(){
+        this.deleteAt = LocalDateTime.now();
+    }
 }
