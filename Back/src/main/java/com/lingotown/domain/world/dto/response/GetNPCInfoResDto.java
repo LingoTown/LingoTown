@@ -1,6 +1,6 @@
-package com.lingotown.domain.world.world.dto.response;
+package com.lingotown.domain.world.dto.response;
 
-import com.lingotown.domain.npc.npc.entity.NPC;
+import com.lingotown.domain.npc.entity.NPC;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +16,7 @@ public class GetNPCInfoResDto {
     private String name;
     private String npcRole;
     private String genderType;
-    private String ageGroup;
+    private String npcAge;
     private String firstMessage;
     private String voice;
 
@@ -27,7 +27,7 @@ public class GetNPCInfoResDto {
                 .name(npc.getName())
                 .npcRole(npc.getNpcRole().toString())
                 .genderType(npc.getGenderType().toString())
-                .ageGroup(npc.getAgeGroup().toString())
+                .npcAge(npc.getNpcAge().toString())
                 .firstMessage(npc.getFirstMessage())
                 .voice(npc.getVoice())
                 .build();

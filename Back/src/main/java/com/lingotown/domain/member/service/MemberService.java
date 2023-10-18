@@ -21,14 +21,14 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberInfoResponseDto getMemberInfo(Long userId) {
-        Member member = getMemberEntity(userId);
+    public MemberInfoResponseDto getMemberInfo(Long memberId) {
+        Member member = getMemberEntity(memberId);
         return MemberInfoResponseDto.of(member);
     }
 
     @Transactional
-    public void leaveService(Long userId) {
-        Member member = getMemberEntity(userId);
+    public void leaveService(Long memberId) {
+        Member member = getMemberEntity(memberId);
         member.leaveService();
     }
 
@@ -41,8 +41,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void tempRejoinService(Long userId) {
-        Member member = getMemberEntity(userId);
+    public void tempRejoinService(Long memberId) {
+        Member member = getMemberEntity(memberId);
         member.tempRejoin();
     }
 

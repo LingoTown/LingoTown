@@ -1,6 +1,6 @@
-package com.lingotown.domain.npc.npc.entity;
+package com.lingotown.domain.npc.entity;
 
-import com.lingotown.domain.world.world.entity.World;
+import com.lingotown.domain.world.entity.World;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.NPCAge;
 import com.lingotown.global.data.NPCRole;
@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,8 +18,7 @@ import javax.persistence.*;
 @Table(name = "npc")
 public class NPC {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "npc_id")
     private Long id;
 
@@ -40,10 +41,13 @@ public class NPC {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private NPCAge ageGroup;
+    private NPCAge npcAge;
 
     @JoinColumn(name="world_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private World world;
+
+    @OneToMany(mappedBy = "npc", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Topic> topicList = new ArrayList<>();
 
 }

@@ -1,10 +1,14 @@
-package com.lingotown.domain.npc.topic.entity;
+package com.lingotown.domain.npc.entity;
 
-import com.lingotown.domain.npc.npc.entity.NPC;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Topic {
 
     @Id
@@ -16,7 +20,7 @@ public class Topic {
     private String keyword;
 
     @JoinColumn(name="npc_id")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private NPC npc;
 
 

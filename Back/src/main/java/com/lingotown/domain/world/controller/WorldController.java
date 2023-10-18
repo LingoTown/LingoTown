@@ -1,8 +1,9 @@
-package com.lingotown.domain.world.world.controller;
+package com.lingotown.domain.world.controller;
 
-import com.lingotown.domain.world.world.dto.response.GetNPCInfoResDto;
-import com.lingotown.domain.world.world.dto.response.GetWorldInfoResDto;
-import com.lingotown.domain.world.world.service.WorldService;
+import com.lingotown.domain.world.dto.response.GetNPCInfoResDto;
+import com.lingotown.domain.world.dto.response.GetWorldInfoResDto;
+import com.lingotown.domain.world.service.WorldService;
+import com.lingotown.global.data.Language;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +18,10 @@ public class WorldController {
 
     private final WorldService worldService;
 
-    @GetMapping("/{language}")
-    public DataResponse<List<GetWorldInfoResDto>> getWorldInfoList(@PathVariable("language") String language){
+    @GetMapping("/theme/{language}")
+    public DataResponse<List<GetWorldInfoResDto>> getWorldInfoList(@PathVariable("language") Language language){
+        System.out.println("language : " +language);
+
         List<GetWorldInfoResDto> worldInfoResDtoList = worldService.getWorldInfoList(language);
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
                 ResponseStatus.RESPONSE_SUCCESS.getMessage(), worldInfoResDtoList);

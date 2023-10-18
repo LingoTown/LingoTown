@@ -20,26 +20,26 @@ public class MemberController {
 
     @GetMapping
     public DataResponse<MemberInfoResponseDto> getUserInfo(Principal principal) {
-        Long userId = Long.parseLong(principal.getName());
-        MemberInfoResponseDto responseDto = memberService.getMemberInfo(userId);
+        Long memberId = Long.parseLong(principal.getName());
+        MemberInfoResponseDto responseDto = memberService.getMemberInfo(memberId);
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), responseDto);
     }
 
     @DeleteMapping("/leave")
     public CommonResponse deleteMember(Principal principal) {
-        Long userId = Long.parseLong(principal.getName());
+        Long memberId = Long.parseLong(principal.getName());
 
-        memberService.leaveService(userId);
-        return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
+        memberService.leaveService(memberId);
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
     @PutMapping("/nickname")
-    public CommonResponse putNickname(Principal principal, PutNicknameReqDto putNicknameReqDto) {
-        Long userId = Long.parseLong(principal.getName());
+    public CommonResponse putNickname(Principal principal, @RequestBody PutNicknameReqDto putNicknameReqDto) {
+        Long memberId = Long.parseLong(principal.getName());
 
-        memberService.editNickname(userId, putNicknameReqDto);
+        memberService.editNickname(memberId, putNicknameReqDto);
 
-        return new CommonResponse(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage());
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 
 

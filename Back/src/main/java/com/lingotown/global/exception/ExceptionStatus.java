@@ -22,6 +22,7 @@ public enum ExceptionStatus {
     AUTHENTICATION_FAILED(4003, "유저 인증에 실패하였습니다."),
     MEMBER_NOT_FOUND(4000, "존재하지 않는 사용자입니다."),
     MEMBER_NPC_NOT_FOUND(4000, "사용자와 NPC와의 관계가 존재하지 않습니다"),
+    NPC_NOT_FOUND(4000, "NPC가 존재하지 않습니다"),
     TALK_NOT_FOUND(4000, "대화 기록이 존재하지 않습니다"),
     WORLD_NOT_FOUND(4000, "해당 국가(언어)가 존재하지 않습니다"),
     TOKEN_NOT_FOUND_IN_COOKIE(-1002, "토큰이 쿠키에 없습니다.");

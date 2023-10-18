@@ -1,6 +1,6 @@
-package com.lingotown.domain.world.world.entity;
+package com.lingotown.domain.world.entity;
 
-import com.lingotown.domain.npc.npc.entity.NPC;
+import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.global.data.Theme;
 import com.lingotown.global.data.Language;
 import lombok.AccessLevel;

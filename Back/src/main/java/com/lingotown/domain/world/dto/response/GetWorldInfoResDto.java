@@ -1,6 +1,6 @@
-package com.lingotown.domain.world.world.dto.response;
+package com.lingotown.domain.world.dto.response;
 
-import com.lingotown.domain.world.world.entity.World;
+import com.lingotown.domain.world.entity.World;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class GetWorldInfoResDto {
                 .builder()
                 .worldId(world.getId())
                 .theme(world.getTheme().toString())
-                .language(world.getTheme().toString())
+                .language(world.getLanguage().toString())
                 .build();
     }
 
