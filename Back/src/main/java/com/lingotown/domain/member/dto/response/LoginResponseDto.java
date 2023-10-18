@@ -10,17 +10,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberInfoResponseDto {
+public class LoginResponseDto {
 
+    private String accessToken;
+    private String refreshToken;
     private String email;
     private String gender;
     private String social;
     private String nickname;
     private String profileImg;
 
-    public static MemberInfoResponseDto of(Member member) {
-        return MemberInfoResponseDto
+    public static LoginResponseDto of(Member member, String accessToken, String refreshToken) {
+        return LoginResponseDto
                 .builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .email(member.getEmail())
                 .gender(member.getGenderType().toString())
                 .social(member.getLoginType().toString())
@@ -28,4 +32,5 @@ public class MemberInfoResponseDto {
                 .profileImg(member.getProfile())
                 .build();
     }
+
 }

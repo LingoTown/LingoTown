@@ -2,6 +2,7 @@ package com.lingotown.domain.member.service;
 
 
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
+import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.global.data.LoginType;
@@ -66,18 +67,18 @@ public class SocialLoginService {
     private String GOOGLE_USER_INFO_URI;
 
 
-    public DataResponse<HashMap<String, Object>> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
+    public DataResponse<LoginResponseDto> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
         String accessToken = getAccessTokenByKakao(requestDto);
         HashMap<String, Object> userInfo = getUserInfoByKakao(accessToken);
-        HashMap<String, Object> jwt = getJWT(userInfo, LoginType.KAKAO);
-        return new DataResponse<>(200, "로그인 성공", jwt);
+        LoginResponseDto responseDto = getLoginResponseDto(userInfo, LoginType.KAKAO);
+        return new DataResponse<>(200, "로그인 성공", responseDto);
     }
 
-    public DataResponse<HashMap<String, Object>> googleLogin(SocialLoginRequestDto requestDto) throws IOException {
+    public DataResponse<LoginResponseDto> googleLogin(SocialLoginRequestDto requestDto) throws IOException {
         String accessToken = getAccessTokenByGoogle(requestDto);
         HashMap<String, Object> userInfo = getUserInfoByGoogle(accessToken);
-        HashMap<String, Object> jwt = getJWT(userInfo, LoginType.GOOGLE);
-        return new DataResponse<>(200, "로그인 성공", jwt);
+        LoginResponseDto responseDto = getLoginResponseDto(userInfo, LoginType.GOOGLE);
+        return new DataResponse<>(200, "로그인 성공", responseDto);
     }
 
     public String getAccessTokenByKakao(SocialLoginRequestDto requestDto) throws JsonProcessingException {
@@ -185,7 +186,7 @@ public class SocialLoginService {
         return result;
     }
 
-    private HashMap<String, Object> getJWT(HashMap<String, Object> userInfo, LoginType loginType) {
+    private LoginResponseDto getLoginResponseDto(HashMap<String, Object> userInfo, LoginType loginType) {
 
         if (memberService.isEmpty(userInfo.get("loginId").toString(), loginType)) {
             Member user = memberService.enterMember(userInfo, loginType);
@@ -194,14 +195,9 @@ public class SocialLoginService {
         Member member = memberRepository.findByLoginIdAndLoginType(userInfo.get("loginId").toString(), loginType)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
 
-        HashMap<String, Object> result = new HashMap<>();
-
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
-        result.put("accessToken", accessToken);
-        result.put("refreshToken", refreshToken);
-
-        return result;
+        return LoginResponseDto.of(member, accessToken, refreshToken);
     }
 
 
