@@ -1,4 +1,4 @@
-package com.lingotown.util;
+package com.lingotown.global.util;
 
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
