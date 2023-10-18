@@ -1,6 +1,6 @@
-package com.lingotown.config.sercurity;
+package com.lingotown.global.config.sercurity;
 
-import com.lingotown.util.JwtUtil;
+import com.lingotown.global.util.JwtUtil;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
