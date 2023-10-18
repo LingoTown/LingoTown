@@ -9,7 +9,7 @@ import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
-import com.lingotown.util.JwtUtil;
+import com.lingotown.global.util.JwtUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

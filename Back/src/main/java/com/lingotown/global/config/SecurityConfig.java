@@ -1,8 +1,8 @@
-package com.lingotown.config;
+package com.lingotown.global.config;
 
-import com.lingotown.config.sercurity.CustomAccessDeniedHandler;
-import com.lingotown.config.sercurity.CustomAuthenticationEntryPoint;
-import com.lingotown.config.sercurity.JwtAuthenticationFilter;
+import com.lingotown.global.config.sercurity.CustomAccessDeniedHandler;
+import com.lingotown.global.config.sercurity.CustomAuthenticationEntryPoint;
+import com.lingotown.global.config.sercurity.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
