@@ -1,7 +1,7 @@
-package com.lingotown.domain.talk.entity;
+package com.lingotown.domain.talk.talk.entity;
 
 import com.lingotown.domain.membernpc.entity.MemberNPC;
-import com.lingotown.domain.talkdetail.entity.TalkDetail;
+import com.lingotown.domain.talk.talkDetail.entity.TalkDetail;
 import com.lingotown.global.baseTimeEntity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;

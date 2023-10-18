@@ -25,6 +25,14 @@ public class MemberController {
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), responseDto);
     }
 
+    @DeleteMapping("/leave")
+    public CommonResponse deleteMember(Principal principal) {
+        Long userId = Long.parseLong(principal.getName());
+
+        memberService.leaveService(userId);
+        return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
+    }
+
     @PutMapping("/nickname")
     public CommonResponse putNickname(Principal principal, PutNicknameReqDto putNicknameReqDto) {
         Long userId = Long.parseLong(principal.getName());
@@ -34,7 +42,7 @@ public class MemberController {
         return new CommonResponse(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage());
     }
 
-    //@DeleteMapping("/leave")
+
 
 
 }

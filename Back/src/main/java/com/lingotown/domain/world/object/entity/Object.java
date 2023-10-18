@@ -1,6 +1,6 @@
-package com.lingotown.domain.object.entity;
+package com.lingotown.domain.world.object.entity;
 
-import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.world.world.entity.World;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

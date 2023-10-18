@@ -7,7 +7,6 @@ import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
-import com.lingotown.global.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,38 +14,35 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
     public MemberInfoResponseDto getMemberInfo(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Member member = getMemberEntity(userId);
         return MemberInfoResponseDto.of(member);
     }
 
     @Transactional
     public void leaveService(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Member member = getMemberEntity(userId);
         member.leaveService();
     }
 
+    @Transactional
     public void editNickname(Long memberId, PutNicknameReqDto putNicknameReqDto){
+        Member member = getMemberEntity(memberId);
 
         String nickname = putNicknameReqDto.getNickname();
-
-        Member member = getMemberEntity(memberId);
         member.editNickname(nickname);
     }
 
     @Transactional
     public void tempRejoinService(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+        Member member = getMemberEntity(userId);
         member.tempRejoin();
     }
 
@@ -67,7 +63,6 @@ public class MemberService {
         Optional<Member> checkUser = memberRepository.findByLoginIdAndLoginType(loginId, loginType);
         return checkUser.isEmpty();
     }
-
 
     private Member getMemberEntity(Long memberId){
         Member member = memberRepository.findById(memberId)
