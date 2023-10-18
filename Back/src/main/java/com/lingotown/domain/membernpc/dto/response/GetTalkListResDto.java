@@ -1,4 +1,4 @@
-package com.lingotown.domain.talk.talk.response;
+package com.lingotown.domain.membernpc.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,5 +9,5 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class GetTalkListResDto {
     Long talkId;
-    LocalDateTime visitedDate;
+    LocalDateTime talkDate;
 }
