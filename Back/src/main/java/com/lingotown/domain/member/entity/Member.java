@@ -49,10 +49,10 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private GenderType genderType;
 
-    private LocalDateTime deleteAt;
+    private LocalDateTime deletedAt;
 
     @JoinColumn(name="world_id")
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     private World world;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
@@ -71,7 +71,7 @@ public class Member extends BaseTimeEntity {
 
     //사용자 탈퇴
     public void leaveService(){
-        this.deleteAt = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
     //사용자 정보 닉네임 수정
@@ -84,9 +84,12 @@ public class Member extends BaseTimeEntity {
         this.profile = profile;
     }
 
+    //사용자 리스폰 지역 설정
+    public void settingResponse(World world) { this.world = world; }
+
     // 재가입
     public void tempRejoin() {
-        this.deleteAt = null;
+        this.deletedAt = null;
     }
 
 
