@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReadTopicResDto {
 
-    Long id;
+    Long topicId;
     String keyword;
 
     public static ReadTopicResDto of(Topic topic){
         return ReadTopicResDto
                 .builder()
-                .id(topic.getId())
+                .topicId(topic.getId())
                 .keyword(topic.getKeyword())
                 .build();
     }

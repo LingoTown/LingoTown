@@ -1,13 +1,13 @@
 package com.lingotown.domain.talk.dto.request;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class CreateTalkDetailReqDto {
 
-    Long talkId;
-    boolean isMember;
-    String content;
-    String talkFile;
+    private final Long talkId;
+    private final boolean isMember;
+    private final String content;
+    private final String talkFile;
 
 }

@@ -95,6 +95,8 @@ public class TalkService {
         Talk talk = getTalkEntity(talkId);
 
         boolean isMember = createTalkDetailReqDto.isMember();
+        System.out.println("isMember : " +isMember);
+
         String content = createTalkDetailReqDto.getContent();
         String talkFile = createTalkDetailReqDto.getTalkFile();
 
@@ -106,8 +108,7 @@ public class TalkService {
                 .talk(talk)
                 .build();
 
-        TalkDetail savedTalk = talkDetailRepository.save(talkDetail);
-        System.out.println("저장됐나?" +talk.getTalkDetailList().get(0).getId());
+        talkDetailRepository.save(talkDetail);
     }
 
     private Talk getTalkEntity(Long talkId){
