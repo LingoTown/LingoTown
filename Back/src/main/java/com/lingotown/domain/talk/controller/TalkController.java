@@ -2,6 +2,7 @@ package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.membernpc.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
+import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.response.CommonResponse;
@@ -45,7 +46,11 @@ public class TalkController {
         return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
-
+    @PutMapping("/end")
+    public CommonResponse increaseIntimacy(@RequestBody IncreaseIntimacyReqDto increaseIntimacyReqDto){
+        talkService.increaseIntimacy(increaseIntimacyReqDto);
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+    }
 
 
 }

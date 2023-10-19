@@ -6,6 +6,7 @@ import com.lingotown.domain.membernpc.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
+import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
@@ -109,6 +110,15 @@ public class TalkService {
                 .build();
 
         talkDetailRepository.save(talkDetail);
+    }
+
+    //대화 종료 후 친밀도 변경
+    @Transactional
+    public void increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
+        Talk talk = getTalkEntity(increaseIntimacyReqDto.getTalkId());
+        MemberNPC memberNPC = talk.getMemberNPC();
+
+        memberNPC.increaseIntimacy();
     }
 
     private Talk getTalkEntity(Long talkId){

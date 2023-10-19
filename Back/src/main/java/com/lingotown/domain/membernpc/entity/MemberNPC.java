@@ -42,4 +42,9 @@ public class MemberNPC {
         this.npc = npc;
         this.talkList = new ArrayList<>();
     }
+
+    //친밀도 증가
+    public void increaseIntimacy(){
+        this.intimacy+=10;
+    }
 }
