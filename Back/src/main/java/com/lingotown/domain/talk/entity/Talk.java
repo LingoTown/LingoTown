@@ -1,9 +1,9 @@
 package com.lingotown.domain.talk.entity;
 
 import com.lingotown.domain.membernpc.entity.MemberNPC;
-import com.lingotown.domain.talkdetail.entity.TalkDetail;
 import com.lingotown.global.baseTimeEntity.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +18,7 @@ import java.util.List;
 public class Talk extends BaseTimeEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "talk_id")
     private Long id;
 
@@ -30,4 +31,15 @@ public class Talk extends BaseTimeEntity {
     @OneToMany(mappedBy = "talk", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<TalkDetail> talkDetailList = new ArrayList<>();
 
+    //대화 기록 삭제
+    public void deleteTalkHistory(){
+        this.deleteAt = LocalDateTime.now();
+    }
+
+
+    @Builder
+    public Talk(MemberNPC memberNPC){
+        this.memberNPC = memberNPC;
+        this.talkDetailList = new ArrayList<>();
+    }
 }

@@ -1,12 +1,13 @@
 package com.lingotown.domain.member.controller;
 
+import com.lingotown.domain.member.dto.request.PutNicknameReqDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberService;
+import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -19,9 +20,29 @@ public class MemberController {
 
     @GetMapping
     public DataResponse<MemberInfoResponseDto> getUserInfo(Principal principal) {
-        Long userId = Long.parseLong(principal.getName());
-        MemberInfoResponseDto responseDto = memberService.getMemberInfo(userId);
-        return new DataResponse<>(200, "유저 정보 조회 성공", responseDto);
+        Long memberId = Long.parseLong(principal.getName());
+        MemberInfoResponseDto responseDto = memberService.getMemberInfo(memberId);
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), responseDto);
     }
+
+    @DeleteMapping("/leave")
+    public CommonResponse deleteMember(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        memberService.leaveService(memberId);
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
+    }
+
+    @PutMapping("/nickname")
+    public CommonResponse putNickname(Principal principal, @RequestBody PutNicknameReqDto putNicknameReqDto) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        memberService.editNickname(memberId, putNicknameReqDto);
+
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+    }
+
+
+
 
 }

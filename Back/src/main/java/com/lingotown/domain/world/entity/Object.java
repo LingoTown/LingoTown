@@ -1,4 +1,4 @@
-package com.lingotown.domain.object.entity;
+package com.lingotown.domain.world.entity;
 
 import com.lingotown.domain.world.entity.World;
 import lombok.AccessLevel;
@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Object {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "object_id")
     private Long id;
 
