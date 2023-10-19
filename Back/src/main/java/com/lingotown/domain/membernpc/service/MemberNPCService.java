@@ -10,7 +10,6 @@ import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
-import com.lingotown.domain.membernpc.dto.response.GetTalkListResDto;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -62,26 +61,27 @@ public class MemberNPCService {
         return memberNPCResDtoList;
     }
 
+    //대화기록이 없는 NPC와 관계 만들기
     @Transactional
-    public void postNPCTalkList(Principal principal, PostMemberNPCReqDto postMemberNPCReqDto){
+    public MemberNPC postMemberNPCConnect(Principal principal, PostMemberNPCReqDto postMemberNPCReqDto){
+
         Long memberId = Long.valueOf(principal.getName());
-        Member member = getMemberEntity(memberId);
-
         Long npcId = postMemberNPCReqDto.getNpcId();
-        NPC npc = getNPCEntity(npcId);
+        MemberNPC connectedMemberNPC = memberNPCRepository.findByMemberIdNPCId(memberId, npcId);
 
-        int intimacy = postMemberNPCReqDto.getIntimacy();
+        if(connectedMemberNPC != null) return connectedMemberNPC;
+
+        Member member = getMemberEntity(memberId);
+        NPC npc = getNPCEntity(npcId);
 
         MemberNPC memberNPC = MemberNPC
                 .builder()
-                .intimacy(intimacy)
                 .member(member)
                 .npc(npc)
                 .build();
 
-
-        memberNPCRepository.save(memberNPC);
-
+        MemberNPC newMemberNPC = memberNPCRepository.save(memberNPC);
+        return newMemberNPC;
     }
 
     private NPC getNPCEntity(Long npcId){
@@ -90,7 +90,6 @@ public class MemberNPCService {
 
         return npc;
     }
-
 
     private Member getMemberEntity(Long memberId){
         Member member = memberRepository.findById(memberId)

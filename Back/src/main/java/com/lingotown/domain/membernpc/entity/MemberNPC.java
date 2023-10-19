@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "member_npc")
 public class MemberNPC {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_npc_id")
     private Long id;
 
@@ -36,8 +36,8 @@ public class MemberNPC {
     private List<Talk> talkList = new ArrayList<>();
 
     @Builder
-    public MemberNPC(int intimacy, Member member, NPC npc) {
-        this.intimacy = intimacy;
+    public MemberNPC(Member member, NPC npc) {
+        this.intimacy = 0;
         this.member = member;
         this.npc = npc;
         this.talkList = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.membernpc.dto.response.GetTalkListResDto;
+import com.lingotown.domain.talk.dto.request.PostTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.response.GetTalkDetailResDto;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.talk.service.TalkService;
@@ -19,6 +20,12 @@ public class TalkController {
 
     private final TalkService talkService;
 
+    @PostMapping()
+    public CommonResponse postTalkDetail(@RequestBody PostTalkDetailReqDto postTalkDetailReqDto){
+        System.out.println("여기 안오나?");
+        talkService.PostTalkDetail(postTalkDetailReqDto);
+        return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
+    }
 
     @GetMapping("/list/{memberNPCId}")
     public DataResponse<List<GetTalkListResDto>> getTalkList(@PathVariable("memberNPCId") Long memberNPCId){
@@ -32,6 +39,8 @@ public class TalkController {
         List<GetTalkDetailResDto> talkDetailResDtoList = talkService.getTalkDetail(talkId);
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkDetailResDtoList);
     }
+
+
 
 
     @DeleteMapping("/{talkId}")

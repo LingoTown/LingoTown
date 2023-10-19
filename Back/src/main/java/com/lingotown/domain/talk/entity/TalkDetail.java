@@ -2,6 +2,7 @@ package com.lingotown.domain.talk.entity;
 
 import com.lingotown.global.baseTimeEntity.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.bytebuddy.asm.Advice;
@@ -23,6 +24,7 @@ public class TalkDetail  extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isMember;
 
+    @Column(nullable = false)
     private String content;
 
     @Column(name = "talk_file", nullable = false)
@@ -33,6 +35,14 @@ public class TalkDetail  extends BaseTimeEntity {
     @JoinColumn(name = "talk_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Talk talk;
+
+    @Builder
+    public TalkDetail(boolean isMember, String content, String talkFile, Talk talk){
+        this.isMember = isMember;
+        this.content = content;
+        this.talkFile = talkFile;
+        this.talk = talk;
+    }
 
     //대화 상세 기록 삭제
     public void deleteTalkDetail(){
