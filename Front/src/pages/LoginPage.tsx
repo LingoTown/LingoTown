@@ -26,6 +26,9 @@ function LoginPage() {
         <img 
           className="h-10 rounded mt-4 cursor-pointer" 
           src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/googlebtn.png' onClick={() => { googleLogin() }}/>
+                <img 
+          className="h-10 rounded mt-4 cursor-pointer" 
+          src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/exp.png' onClick={() => { alert("구현중 입니다.") }}/>
       </div>
     </div>
   </>
