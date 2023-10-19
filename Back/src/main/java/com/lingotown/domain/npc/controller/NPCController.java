@@ -21,8 +21,7 @@ public class NPCController {
 
     @GetMapping("{npcId}")
     public DataResponse<List<ReadTopicResDto>> readNPCTopicList(@PathVariable("npcId") Long npcId){
-        List<ReadTopicResDto> topicList = npcService.readNPCTopicList(npcId);
-        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), topicList);
+        return npcService.readNPCTopicList(npcId);
     }
 
 }

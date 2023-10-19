@@ -14,6 +14,9 @@ import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
+import com.lingotown.global.response.CommonResponse;
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,22 +34,28 @@ public class TalkService {
     private final MemberNPCRepository memberNPCRepository;
 
     //해당 NPC와 대화 내역
-    public List<ReadTalkListResDto> readTalkList(Long memberNPCId){
+    public DataResponse<List<ReadTalkListResDto>> readTalkList(Long memberNPCId){
         getMemberNPCEntity(memberNPCId);
 
         List<ReadTalkListResDto> talkListResDtoList = new ArrayList<>();
 
         List<Talk> talkList = memberNPCRepository.findTalkList(memberNPCId);
         for(Talk talk : talkList){
-            talkListResDtoList.add(new ReadTalkListResDto(talk.getId(), talk.getCreatedAt()));
+            ReadTalkListResDto talkListDto = ReadTalkListResDto.builder()
+                    .talkId(talk.getId())
+                    .talkDate(talk.getCreatedAt())
+                    .build();
+
+            talkListResDtoList.add(talkListDto);
         }
 
-        return talkListResDtoList;
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkListResDtoList);
     }
 
 
     //해당 대화 detail 조회
-    public List<ReadTalkDetailResDto> readTalkDetail(Long talkId){
+    public DataResponse<List<ReadTalkDetailResDto>> readTalkDetail(Long talkId){
         Talk talk = getTalkEntity(talkId);
 
         List<ReadTalkDetailResDto> talkDetailResDtoList = new ArrayList<>();
@@ -56,13 +65,13 @@ public class TalkService {
             talkDetailResDtoList.add(ReadTalkDetailResDto.of(talkDetail));
         }
 
-        return talkDetailResDtoList;
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkDetailResDtoList);
     }
-
 
     //해당 대화 삭제
     @Transactional
-    public void removeTalk(Long talkId){
+    public CommonResponse removeTalk(Long talkId){
         Talk talk = getTalkEntity(talkId);
 
         talk.deleteTalkHistory();
@@ -71,32 +80,36 @@ public class TalkService {
         for(TalkDetail talkDetail : talkDetailList) {
             talkDetail.deleteTalkDetail();
         }
+
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
     //NPC와 대화 시작하기
     @Transactional
-    public CreateTalkResDto createTalk(MemberNPC memberNPC){
+    public DataResponse createTalk(MemberNPC memberNPC){
         Talk talk = Talk
                 .builder()
                 .memberNPC(memberNPC)
                 .build();
 
         Talk savedTalk =  talkRepository.save(talk);
-        CreateTalkResDto createTalk = new CreateTalkResDto(savedTalk.getId());
+        CreateTalkResDto createTalk = CreateTalkResDto
+                .builder()
+                .talkId(savedTalk.getId())
+                .build();
 
-        return createTalk;
+        return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
+                ResponseStatus.CREATED_SUCCESS.getMessage(), createTalk);
     }
 
 
     //NPC와 대화하기
     @Transactional
-    public void createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto){
+    public CommonResponse createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto){
         Long talkId = createTalkDetailReqDto.getTalkId();
-
         Talk talk = getTalkEntity(talkId);
 
         boolean isMember = createTalkDetailReqDto.isMember();
-        System.out.println("isMember : " +isMember);
 
         String content = createTalkDetailReqDto.getContent();
         String talkFile = createTalkDetailReqDto.getTalkFile();
@@ -110,16 +123,19 @@ public class TalkService {
                 .build();
 
         talkDetailRepository.save(talkDetail);
+        return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
     }
 
     //대화 종료 후 친밀도 변경
     @Transactional
-    public void increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
+    public CommonResponse increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
         Talk talk = getTalkEntity(increaseIntimacyReqDto.getTalkId());
         MemberNPC memberNPC = talk.getMemberNPC();
 
         memberNPC.increaseIntimacy();
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
+
 
     private Talk getTalkEntity(Long talkId){
         Talk talk = talkRepository.findById(talkId)

@@ -13,6 +13,8 @@ import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,7 @@ public class MemberNPCService {
     private final MemberNPCRepository memberNPCRepository;
 
     //사용자가 대화를 나눈 모든 npc 조회
-    public List<ReadMemberNPCResDto> readMemberNPCList(Principal principal){
+    public DataResponse<List<ReadMemberNPCResDto>> readMemberNPCList(Principal principal){
         Long memberId = Long.valueOf(principal.getName());
         Member member = getMemberEntity(memberId);
 
@@ -49,15 +51,21 @@ public class MemberNPCService {
 
             if(count==0)  continue;
 
-            ReadMemberNPCResDto memberNPCResDto = new ReadMemberNPCResDto(memberNPC.getId(), count,
-                    memberNPC.getIntimacy(), npc.getId(),
-                    world.getLanguage().toString(), world.getTheme().toString(),
-                    talkList.get(0).getCreatedAt());
+            ReadMemberNPCResDto memberNPCResDto = ReadMemberNPCResDto
+                    .builder()
+                    .memberNPCId(memberNPC.getId())
+                    .talkCount(count)
+                    .intimacy(memberNPC.getIntimacy())
+                    .npcId(npc.getId())
+                    .language(world.getLanguage().toString())
+                    .theme(world.getTheme().toString())
+                    .lastVisited(talkList.get(0).getCreatedAt())
+                    .build();
 
             memberNPCResDtoList.add(memberNPCResDto);
         }
 
-        return memberNPCResDtoList;
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberNPCResDtoList);
     }
 
     //대화기록이 없는 NPC와 관계 만들기

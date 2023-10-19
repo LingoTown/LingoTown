@@ -8,6 +8,8 @@ import com.lingotown.domain.world.repository.WorldRepository;
 import com.lingotown.global.data.Language;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,7 @@ public class WorldService {
 
     private final WorldRepository worldRepository;
 
-    public List<ReadWorldInfoResDto> readWorldInfoList(Language language){
+    public DataResponse<List<ReadWorldInfoResDto>> readWorldInfoList(Language language){
         List<World> worldInfoList = worldRepository.findByLanguage(language);
 
         List<ReadWorldInfoResDto> worldInfoResDtoList = new ArrayList<>();
@@ -30,11 +32,12 @@ public class WorldService {
             worldInfoResDtoList.add(ReadWorldInfoResDto.of(world));
         }
 
-        return worldInfoResDtoList;
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), worldInfoResDtoList);
     }
 
 
-    public List<ReadNPCInfoResDto> readNPCInfoList(Long worldId){
+    public DataResponse<List<ReadNPCInfoResDto>> readNPCInfoList(Long worldId){
         World world = getWorldEntity(worldId);
 
         List<NPC> npcList = world.getNpcList();
@@ -44,7 +47,8 @@ public class WorldService {
             npcInfoList.add(ReadNPCInfoResDto.of(npc));
         }
 
-        return npcInfoList;
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), npcInfoList);
     }
 
     private World getWorldEntity(Long worldId){

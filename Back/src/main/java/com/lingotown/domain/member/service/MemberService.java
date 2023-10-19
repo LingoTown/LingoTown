@@ -7,6 +7,9 @@ import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
+import com.lingotown.global.response.CommonResponse;
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,28 +25,34 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberInfoResponseDto readMemberInfo(Principal principal) {
+    //사용자 정보 조회
+    public DataResponse readMemberInfo(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
 
         Member member = getMemberEntity(memberId);
-        return MemberInfoResponseDto.of(member);
+        MemberInfoResponseDto memberInfoDto = MemberInfoResponseDto.of(member);
+        return new DataResponse(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberInfoDto);
     }
 
+    //사용자 탈퇴
     @Transactional
-    public void removeMember(Principal principal) {
+    public CommonResponse removeMember(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
 
         Member member = getMemberEntity(memberId);
         member.leaveService();
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
+    //사용자 닉네임 변경
     @Transactional
-    public void editNickname(Principal principal, EditNicknameReqDto editNicknameReqDto){
+    public CommonResponse editNickname(Principal principal, EditNicknameReqDto editNicknameReqDto){
         Long memberId = Long.parseLong(principal.getName());
         Member member = getMemberEntity(memberId);
 
         String nickname = editNicknameReqDto.getNickname();
         member.editNickname(nickname);
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 
     @Transactional

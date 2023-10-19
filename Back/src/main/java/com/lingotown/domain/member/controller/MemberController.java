@@ -20,23 +20,17 @@ public class MemberController {
 
     @GetMapping
     public DataResponse<MemberInfoResponseDto> readUserInfo(Principal principal) {
-        MemberInfoResponseDto responseDto = memberService.readMemberInfo(principal);
-        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), responseDto);
+        return memberService.readMemberInfo(principal);
     }
 
     @DeleteMapping("/leave")
     public CommonResponse removeMember(Principal principal) {
-        memberService.removeMember(principal);
-        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
+       return memberService.removeMember(principal);
     }
 
     @PutMapping("/nickname")
     public CommonResponse editNickname(Principal principal, @RequestBody EditNicknameReqDto editNicknameReqDto) {
-        memberService.editNickname(principal, editNicknameReqDto);
-        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+        return memberService.editNickname(principal, editNicknameReqDto);
     }
-
-
-
 
 }

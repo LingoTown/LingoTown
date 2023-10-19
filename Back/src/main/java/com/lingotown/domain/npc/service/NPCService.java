@@ -6,6 +6,8 @@ import com.lingotown.domain.npc.entity.Topic;
 import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +22,7 @@ public class NPCService {
 
     private final NPCRepository npcRepository;
 
-    public List<ReadTopicResDto> readNPCTopicList(Long npcId){
+    public DataResponse<List<ReadTopicResDto>> readNPCTopicList(Long npcId){
         NPC npc = getNPCEntity(npcId);
         List<Topic> topicList = npc.getTopicList();
 
@@ -29,7 +31,7 @@ public class NPCService {
             topicResList.add(ReadTopicResDto.of(topic));
         }
 
-        return topicResList;
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), topicResList);
     }
 
     private NPC getNPCEntity(Long npcId){

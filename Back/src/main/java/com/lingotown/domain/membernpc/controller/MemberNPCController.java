@@ -24,17 +24,14 @@ public class MemberNPCController {
 
     @GetMapping("/list")
     public DataResponse<List<ReadMemberNPCResDto>> readMemberNPCList(Principal principal){
-        List<ReadMemberNPCResDto> memberNPCResDtoList = memberNPCService.readMemberNPCList(principal);
-        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberNPCResDtoList);
+        return memberNPCService.readMemberNPCList(principal);
     }
 
     @PostMapping("/start")
     public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @RequestBody CreateMemberNPCReqDto createMemberNPCReqDto){
         MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, createMemberNPCReqDto);
-        CreateTalkResDto createTalkResDto = talkService.createTalk(memberNPC);
-
-        return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
-                ResponseStatus.CREATED_SUCCESS.getMessage(), createTalkResDto);
+        return talkService.createTalk(memberNPC);
     }
+
 
 }

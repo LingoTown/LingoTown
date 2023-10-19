@@ -22,34 +22,27 @@ public class TalkController {
 
     @PostMapping()
     public CommonResponse createTalkDetail(@RequestBody CreateTalkDetailReqDto createTalkDetailReqDto){
-        talkService.createTalkDetail(createTalkDetailReqDto);
-        return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
+        return talkService.createTalkDetail(createTalkDetailReqDto);
     }
 
     @GetMapping("/list/{memberNPCId}")
     public DataResponse<List<ReadTalkListResDto>> readTalkList(@PathVariable("memberNPCId") Long memberNPCId){
-        List<ReadTalkListResDto> talkList = talkService.readTalkList(memberNPCId);
-        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkList);
+        return talkService.readTalkList(memberNPCId);
     }
-
 
     @GetMapping("/{talkId}")
     public DataResponse<List<ReadTalkDetailResDto>> readTalkDetailList(@PathVariable("talkId") Long talkId) {
-        List<ReadTalkDetailResDto> talkDetailResDtoList = talkService.readTalkDetail(talkId);
-        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkDetailResDtoList);
+        return talkService.readTalkDetail(talkId);
     }
-
 
     @DeleteMapping("/{talkId}")
     public CommonResponse removeTalkList(@PathVariable("talkId") Long talkId) {
-        talkService.removeTalk(talkId);
-        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
+        return talkService.removeTalk(talkId);
     }
 
     @PutMapping("/end")
     public CommonResponse increaseIntimacy(@RequestBody IncreaseIntimacyReqDto increaseIntimacyReqDto){
-        talkService.increaseIntimacy(increaseIntimacyReqDto);
-        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+        return talkService.increaseIntimacy(increaseIntimacyReqDto);
     }
 
 
