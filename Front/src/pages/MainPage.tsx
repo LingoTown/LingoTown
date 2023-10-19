@@ -8,35 +8,35 @@ function MainPage() {
   const user = useRecoilValue(userAtom);
 
   return(
-<>
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 space-y-5 py-10">
-      <h1 className="text-4xl font-bold text-blue-500">ㅎ2</h1>
-      <button onClick={() => navigate("/")} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300">
-        로그인 페이지로 이동
-      </button>
-      <div className="bg-white p-6 w-96 rounded-xl shadow-lg space-y-3">
-        <div className="flex items-center space-x-3">
-          <span className="font-medium">Gender:</span>
-          <span>{user.gender}</span>
+    
+    <>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
+        <div className="w-full flex justify-between text-5xl font-bold text-white font-['passero-one']">
+          <div className="ml-8 cursor-pointer" onClick={() => {
+            alert("구현중 입니다.")
+          }}>GO TO MAIN</div>
+          <div className="mr-8 cursor-pointer" onClick={() => {
+            navigate("/");
+          }}>Close</div>
         </div>
-        <div className="flex items-center space-x-3">
-          <span className="font-medium">Social:</span>
-          <span>{user.social}</span>
-        </div>
-        <div className="flex items-center space-x-3">
-          <span className="font-medium">Email:</span>
-          <span>{user.email}</span>
-        </div>
-        <div className="flex items-center space-x-3">
-          <span className="font-medium">Nickname:</span>
-          <span>{user.nickname}</span>
-        </div>
-        <div className="flex items-center justify-center">
-          <img src={user.profileImg} alt="User Profile" className="w-32 h-32 rounded-full border-2 border-blue-400 object-cover"/>
+        <div className='mt-5'>
+          <div className='z-10'>
+            <div className='w-[70rem] h-[37rem] bg-slate-950/[.88] rounded-md flex flex-row pt-5'>
+            <div className='font-bold text-white flex-1 border-r border-white border-opacity-50 flex justify-center'>
+              <div>
+                <img className="w-40 h-40 rounded-full object-cover mt-10" alt="User Profile" src={user.profileImg}/>
+                <div className='pt-10'>Name : {user.nickname}</div>
+                <div>Acount : {user.email}</div>
+              </div>
+            </div>
+              <div className='font-bold text-white flex-1 pl-3'>
+                assdas
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-</>
+    </>
   )
 }
 
