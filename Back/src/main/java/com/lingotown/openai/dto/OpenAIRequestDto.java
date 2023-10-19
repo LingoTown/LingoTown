@@ -1,4 +1,4 @@
-package com.lingotown.openai;
+package com.lingotown.openai.dto;
 
 import lombok.*;
 

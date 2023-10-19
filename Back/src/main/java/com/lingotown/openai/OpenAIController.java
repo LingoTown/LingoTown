@@ -1,5 +1,6 @@
 package com.lingotown.openai;
 
+import com.lingotown.openai.dto.TalkRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

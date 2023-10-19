@@ -1,6 +1,8 @@
 package com.lingotown.openai;
 
 import com.google.gson.Gson;
+import com.lingotown.openai.dto.OpenAIMessageDto;
+import com.lingotown.openai.dto.OpenAIRequestDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
