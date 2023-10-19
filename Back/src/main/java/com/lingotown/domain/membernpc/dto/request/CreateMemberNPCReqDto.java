@@ -3,6 +3,6 @@ package com.lingotown.domain.membernpc.dto.request;
 import lombok.Getter;
 
 @Getter
-public class PostMemberNPCReqDto {
+public class CreateMemberNPCReqDto {
     Long npcId;
 }

@@ -1,6 +1,6 @@
 package com.lingotown.domain.member.controller;
 
-import com.lingotown.domain.member.dto.request.PutNicknameReqDto;
+import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberService;
 import com.lingotown.global.response.CommonResponse;
@@ -19,26 +19,20 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public DataResponse<MemberInfoResponseDto> getUserInfo(Principal principal) {
-        Long memberId = Long.parseLong(principal.getName());
-        MemberInfoResponseDto responseDto = memberService.getMemberInfo(memberId);
+    public DataResponse<MemberInfoResponseDto> readUserInfo(Principal principal) {
+        MemberInfoResponseDto responseDto = memberService.readMemberInfo(principal);
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), responseDto);
     }
 
     @DeleteMapping("/leave")
-    public CommonResponse deleteMember(Principal principal) {
-        Long memberId = Long.parseLong(principal.getName());
-
-        memberService.leaveService(memberId);
+    public CommonResponse removeMember(Principal principal) {
+        memberService.removeMember(principal);
         return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
     @PutMapping("/nickname")
-    public CommonResponse putNickname(Principal principal, @RequestBody PutNicknameReqDto putNicknameReqDto) {
-        Long memberId = Long.parseLong(principal.getName());
-
-        memberService.editNickname(memberId, putNicknameReqDto);
-
+    public CommonResponse editNickname(Principal principal, @RequestBody EditNicknameReqDto editNicknameReqDto) {
+        memberService.editNickname(principal, editNicknameReqDto);
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 

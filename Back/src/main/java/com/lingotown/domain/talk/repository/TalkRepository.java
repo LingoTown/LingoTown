@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface TalkRepository extends JpaRepository<Talk, Long> {
 
-    int countByMemberNPCAndDeleteAtIsNull(MemberNPC memberNPC);
+    int countByMemberNPCAndDeletedAtIsNull(MemberNPC memberNPC);
 
-    @Query("SELECT t FROM MemberNPC mn JOIN mn.talkList t WHERE mn.id = :memberNPCId AND t.deleteAt IS NULL ORDER BY t.createdAt DESC")
+    @Query("select t from Talk as t join t.memberNPC as mn where mn.id = :memberNPCId and t.deletedAt is null order by t.createdAt desc")
     List<Talk> findTalkList(@Param("memberNPCId") Long memberNPCId);
 
 

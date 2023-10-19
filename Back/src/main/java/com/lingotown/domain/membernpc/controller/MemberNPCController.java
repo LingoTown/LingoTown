@@ -1,17 +1,13 @@
 package com.lingotown.domain.membernpc.controller;
 
-import com.lingotown.domain.member.service.MemberService;
-import com.lingotown.domain.membernpc.dto.request.PostMemberNPCReqDto;
-import com.lingotown.domain.membernpc.dto.response.GetMemberNPCResDto;
-import com.lingotown.domain.membernpc.dto.response.GetTalkListResDto;
-import com.lingotown.domain.membernpc.dto.response.PostTalkList;
+import com.lingotown.domain.membernpc.dto.request.CreateMemberNPCReqDto;
+import com.lingotown.domain.membernpc.dto.response.ReadMemberNPCResDto;
+import com.lingotown.domain.membernpc.dto.response.CreateTalkResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.service.MemberNPCService;
 import com.lingotown.domain.talk.service.TalkService;
-import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,19 +23,18 @@ public class MemberNPCController {
     private final TalkService talkService;
 
     @GetMapping("/list")
-    public DataResponse<List<GetMemberNPCResDto>> getMemberNPCList(Principal principal){
-        List<GetMemberNPCResDto> memberNPCResDtoList = memberNPCService.getMemberNPCList(principal);
+    public DataResponse<List<ReadMemberNPCResDto>> readMemberNPCList(Principal principal){
+        List<ReadMemberNPCResDto> memberNPCResDtoList = memberNPCService.readMemberNPCList(principal);
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberNPCResDtoList);
     }
 
     @PostMapping("/start")
-    public DataResponse<PostTalkList> postNPCTalkList(Principal principal, @RequestBody PostMemberNPCReqDto postMemberNPCReqDto){
-        MemberNPC memberNPC = memberNPCService.postMemberNPCConnect(principal, postMemberNPCReqDto);
-        Long talkId = talkService.postTalkList(memberNPC);
+    public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @RequestBody CreateMemberNPCReqDto createMemberNPCReqDto){
+        MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, createMemberNPCReqDto);
+        CreateTalkResDto createTalkResDto = talkService.createTalk(memberNPC);
 
-        PostTalkList postTalkList = new PostTalkList(talkId);
         return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
-                ResponseStatus.CREATED_SUCCESS.getMessage(), postTalkList);
+                ResponseStatus.CREATED_SUCCESS.getMessage(), createTalkResDto);
     }
 
 }

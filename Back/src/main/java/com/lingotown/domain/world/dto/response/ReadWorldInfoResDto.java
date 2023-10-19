@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetWorldInfoResDto {
+public class ReadWorldInfoResDto {
 
     Long worldId;
     String theme;
     String language;
 
-    public static GetWorldInfoResDto of(World world) {
-        return GetWorldInfoResDto
+    public static ReadWorldInfoResDto of(World world) {
+        return ReadWorldInfoResDto
                 .builder()
                 .worldId(world.getId())
                 .theme(world.getTheme().toString())

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetTalkDetailResDto {
+public class ReadTalkDetailResDto {
 
     private Long talkDetailId;
     private boolean isMember;
@@ -20,8 +20,8 @@ public class GetTalkDetailResDto {
     private String talkFile;
     private LocalDateTime createdAt;
 
-    public static GetTalkDetailResDto of(TalkDetail talkDetail){
-        return GetTalkDetailResDto
+    public static ReadTalkDetailResDto of(TalkDetail talkDetail){
+        return ReadTalkDetailResDto
                 .builder()
                 .talkDetailId(talkDetail.getId())
                 .isMember(talkDetail.getIsMember())

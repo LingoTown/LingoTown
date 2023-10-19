@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GetNPCInfoResDto {
+public class ReadNPCInfoResDto {
 
     private Long npcId;
     private String name;
@@ -20,8 +20,8 @@ public class GetNPCInfoResDto {
     private String firstMessage;
     private String voice;
 
-    public static GetNPCInfoResDto of(NPC npc){
-        return GetNPCInfoResDto
+    public static ReadNPCInfoResDto of(NPC npc){
+        return ReadNPCInfoResDto
                 .builder()
                 .npcId(npc.getId())
                 .name(npc.getName())

@@ -2,8 +2,8 @@ package com.lingotown.domain.membernpc.service;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
-import com.lingotown.domain.membernpc.dto.request.PostMemberNPCReqDto;
-import com.lingotown.domain.membernpc.dto.response.GetMemberNPCResDto;
+import com.lingotown.domain.membernpc.dto.request.CreateMemberNPCReqDto;
+import com.lingotown.domain.membernpc.dto.response.ReadMemberNPCResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
 import com.lingotown.domain.npc.entity.NPC;
@@ -32,27 +32,26 @@ public class MemberNPCService {
     private final MemberNPCRepository memberNPCRepository;
 
     //사용자가 대화를 나눈 모든 npc 조회
-    public List<GetMemberNPCResDto> getMemberNPCList(Principal principal){
+    public List<ReadMemberNPCResDto> readMemberNPCList(Principal principal){
         Long memberId = Long.valueOf(principal.getName());
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
+        Member member = getMemberEntity(memberId);
 
         final List<MemberNPC> npcList = member.getMemberNPCList();
 
-        List<GetMemberNPCResDto> memberNPCResDtoList = new ArrayList<>();
+        List<ReadMemberNPCResDto> memberNPCResDtoList = new ArrayList<>();
         for(MemberNPC memberNPC : npcList){
 
             NPC npc =  memberNPC.getNpc();
             World world = npc.getWorld();
 
-            List<Talk> talkList = talkRepository.findTalkList(npc.getId());
+            List<Talk> talkList = talkRepository.findTalkList(memberNPC.getId());
             int count = talkList.size();
 
             if(count==0)  continue;
 
-            GetMemberNPCResDto memberNPCResDto = new GetMemberNPCResDto(memberNPC.getId(),
-                    memberNPC.getIntimacy(), count,
-                    npc.getId(), world.getLanguage().toString(), world.getTheme().toString(),
+            ReadMemberNPCResDto memberNPCResDto = new ReadMemberNPCResDto(memberNPC.getId(), count,
+                    memberNPC.getIntimacy(), npc.getId(),
+                    world.getLanguage().toString(), world.getTheme().toString(),
                     talkList.get(0).getCreatedAt());
 
             memberNPCResDtoList.add(memberNPCResDto);
@@ -63,10 +62,10 @@ public class MemberNPCService {
 
     //대화기록이 없는 NPC와 관계 만들기
     @Transactional
-    public MemberNPC postMemberNPCConnect(Principal principal, PostMemberNPCReqDto postMemberNPCReqDto){
+    public MemberNPC createMemberNPCConnect(Principal principal, CreateMemberNPCReqDto createMemberNPCReqDto){
 
         Long memberId = Long.valueOf(principal.getName());
-        Long npcId = postMemberNPCReqDto.getNpcId();
+        Long npcId = createMemberNPCReqDto.getNpcId();
         MemberNPC connectedMemberNPC = memberNPCRepository.findByMemberIdNPCId(memberId, npcId);
 
         if(connectedMemberNPC != null) return connectedMemberNPC;

@@ -1,23 +1,22 @@
 package com.lingotown.domain.talk.service;
 
 
-import com.lingotown.domain.membernpc.dto.response.GetTalkListResDto;
+import com.lingotown.domain.membernpc.dto.response.CreateTalkResDto;
+import com.lingotown.domain.membernpc.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
-import com.lingotown.domain.talk.dto.request.PostTalkDetailReqDto;
-import com.lingotown.domain.talk.dto.response.GetTalkDetailResDto;
+import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
+import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,14 +30,14 @@ public class TalkService {
     private final MemberNPCRepository memberNPCRepository;
 
     //해당 NPC와 대화 내역
-    public List<GetTalkListResDto> getTalkList(Long memberNPCId){
+    public List<ReadTalkListResDto> readTalkList(Long memberNPCId){
         getMemberNPCEntity(memberNPCId);
 
-        List<GetTalkListResDto> talkListResDtoList = new ArrayList<>();
+        List<ReadTalkListResDto> talkListResDtoList = new ArrayList<>();
 
-        List<Talk> talkList = memberNPCRepository.findAllByTalkListDeleteAtIsNullAndId(memberNPCId);
+        List<Talk> talkList = memberNPCRepository.findTalkList(memberNPCId);
         for(Talk talk : talkList){
-            talkListResDtoList.add(new GetTalkListResDto(talk.getId(), talk.getCreatedAt()));
+            talkListResDtoList.add(new ReadTalkListResDto(talk.getId(), talk.getCreatedAt()));
         }
 
         return talkListResDtoList;
@@ -46,14 +45,14 @@ public class TalkService {
 
 
     //해당 대화 detail 조회
-    public List<GetTalkDetailResDto> getTalkDetail(Long talkId){
+    public List<ReadTalkDetailResDto> readTalkDetail(Long talkId){
         Talk talk = getTalkEntity(talkId);
 
-        List<GetTalkDetailResDto> talkDetailResDtoList = new ArrayList<>();
+        List<ReadTalkDetailResDto> talkDetailResDtoList = new ArrayList<>();
 
         List<TalkDetail> talkDetailList = talk.getTalkDetailList();
         for(TalkDetail talkDetail : talkDetailList){
-            talkDetailResDtoList.add(GetTalkDetailResDto.of(talkDetail));
+            talkDetailResDtoList.add(ReadTalkDetailResDto.of(talkDetail));
         }
 
         return talkDetailResDtoList;
@@ -61,8 +60,10 @@ public class TalkService {
 
 
     //해당 대화 삭제
-    public void deleteTalk(Long talkId){
+    @Transactional
+    public void removeTalk(Long talkId){
         Talk talk = getTalkEntity(talkId);
+
         talk.deleteTalkHistory();
 
         List<TalkDetail> talkDetailList = talk.getTalkDetailList();
@@ -73,27 +74,29 @@ public class TalkService {
 
     //NPC와 대화 시작하기
     @Transactional
-    public Long postTalkList(MemberNPC memberNPC){
+    public CreateTalkResDto createTalk(MemberNPC memberNPC){
         Talk talk = Talk
                 .builder()
                 .memberNPC(memberNPC)
                 .build();
 
         Talk savedTalk =  talkRepository.save(talk);
-        return savedTalk.getId();
+        CreateTalkResDto createTalk = new CreateTalkResDto(savedTalk.getId());
+
+        return createTalk;
     }
 
 
     //NPC와 대화하기
     @Transactional
-    public void PostTalkDetail(PostTalkDetailReqDto postTalkDetailReqDto){
-        Long talkId = postTalkDetailReqDto.getTalkId();
+    public void createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto){
+        Long talkId = createTalkDetailReqDto.getTalkId();
 
         Talk talk = getTalkEntity(talkId);
 
-        boolean isMember = postTalkDetailReqDto.isMember();
-        String content = postTalkDetailReqDto.getContent();
-        String talkFile = postTalkDetailReqDto.getTalkFile();
+        boolean isMember = createTalkDetailReqDto.isMember();
+        String content = createTalkDetailReqDto.getContent();
+        String talkFile = createTalkDetailReqDto.getTalkFile();
 
         TalkDetail talkDetail = TalkDetail
                 .builder()

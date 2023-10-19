@@ -1,6 +1,6 @@
 package com.lingotown.domain.member.service;
 
-import com.lingotown.domain.member.dto.request.PutNicknameReqDto;
+import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -21,22 +22,27 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberInfoResponseDto getMemberInfo(Long memberId) {
+    public MemberInfoResponseDto readMemberInfo(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+
         Member member = getMemberEntity(memberId);
         return MemberInfoResponseDto.of(member);
     }
 
     @Transactional
-    public void leaveService(Long memberId) {
+    public void removeMember(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+
         Member member = getMemberEntity(memberId);
         member.leaveService();
     }
 
     @Transactional
-    public void editNickname(Long memberId, PutNicknameReqDto putNicknameReqDto){
+    public void editNickname(Principal principal, EditNicknameReqDto editNicknameReqDto){
+        Long memberId = Long.parseLong(principal.getName());
         Member member = getMemberEntity(memberId);
 
-        String nickname = putNicknameReqDto.getNickname();
+        String nickname = editNicknameReqDto.getNickname();
         member.editNickname(nickname);
     }
 

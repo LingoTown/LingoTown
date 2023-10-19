@@ -3,11 +3,8 @@ package com.lingotown.domain.membernpc.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
-public class GetTalkListResDto {
+public class CreateTalkResDto {
     Long talkId;
-    LocalDateTime talkDate;
 }

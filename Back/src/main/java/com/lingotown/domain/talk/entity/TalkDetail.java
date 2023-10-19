@@ -30,7 +30,7 @@ public class TalkDetail  extends BaseTimeEntity {
     @Column(name = "talk_file", nullable = false)
     private String talkFile;
 
-    private LocalDateTime deleteAt;
+    private LocalDateTime deletedAt;
 
     @JoinColumn(name = "talk_id")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,7 +46,7 @@ public class TalkDetail  extends BaseTimeEntity {
 
     //대화 상세 기록 삭제
     public void deleteTalkDetail(){
-        this.deleteAt = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
 }

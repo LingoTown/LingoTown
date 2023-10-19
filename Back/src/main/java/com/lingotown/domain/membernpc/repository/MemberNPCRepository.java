@@ -10,11 +10,8 @@ import java.util.List;
 
 public interface MemberNPCRepository extends JpaRepository<MemberNPC, Long> {
 
-    List<Talk> findAllByTalkListDeleteAtIsNullAndId(Long memberNPCId);
-
-    //
-    // @Query("select mn from MemberNPC as mn join Talk as t where mn.id=:id and t.deleteAt is null")
-    // List<Talk> findTalkList(Long memberNPCId);
+    @Query("select t from MemberNPC as mn join mn.talkList as t where mn.id=:memberNPCId and t.deletedAt is null")
+    List<Talk> findTalkList(@Param("memberNPCId") Long memberNPCId);
 
 
     @Query("select mn from MemberNPC as mn where mn.member.id = :memberId and mn.npc.id = :npcId")
