@@ -84,6 +84,9 @@ public class Member extends BaseTimeEntity {
         this.profile = profile;
     }
 
+    //사용자 리스폰 지역 설정
+    public void settingResponse(World world) { this.world = world; }
+
     // 재가입
     public void tempRejoin() {
         this.deletedAt = null;

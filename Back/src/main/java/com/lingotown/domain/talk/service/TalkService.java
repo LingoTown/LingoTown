@@ -1,10 +1,12 @@
 package com.lingotown.domain.talk.service;
 
 
+import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.membernpc.dto.response.CreateTalkResDto;
 import com.lingotown.domain.membernpc.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
+import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
@@ -126,11 +128,15 @@ public class TalkService {
         return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
     }
 
-    //대화 종료 후 친밀도 변경
+    //대화 종료 후 친밀도 변경과 리스폰 지역 설정
     @Transactional
     public CommonResponse increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
         Talk talk = getTalkEntity(increaseIntimacyReqDto.getTalkId());
         MemberNPC memberNPC = talk.getMemberNPC();
+        NPC npc = memberNPC.getNpc();
+
+        Member member = memberNPC.getMember();
+        member.settingResponse(npc.getWorld());
 
         memberNPC.increaseIntimacy();
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
