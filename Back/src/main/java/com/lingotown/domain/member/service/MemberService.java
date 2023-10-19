@@ -1,40 +1,54 @@
 package com.lingotown.domain.member.service;
 
+import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.global.data.LoginType;
+import com.lingotown.global.exception.CustomException;
+import com.lingotown.global.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public MemberInfoResponseDto getMemberInfo(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public MemberInfoResponseDto readMemberInfo(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        Member member = getMemberEntity(memberId);
         return MemberInfoResponseDto.of(member);
     }
 
     @Transactional
-    public void leaveService(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void removeMember(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        Member member = getMemberEntity(memberId);
         member.leaveService();
     }
 
     @Transactional
-    public void tempRejoinService(Long userId) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다."));
+    public void editNickname(Principal principal, EditNicknameReqDto editNicknameReqDto){
+        Long memberId = Long.parseLong(principal.getName());
+        Member member = getMemberEntity(memberId);
+
+        String nickname = editNicknameReqDto.getNickname();
+        member.editNickname(nickname);
+    }
+
+    @Transactional
+    public void tempRejoinService(Long memberId) {
+        Member member = getMemberEntity(memberId);
         member.tempRejoin();
     }
 
@@ -54,5 +68,12 @@ public class MemberService {
     boolean isEmpty(String loginId, LoginType loginType) {
         Optional<Member> checkUser = memberRepository.findByLoginIdAndLoginType(loginId, loginType);
         return checkUser.isEmpty();
+    }
+
+    private Member getMemberEntity(Long memberId){
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
+
+        return member;
     }
 }
