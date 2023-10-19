@@ -1,12 +1,13 @@
 package com.lingotown.domain.member.controller;
 
+import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberService;
+import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -18,10 +19,18 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public DataResponse<MemberInfoResponseDto> getUserInfo(Principal principal) {
-        Long userId = Long.parseLong(principal.getName());
-        MemberInfoResponseDto responseDto = memberService.getMemberInfo(userId);
-        return new DataResponse<>(200, "유저 정보 조회 성공", responseDto);
+    public DataResponse<MemberInfoResponseDto> readUserInfo(Principal principal) {
+        return memberService.readMemberInfo(principal);
+    }
+
+    @DeleteMapping("/leave")
+    public CommonResponse removeMember(Principal principal) {
+       return memberService.removeMember(principal);
+    }
+
+    @PutMapping("/nickname")
+    public CommonResponse editNickname(Principal principal, @RequestBody EditNicknameReqDto editNicknameReqDto) {
+        return memberService.editNickname(principal, editNicknameReqDto);
     }
 
 }

@@ -193,7 +193,7 @@ public class SocialLoginService {
         }
 
         Member member = memberRepository.findByLoginIdAndLoginType(userInfo.get("loginId").toString(), loginType)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
 
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
