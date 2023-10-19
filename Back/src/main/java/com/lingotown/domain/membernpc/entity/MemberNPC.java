@@ -3,9 +3,7 @@ package com.lingotown.domain.membernpc.entity;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.entity.Talk;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -18,8 +16,7 @@ import java.util.List;
 @Table(name = "member_npc")
 public class MemberNPC {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_npc_id")
     private Long id;
 
@@ -37,4 +34,12 @@ public class MemberNPC {
 
     @OneToMany(mappedBy = "memberNPC", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Talk> talkList = new ArrayList<>();
+
+    @Builder
+    public MemberNPC(Member member, NPC npc) {
+        this.intimacy = 0;
+        this.member = member;
+        this.npc = npc;
+        this.talkList = new ArrayList<>();
+    }
 }

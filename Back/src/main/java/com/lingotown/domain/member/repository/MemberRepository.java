@@ -12,10 +12,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByLoginIdAndLoginType(String loginId, LoginType loginType);
 
-    @Query("SELECT user FROM Member user where user.loginId=:loginId AND user.loginType=:loginType AND user.deleteAt = null")
+    @Query("SELECT user FROM Member user where user.loginId=:loginId AND user.loginType=:loginType AND user.deletedAt = null")
     Optional<Member> findByLoginIdAndLoginTypeWhereDeleteAtIsNull(@Param("loginId")String loginId, @Param("loginType")LoginType loginType);
 
-    @Query("SELECT user FROM Member user where user.id=:userId AND user.deleteAt = null")
+    @Query("SELECT user FROM Member user where user.id=:userId AND user.deletedAt = null")
     Optional<Member> findByIdWhereDeleteAtIsNull(@Param("userId") Long userId);
 
 }
