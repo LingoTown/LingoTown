@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { userAtom } from '../atom/UserAtom';
 import { useRecoilValue } from 'recoil';
 
-function MainPage() {
+const MainPage = () => {
   
   const navigate = useNavigate();
   const user = useRecoilValue(userAtom);
