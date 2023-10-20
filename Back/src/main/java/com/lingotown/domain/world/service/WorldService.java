@@ -1,6 +1,8 @@
 package com.lingotown.domain.world.service;
 
+import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import com.lingotown.domain.npc.entity.NPC;
+import com.lingotown.domain.npc.entity.Topic;
 import com.lingotown.domain.world.dto.response.ReadNPCInfoResDto;
 import com.lingotown.domain.world.dto.response.ReadWorldInfoResDto;
 import com.lingotown.domain.world.entity.World;
@@ -41,10 +43,28 @@ public class WorldService {
         World world = getWorldEntity(worldId);
 
         List<NPC> npcList = world.getNpcList();
-
         List<ReadNPCInfoResDto> npcInfoList = new ArrayList<>();
         for(NPC npc : npcList){
-            npcInfoList.add(ReadNPCInfoResDto.of(npc));
+
+            List<Topic> topicList = npc.getTopicList();
+            List<ReadTopicResDto> topicResDtoList = new ArrayList<>();
+            for(Topic topic : topicList){
+                topicResDtoList.add(ReadTopicResDto.of(topic));
+            }
+
+            ReadNPCInfoResDto npcInfoResDto= ReadNPCInfoResDto
+                        .builder()
+                        .npcId(npc.getId())
+                        .name(npc.getName())
+                        .npcRole(npc.getNpcRole().toString())
+                        .genderType(npc.getGenderType().toString())
+                        .npcAge(npc.getNpcAge().toString())
+                        .firstMessage(npc.getFirstMessage())
+                        .voice(npc.getVoice())
+                        .topicList(topicResDtoList)
+                        .build();
+
+            npcInfoList.add(npcInfoResDto);
         }
 
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
