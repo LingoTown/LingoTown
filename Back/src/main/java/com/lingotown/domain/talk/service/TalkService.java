@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +37,12 @@ public class TalkService {
     private final MemberNPCRepository memberNPCRepository;
 
     //해당 NPC와 대화 내역
-    public DataResponse<List<ReadTalkListResDto>> readTalkList(Long memberNPCId){
-        getMemberNPCEntity(memberNPCId);
+    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long memberNPCId){
+        MemberNPC memberNPC = getMemberNPCEntity(memberNPCId);
+
+        Long memberId = memberNPC.getMember().getId();
+        Long logInMemberId = Long.valueOf(principal.getName());
+        if(memberId!=logInMemberId) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         List<ReadTalkListResDto> talkListResDtoList = new ArrayList<>();
 
@@ -57,8 +62,12 @@ public class TalkService {
 
 
     //해당 대화 detail 조회
-    public DataResponse<List<ReadTalkDetailResDto>> readTalkDetail(Long talkId){
+    public DataResponse<List<ReadTalkDetailResDto>> readTalkDetail(Principal principal, Long talkId){
         Talk talk = getTalkEntity(talkId);
+
+        Long memberId = talk.getMemberNPC().getMember().getId();
+        Long logInMemberId = Long.valueOf(principal.getName());
+        if(memberId!=logInMemberId) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         List<ReadTalkDetailResDto> talkDetailResDtoList = new ArrayList<>();
 
@@ -73,8 +82,12 @@ public class TalkService {
 
     //해당 대화 삭제
     @Transactional
-    public CommonResponse removeTalk(Long talkId){
+    public CommonResponse removeTalk(Principal principal, Long talkId){
         Talk talk = getTalkEntity(talkId);
+
+        Long memberId = talk.getMemberNPC().getMember().getId();
+        Long logInMemberId = Long.valueOf(principal.getName());
+        if(memberId!=logInMemberId) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         talk.deleteTalkHistory();
 
@@ -88,7 +101,7 @@ public class TalkService {
 
     //NPC와 대화 시작하기
     @Transactional
-    public DataResponse createTalk(MemberNPC memberNPC){
+    public DataResponse<CreateTalkResDto> createTalk(MemberNPC memberNPC){
         Talk talk = Talk
                 .builder()
                 .memberNPC(memberNPC)
