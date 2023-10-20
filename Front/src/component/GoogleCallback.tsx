@@ -5,7 +5,7 @@ import { userAtom } from '../atom/UserAtom';
 import { useSetRecoilState } from 'recoil';
 import { userType } from '../type/UserType';
 
-function GetAuthCodeAndSendToSpring() {
+const GetAuthCodeAndSendToSpring = () => {
 
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
