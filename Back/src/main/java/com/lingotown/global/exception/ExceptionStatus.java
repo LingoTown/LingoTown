@@ -25,6 +25,7 @@ public enum ExceptionStatus {
     NPC_NOT_FOUND(4000, "NPC가 존재하지 않습니다"),
     TALK_NOT_FOUND(4000, "대화 기록이 존재하지 않습니다"),
     WORLD_NOT_FOUND(4000, "해당 국가(언어)가 존재하지 않습니다"),
+    FORBIDDEN_FAILED(4003, "콘텐츠에 접근할 수 없어, 정보를 조회할 수 없습니다."),
     TOKEN_NOT_FOUND_IN_COOKIE(-1002, "토큰이 쿠키에 없습니다.");
 
     private final int code;
