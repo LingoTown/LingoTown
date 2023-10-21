@@ -1,7 +1,6 @@
 package com.lingotown.domain.world.dto.response;
 
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
-import com.lingotown.domain.npc.entity.NPC;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
