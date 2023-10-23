@@ -32,9 +32,4 @@ public class MemberController {
     public CommonResponse editNickname(Principal principal, @RequestBody EditNicknameReqDto editNicknameReqDto) {
         return memberService.editNickname(principal, editNicknameReqDto);
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "test success";
-    }
 }
