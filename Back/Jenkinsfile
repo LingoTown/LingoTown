@@ -4,7 +4,7 @@ pipeline {
         stage("Set Variable") {
             steps {
                 script {
-                    IMAGE_NAME_BE = "LingoTown_Back_Image"
+                    IMAGE_NAME_BE = "lingotown_back_image"
                     CONTAINER_NAME_BE = "LingoTown_Back"
                     APPLICATION_YML_PATH = "/usr/spring/resources"
                     PROJECT_DIR_BE = "Back"
