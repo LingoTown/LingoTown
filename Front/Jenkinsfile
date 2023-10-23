@@ -4,7 +4,7 @@ pipeline {
         stage("Set Variable") {
             steps {
                 script {
-                    IMAGE_NAME_FE = "lingoTown_front_image"
+                    IMAGE_NAME_FE = "lingotown_front_image"
                     CONTAINER_NAME_FE = "LingoTown_Front_Dev"
                     APPLICATION_ENV_PATH = "/usr/react"
                     PROJECT_DIR_FE = "Front"
