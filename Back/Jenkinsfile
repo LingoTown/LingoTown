@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+    stages {
+        stage("Set Variable") {
+            steps {
+                script {
+                    IMAGE_NAME_BE = "LingoTown_Back_Image"
+                    CONTAINER_NAME_BE = "LingoTown_Back"
+                    APPLICATION_YML_PATH = "/usr/spring/resources"
+                    PROJECT_DIR_BE = "Back"
+                }
+            }
+        }
+
+        // 설정파일 참조
+        stage("Copy Setting File") {
+            steps {
+                sh """
+                    if [ ! -d "${PROJECT_DIR_BE}/src/main/resources" ]; then
+                        mkdir -p "${PROJECT_DIR_BE}/src/main/resources"
+                    fi
+
+                    cp ${APPLICATION_YML_PATH}/* ${PROJECT_DIR_BE}/src/main/resources
+                    """
+            }
+        }
+
+        // 백엔드 프로젝트 빌드
+        stage("Build") {
+            // build
+            steps{
+                sh """
+                cd ${PROJECT_DIR_BE}
+                chmod 777 ./gradlew
+                ls -al
+                pwd
+                ./gradlew clean build
+                """
+            }
+        }
+
+        // 컨테이너 클리닝
+        stage("Docker Container Cleaning") {
+            steps{
+                sh "docker ps -q -f name=${CONTAINER_NAME_BE} | xargs --no-run-if-empty docker container stop"
+                sh "docker container ls -a -q -f name=${CONTAINER_NAME_BE} | xargs --no-run-if-empty docker rm"
+            }
+        }
+
+        // 이미지 삭제
+        stage("Docker Image Cleaning") {
+            steps{
+                sh "docker images ${IMAGE_NAME_BE} -q | xargs -r docker rmi -f"
+            }
+        }
+
+        // 도커 이미지 빌드
+        stage("Docker Image Build") {
+            steps {
+                dir("${PROJECT_DIR_BE}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_BE} ."
+                    }
+                }
+            }
+        }
+
+        // 컨테이너 실행
+        stage("Docker Container Run") {
+            steps {
+                script {
+                    sh "docker run -d -p 8081:8081 --name ${CONTAINER_NAME_BE} ${IMAGE_NAME_BE} -e TZ=Asia/Seoul"
+                }
+            }
+        }
+    }
+}

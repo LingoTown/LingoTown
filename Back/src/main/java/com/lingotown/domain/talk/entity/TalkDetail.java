@@ -27,7 +27,7 @@ public class TalkDetail  extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(name = "talk_file", nullable = false)
+    @Column(name = "talk_file")
     private String talkFile;
 
     private LocalDateTime deletedAt;

@@ -1,21 +1,21 @@
-package com.lingotown.domain.talk.dto.response;
+package com.lingotown.openai.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ChatResDto {
+public class OpenAIResDto {
     private String id;
     private String object;
-    private LocalDate created;
+    private long created;
     private String model;
-    private List<Choice> choices;
+    private OpenAIChoiceDto[] choices;
+    private Usage usage;
 }
