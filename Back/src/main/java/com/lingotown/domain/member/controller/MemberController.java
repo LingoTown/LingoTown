@@ -33,4 +33,8 @@ public class MemberController {
         return memberService.editNickname(principal, editNicknameReqDto);
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "test success";
+    }
 }
