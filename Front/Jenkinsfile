@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+    stages {
+        stage("Set Variable") {
+            steps {
+                script {
+                    IMAGE_NAME_FE = "LingoTown_Front_Image"
+                    CONTAINER_NAME_FE = "LingoTown_Front"
+                    APPLICATION_ENV_PATH = "/usr/react"
+                    PROJECT_DIR_FE = "Front"
+                }
+            }
+        }
+
+        // 설정파일 참조
+        stage("Copy Setting File") {
+            steps {
+                sh "cp ${APPLICATION_ENV_PATH}/.env ${PROJECT_DIR_FE}"
+            }
+        }
+
+        // 컨테이너 클리닝
+        stage("Docker Container Cleaning") {
+            steps{
+                sh "docker ps -q -f name=${CONTAINER_NAME_FE} | xargs --no-run-if-empty docker container stop"    
+                sh "docker container ls -a -q -f name=${CONTAINER_NAME_FE} | xargs --no-run-if-empty docker rm"
+            }
+        }
+
+        // 이미지 삭제
+        stage("Docker Image Cleaning") {
+            steps{
+                sh "docker images ${IMAGE_NAME_FE} -q | xargs -r docker rmi -f"
+            }
+        }
+        
+        // 도커 이미지 빌드
+        stage("Docker Image Build") {
+            steps {
+                dir("${PROJECT_DIR_FE}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_FE} ."
+                    }
+                }
+            }
+        }
+
+        // 컨테이너 실행
+        stage("Docker Container Run") {
+            steps {
+                script {
+                    sh "docker run -d -p 3001:3000 --name ${CONTAINER_NAME_FE} ${IMAGE_NAME_FE}"
+                }
+            }
+        }
+    }
+}
