@@ -5,7 +5,7 @@ pipeline {
             steps {
                 script {
                     IMAGE_NAME_BE = "lingotown_back_image"
-                    CONTAINER_NAME_BE = "LingoTown_Back"
+                    CONTAINER_NAME_BE = "LingoTown_Back_Dev"
                     APPLICATION_YML_PATH = "/usr/spring/resources"
                     PROJECT_DIR_BE = "Back"
                 }
