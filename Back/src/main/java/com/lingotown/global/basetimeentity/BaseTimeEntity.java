@@ -1,4 +1,4 @@
-package com.lingotown.global.baseTimeEntity;
+package com.lingotown.global.basetimeentity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
