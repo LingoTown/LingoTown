@@ -14,4 +14,10 @@ const getUserInfo = async (success: (data : {data : ReturnType}) => void, fail: 
   await HttpJson.get(`/api/member`).then(success).catch(fail);
 }
 
+// 탈퇴
+
+// 닉네임수정
+
+// 프로필 이미지 수정
+
 export { googleLogin, kakaoLogin, getUserInfo };
