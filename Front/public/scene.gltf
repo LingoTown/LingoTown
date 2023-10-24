@@ -1,0 +1,2 @@
+GET http://localhost:5173/scene.gltf net::ERR_ABORTED 404 (Not Found)
+해결을 위한 파일
