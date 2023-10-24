@@ -6,9 +6,9 @@ import * as THREE from 'three';
 
 export const RestaurantTheme = () => {
 
-  const human = useGLTF("../../public/player/model.glb");
-  const fox = useGLTF("../../public/npc/fox.glb");
-  const rabbit = useGLTF("../../public/npc/rabbit.glb");
+  const human = useGLTF("./player/model.glb");
+  const fox = useGLTF("./npc/fox.glb");
+  const rabbit = useGLTF("./npc/rabbit.glb");
 
   const cameraOffset = useRef(new THREE.Vector3(0, 3, -4));
   const keysPressed = useRef({ ArrowUp: false, ArrowLeft: false, ArrowRight: false });
