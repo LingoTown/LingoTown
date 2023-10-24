@@ -4,10 +4,10 @@ pipeline {
         stage("Set Variable") {
             steps {
                 script {
-                    IMAGE_NAME_FE = "cicdtest-front"
-                    CONTAINER_NAME_FE = "cicdtest_front"
+                    IMAGE_NAME_FE = "lingotown_front_image"
+                    CONTAINER_NAME_FE = "LingoTown_Front_Dev"
                     APPLICATION_ENV_PATH = "/usr/react"
-                    PROJECT_DIR_FE = "front"
+                    PROJECT_DIR_FE = "Front"
                 }
             }
         }
