@@ -22,7 +22,7 @@ ENV NODE_ENV=production
 COPY . .
 
 # 이 부분은 오류를 유발하도록 잘못된 경로를 사용합니다.
-COPY not-a-real-file.txt /tmp/
+# COPY not-a-real-file.txt /tmp/
 
 
 RUN vite build
