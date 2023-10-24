@@ -31,27 +31,9 @@ pipeline {
         stage("Docker Image Cleaning") {
             steps{
                 script {
-                    // 'latest-success' 이미지 ID를 가져옵니다. 만약 없다면 빈 문자열이 반환됩니다.
-                    def result = sh(script: "docker images ${IMAGE_NAME_FE}:latest-success -q", returnStatus: true)
-
-                    // 결과 코드가 0 (성공) 이면 이미지 ID를 가져온 것이므로 .trim()을 붙여서 문자열로 변환합니다.
-                    if (result == 0) {
-                        LATEST_SUCCESS_IMAGE_ID = sh(script: "docker images ${IMAGE_NAME_FE}:latest-success -q", returnStdout: true).trim()
-                    } else {
-                        // 결과 코드가 0이 아니면 이미지가 없는 것이므로 빈 문자열로 설정합니다.
-                        LATEST_SUCCESS_IMAGE_ID = ''
-                    }
-
-                    // 가져온 'latest-success' 이미지 ID를 로깅합니다.
-                    echo "Latest successful image ID: '${LATEST_SUCCESS_IMAGE_ID}'"
-
-                    if (LATEST_SUCCESS_IMAGE_ID != '') {
-                        // 'latest-success' 태그가 없는 이미지만 삭제합니다.
-                        echo "Deleting images..."
-                        sh "docker images ${IMAGE_NAME_FE} -q | grep -v ${LATEST_SUCCESS_IMAGE_ID} | xargs docker rmi -f"
-                    } else {
-                        echo "No images found for deletion. Skipping..."
-                    }
+                    sh "docker ps -a"
+                    sh "docker rmi -f ${IMAGE_NAME_FE}:latest"
+                    sh "docker ps -a"
                 }
             }
         }
@@ -62,12 +44,13 @@ pipeline {
                 dir("${PROJECT_DIR_FE}") {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_FE}:latest ."
-
+                        sh "docker ps -a"
                         // 기존 latest-success 태그 삭제
                         sh "docker rmi ${IMAGE_NAME_FE}:latest-success || true"
-
+                        sh "docker ps -a"
                         // 빌드 성공 시, 이미지에 latest-success 태그 추가
                         sh "docker tag ${IMAGE_NAME_FE}:latest ${IMAGE_NAME_FE}:latest-success"
+                        sh "docker ps -a"
                     }
                 }
             }
