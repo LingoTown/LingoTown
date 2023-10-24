@@ -59,31 +59,6 @@ pipeline {
                 }
             }
         }
-
-        // // 롤백 스테이지 (선택적)
-        // stage('Rollback on Failure') {
-        //     when {
-        //         // 이전 단계들 중에서 실패한 경우에만 이 스테이지 실행
-        //         expression { currentBuild.currentResult == 'FAILURE' }
-        //     }
-        //     steps {
-        //         script {
-        //             // 마지막 성공한 빌드에서 artifact 다운로드
-        //             def lastSuccessfulBuild = currentBuild.rawBuild.getPreviousSuccessfulBuild()
-
-        //             if (lastSuccessfulBuild != null) {
-        //                 def artifact = lastSuccessfulBuild.getArtifactManager().root().child('successful_tag.txt')
-        //                 def tagInfo = artifact.readToString()  // 파일 내용 읽기
-
-        //                 echo "Rolling back to previous stable build: ${tagInfo}..."
-        //                 // 태그 정보를 사용하여 이전 버전의 이미지로 컨테이너 시작
-        //                 sh "docker run -d -p 3001:3000 --name ${env.CONTAINER_NAME_FE}_rollback ${tagInfo}"
-        //             } else {
-        //                 echo "No successful build to rollback to!"
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     post {
@@ -106,10 +81,13 @@ pipeline {
                 def build = currentBuild
 
                 while (build != null && recentSuccessfulTags.size() < maxImagesToKeep) {
-                    def artifact = build.getArtifactManager().root().child('successful_tag.txt')
+                    
+                    // 아티팩트 파일의 경로를 직접 구성합니다.
+                    def artifactPath = build.getArtifactsDir().getAbsolutePath() + '/successful_tag.txt'
+                    def artifactFile = new File(artifactPath)
 
-                    if (artifact.exists()) {
-                        def tagInfo = artifact.readToString()
+                    if (artifactFile.exists()) {
+                        def tagInfo = artifactFile.text.trim()
                         recentSuccessfulTags.add(tagInfo)
                     }
 
