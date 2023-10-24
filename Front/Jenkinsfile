@@ -59,6 +59,9 @@ pipeline {
                 dir("${PROJECT_DIR_FE}") {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_FE}:latest ."
+
+                        // 빌드 성공 시, 이미지에 latest-success 태그 추가
+                        sh "docker tag ${IMAGE_NAME_FE}:latest ${IMAGE_NAME_FE}:latest-success"
                     }
                 }
             }
@@ -77,8 +80,7 @@ pipeline {
     post {
         success {
             script {
-                // 빌드 성공시, 'latest-success' 태그를 현재 이미지에 추가합니다.
-                sh "docker tag ${IMAGE_NAME_FE}:latest ${IMAGE_NAME_FE}:latest-success"
+                // 위 스테이지에서 이미지에 'latest-success' 태그를 추가했으므로 추가 작업이 필요 없습니다.
             }
         }
         failure {
