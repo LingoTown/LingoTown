@@ -18,7 +18,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center z-10" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>
       <div className="text-center z-10">
         <div>
-          <h1 className="text-7xl font-bold text-[#dddddd] font-['passero-one']">Explore New Language with</h1>
+          <h1 className="text-7xl font-bold text-[#dddddd] font-['passero-one']">Explore New Language with xxxxxxxx</h1>
           <h2 className="text-7xl mt-2 font-extrabold text-yellow-400 font-['passero-one']">LingoTown!</h2>
         </div>
       </div>
