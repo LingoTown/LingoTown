@@ -4,7 +4,7 @@ import KakaoCallback from "./component/KakaoCallback";
 import GoogleCallback from "./component/GoogleCallback";
 import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
-import Speech from './pages/SpeechTestPage';
+import { ThreeDemensionCanvas } from "./minsung/ThreeDemensionCanvas";
 
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <Route path="/kakao/callback" element={ <KakaoCallback/> }> </Route>
         <Route path="/google/callback" element={ <GoogleCallback/> }> </Route>
         <Route path="/main" element={ <MainPage/> }></Route>
-        <Route path="/explore" element={ <Speech/> }></Route>
+        <Route path="/explore" element={ <ThreeDemensionCanvas/> }></Route>
         <Route path="/*" element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>
