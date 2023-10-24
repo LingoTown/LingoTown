@@ -16,5 +16,4 @@ public class OpenAIMessageDto {
         this.role = role;
         this.content = content;
     }
-
 }

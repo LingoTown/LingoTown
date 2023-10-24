@@ -10,10 +10,13 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
+import com.lingotown.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Optional;
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final S3Service s3Service;
 
     //사용자 정보 조회
     public DataResponse readMemberInfo(Principal principal) {
@@ -52,6 +56,17 @@ public class MemberService {
 
         String nickname = editNicknameReqDto.getNickname();
         member.editNickname(nickname);
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+    }
+
+    //사용자 프로필 변경
+    @Transactional
+    public CommonResponse editProfile(Principal principal, MultipartFile file) throws IOException {
+        Long memberId = Long.parseLong(principal.getName());
+        Member member = getMemberEntity(memberId);
+
+        String fileUrl = s3Service.uploadFile(memberId, file);
+        member.editProfile(fileUrl);
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 

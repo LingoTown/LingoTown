@@ -19,6 +19,7 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
+import com.lingotown.openai.CacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TalkService {
 
+    private final CacheService cacheService;
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
     private final MemberNPCRepository memberNPCRepository;
@@ -125,7 +127,6 @@ public class TalkService {
         Talk talk = getTalkEntity(talkId);
 
         boolean isMember = createTalkDetailReqDto.isMember();
-
         String content = createTalkDetailReqDto.getContent();
         String talkFile = createTalkDetailReqDto.getTalkFile();
 
@@ -141,7 +142,7 @@ public class TalkService {
         return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
     }
 
-    //대화 종료 후 친밀도 변경과 리스폰 지역 설정
+    //대화 종료 후 친밀도 변경과 리스폰 지역 설정, 캐시 삭제
     @Transactional
     public CommonResponse increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
         Talk talk = getTalkEntity(increaseIntimacyReqDto.getTalkId());
@@ -152,6 +153,9 @@ public class TalkService {
         member.settingResponse(npc.getWorld());
 
         memberNPC.increaseIntimacy();
+
+        cacheService.deleteTalkData(increaseIntimacyReqDto.getTalkId());
+
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 
