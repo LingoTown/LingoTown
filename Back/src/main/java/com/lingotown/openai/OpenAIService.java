@@ -1,13 +1,20 @@
 package com.lingotown.openai;
 
 import com.google.gson.Gson;
+import com.lingotown.domain.npc.entity.NPC;
+import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
+import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.talk.service.TalkService;
+import com.lingotown.global.exception.CustomException;
+import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.openai.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -19,6 +26,7 @@ public class OpenAIService {
 
     private final CacheService cacheService;
     private final TalkService talkService;
+    private final TalkRepository talkRepository;
 
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
@@ -26,6 +34,7 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
+    @Transactional
     public OpenAIResDto askGPT(TalkReqDto talkReqDto) {
 
         Gson gson = new Gson();
@@ -38,17 +47,26 @@ public class OpenAIService {
         //요청을 담을 메세지 리스트
         List<OpenAIMessageDto> messages = new ArrayList<>();
 
-        //이전 대화가 없을 경우
+        //이전 대화를 담을 리스트
         List<OpenAIMessageDto> chatList = new ArrayList<>();
+
+        //이전 대화가 없을 경우
         if(!cacheService.hasCache(talkReqDto.getTalkId())) {
+
+            NPC npc = getNPCEntity(talkReqDto.getTalkId());
+
+            String npcJob = npc.getNpcRole().toString();
+            String npcAge = npc.getNpcAge().toString();
+            String language = npc.getWorld().getLanguage().toString();
+            String npcGender = npc.getGenderType().toString();
+
             String concept = "\n" +
                     "We are trying to do situational comedy. " +
-                    "You are now an employee at a traditional Korean restaurant." +
                     "The user is a beginner who has just started learning English. " +
                     "The user's English level is 3rd grade, and you need to respond appropriately. " +
                     "All you have to do is respond appropriately to what the user says. " +
-                    "And also, the answer sentence should be within 2 sentences." +
-                    "because the tokens must be within 25.";
+                    "And also, the complete answer sentence should be within 3 sentences. " +
+                    "Now, " + "you are " + npcJob + ", and " + "your age is " + npcAge;
 
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
@@ -104,16 +122,24 @@ public class OpenAIService {
         }
 
         //DB에 저장
-        CreateTalkDetailReqDto talkDetailUserReqDto
+        CreateTalkDetailReqDto userReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
-        talkService.createTalkDetail(talkDetailUserReqDto);
+        talkService.createTalkDetail(userReqDto);
 
-        CreateTalkDetailReqDto talkDetailSystemReqDto
+        CreateTalkDetailReqDto systemReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDtoUser.getContent(), "1234");
-        talkService.createTalkDetail(talkDetailSystemReqDto);
+        talkService.createTalkDetail(systemReqDto);
 
         return response.getBody();
     }
 
 
+    //대화를 하고 있는 NPC 정보 가져오기
+    private NPC getNPCEntity(Long talkId){
+        Talk talk = talkRepository.findById(talkId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
+
+        NPC npc = talk.getMemberNPC().getNpc();
+        return npc;
+    }
 }

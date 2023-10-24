@@ -22,6 +22,7 @@ public class NPCService {
 
     private final NPCRepository npcRepository;
 
+    //NPC가 가지고 있는 토픽 가져오기
     public DataResponse<List<ReadTopicResDto>> readNPCTopicList(Long npcId){
         NPC npc = getNPCEntity(npcId);
         List<Topic> topicList = npc.getTopicList();

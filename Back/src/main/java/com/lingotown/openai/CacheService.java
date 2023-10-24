@@ -1,7 +1,6 @@
 package com.lingotown.openai;
 
 import com.lingotown.domain.talk.entity.Talk;
-import com.lingotown.domain.talk.entity.TalkDetail;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -9,6 +8,7 @@ import com.lingotown.openai.dto.OpenAIMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "talkId")
 @RequiredArgsConstructor
 public class CacheService {
 
@@ -37,6 +38,12 @@ public class CacheService {
         if (chatList != null) previousChatDataList.addAll(chatList);
 
         return previousChatDataList;
+    }
+
+    //캐시 삭제하기
+    public void deleteTalkData(Long talkId) {
+        Cache cache = cacheManager.getCache("talkId");
+        cache.evict(talkId);
     }
 
     //캐시가 존재하는지 확인
