@@ -32,7 +32,7 @@ pipeline {
             steps{
                 script {
                     // 'latest-success' 이미지 ID를 가져옵니다. 만약 없다면 빈 문자열이 반환됩니다.
-                    LATEST_SUCCESS_IMAGE_ID = sh(script: "docker images ${IMAGE_NAME_FE}:latest-success -q", returnStdout: true).trim()
+                    LATEST_SUCCESS_IMAGE_ID = sh(script: "docker images ${IMAGE_NAME_FE}:latest-success -q", returnStatus: true).trim()
 
                     // 가져온 'latest-success' 이미지 ID를 로깅합니다.
                     echo "Latest successful image ID: '${LATEST_SUCCESS_IMAGE_ID}'"
