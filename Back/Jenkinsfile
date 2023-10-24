@@ -15,27 +15,48 @@ pipeline {
         // 설정파일 참조
         stage("Copy Setting File") {
             steps {
-                sh """
-                    if [ ! -d "${PROJECT_DIR_BE}/src/main/resources" ]; then
-                        mkdir -p "${PROJECT_DIR_BE}/src/main/resources"
-                    fi
+                script {
+                    try {
+                        sh """
+                            if [ ! -d "${PROJECT_DIR_BE}/src/main/resources" ]; then
+                                mkdir -p "${PROJECT_DIR_BE}/src/main/resources"
+                            fi
 
-                    cp ${APPLICATION_YML_PATH}/* ${PROJECT_DIR_BE}/src/main/resources
-                    """
+                            cp ${APPLICATION_YML_PATH}/* ${PROJECT_DIR_BE}/src/main/resources
+                        """
+                    } catch (Exception e) {
+                        // 설정 파일 복사 중 오류가 발생하면, 파이프라인 실행을 중단합니다.
+                        echo "Failed to copy setting files, stopping the pipeline: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+
+                        // 현재 스테이지를 벗어나고, 파이프라인 실행을 중지합니다.
+                        return
+                    }
+                }
             }
         }
 
         // 백엔드 프로젝트 빌드
         stage("Build") {
-            // build
-            steps{
-                sh """
-                cd ${PROJECT_DIR_BE}
-                chmod 777 ./gradlew
-                ls -al
-                pwd
-                ./gradlew clean build
-                """
+            steps {
+                script {
+                    try {
+                        sh """
+                            cd ${PROJECT_DIR_BE}
+                            chmod 777 ./gradlew
+                            ls -al
+                            pwd
+                            ./gradlew clean build
+                        """
+                    } catch (Exception e) {
+                        // 빌드 중 오류가 발생하면, 파이프라인 실행을 중단합니다.
+                        echo "Build failed, stopping the pipeline: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE'
+
+                        // 현재 스테이지를 벗어나고, 파이프라인 실행을 중지합니다.
+                        return
+                    }
+                }
             }
         }
 
