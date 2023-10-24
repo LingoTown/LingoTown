@@ -1,10 +1,12 @@
 package com.lingotown.domain.world.dto.response;
 
-import com.lingotown.domain.npc.entity.NPC;
+import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,17 +21,6 @@ public class ReadNPCInfoResDto {
     private String npcAge;
     private String firstMessage;
     private String voice;
+    private List<ReadTopicResDto> topicList;
 
-    public static ReadNPCInfoResDto of(NPC npc){
-        return ReadNPCInfoResDto
-                .builder()
-                .npcId(npc.getId())
-                .name(npc.getName())
-                .npcRole(npc.getNpcRole().toString())
-                .genderType(npc.getGenderType().toString())
-                .npcAge(npc.getNpcAge().toString())
-                .firstMessage(npc.getFirstMessage())
-                .voice(npc.getVoice())
-                .build();
-    }
 }

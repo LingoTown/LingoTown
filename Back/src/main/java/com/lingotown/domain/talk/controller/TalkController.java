@@ -20,10 +20,6 @@ public class TalkController {
 
     private final TalkService talkService;
 
-    @PostMapping()
-    public CommonResponse createTalkDetail(@RequestBody CreateTalkDetailReqDto createTalkDetailReqDto){
-        return talkService.createTalkDetail(createTalkDetailReqDto);
-    }
 
     @GetMapping("/list/{memberNPCId}")
     public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("memberNPCId") Long memberNPCId){
