@@ -37,11 +37,6 @@ pipeline {
                     // 가져온 'latest-success' 이미지 ID를 로깅합니다.
                     echo "Latest successful image ID: '${LATEST_SUCCESS_IMAGE_ID}'"
 
-                    def imageIdsToDelete = sh(script: "docker images ${IMAGE_NAME_FE} -q | grep -v ${LATEST_SUCCESS_IMAGE_ID}", returnStdout: true).trim()
-                    
-                    // 삭제 예정인 이미지 ID 목록을 로깅합니다.
-                    echo "Image IDs to delete: '${imageIdsToDelete}'"
-
                     if (imageIdsToDelete) {
                         // 'latest-success' 태그가 없는 이미지만 삭제합니다.
                         echo "Deleting images..."
