@@ -79,9 +79,7 @@ pipeline {
 
     post {
         success {
-            script {
-                // 위 스테이지에서 이미지에 'latest-success' 태그를 추가했으므로 추가 작업이 필요 없습니다.
-            }
+            // 위 스테이지에서 이미지에 'latest-success' 태그를 추가했으므로 추가 작업이 필요 없습니다.
         }
         failure {
             script {
