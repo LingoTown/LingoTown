@@ -1,46 +1,56 @@
 pipeline {
     agent any
-    stages {
-        stage("Set Variable") {
-            steps {
-                script {
-                    IMAGE_NAME_FE = "lingotown_front_image"
-                    CONTAINER_NAME_FE = "LingoTown_Front_Dev"
-                    APPLICATION_ENV_PATH = "/usr/react"
-                    PROJECT_DIR_FE = "Front"
-                }
-            }
-        }
 
+    // 전역 변수 설정
+    environment {
+        IMAGE_NAME_FE = "lingotown_front_image"
+        CONTAINER_NAME_FE = "LingoTown_Front_Dev"
+        APPLICATION_ENV_PATH = "/usr/react"
+        PROJECT_DIR_FE = "Front"
+    }
+
+    stages {
         // 설정파일 참조
         stage("Copy Setting File") {
             steps {
-                sh "cp ${APPLICATION_ENV_PATH}/.env ${PROJECT_DIR_FE}"
+                script {
+                    try {
+                        sh "cp ${env.APPLICATION_ENV_PATH}/.env ${env.PROJECT_DIR_FE}"
+                    } catch (Exception e) {
+                        // 설정 파일 복사 중 오류가 발생하면, 파이프라인 실행을 중단합니다.
+                        echo "Failed to copy setting files, stopping the pipeline: ${e.getMessage()}"
+                        error "Stopping the pipeline because the setting file copying stage failed."
+                    }
+                }
             }
         }
 
         // 컨테이너 클리닝
         stage("Docker Container Cleaning") {
             steps{
-                sh "docker ps -q -f name=${CONTAINER_NAME_FE} | xargs --no-run-if-empty docker container stop"    
-                sh "docker container ls -a -q -f name=${CONTAINER_NAME_FE} | xargs --no-run-if-empty docker rm"
+                sh "docker ps -q -f name=${env.CONTAINER_NAME_FE} | xargs --no-run-if-empty docker container stop"    
+                sh "docker container ls -a -q -f name=${env.CONTAINER_NAME_FE} | xargs --no-run-if-empty docker rm"
             }
         }
 
         // 이미지 삭제
         stage("Docker Image Cleaning") {
             steps{
-                sh "docker images ${IMAGE_NAME_FE} -q | xargs -r docker rmi -f"
+                sh "docker images ${env.IMAGE_NAME_FE} -q | xargs -r docker rmi -f"
             }
         }
         
         // 도커 이미지 빌드
         stage("Docker Image Build") {
             steps {
-                dir("${PROJECT_DIR_FE}") {
-                    script {
-                        sh "docker build --no-cache -t ${IMAGE_NAME_FE} ."
+                try {
+                    dir("${env.PROJECT_DIR_FE}") {
+                        sh "docker build --no-cache -t ${env.IMAGE_NAME_FE}:latest -t ${env.IMAGE_NAME_FE}:${BUILD_NUMBER} ."
                     }
+                } catch (Exception e) {
+                    // 빌드를 중지하고 오류 상태로 설정합니다.
+                    echo "Docker build failed: ${e.getMessage()}"
+                    error "Stopping build due to errors"
                 }
             }
         }
@@ -49,7 +59,65 @@ pipeline {
         stage("Docker Container Run") {
             steps {
                 script {
-                    sh "docker run -d -p 3001:3000 --name ${CONTAINER_NAME_FE} ${IMAGE_NAME_FE}"
+                    // 최신 빌드 이미지를 사용하여 컨테이너 실행 (Rollback Stage와 구분)
+                    sh "docker run -d -p 3001:3000 --name ${env.CONTAINER_NAME_FE} ${env.IMAGE_NAME_FE}:${BUILD_NUMBER}"
+                }
+            }
+        }
+
+        // 롤백 스테이지 (선택적)
+        stage('Rollback on Failure') {
+            when {
+                // 이전 단계들 중에서 실패한 경우에만 이 스테이지 실행
+                expression { currentBuild.currentResult == 'FAILURE' }
+            }
+            steps {
+                script {
+                    // 마지막 성공한 빌드에서 artifact 다운로드
+                    def lastSuccessfulBuild = currentBuild.rawBuild.getPreviousSuccessfulBuild()
+
+                    if (lastSuccessfulBuild != null) {
+                        def artifact = lastSuccessfulBuild.getArtifactManager().root().child('successful_tag.txt')
+                        def tagInfo = artifact.readToString()  // 파일 내용 읽기
+
+                        echo "Rolling back to previous stable build: ${tagInfo}..."
+                        // 태그 정보를 사용하여 이전 버전의 이미지로 컨테이너 시작
+                        sh "docker run -d -p 3001:3000 --name ${env.CONTAINER_NAME_FE}_rollback ${tagInfo}"
+                    } else {
+                        echo "No successful build to rollback to!"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // 모든 경우에 실행되는 후처리 작업
+            echo 'This will always run'
+        }
+        success {
+            // 빌드가 성공적으로 완료된 경우에만 실행
+            script {
+                // 'successful_tag.txt'라는 파일에 성공한 빌드의 태그 정보를 저장합니다.
+                writeFile file: 'successful_tag.txt', text: "${env.IMAGE_NAME_FE}:${BUILD_NUMBER}"
+                archiveArtifacts artifacts: 'successful_tag.txt'  // 이 파일을 Jenkins artifact로 보관합니다.
+            }
+        }
+        failure {
+            // 빌드가 실패한 경우 롤백 메커니즘 실행
+            script {
+                // 마지막 성공한 빌드에서 artifact 다운로드
+                def lastSuccessfulBuild = currentBuild.rawBuild.getPreviousSuccessfulBuild()
+                
+                if (lastSuccessfulBuild != null) {
+                    def artifact = lastSuccessfulBuild.getArtifactManager().root().child('successful_tag.txt')
+                    def tagInfo = artifact.readToString()
+
+                    echo "Rolling back to previous stable build: ${tagInfo}..."
+                    sh "docker run -d -p 3001:3000 --name ${env.CONTAINER_NAME_FE}_rollback ${tagInfo}"
+                } else {
+                    echo "No successful build to rollback to!"
                 }
             }
         }
