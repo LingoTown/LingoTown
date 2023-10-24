@@ -31,7 +31,7 @@ pipeline {
         stage("Docker Image Cleaning") {
             steps{
                 script {
-                    sh "docker rmi -f ${IMAGE_NAME_FE}:latest"
+                    sh "docker rmi -f ${IMAGE_NAME_FE}:latest | true"
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_FE}:latest ."
 
-                        // 기존 latest-success 태그 삭제
+                        // 빌드 성공 시 기존 latest-success 태그 삭제
                         sh "docker rmi ${IMAGE_NAME_FE}:latest-success || true"
 
                         // 빌드 성공 시, 이미지에 latest-success 태그 추가
@@ -57,6 +57,7 @@ pipeline {
         stage("Docker Container Run") {
             steps {
                 script {
+                    // 이전 스테이지에서 빌드 성공 했을 때로 새로 등록한 latest-success 태그의 이미지 사용
                     sh "docker run -d -p 3001:3000 --name ${CONTAINER_NAME_FE} ${IMAGE_NAME_FE}:latest-success"
                 }
             }
