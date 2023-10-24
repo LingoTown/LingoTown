@@ -104,12 +104,15 @@ pipeline {
 
                 // 이전 성공 빌드들로부터 태그 정보를 가져옵니다.
                 def build = currentBuild
+
                 while (build != null && recentSuccessfulTags.size() < maxImagesToKeep) {
                     def artifact = build.getArtifactManager().root().child('successful_tag.txt')
+
                     if (artifact.exists()) {
                         def tagInfo = artifact.readToString()
                         recentSuccessfulTags.add(tagInfo)
                     }
+
                     build = build.getPreviousSuccessfulBuild()
                 }
 
@@ -127,21 +130,33 @@ pipeline {
         failure {
             // 빌드가 실패한 경우 롤백 메커니즘 실행
             script {
-                // 현재 빌드에서 생성된 이미지를 삭제합니다. 이 명령은 빌드 실패 시에만 실행됩니다.
-                sh "docker rmi ${env.IMAGE_NAME_FE}:${BUILD_NUMBER} || true"  // 실패해도 빌드 프로세스를 계속합니다.
+                // 현재 빌드가 실패한 경우 이전 성공한 빌드에서 아티팩트를 가져오기
+                if (currentBuild.currentResult == 'FAILURE') {
+                    echo 'Starting Rollback Process...'
 
+                    // 이전 성공한 빌드 번호 가져오기
+                    def lastSuccessfulBuildNumber = currentBuild.getPreviousSuccessfulBuild()?.number
 
-                // 마지막 성공한 빌드에서 artifact 다운로드
-                def lastSuccessfulBuild = currentBuild.rawBuild.getPreviousSuccessfulBuild()
-                
-                if (lastSuccessfulBuild != null) {
-                    def artifact = lastSuccessfulBuild.getArtifactManager().root().child('successful_tag.txt')
-                    def tagInfo = artifact.readToString()
+                    if (lastSuccessfulBuildNumber != null) {
+                        // "Copy Artifact" 플러그인 기능 사용
+                        step([
+                            $class: 'CopyArtifact',
+                            projectName: "${env.JOB_NAME}", // 현재 프로젝트 이름 사용
+                            filter: 'successful_tag.txt', // 가져올 파일 지정
+                            target: '', // 현재 작업공간으로 파일 복사
+                            fingerprintArtifacts: true, // 아티팩트 지문 생성 옵션
+                            selector: specific("${lastSuccessfulBuildNumber}") // 특정 빌드 번호에서 아티팩트 선택
+                        ])
 
-                    echo "Rolling back to previous stable build: ${tagInfo}..."
-                    sh "docker run -d -p 3001:3000 --name ${env.CONTAINER_NAME_FE}_rollback ${tagInfo}"
-                } else {
-                    echo "No successful build to rollback to!"
+                        // 파일 읽기 및 태그 정보 추출
+                        def tagInfo = readFile('successful_tag.txt').trim()
+                        echo "Rolling back to previous stable build: ${tagInfo}..."
+
+                        // 이전 성공한 이미지 태그로 롤백 프로세스 수행
+                        sh "docker run -d -p 3001:3000 --name ${env.CONTAINER_NAME_FE}_rollback ${tagInfo}"
+                    } else {
+                        echo "No successful build to rollback to!"
+                    }
                 }
             }
         }
