@@ -1,5 +1,8 @@
-석다영신산하지민성이승현유지연
-function LoginPage() {
+import { useNavigate } from 'react-router-dom';
+
+const LoginPage = () => {
+
+  const navigate = useNavigate();
 
   const kakaoLogin = () => {
     window.location.href = import.meta.env.VITE_KAKAO_LOGIN;
@@ -28,7 +31,7 @@ function LoginPage() {
           src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/googlebtn.png' onClick={() => { googleLogin() }}/>
         <img 
           className="h-10 rounded mt-4 cursor-pointer" 
-          src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/exp.png' onClick={() => { alert("구현중 입니다.") }}/>
+          src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/exp.png' onClick={() => { navigate("/explore") }}/>
       </div>
     </div>
   </>
