@@ -31,9 +31,9 @@ pipeline {
         stage("Docker Image Cleaning") {
             steps{
                 script {
-                    sh "docker ps -a"
+                    sh "docker images"
                     sh "docker rmi -f ${IMAGE_NAME_FE}:latest"
-                    sh "docker ps -a"
+                    sh "docker images"
                 }
             }
         }
@@ -44,13 +44,13 @@ pipeline {
                 dir("${PROJECT_DIR_FE}") {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_FE}:latest ."
-                        sh "docker ps -a"
+                        sh "docker images"
                         // 기존 latest-success 태그 삭제
                         sh "docker rmi ${IMAGE_NAME_FE}:latest-success || true"
-                        sh "docker ps -a"
+                        sh "docker images"
                         // 빌드 성공 시, 이미지에 latest-success 태그 추가
                         sh "docker tag ${IMAGE_NAME_FE}:latest ${IMAGE_NAME_FE}:latest-success"
-                        sh "docker ps -a"
+                        sh "docker images"
                     }
                 }
             }
