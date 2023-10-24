@@ -19,7 +19,7 @@ const LoginPage = () => {
       <div className="text-center z-10">
         <div>
           <h1 className="text-7xl font-bold text-[#dddddd] font-['passero-one']">Explore New Language with</h1>
-          <h2 className="text-7xl mt-2 font-extrabold text-yellow-400 font-['passero-one']">LingoTown!</h2>
+          <h2 className="text-7xl mt-2 font-extrabold text-yellow-400 font-['passero-one']">LingoTown!xxxxxxxxxxx</h2>
         </div>
       </div>
       <div className="z-10 mt-7">
