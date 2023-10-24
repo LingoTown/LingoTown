@@ -37,12 +37,7 @@ pipeline {
                     // 가져온 'latest-success' 이미지 ID를 로깅합니다.
                     echo "Latest successful image ID: '${LATEST_SUCCESS_IMAGE_ID}'"
 
-                    def imageIdsToDelete = sh(script: "docker images ${IMAGE_NAME_FE} -q | grep -v ${LATEST_SUCCESS_IMAGE_ID}", returnStdout: true).trim()
-            
-            // 삭제 예정인 이미지 ID 목록을 로깅합니다.
-            echo "Image IDs to delete: '${imageIdsToDelete}'"
-
-                    if (imageIdsToDelete) {
+                    if (LATEST_SUCCESS_IMAGE_ID != '') {
                         // 'latest-success' 태그가 없는 이미지만 삭제합니다.
                         echo "Deleting images..."
                         sh "docker images ${IMAGE_NAME_FE} -q | grep -v ${LATEST_SUCCESS_IMAGE_ID} | xargs docker rmi -f"
@@ -60,6 +55,9 @@ pipeline {
                     script {
                         sh "docker build --no-cache -t ${IMAGE_NAME_FE}:latest ."
 
+                        // 기존 latest-success 태그 삭제
+                        sh "docker rmi ${IMAGE_NAME_FE}:latest-success || true"
+
                         // 빌드 성공 시, 이미지에 latest-success 태그 추가
                         sh "docker tag ${IMAGE_NAME_FE}:latest ${IMAGE_NAME_FE}:latest-success"
                     }
@@ -71,7 +69,7 @@ pipeline {
         stage("Docker Container Run") {
             steps {
                 script {
-                    sh "docker run -d -p 3001:3000 --name ${CONTAINER_NAME_FE} ${IMAGE_NAME_FE}:latest"
+                    sh "docker run -d -p 3001:3000 --name ${CONTAINER_NAME_FE} ${IMAGE_NAME_FE}:latest-success"
                 }
             }
         }
