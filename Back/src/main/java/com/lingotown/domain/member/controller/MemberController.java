@@ -33,5 +33,5 @@ public class MemberController {
         return memberService.editNickname(principal, editNicknameReqDto);
     }
 
-    일부러 에러내기!!!!!!!!!!
+//    일부러 에러내기!!!!!!!!!!
 }
