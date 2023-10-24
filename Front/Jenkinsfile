@@ -80,13 +80,13 @@ pipeline {
                 // 'latest-success' 이미지의 존재 여부를 확인합니다.
                 LATEST_SUCCESS_IMAGE_ID = sh(script: "docker images ${IMAGE_NAME_FE}:latest-success -q", returnStdout: true).trim()
                 
-                // RollBack - 이전에 성공한 이미지로 새 컨테이너를 시작하지만, 컨테이너 이름은 동일하게 유지합니다.
+                // RollBack 성공 - 이전에 성공한 이미지로 새 컨테이너를 시작하지만, 컨테이너 이름은 동일하게 유지합니다.
                 if (LATEST_SUCCESS_IMAGE_ID) 
                     sh "docker run -d -p 3001:3000 --name ${CONTAINER_NAME_FE} ${IMAGE_NAME_FE}:latest-success"
 
                 // RollBack 실패
                 else 
-                    echo "No available image for rollback. Please check the previous successful build and its image."
+                    echo "RollBack Fail. No available image for rollback. Please check the previous successful build and its image."
             }
         }
     }
