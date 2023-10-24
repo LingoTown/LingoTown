@@ -30,6 +30,22 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    /* 2023.10.17 */
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //gpt
+    implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
+
 }
 
 tasks.named('test') {
