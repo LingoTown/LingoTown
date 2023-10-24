@@ -69,29 +69,30 @@ pipeline {
         success {
             // 빌드가 성공적으로 완료된 경우에만 실행
             script {
-                // 'successful_tag.txt'라는 파일에 성공한 빌드의 태그 정보를 저장합니다.
-                writeFile file: 'successful_tag.txt', text: "${env.IMAGE_NAME_FE}:${BUILD_NUMBER}"
+                // 현재 빌드의 태그 정보를 파일로 저장합니다.
+                def tagName = "${env.IMAGE_NAME_FE}:${env.BUILD_NUMBER}"
+                writeFile file: 'successful_tag.txt', text: tagName
                 archiveArtifacts artifacts: 'successful_tag.txt'  // 이 파일을 Jenkins artifact로 보관합니다.
-            
+
                 // 최근 성공한 이미지 태그 목록을 유지하기 위한 로직
-                def recentSuccessfulTags = []  // 성공한 태그들을 저장할 리스트
+                def recentSuccessfulTags = []
                 def maxImagesToKeep = 5  // 유지할 이미지 수
 
-                // 이전 성공 빌드들로부터 태그 정보를 가져옵니다.
-                def build = currentBuild
+                // 이전 빌드에서 아티팩트를 검색합니다.
+                def currentBuildNumber = env.BUILD_NUMBER.toInteger()
+                for (int i = 1; i <= maxImagesToKeep; i++) {
+                    def previousBuildNumber = currentBuildNumber - i
+                    def job = Jenkins.instance.getItemByFullName(env.JOB_NAME)
 
-                while (build != null && recentSuccessfulTags.size() < maxImagesToKeep) {
-                    
-                    // 아티팩트 파일의 경로를 직접 구성합니다.
-                    def artifactPath = build.getArtifactsDir().getAbsolutePath() + '/successful_tag.txt'
-                    def artifactFile = new File(artifactPath)
-
-                    if (artifactFile.exists()) {
-                        def tagInfo = artifactFile.text.trim()
-                        recentSuccessfulTags.add(tagInfo)
+                    // 이전 빌드가 존재하는지 확인합니다.
+                    def previousBuild = job.getBuildByNumber(previousBuildNumber)
+                    if (previousBuild != null && previousBuild.result == Result.SUCCESS) {
+                        def artifact = previousBuild.artifacts.find { it.fileName == 'successful_tag.txt' }
+                        if (artifact != null) {
+                            def tagInfo = artifact.file.text.trim()
+                            recentSuccessfulTags.add(tagInfo)
+                        }
                     }
-
-                    build = build.getPreviousSuccessfulBuild()
                 }
 
                 // 전체 이미지 리스트를 가져옵니다.
