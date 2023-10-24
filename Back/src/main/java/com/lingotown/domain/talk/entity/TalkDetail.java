@@ -1,11 +1,10 @@
 package com.lingotown.domain.talk.entity;
 
-import com.lingotown.global.baseTimeEntity.BaseTimeEntity;
+import com.lingotown.global.basetimeentity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
