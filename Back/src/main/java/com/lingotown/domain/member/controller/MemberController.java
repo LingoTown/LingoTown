@@ -32,6 +32,4 @@ public class MemberController {
     public CommonResponse editNickname(Principal principal, @RequestBody EditNicknameReqDto editNicknameReqDto) {
         return memberService.editNickname(principal, editNicknameReqDto);
     }
-
-    일부러 에러내기!!!!!!!!!!
 }
