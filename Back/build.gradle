@@ -46,6 +46,10 @@ dependencies {
     //gpt
     implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
 
+    /* 2023.10.24 : 배포 모니터링 */
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
 }
 
 tasks.named('test') {
