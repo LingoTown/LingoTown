@@ -33,7 +33,10 @@ pipeline {
                 script {
                     // 'latest-success' 이미지 ID를 가져옵니다. 만약 없다면 빈 문자열이 반환됩니다.
                     LATEST_SUCCESS_IMAGE_ID = sh(script: "docker images ${IMAGE_NAME_FE}:latest-success -q", returnStdout: true).trim()
-                    if (LATEST_SUCCESS_IMAGE_ID) {
+                    
+                    def imageIdsToDelete = sh(script: "docker images ${IMAGE_NAME_FE} -q | grep -v ${LATEST_SUCCESS_IMAGE_ID}", returnStdout: true).trim()
+                    
+                    if (imageIdsToDelete) {
                         // 'latest-success' 태그가 없는 이미지만 삭제합니다.
                         sh "docker images ${IMAGE_NAME_FE} -q | grep -v ${LATEST_SUCCESS_IMAGE_ID} | xargs docker rmi -f"
                     } else {
