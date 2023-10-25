@@ -2,6 +2,8 @@ package com.lingotown.global.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.lingotown.global.exception.CustomException;
+import com.lingotown.global.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ public class S3Service {
     public String getExtension(MultipartFile multipartFile) {
         String fileName = multipartFile.getOriginalFilename();
         String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        if(extension == null) throw new CustomException(ExceptionStatus.DATA_NOT_FOUND);
         return extension;
     }
 }

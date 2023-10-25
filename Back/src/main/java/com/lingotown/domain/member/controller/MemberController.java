@@ -1,6 +1,7 @@
 package com.lingotown.domain.member.controller;
 
 import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
+import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberService;
 import com.lingotown.global.response.CommonResponse;
@@ -35,7 +36,7 @@ public class MemberController {
     }
 
     @PutMapping(value = "/profile",  consumes = {"multipart/form-data"})
-    public CommonResponse editProfile(Principal principal, @RequestPart(value = "profile") MultipartFile file) throws IOException {
+    public DataResponse<EditProfileResDto> editProfile(Principal principal, @RequestPart(value = "profile") MultipartFile file) throws IOException {
         return memberService.editProfile(principal, file);
     }
 

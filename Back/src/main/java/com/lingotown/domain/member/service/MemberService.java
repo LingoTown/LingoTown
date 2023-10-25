@@ -1,6 +1,7 @@
 package com.lingotown.domain.member.service;
 
 import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
+import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
@@ -61,13 +62,18 @@ public class MemberService {
 
     //사용자 프로필 변경
     @Transactional
-    public CommonResponse editProfile(Principal principal, MultipartFile file) throws IOException {
+    public DataResponse<EditProfileResDto> editProfile(Principal principal, MultipartFile file) throws IOException {
         Long memberId = Long.parseLong(principal.getName());
         Member member = getMemberEntity(memberId);
 
         String fileUrl = s3Service.uploadFile(memberId, file, false);
         member.editProfile(fileUrl);
-        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+
+        EditProfileResDto profileResDto = EditProfileResDto
+                .builder()
+                .profile(fileUrl)
+                .build();
+        return new DataResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), profileResDto);
     }
 
     @Transactional
