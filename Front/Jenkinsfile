@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage("Set Variable") {
             steps {
@@ -16,6 +17,27 @@ pipeline {
         stage("Copy Setting File") {
             steps {
                 sh "cp ${APPLICATION_ENV_PATH}/.env ${PROJECT_DIR_FE}"
+                sh "cp ${APPLICATION_ENV_PATH}/sonar-project.properties ${PROJECT_DIR_FE}"
+            }
+        }
+
+        // 소스 코드 체크아웃
+        stage('SCM') {
+            steps {
+                checkout scm 
+            }
+        }
+
+        // SonarQube 분석
+        stage('SonarQube Analysis') {  
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
+
+                    withSonarQubeEnv() {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
             }
         }
 

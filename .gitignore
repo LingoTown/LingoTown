@@ -9,6 +9,8 @@ coverage
 # production
 build
 
+# Front Sonarqube Setting File
+sonar-project.properties
 
 # misc
 .DS_Store
