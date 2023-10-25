@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
+import com.lingotown.domain.talk.dto.response.CreateTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.talk.service.TalkService;
@@ -16,7 +17,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class OpenAIService {
     private String API_KEY;
 
     @Transactional
-    public OpenAIResDto askGPT(TalkReqDto talkReqDto) {
+    public OpenAIResDto askGPT(TalkReqDto talkReqDto, MultipartFile file) throws IOException {
 
         Gson gson = new Gson();
         RestTemplate restTemplate = new RestTemplate();
@@ -119,18 +122,22 @@ public class OpenAIService {
         chatList.addAll(messages);
         chatList.add(responseDtoUser);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
-        for(OpenAIMessageDto dto : chatList){
-            System.out.println(dto.getRole() + ", " +dto.getContent());
-        }
 
         //DB에 저장
         CreateTalkDetailReqDto userReqDto
-                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
+                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), file);
         talkService.createTalkDetail(userReqDto);
 
         CreateTalkDetailReqDto systemReqDto
-                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDtoUser.getContent(), "1234");
+                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDtoUser.getContent(), file);
+        CreateTalkDetailResDto systemDetailResDto = talkService.createTalkDetail(systemReqDto);
+
         talkService.createTalkDetail(systemReqDto);
+
+//        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
+//                .builder()
+//                .responseMessage()
+//                .build();
 
         return response.getBody();
     }
