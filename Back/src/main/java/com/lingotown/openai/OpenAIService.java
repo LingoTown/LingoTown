@@ -62,11 +62,11 @@ public class OpenAIService {
 
             String concept = "\n" +
                     "We are trying to do situational comedy. " +
-                    "The user is a beginner who has just started learning English. " +
-                    "The user's English level is 3rd grade, and you need to respond appropriately. " +
+                    "The user is a beginner who has just started learning " + language + ". " +
+                    "The user's " + language +" level is Beginner, and " +
                     "All you have to do is respond appropriately to what the user says. " +
                     "And also, the complete answer sentence should be within 3 sentences. " +
-                    "Now, " + "you are " + npcJob + ", and " + "your age is " + npcAge;
+                    "Now, " + "you are " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge;
 
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto

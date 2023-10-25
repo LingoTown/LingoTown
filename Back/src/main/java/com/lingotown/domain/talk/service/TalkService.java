@@ -44,7 +44,7 @@ public class TalkService {
 
         Long memberId = memberNPC.getMember().getId();
         Long logInMemberId = Long.valueOf(principal.getName());
-        if(memberId!=logInMemberId) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
+        if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         List<ReadTalkListResDto> talkListResDtoList = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class TalkService {
 
         Long memberId = talk.getMemberNPC().getMember().getId();
         Long logInMemberId = Long.valueOf(principal.getName());
-        if(memberId!=logInMemberId) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
+        if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         List<ReadTalkDetailResDto> talkDetailResDtoList = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class TalkService {
 
         Long memberId = talk.getMemberNPC().getMember().getId();
         Long logInMemberId = Long.valueOf(principal.getName());
-        if(memberId!=logInMemberId) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
+        if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         talk.deleteTalkHistory();
 

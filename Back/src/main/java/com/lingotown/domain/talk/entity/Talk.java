@@ -36,7 +36,6 @@ public class Talk extends BaseTimeEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-
     @Builder
     public Talk(MemberNPC memberNPC){
         this.memberNPC = memberNPC;
