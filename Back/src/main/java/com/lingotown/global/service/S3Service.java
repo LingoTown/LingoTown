@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,10 +19,13 @@ public class S3Service {
     private final AmazonS3 amazonS3;
 
 
-    public String uploadFile(Long userId, MultipartFile multipartFile) throws IOException {
+    public String uploadFile(Long userId, MultipartFile multipartFile, Boolean isAudio) throws IOException {
 
         String extension = getExtension(multipartFile);
-        String s3FileName = userId.toString() +"."+ extension;
+
+        String s3FileName = "";
+        if(isAudio) s3FileName = UUID.randomUUID() + "_" + multipartFile.getName();
+        else s3FileName = userId.toString() +"."+ extension;
 
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentType(multipartFile.getContentType());
