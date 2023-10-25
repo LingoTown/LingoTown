@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CustomException extends RuntimeException{
 
-    ExceptionStatus exceptionStatus;
+    final ExceptionStatus exceptionStatus;
 }

@@ -3,7 +3,6 @@ package com.lingotown.domain.npc.controller;
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import com.lingotown.domain.npc.service.NPCService;
 import com.lingotown.global.response.DataResponse;
-import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

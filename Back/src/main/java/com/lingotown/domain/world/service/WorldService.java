@@ -72,10 +72,8 @@ public class WorldService {
     }
 
     private World getWorldEntity(Long worldId){
-        World world = worldRepository.findById(worldId)
+        return worldRepository.findById(worldId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.WORLD_NOT_FOUND));
-
-        return world;
     }
 
 }

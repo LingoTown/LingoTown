@@ -19,7 +19,7 @@ public class S3Service {
     private final AmazonS3 amazonS3;
 
 
-    public String uploadFile(Long userId, MultipartFile multipartFile, Boolean isAudio) throws IOException {
+    public String uploadFile(Long userId, MultipartFile multipartFile, boolean isAudio) throws IOException {
 
         String extension = getExtension(multipartFile);
 

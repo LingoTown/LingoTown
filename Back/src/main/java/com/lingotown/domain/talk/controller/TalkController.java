@@ -1,7 +1,6 @@
 package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.membernpc.dto.response.ReadTalkListResDto;
-import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.service.TalkService;
