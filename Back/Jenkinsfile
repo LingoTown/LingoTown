@@ -61,7 +61,7 @@ pipeline {
                     // 젠킨스에서 설정한 Sonarqube 서버 이름
                     withSonarQubeEnv('SonarQube') {
                         dir("${PROJECT_DIR_BE}") {
-                            sh "./gradlew sonarqube"
+                            sh "./gradlew sonar"
                         }
                     }
                 }
