@@ -95,9 +95,7 @@ public class MemberService {
     }
 
     private Member getMemberEntity(Long memberId){
-        Member member = memberRepository.findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
-
-        return member;
     }
 }
