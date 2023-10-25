@@ -65,7 +65,9 @@ public class OpenAIService {
                     "The user is a beginner who has just started learning " + language + ". " +
                     "The user's " + language +" level is Beginner, and " +
                     "All you have to do is respond appropriately to what the user says. " +
-                    "And also, the complete answer sentence should be within 3 sentences. " +
+                    "The level of difficulty in responding should be relaxed so that users can understand it. " +
+                    "Lower the level of difficulty in responding " +
+                    "And also, Please respond in complete sentences without exceeding max_token. " +
                     "Now, " + "you are " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge;
 
             // AI 역할부여

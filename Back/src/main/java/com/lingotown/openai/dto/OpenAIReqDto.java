@@ -9,7 +9,7 @@ import java.util.List;
 public class OpenAIReqDto {
 
     private final String model = "gpt-3.5-turbo";
-    private final int max_tokens = 25;
+    private final int max_tokens = 40;
     private final float temperature = 0.2f;
     private List<OpenAIMessageDto> messages;
 
