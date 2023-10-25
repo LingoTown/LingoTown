@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "nodejs_installation_name"
+    }
+
     stages {
         stage("Set Variable") {
             steps {
