@@ -65,7 +65,7 @@ public class MemberService {
         Long memberId = Long.parseLong(principal.getName());
         Member member = getMemberEntity(memberId);
 
-        String fileUrl = s3Service.uploadFile(memberId, file);
+        String fileUrl = s3Service.uploadFile(memberId, file, false);
         member.editProfile(fileUrl);
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }

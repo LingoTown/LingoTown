@@ -5,6 +5,7 @@ import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
 import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
+
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -192,7 +193,7 @@ public class SocialLoginService {
             Member user = memberService.enterMember(userInfo, loginType);
         }
 
-        Member member = memberRepository.findByLoginIdAndLoginType(userInfo.get("loginId").toString(), loginType)
+        Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get("loginId").toString(), loginType)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
 
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
