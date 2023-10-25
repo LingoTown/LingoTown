@@ -26,6 +26,9 @@ public class NPC {
     private String name;
 
     @Column(nullable = false)
+    private String npcImage;
+
+    @Column(nullable = false)
     private String firstMessage;
 
     @Column(nullable = false)

@@ -17,6 +17,7 @@ public class ReadMemberNPCResDto {
     int intimacy;
 
     Long npcId;
+    String npcImage;
     String language;
     String theme;
 

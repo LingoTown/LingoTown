@@ -57,6 +57,7 @@ public class MemberNPCService {
                     .talkCount(count)
                     .intimacy(memberNPC.getIntimacy())
                     .npcId(npc.getId())
+                    .npcImage(npc.getNpcImage())
                     .language(world.getLanguage().toString())
                     .theme(world.getTheme().toString())
                     .lastVisited(talkList.get(0).getCreatedAt())
