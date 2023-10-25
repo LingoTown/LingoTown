@@ -21,13 +21,6 @@ pipeline {
             }
         }
 
-        // 소스 코드 체크아웃
-        stage('SCM') {
-            steps {
-                checkout scm 
-            }
-        }
-
         // SonarQube 분석
         stage('SonarQube Analysis') {  
             steps {
