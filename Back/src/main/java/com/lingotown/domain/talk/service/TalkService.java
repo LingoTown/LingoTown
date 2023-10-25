@@ -9,6 +9,7 @@ import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
+import com.lingotown.domain.talk.dto.response.CreateTalkDetailResDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
@@ -19,11 +20,14 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
+import com.lingotown.global.service.S3Service;
 import com.lingotown.openai.CacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,7 @@ import java.util.List;
 public class TalkService {
 
     private final CacheService cacheService;
+    private final S3Service s3Service;
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
     private final MemberNPCRepository memberNPCRepository;
@@ -122,24 +127,30 @@ public class TalkService {
 
     //NPC와 대화하기
     @Transactional
-    public CommonResponse createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto){
+    public CreateTalkDetailResDto createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto) throws IOException {
         Long talkId = createTalkDetailReqDto.getTalkId();
         Talk talk = getTalkEntity(talkId);
 
         boolean isMember = createTalkDetailReqDto.isMember();
         String content = createTalkDetailReqDto.getContent();
-        String talkFile = createTalkDetailReqDto.getTalkFile();
+        MultipartFile talkFile = createTalkDetailReqDto.getTalkFile();
+        String fileUrl = s3Service.uploadFile(talkFile);
 
         TalkDetail talkDetail = TalkDetail
                 .builder()
                 .isMember(isMember)
                 .content(content)
-                .talkFile(talkFile)
+                .talkFile(fileUrl)
                 .talk(talk)
                 .build();
 
-        talkDetailRepository.save(talkDetail);
-        return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(), ResponseStatus.CREATED_SUCCESS.getMessage());
+        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
+        CreateTalkDetailResDto talkDetailResDto = CreateTalkDetailResDto
+                .builder()
+                .talkDetailId(savedTalkDetail.getId())
+                .build();
+
+        return talkDetailResDto;
     }
 
     //대화 종료 후 친밀도 변경과 리스폰 지역 설정, 캐시 삭제
