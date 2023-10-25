@@ -7,7 +7,6 @@ import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.service.MemberNPCService;
 import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.response.DataResponse;
-import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

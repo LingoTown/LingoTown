@@ -36,10 +36,8 @@ public class NPCService {
     }
 
     private NPC getNPCEntity(Long npcId){
-        NPC npc = npcRepository.findById(npcId)
+        return npcRepository.findById(npcId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.NPC_NOT_FOUND));
-
-        return npc;
     }
 
 }

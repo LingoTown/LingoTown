@@ -87,22 +87,18 @@ public class MemberNPCService {
                 .npc(npc)
                 .build();
 
-        MemberNPC newMemberNPC = memberNPCRepository.save(memberNPC);
-        return newMemberNPC;
+        return memberNPCRepository.save(memberNPC);
     }
 
     private NPC getNPCEntity(Long npcId){
-        NPC npc = npcRepository.findById(npcId)
+        return npcRepository.findById(npcId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.NPC_NOT_FOUND));
 
-        return npc;
     }
 
     private Member getMemberEntity(Long memberId){
-        Member member = memberRepository.findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
-
-        return member;
     }
 
 }

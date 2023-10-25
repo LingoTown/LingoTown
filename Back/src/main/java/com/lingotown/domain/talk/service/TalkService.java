@@ -161,17 +161,13 @@ public class TalkService {
 
 
     private Talk getTalkEntity(Long talkId){
-        Talk talk = talkRepository.findById(talkId)
+        return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
-
-        return talk;
     }
 
     private MemberNPC getMemberNPCEntity(Long memberNPCId){
-        MemberNPC memberNPC = memberNPCRepository.findById(memberNPCId)
+        return memberNPCRepository.findById(memberNPCId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
-
-        return memberNPC;
     }
 
 }
