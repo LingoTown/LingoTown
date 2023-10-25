@@ -35,7 +35,9 @@ pipeline {
                     def scannerHome = tool 'SonarScanner'
 
                     withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                        dir("${PROJECT_DIR_FE}") {
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
                     }
                 }
             }
