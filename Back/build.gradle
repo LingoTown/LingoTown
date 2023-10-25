@@ -7,6 +7,7 @@ plugins {
     id 'org.sonarqube' version '4.2.1.3168'
 }
 
+/* 2023.10.25 : Sonarqube */
 sonar {
     properties {
         property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
