@@ -2,6 +2,16 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
+    /* 2023.10.25 : Sonarqube */
+    id 'org.sonarqube' version '4.2.1.3168'
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
+        property "sonar.projectName", "S09P31B305"
+    }
 }
 
 group = 'LingoTown'
@@ -46,7 +56,6 @@ dependencies {
     /* 2023.10.24 : 배포 모니터링 */
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-
 }
 
 tasks.named('test') {
