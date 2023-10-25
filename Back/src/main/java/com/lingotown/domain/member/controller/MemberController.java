@@ -5,7 +5,6 @@ import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberService;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
-import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
