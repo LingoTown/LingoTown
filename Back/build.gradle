@@ -60,6 +60,10 @@ dependencies {
     /* 2023.10.24 : 배포 모니터링 */
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    /* 23.10.26 WebClient 위한 WebFlux 의존성 추가 */
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
 }
 
 tasks.named('test') {
