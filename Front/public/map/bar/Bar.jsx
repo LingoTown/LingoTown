@@ -8,10 +8,13 @@ Title: Restaurant
 */
 
 import React, { useRef } from 'react'
-import { useGLTF } from '@react-three/drei'
+import { useGLTF, useTexture } from '@react-three/drei'
 
 export function Bar(props) {
   const { nodes, materials } = useGLTF('./map/bar/scene.gltf')
+  const textures = useTexture({
+    map:"./map/bar/textures/Material_30_baseColor.jpeg"
+  })
   return (
     <group {...props} dispose={null} scale={0.03}>
 
@@ -109,7 +112,9 @@ export function Bar(props) {
         <mesh geometry={nodes['CUBEDESK011_Material_#26_0'].geometry} material={materials.Material_26} position={[353.074, 55.145, -2.456]} />
         <mesh geometry={nodes['CUBEDESK014_Material_#26_0'].geometry} material={materials.Material_26} position={[353.074, 175.005, -2.456]} />
       </group>
-      <group position={[8.85, 26.751, 468.752]} rotation={[-Math.PI / 2, 0, 0]}>
+
+      {/* 바코드 */}
+      {/* <group position={[8.85, 26.751, 468.752]} rotation={[-Math.PI / 2, 0, 0]}>
         <mesh geometry={nodes['KB_Material_#32_0'].geometry} material={materials.Material_32} position={[1.406, -2.589, 1.527]} rotation={[-2.101, 0, -Math.PI]} scale={[1.515, 1, 1.307]} />
         <mesh geometry={nodes['KB_Material_#32_0_1'].geometry} material={materials.Material_32} position={[0.462, -2.589, 1.527]} rotation={[-2.101, 0, -Math.PI]} scale={[1.515, 1, 1.307]} />
         <mesh geometry={nodes['KB_Material_#32_0_2'].geometry} material={materials.Material_32} position={[-0.444, -2.589, 1.527]} rotation={[-2.101, 0, -Math.PI]} scale={[1.515, 1, 1.307]} />
@@ -132,7 +137,7 @@ export function Bar(props) {
         <mesh geometry={nodes['KB_Material_#32_0_19'].geometry} material={materials.Material_32} position={[0.301, 1.139, -0.678]} rotation={[-2.101, 0, -Math.PI]} scale={[1.515, 1, 1.307]} />
         <mesh geometry={nodes['KB_Material_#32_0_20'].geometry} material={materials.Material_32} position={[1.193, 1.139, -0.678]} rotation={[-2.101, 0, -Math.PI]} scale={[1.515, 1, 1.307]} />
         <mesh geometry={nodes['KB_Material_#32_0_21'].geometry} material={materials.Material_32} position={[1.219, 1.967, -1.163]} rotation={[-2.101, 0, -Math.PI]} scale={[1.515, 1, 1.307]} />
-      </group>
+      </group> */}
       <group position={[-146.332, 28.306, 356.744]} rotation={[-Math.PI / 2, 0, 0]}>
         <mesh geometry={nodes.Cylinder005__0.geometry} material={materials.Rectangle002__0} position={[0, 0, -3.997]} />
         <mesh geometry={nodes.Cylinder003__0.geometry} material={materials.Rectangle002__0} position={[0, 0, -0.064]} scale={[1, 1, 0.982]} />
@@ -178,10 +183,10 @@ export function Bar(props) {
         <mesh geometry={nodes.Cylinder028__0.geometry} material={materials.Rectangle002__0} position={[0, 0, -4.056]} scale={[1.17, 1.17, 1.988]} />
         <mesh geometry={nodes.Cylinder029__0.geometry} material={materials.Rectangle002__0} position={[0, 0, -3.997]} />
       </group>
+      <mesh geometry={nodes.Rectangle002__0.geometry} material={materials.Rectangle002__0} position={[226, -7.874, 408.105]} rotation={[-Math.PI / 2, 0, 0]} scale={[1.5,1.5,100]} map={textures.map}/>
       <mesh geometry={nodes['Rectangle001_Material_#30_0'].geometry} material={materials.Material_30} position={[22.685, 0, 254.042]} rotation={[-Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes.Rectangle002__0.geometry} material={materials.Rectangle002__0} position={[18.748, -7.874, 250.105]} rotation={[-Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes['FLOORB_Material_#24_0'].geometry} material={materials.Material_24} position={[-351.331, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes['FLOOR_Material_#31_0'].geometry} material={materials.Material_31} position={[-311.961, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} />
+      {/* <mesh geometry={nodes['FLOORB_Material_#24_0'].geometry} material={materials.Material_24} position={[-351.331, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} /> */}
+      {/* <mesh geometry={nodes['FLOOR_Material_#31_0'].geometry} material={materials.Material_31} position={[-311.961, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} />
       <mesh geometry={nodes['FLOORB_Material_#24_0_1'].geometry} material={materials.Material_24} position={[-311.961, 0, 17.821]} rotation={[-Math.PI / 2, 0, Math.PI]} />
       <mesh geometry={nodes['FLOOR_Material_#31_0_1'].geometry} material={materials.Material_31} position={[-351.331, 0, 17.821]} rotation={[-Math.PI / 2, 0, Math.PI]} />
       <mesh geometry={nodes['FLOORB_Material_#24_0_2'].geometry} material={materials.Material_24} position={[-272.591, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} />
@@ -477,7 +482,7 @@ export function Bar(props) {
       <mesh geometry={nodes['FLOORB_Material_#24_0_147'].geometry} material={materials.Material_24} position={[278.591, 0, 529.633]} rotation={[-Math.PI / 2, 0, 0]} />
       <mesh geometry={nodes['FLOOR_Material_#31_0_147'].geometry} material={materials.Material_31} position={[317.961, 0, 529.633]} rotation={[-Math.PI / 2, 0, 0]} />
       <mesh geometry={nodes['FLOORB_Material_#24_0_148'].geometry} material={materials.Material_24} position={[357.331, 0, 529.633]} rotation={[-Math.PI / 2, 0, 0]} />
-      <mesh geometry={nodes['FLOOR_Material_#31_0_148'].geometry} material={materials.Material_31} position={[396.701, 0, 529.633]} rotation={[-Math.PI / 2, 0, 0]} />
+      <mesh geometry={nodes['FLOOR_Material_#31_0_148'].geometry} material={materials.Material_31} position={[396.701, 0, 529.633]} rotation={[-Math.PI / 2, 0, 0]} /> */}
       <mesh geometry={nodes['BAR_Material_#25_0'].geometry} material={materials.Material_25} position={[27.501, 1.181, 100.032]} rotation={[-Math.PI / 2, 0, 0]} />
       
       {/* 우측 테이블 가림보 */}
