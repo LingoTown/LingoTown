@@ -15,20 +15,26 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
+import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpenAIService {
+
+    private final WebClientUtil webClientUtil;
 
     private final CacheService cacheService;
     private final TalkService talkService;
@@ -118,6 +124,14 @@ public class OpenAIService {
         CreateTalkDetailReqDto systemReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
         talkService.createTalkDetail(systemReqDto);
+
+        // 비동기 문법 체크
+        Mono<String> checkGrammarMono = webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto.getPrompt(), res -> {
+            // CallBack
+            log.info("|||||||||||||||||||||||||||||||||||||||||||");
+            log.info("Grammer Check Response : " + res);
+            log.info("|||||||||||||||||||||||||||||||||||||||||||");
+        });
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
