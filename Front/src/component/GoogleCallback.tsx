@@ -27,7 +27,7 @@ const GetAuthCodeAndSendToSpring = () => {
     await googleLogin(json, ({data}) => {
       const result = data.data as userType;
       const tempUser = {...result};
-      setUser(tempUser);
+      setUser(tempUser); //유저 정보를 유저아톰에 저장
       navigate("/main");
     }, (error) => {
       console.log(error)
