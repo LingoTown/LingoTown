@@ -1,14 +1,21 @@
 package com.lingotown.global.util;
 
+import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
+import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
+import com.lingotown.domain.talk.dto.request.TalkReqDto;
+import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.global.config.WebClientConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -39,20 +46,38 @@ public class WebClientUtil {
                 .bodyToMono(responseDtoClass);
     }
 
-    public Mono<String> checkGrammarAsync(String GPTKey, String GPTUrl, String prompt) {
-        // GPT-3 API에 필요한 요청 바디 구성 (예시입니다. 실제 요청 바디 구조에 따라 변경해야 할 수 있습니다.)
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("prompt", prompt + "  에서 문법 오류를 찾아서 간단하게 알려줘.");
-        requestBody.put("max_tokens", 50); // 예시로 사용된 파라미터입니다.
+    public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
+        // 이미 외부에서 생성된 requestDto 객체를 이용하여 요청을 보냅니다.
+
+
+        // user 인풋
+        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
+                .builder()
+                .role("user")
+                .content(talkReqDto.getPrompt() + "  이 문장에 어떤 문법적 오류가 있는지 확인해줘. 한글로 대답해줘.")
+                .build();
+
+
+        List<OpenAIMessageDto> messages = new ArrayList<>();
+
+        //요청Dto
+        messages.add(messageDtoUser);
+        OpenAIReqDto requestDto = OpenAIReqDto
+                .builder()
+                .max_tokens(100)
+                .messages(messages)
+                .build();
+
+        log.info(String.valueOf(requestDto));
 
         return webClientConfig.webClient().post()
                 .uri(GPTUrl)
                 .headers(headers -> {
-                    headers.setBearerAuth(GPTKey); // 여기에 실제 GPT API 키를 설정해야 합니다.
+                    headers.setBearerAuth(GPTKey); // 여기에 실제 GPT API 키를 설정합니다.
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 })
-                .bodyValue(requestBody)
+                .body(BodyInserters.fromValue(requestDto)) // 준비된 DTO를 바디에 삽입합니다.
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(OpenAIResDto.class);
     }
 }
