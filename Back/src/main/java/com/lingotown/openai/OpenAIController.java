@@ -1,5 +1,7 @@
 package com.lingotown.openai;
 
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.openai.dto.CreateOpenAIResDto;
 import com.lingotown.openai.dto.OpenAIResDto;
 import com.lingotown.openai.dto.TalkReqDto;
 import lombok.RequiredArgsConstructor;
@@ -10,14 +12,14 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/openai")
+@RequestMapping("/api/talk")
 public class OpenAIController {
 
     private final OpenAIService openAIService;
 
     @PostMapping(value = "", consumes = {"multipart/form-data"})
-    public OpenAIResDto askGPT(@RequestPart TalkReqDto talkReqDto, @RequestPart(value = "talkFile",  required = false) MultipartFile file) throws IOException {
-        return openAIService.askGPT(talkReqDto, file);
+    public DataResponse<CreateOpenAIResDto> askGPT(@ModelAttribute TalkReqDto talkReqDto) throws IOException {
+        return openAIService.askGPT(talkReqDto);
     }
 
 }
