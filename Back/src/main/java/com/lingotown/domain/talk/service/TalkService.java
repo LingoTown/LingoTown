@@ -3,10 +3,13 @@ package com.lingotown.domain.talk.service;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.membernpc.dto.response.CreateTalkResDto;
+import com.lingotown.domain.membernpc.dto.response.ReadMemberNPCResDto;
 import com.lingotown.domain.membernpc.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.membernpc.entity.MemberNPC;
 import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
+import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import com.lingotown.domain.npc.entity.NPC;
+import com.lingotown.domain.npc.service.NPCService;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.CreateTalkDetailResDto;
@@ -38,6 +41,7 @@ import java.util.List;
 public class TalkService {
 
     private final CacheService cacheService;
+    private final NPCService npcService;
     private final S3Service s3Service;
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
@@ -116,9 +120,15 @@ public class TalkService {
                 .build();
 
         Talk savedTalk =  talkRepository.save(talk);
+
+        Long npcId = talk.getMemberNPC().getNpc().getId();
+        List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(npcId).getData();
+
         CreateTalkResDto createTalk = CreateTalkResDto
                 .builder()
                 .talkId(savedTalk.getId())
+                .npcId(npcId)
+                .topicList(topicResDtoList)
                 .build();
 
         return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
