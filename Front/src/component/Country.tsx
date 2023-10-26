@@ -51,12 +51,13 @@ function Country(props:myListProps) {
                 val.map((arr)=>(
                     <div className="flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/40 rounded-lg">
                     <div className="w-full px-5 py-3 bg-[#ddd]/70 rounded-lg flex flex-row place-content-between items-center">
-                        <div className="flex">
-                        <img className="mr-3 w-[3.3rem] h-[3.3rem] rounded-full" src={arr.npcImage} alt="" />
-                        <div className="flex-col text-[#111]">
-                            <div>{arr.talkCount} talks</div>
-                            <div>Last visited : {arr.lastVisited.split("T")[0]} | {arr.lastVisited.split("T")[1]}</div>
-                        </div>
+                        <div className="flex items-center">
+													<img className="mr-3 w-[3.3rem] h-[3.3rem] rounded-full" src={arr.npcImage} alt="" />
+													<div className="flex-col text-[#111] text-[0.8rem]">
+														<div className="text-[1rem] font-bolder">{arr.npcName}</div>
+															<div>{arr.talkCount}개의 대화</div>
+															<div>마지막 대화일시 : {arr.lastVisited.split("T")[0]} | {arr.lastVisited.split("T")[1]}</div>
+													</div>
                         </div>
                         
                         <img className="w-[2rem] h-[2rem]" src={getIntimacy(arr.intimacy)} alt="" />
