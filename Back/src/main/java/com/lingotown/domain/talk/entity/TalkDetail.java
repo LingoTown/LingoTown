@@ -31,21 +31,28 @@ public class TalkDetail  extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
+    private String grammarAdvise;
+
     @JoinColumn(name = "talk_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Talk talk;
 
     @Builder
-    public TalkDetail(boolean isMember, String content, String talkFile, Talk talk){
+    public TalkDetail(boolean isMember, String content, String talkFile, Talk talk, String grammarAdvise){
         this.isMember = isMember;
         this.content = content;
         this.talkFile = talkFile;
         this.talk = talk;
+        this.grammarAdvise = grammarAdvise;
     }
 
     //대화 상세 기록 삭제
     public void deleteTalkDetail(){
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void updateGrammerAdvise(String advise) {
+        this.grammarAdvise = advise;
     }
 
 }
