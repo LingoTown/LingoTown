@@ -1,4 +1,4 @@
-package com.lingotown.domain.membernpc.entity;
+package com.lingotown.domain.talk.entity;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.npc.entity.NPC;

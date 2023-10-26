@@ -1,11 +1,10 @@
-package com.lingotown.domain.membernpc.service;
+package com.lingotown.domain.talk.service;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
-import com.lingotown.domain.membernpc.dto.request.CreateMemberNPCReqDto;
-import com.lingotown.domain.membernpc.dto.response.ReadMemberNPCResDto;
-import com.lingotown.domain.membernpc.entity.MemberNPC;
-import com.lingotown.domain.membernpc.repository.MemberNPCRepository;
+import com.lingotown.domain.talk.dto.response.ReadMemberNPCResDto;
+import com.lingotown.domain.talk.entity.MemberNPC;
+import com.lingotown.domain.talk.repository.MemberNPCRepository;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.entity.Talk;

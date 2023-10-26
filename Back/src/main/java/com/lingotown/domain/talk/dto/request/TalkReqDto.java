@@ -1,4 +1,4 @@
-package com.lingotown.openai.dto;
+package com.lingotown.domain.talk.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
