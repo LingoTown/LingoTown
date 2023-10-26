@@ -1,26 +1,26 @@
-package com.lingotown.openai;
+package com.lingotown.domain.talk.service;
 
 import com.google.gson.Gson;
-import com.lingotown.domain.membernpc.dto.response.CreateTalkResDto;
 import com.lingotown.domain.npc.entity.NPC;
-import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
-import com.lingotown.domain.talk.dto.response.CreateTalkDetailResDto;
+import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
+import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
+import com.lingotown.domain.talk.dto.request.TalkReqDto;
+import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
+import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
-import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
-import com.lingotown.openai.dto.*;
+import com.lingotown.global.service.CacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
-package com.lingotown.openai;
+package com.lingotown.global.service;
 
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
-import com.lingotown.openai.dto.OpenAIMessageDto;
+import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;

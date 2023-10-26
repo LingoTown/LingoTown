@@ -1,7 +1,7 @@
 package com.lingotown.domain.member.entity;
 
 import com.lingotown.domain.world.entity.World;
-import com.lingotown.domain.membernpc.entity.MemberNPC;
+import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.global.basetimeentity.BaseTimeEntity;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.MemberRole;

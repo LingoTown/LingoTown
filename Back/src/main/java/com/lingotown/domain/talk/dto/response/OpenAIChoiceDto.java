@@ -1,5 +1,6 @@
-package com.lingotown.openai.dto;
+package com.lingotown.domain.talk.dto.response;
 
+import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import lombok.Getter;
 
 @Getter

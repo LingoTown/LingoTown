@@ -1,4 +1,4 @@
-package com.lingotown.openai;
+package com.lingotown.global.config;
 
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
