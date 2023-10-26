@@ -128,12 +128,23 @@ public class OpenAIService {
         talkService.createTalkDetail(systemReqDto);
 
         // 비동기 문법 체크
-        Mono<String> checkGrammarMono = webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto.getPrompt(), res -> {
-            // CallBack
-            log.info("|||||||||||||||||||||||||||||||||||||||||||");
-            log.info("Grammer Check Response : " + res);
-            log.info("|||||||||||||||||||||||||||||||||||||||||||");
-        });
+        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto.getPrompt(), null)
+            .subscribe(
+                    res -> {
+                        // GPT-3의 응답을 처리합니다.
+                        log.info("Grammar Check Response: " + res);
+
+                        // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
+                        // 예: 응답을 분석하고 데이터베이스에 저장하기
+
+                        // 이 부분에서 DB에 데이터를 저장하는 로직을 호출합니다. 예를 들어, 아래와 같이 작성할 수 있습니다.
+                        saveResponseToDatabase(talkReqDto.getTalkId(), res);
+                    },
+                    err -> {
+                        // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+                        log.error("Error occurred: ", err);
+                    }
+            );
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto

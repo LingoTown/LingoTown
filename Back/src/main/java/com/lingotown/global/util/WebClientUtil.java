@@ -39,10 +39,10 @@ public class WebClientUtil {
                 .bodyToMono(responseDtoClass);
     }
 
-    public Mono<String> checkGrammarAsync(String GPTKey, String GPTUrl, String prompt, Consumer<String> callback) {
+    public Mono<String> checkGrammarAsync(String GPTKey, String GPTUrl, String prompt) {
         // GPT-3 API에 필요한 요청 바디 구성 (예시입니다. 실제 요청 바디 구조에 따라 변경해야 할 수 있습니다.)
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("prompt", prompt + "에서 문법 오류를 찾아서 간단하게 알려줘.");
+        requestBody.put("prompt", prompt + "  에서 문법 오류를 찾아서 간단하게 알려줘.");
         requestBody.put("max_tokens", 50); // 예시로 사용된 파라미터입니다.
 
         return webClientConfig.webClient().post()
@@ -53,12 +53,6 @@ public class WebClientUtil {
                 })
                 .bodyValue(requestBody)
                 .retrieve()
-                .bodyToMono(String.class)
-                .doOnSuccess(response -> {
-                    // 성공적으로 완료되면 콜백 함수 실행
-                    if (callback != null) {
-                        callback.accept(response);
-                    }
-                });
+                .bodyToMono(String.class);
     }
 }
