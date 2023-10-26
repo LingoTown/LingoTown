@@ -12,6 +12,7 @@ export const ParkTheme = () => {
 
   const cameraOffset = useRef(new THREE.Vector3(0, 3, -4));
   const keysPressed = useRef({ ArrowUp: false, ArrowLeft: false, ArrowRight: false });
+  const isJumping = useRef(false);//점프 ref
   const humanRef = useRef();
   const activeAction = useRef();
   const foxCircleRef = useRef();
@@ -25,60 +26,109 @@ export const ParkTheme = () => {
   
   const circleRadius = 3;
   
+  let action = actions["Idle"];
   const setAction = (actionName) => {
+
+    if (!actions[actionName]) {
+      return;
+    }
+
     if (activeAction.current && activeAction.current === actions[actionName])
       return;
 
     if (activeAction.current)
       activeAction.current.fadeOut(0.1);
 
-    const action = actions[actionName];
+    action = actions[actionName];
     action.reset().fadeIn(0.1).play();
     activeAction.current = action;
   };
 
   const handleKeyDown = (event) => {
+    if (event.code === 'Space' && !isJumping.current) {
+      isJumping.current = true;
+      setAction('Armature|mixamo.com|Layer0');
+    }
+  
     if (['ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
       keysPressed.current[event.key] = true;
       setAction('Run');
     }
   };
-
+  
   const handleKeyUp = (event) => {
     if (['ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
       keysPressed.current[event.key] = false;
       if (Object.values(keysPressed.current).every(key => !key)) {
         setAction('Idle');
+        console.log(human.animations)
       }
+    }
+  
+    if (event.code === 'Space') {
+      keysPressed.current[event.key] = false;
+      isJumping.current = false;
+      setAction("Idle");
     }
   };
 
+  // jumpTime을 useRef로 정의
+  const jumpTime = useRef(0);
+  let jumpDown = false;
+
   useFrame(() => {
-    if (humanRef.current) {
-      
-      const speed = 0.1;
-      const rotationSpeed = 0.03;
-      const moveForward = new THREE.Vector3();
-  
-      if (keysPressed.current.ArrowUp) {
-        humanRef.current.getWorldDirection(moveForward);
-        moveForward.multiplyScalar(speed);
-        humanRef.current.position.add(moveForward);
-      }
-  
-      if (keysPressed.current.ArrowLeft || keysPressed.current.ArrowRight) {
-        const deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
-        humanRef.current.rotateY(deltaRotation);
-      }
-  
-      const currentPos = humanRef.current.position.clone();
-      const offset = cameraOffset.current.clone().applyQuaternion(humanRef.current.quaternion);
-      const desiredCameraPosition = currentPos.add(offset);
-  
-      camera.position.lerp(desiredCameraPosition, 0.1);
-      camera.lookAt(humanRef.current.position);
+  if (humanRef.current) {
+    const speed = 0.1;
+    const rotationSpeed = 0.03;
+    const moveForward = new THREE.Vector3();
+
+    if (keysPressed.current.ArrowUp) {
+      humanRef.current.getWorldDirection(moveForward);
+      moveForward.multiplyScalar(speed);
+      humanRef.current.position.add(moveForward);
     }
-  });
+
+    if (keysPressed.current.ArrowLeft || keysPressed.current.ArrowRight) {
+      const deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
+      humanRef.current.rotateY(deltaRotation);
+    }
+
+    // Jumping logic
+  if (isJumping.current) {
+    const jumpHeight = 2.0;
+    const jumpSpeed = 0.1;
+    const maxJumpTime = 1.5; // Adjust this value to control the jump height and duration
+
+    // Increment jump time
+    jumpTime.current += 0.01;
+
+    // Calculate jump position based on elapsed time
+    const jumpPosition = jumpSpeed * jumpTime.current - 0.5 * 9.8 * jumpTime.current * jumpTime.current;
+
+    // Set the Y position of the character
+    humanRef.current.position.y = Math.max(0, jumpPosition) + jumpHeight;
+
+    // Check if the jump is complete
+    if (jumpTime.current >= maxJumpTime) {
+      isJumping.current = false;
+      jumpTime.current = 0;
+    }
+  } 
+  else if (humanRef.current.position.y > 0) {
+      // Simulate a gradual descent when not jumping
+      humanRef.current.position.y -= 0.1;
+  }
+
+
+    // Rest of the code remains unchanged
+    const currentPos = humanRef.current.position.clone();
+    const offset = cameraOffset.current.clone().applyQuaternion(humanRef.current.quaternion);
+    const desiredCameraPosition = currentPos.add(offset);
+
+    camera.position.lerp(desiredCameraPosition, 0.1);
+    camera.lookAt(humanRef.current.position);
+  }
+});
 
   useFrame(() => {
     if (humanRef.current && foxCircleRef.current) {
@@ -128,11 +178,12 @@ export const ParkTheme = () => {
     setAction('Idle');
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+    console.log(action);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, []);
+  }, [action]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {

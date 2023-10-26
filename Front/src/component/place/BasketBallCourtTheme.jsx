@@ -12,6 +12,7 @@ export const BasketBallCourtTheme = () => {
 
   const cameraOffset = useRef(new THREE.Vector3(0, 3, -4));
   const keysPressed = useRef({ ArrowUp: false, ArrowLeft: false, ArrowRight: false });
+  const isJumping = useRef(false);//점프 ref
   const humanRef = useRef();
   const activeAction = useRef();
   const foxCircleRef = useRef();
@@ -41,6 +42,11 @@ export const BasketBallCourtTheme = () => {
     if (['ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
       keysPressed.current[event.key] = true;
       setAction('Run');
+    } else if (event.key === ' ') {
+      isJumping.current = !isJumping.current;
+      if (isJumping.current) {
+        setAction('Jump');
+      }
     }
   };
 
@@ -69,6 +75,11 @@ export const BasketBallCourtTheme = () => {
       if (keysPressed.current.ArrowLeft || keysPressed.current.ArrowRight) {
         const deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
         humanRef.current.rotateY(deltaRotation);
+      }
+
+      // 점프 중인 경우 Y 방향으로 이동
+      if (isJumping.current) {
+        humanRef.current.position.y += 0.1;
       }
   
       const currentPos = humanRef.current.position.clone();
@@ -159,7 +170,7 @@ export const BasketBallCourtTheme = () => {
       <Circle ref={rabbitCircleRef} args={[3, 32]} position={[-6.4, 0.03, 7]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" side={THREE.DoubleSide} />
       </Circle>
-      <primitive ref={humanRef} scale={1} position={[5, 5, 2]} rotation={[0, Math.PI, 0]} object={human.scene}/>
+      <primitive ref={humanRef} scale={1} position={[5, 10, 2]} rotation={[0, Math.PI, 0]} object={human.scene}/>
       <primitive scale={0.5} position={[-3.4, 0.53, 0]} rotation={[0, 0, 0]} object={fox.scene}/>
       <primitive scale={0.5} position={[-6.4, 0.53, 7]} rotation={[0, 0, 0]} object={rabbit.scene} />
     </>
