@@ -1,33 +1,75 @@
-import {useState} from "react"
-// https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+bronze.png
-// https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+silver.png
-function Country(props:{country:string, npc:string}) {
-    const [openToggle, setToggle] = useState(false);
-    const [openBox, setBox] = useState(false);
+import {useState, useEffect} from "react"
+import { myPageNPCType } from "../type/MyPageNpcType";
+export type myPageNPCListType = {
+    [key:string]: myPageNPCType[];
+}
+interface myListProps {
+    myList : myPageNPCListType;
+}
+
+function Country(props:myListProps) {
+    const {myList} = props
+    const [openToggle, setToggle] = useState(Array(Object.keys(myList).length).fill(false));
+    const [openBox, setBox] = useState(Array(Object.keys(myList).length).fill(false));
+    useEffect(()=>{
+        console.log(myList); 
+    }, [])
+    const getIntimacy = (intimacy : number):string => {
+        if(intimacy >= 100){
+            return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+gold.png"
+        } else if (intimacy >= 50){
+            return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+silver.png"
+        } else {
+            return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+bronze.png"
+        }
+    }
     return (
+        Object.entries(props.myList).map(([key, val], i:number) => (
         <div >
             {/* 토글, 나라이름 */}
             {
-                openToggle?
-                <span onClick={()=>{setToggle(false); setBox(false)}} className="cursor-pointer rotate-90 material-icons text-[1.8rem]">play_arrow</span> 
+                openToggle[i]?
+                <span onClick={()=>{
+                    const update = [...openToggle];
+                    update[i] = !update[i];
+                    setToggle(update); 
+                    setBox(update);
+                }} className="cursor-pointer rotate-90 material-icons text-[1.8rem]">play_arrow</span> 
                 :
-                <span onClick={()=>{setToggle(true); setBox(true)}} className="cursor-pointer material-icons text-[1.8rem]">play_arrow</span>
+                <span onClick={()=>{
+                    const update = [...openToggle];
+                    update[i] = !update[i];
+                    setToggle(update);
+                    setBox(update);
+                }} className="cursor-pointer material-icons text-[1.8rem]">play_arrow</span>
             } 
             &nbsp;
-           <span className="font-['passero-one'] text-[2rem]">{props.country}</span>
+           <span className="font-['passero-one'] font-[30] text-[2rem]">{key}</span>
             {/* NPC 리스트 */}
             {
-                openBox?
-                <div className="flex mx-5">
-                <div className="w-full p-5 bg-[#ddd]/70 rounded-lg">
-                    <img width={"30px"} src="https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+gold.png" alt="" />
-                </div>
-                </div>
-                :
-                ""
+                openBox[i]?
+                val.map((arr)=>(
+                    <div className="flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/40 rounded-lg">
+                    <div className="w-full px-5 py-3 bg-[#ddd]/70 rounded-lg flex flex-row place-content-between items-center">
+                        <div className="flex">
+                        <img className="mr-3 w-[3.3rem] h-[3.3rem] rounded-full" src={arr.npcImage} alt="" />
+                        <div className="flex-col text-[#111]">
+                            <div>{arr.talkCount} talks</div>
+                            <div>Last visited : {arr.lastVisited.split("T")[0]} | {arr.lastVisited.split("T")[1]}</div>
+                        </div>
+                        </div>
+                        
+                        <img className="w-[2rem] h-[2rem]" src={getIntimacy(arr.intimacy)} alt="" />
+                    </div>
+                    </div>
+                   
+                ))
+                 :
+                    ""
             }
            
         </div>
+        ))
     );
 }
 
