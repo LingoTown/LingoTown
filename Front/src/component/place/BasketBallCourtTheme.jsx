@@ -10,6 +10,8 @@ export const BasketBallCourtTheme = () => {
   const fox = useGLTF("../../../public/npc/fox.glb");
   const rabbit = useGLTF("../../../public/npc/rabbit.glb");
 
+  const rabbit_standing = useGLTF("../../../public/npc/rabbit.glb");
+
   const cameraOffset = useRef(new THREE.Vector3(0, 3, -4));
   const keysPressed = useRef({ ArrowUp: false, ArrowLeft: false, ArrowRight: false });
   const humanRef = useRef();
@@ -153,15 +155,16 @@ export const BasketBallCourtTheme = () => {
     <>
       <BasketBall_court />
       <Environment blur={1} background preset="sunset" />
-      <Circle ref={foxCircleRef} args={[3, 32]} position={[-3.4, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={foxCircleRef} args={[2, 32]} position={[-0.3, 5.1, 0.5]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" side={THREE.DoubleSide} />
       </Circle>
-      <Circle ref={rabbitCircleRef} args={[3, 32]} position={[-6.4, 0.03, 7]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={rabbitCircleRef} args={[2, 32]} position={[-9.5, 5.1, 4]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" side={THREE.DoubleSide} />
       </Circle>
-      <primitive ref={humanRef} scale={1} position={[5,5, 2]} rotation={[0, Math.PI, 0]} object={human.scene}/>
-      <primitive scale={0.5} position={[-3.4, 0.53, 0]} rotation={[0, 0, 0]} object={fox.scene}/>
-      <primitive scale={0.5} position={[-6.4, 0.53, 7]} rotation={[0, 0, 0]} object={rabbit.scene} />
+      <primitive ref={humanRef} scale={1} position={[5, 5, 2]} rotation={[0, Math.PI, 0]} object={human.scene}/>
+      <primitive scale={0.5} position={[-0.3, 5.6, 0.5]} rotation={[0, 0, 0]} object={fox.scene}/>
+      <primitive scale={0.5} position={[-9.5, 5.6, 4]} rotation={[0, 2, 0]} object={rabbit.scene} />
+
     </>
   )
 } 
