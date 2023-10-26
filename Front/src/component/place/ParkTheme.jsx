@@ -96,8 +96,8 @@ export const ParkTheme = () => {
     // Jumping logic
   if (isJumping.current) {
     const jumpHeight = 2.0;
-    const jumpSpeed = 0.1;
-    const maxJumpTime = 1.5; // Adjust this value to control the jump height and duration
+    const jumpSpeed = 0.007;
+    const maxJumpTime = 15; // Adjust this value to control the jump height and duration
 
     // Increment jump time
     jumpTime.current += 0.01;
