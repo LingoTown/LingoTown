@@ -10,6 +10,7 @@ import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
@@ -46,6 +47,7 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
+    @TrackExecutionTime
     @Transactional
     public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws IOException {
 
