@@ -8,10 +8,11 @@ import { StreetCarTheme } from '../component/place/StreetCarTheme';
 import { SchoolTheme } from '../component/place/SchoolTheme';
 import { HouseTheme } from '../component/place/HouseTheme';
 import { ChurchTheme } from '../component/place/ChurchTheme';
+import { BusStopTheme } from '../component/place/BusStopTheme';
 
 export const ThreeDemensionCanvas = () => {
 
-  const [place, setPlace] = useState<number>(8);//유저가 선택한 맵이 recoil에 저장되고 불러와야 함
+  const [place, setPlace] = useState<number>(9);//유저가 선택한 맵이 recoil에 저장되고 불러와야 함
 
   return(
     <>
@@ -26,7 +27,9 @@ export const ThreeDemensionCanvas = () => {
                   place===5?<StreetCarTheme/>:(
                     place===6?<SchoolTheme/>:(
                       place===7?<HouseTheme/>:(
-                        place===8?<ChurchTheme/>:null
+                        place===8?<ChurchTheme/>:(
+                          place===9?<BusStopTheme/>:null
+                        )
                       )
                     )
                   )
