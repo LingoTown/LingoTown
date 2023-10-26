@@ -6,7 +6,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
 
 @Aspect
 @Component
@@ -16,13 +15,19 @@ public class ExecutionTimeTrackerAspect {
 
     @Around("@annotation(TrackExecutionTime)")
     public Object trackTime(ProceedingJoinPoint pjp) throws Throwable {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        long startTime = System.currentTimeMillis();
 
-        Object obj = pjp.proceed(); // 메서드 실행
+        // 메서드 실행
+        Object obj = pjp.proceed();
 
-        stopWatch.stop();
-        logger.info("Method: " + pjp.getSignature() + " executed in " + stopWatch.getTotalTimeMillis() + " ms");
+        long endTime = System.currentTimeMillis();
+        long duration = endTime - startTime; //ms
+
+        // 밀리초를 초로 변환
+        double durationInSeconds = duration / 1000.0;
+
+        // 커스텀 로그 메시지 생성
+        logger.info("Method: " + pjp.getSignature() + " executed in " + duration + " ms (" + durationInSeconds + " s)");
 
         return obj;
     }
