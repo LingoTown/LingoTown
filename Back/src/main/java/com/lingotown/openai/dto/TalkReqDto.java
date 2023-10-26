@@ -10,4 +10,5 @@ import org.springframework.web.multipart.MultipartFile;
 public class TalkReqDto {
     private Long talkId;
     private String prompt;
+    private MultipartFile talkFile;
 }

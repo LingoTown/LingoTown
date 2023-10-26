@@ -26,9 +26,9 @@ public class MemberNPCController {
         return memberNPCService.readMemberNPCList(principal);
     }
 
-    @PostMapping("/start")
-    public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @RequestBody CreateMemberNPCReqDto createMemberNPCReqDto){
-        MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, createMemberNPCReqDto);
+    @PostMapping("/start/{npcId}")
+    public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @PathVariable("npcId") Long npcId){
+        MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, npcId);
         return talkService.createTalk(memberNPC);
     }
 

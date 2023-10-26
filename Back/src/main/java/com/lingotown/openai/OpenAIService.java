@@ -1,6 +1,7 @@
 package com.lingotown.openai;
 
 import com.google.gson.Gson;
+import com.lingotown.domain.membernpc.dto.response.CreateTalkResDto;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
@@ -10,6 +11,8 @@ import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
+import com.lingotown.global.response.DataResponse;
+import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.openai.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +41,7 @@ public class OpenAIService {
     private String API_KEY;
 
     @Transactional
-    public OpenAIResDto askGPT(TalkReqDto talkReqDto, MultipartFile file) throws IOException {
+    public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws IOException {
 
         Gson gson = new Gson();
         RestTemplate restTemplate = new RestTemplate();
@@ -56,22 +59,7 @@ public class OpenAIService {
         //이전 대화가 없을 경우
         if(!cacheService.hasCache(talkReqDto.getTalkId())) {
 
-            NPC npc = getNPCEntity(talkReqDto.getTalkId());
-
-            String npcJob = npc.getNpcRole().toString();
-            String npcAge = npc.getNpcAge().toString();
-            String language = npc.getWorld().getLanguage().toString();
-            String npcGender = npc.getGenderType().toString();
-
-            String concept = "\n" +
-                    "We are trying to do situational comedy. " +
-                    "The user is a beginner who has just started learning " + language + ". " +
-                    "The user's " + language +" level is Beginner, and " +
-                    "All you have to do is respond appropriately to what the user says. " +
-                    "The level of difficulty in responding should be relaxed so that users can understand it. " +
-                    "Lower the level of difficulty in responding " +
-                    "And also, Please respond in complete sentences without exceeding max_token. " +
-                    "Now, " + "you are " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge;
+            String concept = createConcept(talkReqDto.getTalkId());
 
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
@@ -97,9 +85,8 @@ public class OpenAIService {
                 .content(talkReqDto.getPrompt())
                 .build();
 
-        messages.add(messageDtoUser);
-
         //요청Dto
+        messages.add(messageDtoUser);
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
                 .messages(messages)
@@ -113,33 +100,56 @@ public class OpenAIService {
         ResponseEntity<OpenAIResDto> response = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
 
         //현재 요청과 응답 캐싱
-        OpenAIMessageDto responseDtoUser = OpenAIMessageDto
+        OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
                 .role("assistant")
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 
         chatList.addAll(messages);
-        chatList.add(responseDtoUser);
+        chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
         //DB에 저장
         CreateTalkDetailReqDto userReqDto
-                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), file);
+                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
         talkService.createTalkDetail(userReqDto);
 
         CreateTalkDetailReqDto systemReqDto
-                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDtoUser.getContent(), file);
-        CreateTalkDetailResDto systemDetailResDto = talkService.createTalkDetail(systemReqDto);
-
+                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
         talkService.createTalkDetail(systemReqDto);
 
-//        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
-//                .builder()
-//                .responseMessage()
-//                .build();
+        //응답 반환
+        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
+                .builder()
+                .responseMessage(responseDto.getContent())
+                .build();
 
-        return response.getBody();
+        return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
+                ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
+    }
+
+
+    //GPT에게 상황설명하기
+    private String createConcept(Long talkId){
+        NPC npc = getNPCEntity(talkId);
+
+        String npcJob = npc.getNpcRole().toString();
+        String npcAge = npc.getNpcAge().toString();
+        String language = npc.getWorld().getLanguage().toString();
+        String npcGender = npc.getGenderType().toString();
+
+        String concept = "\n" +
+                "We are trying to do situational comedy. " +
+                "The user is a beginner who has just started learning " + language + ". " +
+                "The user's " + language +" level is Beginner, and " +
+                "All you have to do is respond appropriately to what the user says. " +
+                "The level of difficulty in responding should be relaxed so that users can understand it. " +
+                "Lower the level of difficulty in responding " +
+                "And also, Please respond in complete sentences without exceeding max_token. " +
+                "Now, " + "you are " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge;
+
+        return concept;
     }
 
 
