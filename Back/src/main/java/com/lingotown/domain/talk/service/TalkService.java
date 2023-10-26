@@ -103,7 +103,8 @@ public class TalkService {
             talkDetail.deleteTalkDetail();
         }
 
-        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(), ResponseStatus.DELETED_SUCCESS.getMessage());
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(),
+                ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
     //NPC와 대화 시작하기
@@ -127,7 +128,7 @@ public class TalkService {
 
     //NPC와 대화하기
     @Transactional
-    public CreateTalkDetailResDto createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto) throws IOException {
+    public CommonResponse createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto) throws IOException {
         Long talkId = createTalkDetailReqDto.getTalkId();
         Talk talk = getTalkEntity(talkId);
 
@@ -144,13 +145,10 @@ public class TalkService {
                 .talk(talk)
                 .build();
 
-        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
-        CreateTalkDetailResDto talkDetailResDto = CreateTalkDetailResDto
-                .builder()
-                .talkDetailId(savedTalkDetail.getId())
-                .build();
+        talkDetailRepository.save(talkDetail);
 
-        return talkDetailResDto;
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(),
+                ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
     //대화 종료 후 친밀도 변경과 리스폰 지역 설정, 캐시 삭제

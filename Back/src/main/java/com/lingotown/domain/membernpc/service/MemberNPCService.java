@@ -71,10 +71,9 @@ public class MemberNPCService {
 
     //대화기록이 없는 NPC와 관계 만들기
     @Transactional
-    public MemberNPC createMemberNPCConnect(Principal principal, CreateMemberNPCReqDto createMemberNPCReqDto){
+    public MemberNPC createMemberNPCConnect(Principal principal, Long npcId){
 
         Long memberId = Long.valueOf(principal.getName());
-        Long npcId = createMemberNPCReqDto.getNpcId();
         MemberNPC connectedMemberNPC = memberNPCRepository.findByMemberIdNPCId(memberId, npcId);
 
         if(connectedMemberNPC != null) return connectedMemberNPC;
