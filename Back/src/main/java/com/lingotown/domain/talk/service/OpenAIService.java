@@ -9,30 +9,41 @@ import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.entity.TalkDetail;
+import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
+import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpenAIService {
 
+    private final WebClientUtil webClientUtil;
+
+    private final TalkRepository talkRepository;
+    private final TalkDetailRepository talkDetailRepository;
+
     private final CacheService cacheService;
     private final TalkService talkService;
-    private final TalkRepository talkRepository;
 
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
@@ -40,6 +51,7 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
+    @TrackExecutionTime
     @Transactional
     public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws IOException {
 
@@ -89,10 +101,12 @@ public class OpenAIService {
         messages.add(messageDtoUser);
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
+                .max_tokens(40)
                 .messages(messages)
                 .build();
 
         String jsonString = gson.toJson(requestDto);
+
         String body = String.format(jsonString);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
@@ -113,11 +127,32 @@ public class OpenAIService {
         //DB에 저장
         CreateTalkDetailReqDto userReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
-        talkService.createTalkDetail(userReqDto);
+        DataResponse<Long> userReqDataResponse = talkService.createTalkDetail(userReqDto);
 
         CreateTalkDetailReqDto systemReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
         talkService.createTalkDetail(systemReqDto);
+
+        // 비동기 문법 체크
+        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
+            .subscribe(
+                    res -> {
+                        // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
+                        // 예: 응답을 분석하고 데이터베이스에 저장하기
+
+                        TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData())
+                                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                        // 문법 조언 DB 저장
+                        talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+                        // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+                        talkDetailRepository.save(talkDetail);
+                    },
+                    err -> {
+                        // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+                        log.error("Error occurred: ", err);
+                    }
+            );
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto

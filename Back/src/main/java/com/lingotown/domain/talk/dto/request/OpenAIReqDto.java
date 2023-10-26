@@ -10,13 +10,13 @@ import java.util.List;
 public class OpenAIReqDto {
 
     private final String model = "gpt-3.5-turbo";
-    private final int max_tokens = 40;
+    private int max_tokens;
     private final float temperature = 0.2f;
     private List<OpenAIMessageDto> messages;
 
     @Builder
-    public OpenAIReqDto(List<OpenAIMessageDto> messages) {
+    public OpenAIReqDto(int max_tokens, List<OpenAIMessageDto> messages) {
+        this.max_tokens = max_tokens;
         this.messages = messages;
     }
-
 }
