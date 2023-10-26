@@ -1,4 +1,4 @@
-package com.lingotown.domain.membernpc.dto.request;
+package com.lingotown.domain.talk.dto.request;
 
 import lombok.Getter;
 

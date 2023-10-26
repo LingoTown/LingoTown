@@ -1,4 +1,4 @@
-package com.lingotown.domain.membernpc.dto.response;
+package com.lingotown.domain.talk.dto.response;
 
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import lombok.AllArgsConstructor;

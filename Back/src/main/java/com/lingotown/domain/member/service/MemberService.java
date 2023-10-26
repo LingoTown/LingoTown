@@ -31,12 +31,12 @@ public class MemberService {
     private final S3Service s3Service;
 
     //사용자 정보 조회
-    public DataResponse readMemberInfo(Principal principal) {
+    public DataResponse<MemberInfoResponseDto> readMemberInfo(Principal principal) {
         Long memberId = Long.parseLong(principal.getName());
 
         Member member = getMemberEntity(memberId);
         MemberInfoResponseDto memberInfoDto = MemberInfoResponseDto.of(member);
-        return new DataResponse(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberInfoDto);
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberInfoDto);
     }
 
     //사용자 탈퇴
@@ -73,7 +73,7 @@ public class MemberService {
                 .builder()
                 .profile(fileUrl)
                 .build();
-        return new DataResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), profileResDto);
+        return new DataResponse<>(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), profileResDto);
     }
 
     @Transactional

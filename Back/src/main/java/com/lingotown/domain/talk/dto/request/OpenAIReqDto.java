@@ -1,5 +1,6 @@
-package com.lingotown.openai.dto;
+package com.lingotown.domain.talk.dto.request;
 
+import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import lombok.*;
 
 import java.util.List;
