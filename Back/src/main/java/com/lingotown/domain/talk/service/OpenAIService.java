@@ -9,6 +9,8 @@ import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.entity.TalkDetail;
+import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
@@ -37,9 +39,11 @@ public class OpenAIService {
 
     private final WebClientUtil webClientUtil;
 
+    private final TalkRepository talkRepository;
+    private final TalkDetailRepository talkDetailRepository;
+
     private final CacheService cacheService;
     private final TalkService talkService;
-    private final TalkRepository talkRepository;
 
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
@@ -97,10 +101,12 @@ public class OpenAIService {
         messages.add(messageDtoUser);
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
+                .max_tokens(40)
                 .messages(messages)
                 .build();
 
         String jsonString = gson.toJson(requestDto);
+
         String body = String.format(jsonString);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
@@ -121,24 +127,26 @@ public class OpenAIService {
         //DB에 저장
         CreateTalkDetailReqDto userReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
-        talkService.createTalkDetail(userReqDto);
+        DataResponse<Long> userReqDataResponse = talkService.createTalkDetail(userReqDto);
 
         CreateTalkDetailReqDto systemReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
         talkService.createTalkDetail(systemReqDto);
 
         // 비동기 문법 체크
-        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto.getPrompt(), null)
+        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
             .subscribe(
                     res -> {
-                        // GPT-3의 응답을 처리합니다.
-                        log.info("Grammar Check Response: " + res);
-
                         // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
                         // 예: 응답을 분석하고 데이터베이스에 저장하기
 
-                        // 이 부분에서 DB에 데이터를 저장하는 로직을 호출합니다. 예를 들어, 아래와 같이 작성할 수 있습니다.
-                        saveResponseToDatabase(talkReqDto.getTalkId(), res);
+                        TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData())
+                                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                        // 문법 조언 DB 저장
+                        talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+                        // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+                        talkDetailRepository.save(talkDetail);
                     },
                     err -> {
                         // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
