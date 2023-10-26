@@ -5,12 +5,13 @@ import { useRecoilValue } from 'recoil';
 import { HttpJson } from '../api/Http';
 import { HttpForm } from "../api/Http";
 import { useSetRecoilState } from "recoil";
+import { myPageNPCListType } from "../component/Country";
 import Country from "../component/Country";
 
 const MainPage = () => {
   const [nickEditMode, setNickMode] = useState(false);
   const [nick, setNick] = useState('');
-  const [showBoxes, setShowBoxes] = useState("box1"); // 'box1', 'box2', or null
+  const [myList, setMyList] = useState<myPageNPCListType>({});
 
   const navigate = useNavigate();
   const user = useRecoilValue(userAtom);
@@ -20,27 +21,40 @@ const MainPage = () => {
     alert("로그아웃 되었습니다.")
     navigate("/")
   }
+  const groupByCountry = (arr:any) => {
+    return arr.reduce((arr:any, obj:any) => {
+      const language = obj.language;
+      if (!arr[language]) {
+        arr[language] = [];
+    }
+      arr[language].push(obj);
+      return arr;
+    },[])
+  }
   useEffect(()=> {
     HttpJson.get("/api/talk/list")
       .then((res) => {
-        console.log(res)
+        const arr = res.data.data;
+        console.log(groupByCountry(arr));
+        setMyList(groupByCountry(arr));     
       })
       .catch((err) => {
+        console.log(err);
         console.log("NPC 정보를 불러올 수 없습니다.")
       })
-  })
+  }, [])
 
   const deleteAccount = () => {
     if(confirm("탈퇴하시겠습니까?")){
       HttpJson.delete("/api/member/leave")
       .then((res)=>{
+        res;
         localStorage.removeItem("userAtom");
         navigate("/");
       })
       .catch(console.log)
     }
   }
-
   const editNickname = () => {
     setNickMode(true);
   }
@@ -73,6 +87,7 @@ const MainPage = () => {
     console.log(data);
     HttpForm.put("/api/member/profile", data)
       .then((res)=>{
+        res;
         console.log("success!")
         HttpJson.get("/api/member")
           .then((res)=>{
@@ -82,7 +97,6 @@ const MainPage = () => {
               ...prevUser, 
               profileImg: newImg
           }))
-          // location.reload();
           })
         
       })
@@ -117,18 +131,18 @@ const MainPage = () => {
                     <div>Name : &nbsp;
                       <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" placeholder={user.nickname}/>
                       &nbsp;&nbsp;
-                      <span onClick={saveNickname} class="material-icons">check</span>
+                      <span onClick={saveNickname} className="material-icons">check</span>
                     </div>
                     :
-                    <div>Name : {user.nickname} &nbsp; <span onClick={editNickname} class="material-icons">edit</span></div>
+                    <div>Name : {user.nickname} &nbsp; <span onClick={editNickname} className="material-icons">edit</span></div>
 
                   }
                   <div>Account : {user.social}</div>
                   <div>({user.email})</div>
                 </div>
-                <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem] cursor-pointer" >
-                  <div onClick={logout}>Logout</div>
-                  <div onClick={deleteAccount}>Delete Account</div>
+                <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem] cursor-pointer " >
+                  <div className="hover:text-[2rem]" onClick={logout}>Logout</div>
+                  <div className="hover:text-[2rem]" onClick={deleteAccount}>Delete Account</div>
                 </div>
         
             </div>
@@ -136,7 +150,7 @@ const MainPage = () => {
               <div className='font-bold text-white flex-1 pl-7'>
                 <div className="m-5 font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
                 {/* 나라별로 모아서 토글만들기 */}
-                <Country country={"france"} npc={"npc"}></Country>
+                <Country myList={myList}></Country>
                 {/* <div className="flex space-x-4 mb-4">
                   <div className="cursor-pointer w-6 h-6 bg-[#ddd] "
                     onClick={() => setShowBoxes(showBoxes === 'box1' ? null : 'box1')}>
