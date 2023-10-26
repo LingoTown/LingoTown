@@ -24,8 +24,8 @@ public class WebClientConfig {
                             .maxIdleTime(Duration.ofMillis(1000L))
                             .build())
 
-            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 100000) // 100초
-            .responseTimeout(Duration.ofSeconds(100)); // 100초 응답 타임아웃
+            .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 600000) // 600초
+            .responseTimeout(Duration.ofSeconds(600)); // 600초 응답 타임아웃
 
     @Bean
     public WebClient webClient() {
