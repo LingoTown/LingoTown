@@ -1,9 +1,12 @@
 package com.lingotown.domain.membernpc.dto.response;
 
+import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -11,4 +14,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CreateTalkResDto {
     Long talkId;
+    Long npcId;
+    List<ReadTopicResDto> topicList;
 }
