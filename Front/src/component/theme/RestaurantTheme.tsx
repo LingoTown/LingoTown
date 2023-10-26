@@ -1,31 +1,57 @@
 import { useEffect, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { Restaurant } from "../../public/map/restaurant/Restaurant"
+import { Restaurant } from "../../../public/map/restaurant/Restaurant";
+import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { startTalk} from "../../api/Talk";
+import { startTalkType } from "../../type/TalkType";
 import * as THREE from 'three';
+import { userAtom } from "../../atom/UserAtom";
+import { talkStateAtom } from "../../atom/TalkStateAtom";
+import { STTAndRecord } from "../town/SttAndRecordComp";
 
-export const RestaurantTheme = () => {
 
+interface KeyPressed {
+  ArrowUp: boolean;
+  ArrowLeft: boolean;
+  ArrowRight: boolean;
+  ArrowDown: boolean;
+}
+
+type AnimationAction = {
+  reset: () => AnimationAction;
+  fadeIn: (duration: number) => AnimationAction;
+  play: () => AnimationAction;
+  fadeOut: (duration: number) => void;
+};
+
+
+export const RestaurantTheme: React.FC = () => {
   const human = useGLTF("./player/model.glb");
   const fox = useGLTF("./npc/fox.glb");
   const rabbit = useGLTF("./npc/rabbit.glb");
 
-  const cameraOffset = useRef(new THREE.Vector3(0, 3, -4));
-  const keysPressed = useRef({ ArrowUp: false, ArrowLeft: false, ArrowRight: false });
-  const humanRef = useRef();
-  const activeAction = useRef();
-  const foxCircleRef = useRef();
-  const rabbitCircleRef = useRef();
-  
+  const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
+  const keysPressed = useRef<KeyPressed>({ ArrowUp: false, ArrowLeft: false, ArrowRight: false, ArrowDown: false });
+  const humanRef = useRef<THREE.Object3D | undefined>();
+  const activeAction = useRef<AnimationAction>(); 
+  const foxCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const rabbitCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+
   const { actions } = useAnimations(human.animations, human.scene);
   const { camera } = useThree();
 
-  const [isInsideCircle, setIsInsideCircle] = useState(false);
-  const [npc, setNpc] = useState("");
-  
+  const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
+  const [npc, setNpc] = useState<string>("");
+
+  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
+  const [talkState, setTalkState] = useRecoilState(talkStateAtom);
+  const user = useRecoilValue(userAtom);
+
   const circleRadius = 3;
   
-  const setAction = (actionName) => {
+  const setAction = (actionName: string): void => {
     if (activeAction.current && activeAction.current === actions[actionName])
       return;
 
@@ -33,20 +59,22 @@ export const RestaurantTheme = () => {
       activeAction.current.fadeOut(0.1);
 
     const action = actions[actionName];
-    action.reset().fadeIn(0.1).play();
-    activeAction.current = action;
-  };
-
-  const handleKeyDown = (event) => {
-    if (['ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-      keysPressed.current[event.key] = true;
-      setAction('Run');
+    if (action) {
+      action.reset().fadeIn(0.1).play();
+      activeAction.current = action;
     }
   };
 
-  const handleKeyUp = (event) => {
-    if (['ArrowUp', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-      keysPressed.current[event.key] = false;
+  const handleKeyDown = (event: KeyboardEvent): void => {
+    if (['ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
+      keysPressed.current[event.key as 'ArrowUp' | 'ArrowLeft' | 'ArrowRight' | 'ArrowDown'] = true;
+      setAction('Walk');
+    }
+  };
+
+  const handleKeyUp = (event: KeyboardEvent): void => {
+    if (['ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
+      keysPressed.current[event.key as 'ArrowUp' | 'ArrowLeft' | 'ArrowRight' | 'ArrowDown'] = false;
       if (Object.values(keysPressed.current).every(key => !key)) {
         setAction('Idle');
       }
@@ -56,8 +84,8 @@ export const RestaurantTheme = () => {
   useFrame(() => {
     if (humanRef.current) {
       
-      const speed = 0.1;
-      const rotationSpeed = 0.03;
+      const speed = 0.15;
+      const rotationSpeed = 0.04;
       const moveForward = new THREE.Vector3();
   
       if (keysPressed.current.ArrowUp) {
@@ -65,9 +93,20 @@ export const RestaurantTheme = () => {
         moveForward.multiplyScalar(speed);
         humanRef.current.position.add(moveForward);
       }
-  
+
+      if (keysPressed.current.ArrowDown) {
+        humanRef.current.getWorldDirection(moveForward);
+        moveForward.multiplyScalar(-speed * 0.5);
+        humanRef.current.position.add(moveForward);
+      }
+
       if (keysPressed.current.ArrowLeft || keysPressed.current.ArrowRight) {
-        const deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
+        let deltaRotation = 1;
+        if (keysPressed.current.ArrowDown) {
+          deltaRotation = keysPressed.current.ArrowLeft ? -rotationSpeed : rotationSpeed;
+        } else {
+          deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
+        }
         humanRef.current.rotateY(deltaRotation);
       }
   
@@ -134,11 +173,30 @@ export const RestaurantTheme = () => {
     };
   }, []);
 
+  const doStartTalk = async(npcId: number) => {
+    await startTalk(npcId, ({data}) => {
+      const result = data.data as startTalkType;
+      console.log(result)
+    }, (error) => {
+      console.log(error);
+    }); 
+  }
+
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'Space') {
         if (isInsideCircle) {
-          confirm(npc + "와 대화를 시작하시겠습니까?")
+          const flag = confirm(npc + "와 대화를 시작하시겠습니까?")
+          if (flag) {
+            const copy = {...talkBalloon};
+            copy.isShow = true;
+            copy.profileImg = user.profileImg;
+            setTalkBalloon(copy);
+            doStartTalk(1);
+            const copy2 = {...talkState};
+            copy2.onRec = !talkState.onRec;
+            setTalkState(copy2);
+          }
         }
       }
     };
@@ -151,6 +209,7 @@ export const RestaurantTheme = () => {
 
   return(
     <>
+      <STTAndRecord />
       <Restaurant />
       <Environment blur={1} background preset="sunset" />
       <Circle ref={foxCircleRef} args={[3, 32]} position={[-3.4, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} >
