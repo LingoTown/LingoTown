@@ -4,7 +4,7 @@ import KakaoCallback from "./component/KakaoCallback";
 import GoogleCallback from "./component/GoogleCallback";
 import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
-import { ThreeDemensionCanvas } from "./minsung/ThreeDemensionCanvas";
+import { ThreeDemensionCanvas } from "./pages/ThreeDemensionCanvas";
 
 
 function App() {

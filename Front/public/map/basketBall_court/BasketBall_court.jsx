@@ -11,7 +11,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function BasketBall_court(props) {
-  const { nodes, materials } = useGLTF('/scene.gltf')
+  const { nodes, materials } = useGLTF('./map/basketBall_court/scene.gltf')
   return (
     <group {...props} dispose={null}>
       <group scale={0.01}>
