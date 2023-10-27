@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { Restaurant } from "../../../public/map/restaurant/Restaurant";
@@ -10,6 +10,7 @@ import * as THREE from 'three';
 import { userAtom } from "../../atom/UserAtom";
 import { talkStateAtom } from "../../atom/TalkStateAtom";
 import { STTAndRecord } from "../town/SttAndRecordComp";
+import ConfirmContext from "../util/confirm/ConfirmContext";
 
 
 interface KeyPressed {
@@ -48,8 +49,14 @@ export const RestaurantTheme: React.FC = () => {
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const [talkState, setTalkState] = useRecoilState(talkStateAtom);
   const user = useRecoilValue(userAtom);
+  const { confirm: confirmComp } = useContext(ConfirmContext);
 
   const circleRadius = 3;
+
+  const customConfirm = async(title:string, message:string) => {
+    const result = await confirmComp(title, message);
+    return result
+  }
   
   const setAction = (actionName: string): void => {
     if (activeAction.current && activeAction.current === actions[actionName])
@@ -183,10 +190,11 @@ export const RestaurantTheme: React.FC = () => {
   }
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = async(event: KeyboardEvent) => {
       if (event.code === 'Space') {
         if (isInsideCircle) {
-          const flag = confirm(npc + "와 대화를 시작하시겠습니까?")
+          const flag = await customConfirm(npc, npc + "와 대화를 시작하시겠습니까?")
+          console.log("asdas" + flag)
           if (flag) {
             const copy = {...talkBalloon};
             copy.isShow = true;

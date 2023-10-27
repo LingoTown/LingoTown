@@ -1,17 +1,26 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ConfirmType } from './ConfirmType';
 
 const CustomConfirm = ({ title, message, onClickOK, onClickCancel }: ConfirmType) => {
+  const okButtonRef = useRef<HTMLButtonElement>(null);
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleKeydown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClickCancel();
       }
+      if (e.key === 'ArrowLeft') {
+        okButtonRef.current?.focus();
+      }
+      if (e.key === 'ArrowRight') {
+        cancelButtonRef.current?.focus();
+      }
     };
 
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleKeydown);
 
-    return () => document.removeEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleKeydown);
   }, [onClickCancel]);
 
   return (
@@ -21,15 +30,15 @@ const CustomConfirm = ({ title, message, onClickOK, onClickCancel }: ConfirmType
         <h2 className="text-lg font-bold mb-4 border-b pb-2">{title}</h2>
         <div className="mb-5 text-gray-700">{message}</div>
         <div className="mt-5 flex justify-end space-x-2">
-          <button onClick={onClickOK} className="py-2 px-4 bg-blue-500 text-white rounded focus:ring focus:ring-blue-400 focus:ring-opacity-50">
+          <button ref={okButtonRef} onClick={onClickOK} className="py-2 px-4 bg-blue-500 text-white rounded focus:ring focus:ring-blue-400 focus:ring-opacity-50">
             확인
           </button>
-          <button onClick={onClickCancel} className="py-2 px-4 bg-gray-200 text-gray-700 rounded focus:ring focus:ring-gray-400 focus:ring-opacity-50" autoFocus>
+          <button ref={cancelButtonRef} onClick={onClickCancel} className="py-2 px-4 bg-gray-200 text-gray-700 rounded focus:ring focus:ring-gray-400 focus:ring-opacity-50" autoFocus>
             취소
           </button>
         </div>
       </div>
-</div>
+    </div>
   );
 };
 

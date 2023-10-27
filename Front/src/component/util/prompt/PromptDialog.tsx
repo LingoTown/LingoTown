@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import PromptContext from './PromptContext';
 import CustomPrompt from './CustomPrompt';
-import { title } from 'process';
 import { PromptType } from './PromptType';
 
 const PromptDialog = ({ children }: { children: React.ReactNode }) => {
   const [state, setState] = useState<PromptType>();
   const prompt = (
+    title?: string,
     message?: string,
     _default?: string
   ): Promise<string | null> => {
