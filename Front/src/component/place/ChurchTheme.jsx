@@ -154,7 +154,7 @@ export const ChurchTheme = () => {
   return(
     <>
       <Church />
-      <Environment blur={1} background preset="sunset" />
+      <Environment blur={1} background preset="night" />
       <Circle ref={foxCircleRef} args={[2, 32]} position={[5.5, -14.7, 0]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" side={THREE.DoubleSide} />
       </Circle>
