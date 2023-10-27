@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { kakaoLogin } from '../api/User';
-import { userAtom } from '../atom/UserAtom';
+import { kakaoLogin } from '../../api/User';
+import { userAtom } from '../../atom/UserAtom';
 import { useSetRecoilState } from 'recoil';
-import { userType } from '../type/UserType';
-import Background from './BackgrouindComp';
+import { userType } from '../../type/UserType';
+import Background from '../util/BackgroundComp';
 
-
-function GetAuthCodeAndSendToSpring() {
+const KakaoCallbackComp = () => {
 
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
@@ -43,4 +42,4 @@ function GetAuthCodeAndSendToSpring() {
   )
 }
 
-export default GetAuthCodeAndSendToSpring;
+export default KakaoCallbackComp;

@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { googleLogin } from '../api/User';
-import { userAtom } from '../atom/UserAtom';
+import { googleLogin } from '../../api/User';
+import { userAtom } from '../../atom/UserAtom';
 import { useSetRecoilState } from 'recoil';
-import { userType } from '../type/UserType';
-import Background from './BackgrouindComp';
+import { userType } from '../../type/UserType';
+import Background from '../util/BackgroundComp';
 
-
-const GetAuthCodeAndSendToSpring = () => {
+const GoogleCallbackComp = () => {
 
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userAtom);
@@ -27,7 +26,7 @@ const GetAuthCodeAndSendToSpring = () => {
     await googleLogin(json, ({data}) => {
       const result = data.data as userType;
       const tempUser = {...result};
-      setUser(tempUser);
+      setUser(tempUser); //유저 정보를 유저아톰에 저장
       navigate("/main");
     }, (error) => {
       console.log(error)
@@ -43,4 +42,5 @@ const GetAuthCodeAndSendToSpring = () => {
   )
 }
 
-export default GetAuthCodeAndSendToSpring;
+
+export default GoogleCallbackComp;
