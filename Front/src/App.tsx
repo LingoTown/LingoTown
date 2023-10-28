@@ -5,7 +5,6 @@ import GoogleCallback from "./component/login/GoogleCallbackComp";
 import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
 import { CanvasPage } from "./pages/CanvasPage";
-import { STTAndRecord } from "./component/talk/SttAndRecordComp";
 import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolyginiaComp } from "./component/theme/PolyginiaComp";
 
@@ -20,7 +19,6 @@ const App = () => {
         <Route path="/main" element={ <MainPage/> }/>
         <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
         <Route path="/polyginia" element={ <CanvasPage theme={ <PolyginiaComp/> }/> }/>
-        <Route path="/stt" element={ <STTAndRecord/> }/>
         <Route path="/*" element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>
