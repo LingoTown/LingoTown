@@ -4,20 +4,23 @@ import KakaoCallback from "./component/login/KakaoCallbackComp";
 import GoogleCallback from "./component/login/GoogleCallbackComp";
 import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
-import { ThreeDemensionCanvas } from "./pages/MapCanvasPage";
-import { STTAndRecord } from "./component/town/SttAndRecordComp";
-import { RestaurantTheme } from "./component/theme/RestaurantTheme";
+import { CanvasPage } from "./pages/CanvasPage";
+import { STTAndRecord } from "./component/talk/SttAndRecordComp";
+import { RestaurantComp } from "./component/theme/RestaurantComp";
+import { PolyginiaComp } from "./component/theme/PolyginiaComp";
+
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={ <LoginPage/> }/>
-        <Route path="/kakao/callback" element={ <KakaoCallback/> }> </Route>
-        <Route path="/google/callback" element={ <GoogleCallback/> }> </Route>
-        <Route path="/main" element={ <MainPage/> }></Route>
-        <Route path="/explore" element={ <ThreeDemensionCanvas customComponent={ <RestaurantTheme/> }/> }></Route>
-        <Route path="/stt" element={ <STTAndRecord/> }></Route>
+        <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
+        <Route path="/google/callback" element={ <GoogleCallback/> }/>
+        <Route path="/main" element={ <MainPage/> }/>
+        <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
+        <Route path="/polyginia" element={ <CanvasPage theme={ <PolyginiaComp/> }/> }/>
+        <Route path="/stt" element={ <STTAndRecord/> }/>
         <Route path="/*" element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>
