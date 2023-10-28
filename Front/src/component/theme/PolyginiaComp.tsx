@@ -3,12 +3,11 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { Polygonia } from "../../../public/map/polygonia/Polygonia";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { startTalk} from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import * as THREE from 'three';
-import { userAtom } from "../../atom/UserAtom";
-import { talkStateAtom } from "../../atom/TalkStateAtom";
+// import { userAtom } from "../../atom/UserAtom";
 import { KeyPressed, AnimationAction } from "./ThemeType";
 // import { STTAndRecord } from "../town/SttAndRecordComp";
 import ConfirmContext from "../util/confirm/ConfirmContext";
@@ -33,9 +32,7 @@ export const PolyginiaComp: React.FC = () => {
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
   const [npc, setNpc] = useState<string>("");
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
-  const [talkState, setTalkState] = useRecoilState(talkStateAtom);
 
-  const user = useRecoilValue(userAtom);
   const { confirm: confirmComp } = useContext(ConfirmContext);
 
   const circleRadius = 3;
@@ -189,12 +186,10 @@ export const PolyginiaComp: React.FC = () => {
           if (flag) {
             const copy = {...talkBalloon};
             copy.isShow = true;
-            copy.profileImg = user.profileImg;
+            // copy.profileImg = user.profileImg;
             setTalkBalloon(copy);
             doStartTalk(1);
-            const copy2 = {...talkState};
-            copy2.onRec = !talkState.onRec;
-            setTalkState(copy2);
+
           }
         }
       }

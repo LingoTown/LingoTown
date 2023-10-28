@@ -1,11 +1,11 @@
 import 'regenerator-runtime';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { talking } from '../../api/Talk';
 import { talkingType } from '../../type/TalkType';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState, useRecoilValue } from "recoil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 declare global {
   interface Window {
@@ -14,24 +14,24 @@ declare global {
   }
 }
 
-export const STTAndRecord: React.FC = () => {
-  const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+type STTAndRecordProps = {
+  lang: string;
+  talkId: number;
+};
+
+export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const [stream, setStream] = useState<MediaStream>();
   const [media, setMedia] = useState<MediaRecorder>();
-  const [onRec, setOnRec] = useState(true);
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
   const [analyser, setAnalyser] = useState<ScriptProcessorNode>();
-  const [uploadAudio, setUploadAudio] = useState<string>("");
-  listening
-  onRec
-  uploadAudio
-  
-  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
+  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   const talkState = useRecoilValue(talkStateAtom);
+  const isMounted = useRef({ offRec: false, onRec: false, reset: false });
 
   useEffect(() => {
-    console.log(transcript);
+    setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
   }, [transcript]);
 
   if (!browserSupportsSpeechRecognition) {
@@ -50,7 +50,6 @@ export const STTAndRecord: React.FC = () => {
       analyser.connect(audioCtx.destination);
     }
     
-
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
@@ -64,31 +63,26 @@ export const STTAndRecord: React.FC = () => {
           mediaRecorder.stop();
           analyser.disconnect();
           audioCtx.createMediaStreamSource(stream).disconnect();
-
           mediaRecorder.ondataavailable = function () {
-            setOnRec(true);
           };
-        } else {
-          setOnRec(false);
         }
       };
     });
 
-    SpeechRecognition.startListening({ language: 'ko-KR', continuous: true });
+    SpeechRecognition.startListening({ language: lang, continuous: true });
   };
 
   const offRecAudio = () => {
     if (media && stream) {
       media.ondataavailable = function (e) {
-        setOnRec(true);
         const sound = new File([e.data], "soundBlob", {
           lastModified: new Date().getTime(),
           type: "audio",
         });
         const data = new FormData();
         data.append("talkFile", sound);
-        data.append("talkId", String(1));
-        data.append("prompt", "hi");
+        data.append("talkId", String(talkId));
+        data.append("prompt", transcript);
         doTalking(data);
       };
 
@@ -101,13 +95,14 @@ export const STTAndRecord: React.FC = () => {
         analyser.disconnect();
         source.disconnect();
       }
+
+      resetTranscript();
       SpeechRecognition.stopListening();
     }
   };
 
   const resetRecAudio = () => {
     if (media) {
-      media.ondataavailable = function () { setOnRec(true); };
 
       if (stream)
         stream.getAudioTracks().forEach(function (track) { track.stop(); });
@@ -125,28 +120,36 @@ export const STTAndRecord: React.FC = () => {
   const doTalking = async(param: FormData) => {
     await talking(param, ({data}) => {
       const result = data.data as talkingType;
-      setUploadAudio(result.file);
-      const copy = {...talkBalloon}
-      copy.sentence = result.responseMessage;
-      setTalkBalloon(copy);
+      setTalkBalloon(prev => ({ ...prev, sentence: result.responseMessage }));
+      console.log(result)
     }, (error) => {
       console.log(error);
     })
   }
+    
+  useEffect(() => {
+    if (isMounted.current.onRec) {
+      onRecAudio();
+    } else {
+      isMounted.current.onRec = true;
+    }
+  }, [talkState.onRec]);
 
   useEffect(() => {
-    console.log("off");
-    offRecAudio();
-  }, [talkState.offRec])
+    if (isMounted.current.offRec) {
+      offRecAudio();
+    } else {
+      isMounted.current.offRec = true;
+    }
+  }, [talkState.offRec]);
 
+  
   useEffect(() => {
-    onRecAudio();
-    console.log("on")
-  }, [talkState.onRec])
-
-  useEffect(() => {
-    resetRecAudio();
-    console.log("reset")
-  }, [talkState.reset])
+    if (isMounted.current.reset) {
+      resetRecAudio();
+    } else {
+      isMounted.current.reset = true;
+    }
+  }, [talkState.reset]);
 
 };
