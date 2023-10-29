@@ -11,3 +11,16 @@ export type AnimationAction = {
   play: () => AnimationAction;
   fadeOut: (duration: number) => void;
 }
+
+export type NpcInfo = {
+  id: number;
+  name: string;
+  img: string;
+  ref: React.RefObject<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>>;
+};
+
+export type CurrentNpc = {
+  id: number;
+  name: string | null;
+  img: any;
+}

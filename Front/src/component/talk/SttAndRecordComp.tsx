@@ -4,8 +4,12 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { talking } from '../../api/Talk';
 import { talkingType } from '../../type/TalkType';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { userAtom } from '../../atom/UserAtom';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { CurrentNpc } from '../theme/ThemeType';
+
+
 
 declare global {
   interface Window {
@@ -17,9 +21,10 @@ declare global {
 type STTAndRecordProps = {
   lang: string;
   talkId: number;
+  currentNpc: React.MutableRefObject<CurrentNpc | undefined>;
 };
 
-export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
+export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, currentNpc}) => {
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const [stream, setStream] = useState<MediaStream>();
@@ -28,6 +33,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
   const [analyser, setAnalyser] = useState<ScriptProcessorNode>();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   const talkState = useRecoilValue(talkStateAtom);
+  const user = useRecoilValue(userAtom);
   const isMounted = useRef({ offRec: false, onRec: false, reset: false });
 
   useEffect(() => {
@@ -42,6 +48,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const analyser = audioCtx.createScriptProcessor(0, 1, 1);
     setAnalyser(analyser);
+    setTalkBalloon(prev => ({ ...prev, userImg: user.profileImg}));
 
     const makeSound = (stream: MediaStream) => {
       const source = audioCtx.createMediaStreamSource(stream);
@@ -120,8 +127,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
   const doTalking = async(param: FormData) => {
     await talking(param, ({data}) => {
       const result = data.data as talkingType;
-      setTalkBalloon(prev => ({ ...prev, sentence: result.responseMessage }));
-      console.log(result)
+      setTalkBalloon(prev => ({ ...prev, sentence: result.responseMessage, img: currentNpc.current?.img }));
     }, (error) => {
       console.log(error);
     })
@@ -129,6 +135,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
     
   useEffect(() => {
     if (isMounted.current.onRec) {
+      setTalkBalloon(prev => ({ ...prev, img: user.profileImg }));
       onRecAudio();
     } else {
       isMounted.current.onRec = true;
@@ -143,7 +150,6 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId}) => {
     }
   }, [talkState.offRec]);
 
-  
   useEffect(() => {
     if (isMounted.current.reset) {
       resetRecAudio();
