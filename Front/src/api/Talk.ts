@@ -1,10 +1,12 @@
-import { HttpJson } from "./Http";
-// import ReturnType from "../type/ReturnType";
+import { HttpJson, HttpForm } from "./Http";
+import ReturnType from "../type/ReturnType";
 
-
-const tempTalk = async (param: object, success: (data : {data : any}) => void, fail: (error: unknown) => void) => {
-  await HttpJson.post(`/api/openai`, JSON.stringify(param)).then(success).catch(fail);
+const startTalk = async (npcId: number, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.post(`/api/talk/start/` + npcId).then(success).catch(fail);
 }
 
+const talking = async (param: FormData, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpForm.post(`/api/talk`, param).then(success).catch(fail);
+}
 
-export { tempTalk };
+export { startTalk, talking };
