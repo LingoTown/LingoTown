@@ -1,5 +1,6 @@
 package com.lingotown.domain.talk.controller;
 
+import com.lingotown.domain.talk.dto.request.TestDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
@@ -62,5 +63,9 @@ public class TalkController {
         return talkService.increaseIntimacy(increaseIntimacyReqDto);
     }
 
+    @PostMapping("/test")
+    public String test(@RequestBody TestDto test) throws IOException {
+        return openAIService.checkGrammar(test);
+    }
 
 }
