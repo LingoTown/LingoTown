@@ -27,7 +27,7 @@ const CustomPrompt = ({ title, message, _default, onClickOK, onClickCancel }: Pr
       <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClickCapture={(e) => e.stopPropagation()}></div>
       <form className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 p-6 bg-white rounded-lg shadow-xl border border-gray-200" onSubmit={handleSubmit}>
         <h2 className="text-lg font-semibold mb-4 border-b pb-2">{title}</h2>
-        <div className="mb-5 text-gray-600">{message}</div>
+        <div className="mb-5 text-gray-600 font-bold text-lg">{message}</div>
         <input
           id="input"
           className="w-full px-3 py-2 mb-5 border-2 border-gray-300 rounded-lg focus:border-blue-500 transition-colors"
