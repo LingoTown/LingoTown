@@ -98,7 +98,7 @@ pipeline {
         stage("Docker Container Run") {
             steps {
                 script {
-                    sh "docker run -d -p 8081:8081 --name ${CONTAINER_NAME_BE} ${IMAGE_NAME_BE} -e TZ=Asia/Seoul"
+                    sh "docker run -d -p 8081:8081 -e GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS} --name ${CONTAINER_NAME_BE} ${IMAGE_NAME_BE} -e TZ=Asia/Seoul"
                 }
             }
         }
