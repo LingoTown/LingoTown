@@ -18,6 +18,7 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
+import com.lingotown.global.tts.TTSService;
 import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,7 @@ public class OpenAIService {
 
     private final CacheService cacheService;
     private final TalkService talkService;
+    private final TTSService ttsService;
 
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
@@ -53,7 +55,7 @@ public class OpenAIService {
 
     @TrackExecutionTime
     @Transactional
-    public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws IOException {
+    public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws Exception {
 
         Gson gson = new Gson();
         RestTemplate restTemplate = new RestTemplate();
@@ -132,6 +134,8 @@ public class OpenAIService {
         CreateTalkDetailReqDto systemReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
         talkService.createTalkDetail(systemReqDto);
+
+        ttsService.UseTTS();
 
         // 비동기 문법 체크
         webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
