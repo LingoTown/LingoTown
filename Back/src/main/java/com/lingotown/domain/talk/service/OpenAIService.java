@@ -9,6 +9,7 @@ import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
@@ -16,27 +17,33 @@ import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
 import com.lingotown.global.service.S3Service;
+import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OpenAIService {
 
+    private final WebClientUtil webClientUtil;
+    private final TalkRepository talkRepository;
+    private final TalkDetailRepository talkDetailRepository;
     private final CacheService cacheService;
     private final TalkService talkService;
     private final S3Service s3Service;
-    private final TalkRepository talkRepository;
-    private final TalkDetailRepository talkDetailRepository;
+
 
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
@@ -44,6 +51,7 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
+    @TrackExecutionTime
     @Transactional
     public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws IOException {
 
@@ -93,10 +101,12 @@ public class OpenAIService {
         messages.add(messageDtoUser);
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
+                .max_tokens(40)
                 .messages(messages)
                 .build();
 
         String jsonString = gson.toJson(requestDto);
+
         String body = String.format(jsonString);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
@@ -117,11 +127,32 @@ public class OpenAIService {
         //DB에 저장
         CreateTalkDetailReqDto userReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
-        Long savedTalkDetailId = createTalkDetail(userReqDto);
+        createTalkDetail(userReqDto);
 
         CreateTalkDetailReqDto systemReqDto
                 = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
         createTalkDetail(systemReqDto);
+
+        // 비동기 문법 체크
+//        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
+//            .subscribe(
+//                    res -> {
+//                        // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
+//                        // 예: 응답을 분석하고 데이터베이스에 저장하기
+//
+//                        TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData())
+//                                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+//
+//                        // 문법 조언 DB 저장
+//                        talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+//                        // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+//                        talkDetailRepository.save(talkDetail);
+//                    },
+//                    err -> {
+//                        // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+//                        log.error("Error occurred: ", err);
+//                    }
+//            );
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
@@ -157,65 +188,71 @@ public class OpenAIService {
     }
 
     //문법오류 판단하기
-    public String checkGrammar(TestDto test) {
-        Gson gson = new Gson();
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(API_KEY);
-
-        //요청을 담을 메세지 리스트
-        List<OpenAIMessageDto> messages = new ArrayList<>();
-
-        String check = "You are an English teacher from now on. "
-                + "Please make sure there are no grammar or vocabulary errors in this sentence and correct it in the correct sentence" +
-                "Explain in Korean what went wrong " +
-                "The current user is Korean, and I am learning English from you. " +
-                "If there's no error, please return 'Perfect'";
-
-
-        OpenAIMessageDto messageDtoAI = OpenAIMessageDto
-                .builder()
-                .role("assistant")
-                .content(check)
-                .build();
-
-        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-                .builder()
-                .role("user")
-                .content(test.getPrompt())
-                .build();
-
-        messages.add(messageDtoAI);
-        messages.add(messageDtoUser);
-
-        OpenAIReqDto requestDto = OpenAIReqDto
-                .builder()
-                .messages(messages)
-                .build();
-
-        String jsonString = gson.toJson(requestDto);
-        String body = String.format(jsonString);
-
-        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-        ResponseEntity<OpenAIResDto> response
-                = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
-
-        return response.getBody().getChoices()[0].getMessage().getContent();
-    }
+//    public String checkGrammar(TestDto test) {
+//        Gson gson = new Gson();
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.setBearerAuth(API_KEY);
+//
+//        //요청을 담을 메세지 리스트
+//        List<OpenAIMessageDto> messages = new ArrayList<>();
+//
+//        String check = "You are an English teacher from now on. "
+//                + "Please make sure there are no grammar or vocabulary errors in this sentence and correct it in the correct sentence" +
+//                "Explain in Korean what went wrong " +
+//                "The current user is Korean, and I am learning English from you. " +
+//                "If there's no error, please return 'Perfect'";
+//
+//
+//        OpenAIMessageDto messageDtoAI = OpenAIMessageDto
+//                .builder()
+//                .role("assistant")
+//                .content(check)
+//                .build();
+//
+//        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
+//                .builder()
+//                .role("user")
+//                .content(test.getPrompt())
+//                .build();
+//
+//        messages.add(messageDtoAI);
+//        messages.add(messageDtoUser);
+//
+//        OpenAIReqDto requestDto = OpenAIReqDto
+//                .builder()
+//                .messages(messages)
+//                .build();
+//
+//        String jsonString = gson.toJson(requestDto);
+//        String body = String.format(jsonString);
+//
+//        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+//        ResponseEntity<OpenAIResDto> response
+//                = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
+//
+//        return response.getBody().getChoices()[0].getMessage().getContent();
+//    }
 
 
     //상황 설정하기
     private String createConcept(Long talkId){
         NPC npc = getNPCEntity(talkId);
+        System.out.println("id : " +npc.getId());
 
-        String npcJob = npc.getNpcRole().toString();
-        String npcAge = npc.getNpcAge().toString();
+        System.out.println("npcJob: " +npc.getNpcRole());
+        System.out.println();
+
+        String npcJob = npc.getNpcRole();
+        String npcName = npc.getName();
+        int npcAge = npc.getNpcAge();
         String language = npc.getWorld().getLanguage().toString();
         String npcGender = npc.getGenderType().toString();
+        String npcSituation = npc.getSituation();
 
-        return  "\n" +
+        String concept =  "\n" +
                 "We are trying to do situational comedy. " +
                 "The user is a beginner who has just started learning " + language + ". " +
                 "The user's " + language +" level is Beginner, and " +
@@ -223,7 +260,10 @@ public class OpenAIService {
                 "The level of difficulty in responding should be relaxed so that users can understand it. " +
                 "Lower the level of difficulty in responding " +
                 "And also, Please respond in complete sentences without exceeding max_token. " +
-                "Now, " + "you are " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge;
+                "Now, " + "you are " +npcName +", and " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge
+                + ", and " +npcSituation;
+        System.out.println("concept : " +concept);
+        return concept;
     }
 
 

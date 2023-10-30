@@ -2,6 +2,17 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
+    /* 2023.10.25 : Sonarqube */
+    id 'org.sonarqube' version '4.2.1.3168'
+}
+
+/* 2023.10.25 : Sonarqube */
+sonar {
+    properties {
+        property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
+        property "sonar.projectName", "S09P31B305"
+    }
 }
 
 group = 'LingoTown'
@@ -50,6 +61,11 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
+    /* 23.10.26 WebClient 위한 WebFlux 의존성 추가 */
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    /* AOP : 실행시간 측정 용 */
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {

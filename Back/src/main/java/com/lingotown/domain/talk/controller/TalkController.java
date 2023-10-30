@@ -63,9 +63,9 @@ public class TalkController {
         return talkService.increaseIntimacy(increaseIntimacyReqDto);
     }
 
-    @PostMapping("/test")
-    public String test(@RequestBody TestDto test) throws IOException {
-        return openAIService.checkGrammar(test);
-    }
+//    @PostMapping("/test")
+//    public String test(@RequestBody TestDto test) throws IOException {
+//        return openAIService.checkGrammar(test);
+//    }
 
 }

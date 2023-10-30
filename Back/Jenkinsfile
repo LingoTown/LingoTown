@@ -54,6 +54,20 @@ pipeline {
             }
         }
 
+        // SonarQube 분석
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // 젠킨스에서 설정한 Sonarqube 서버 이름
+                    withSonarQubeEnv('SonarQube') {
+                        dir("${PROJECT_DIR_BE}") {
+                            sh "./gradlew sonar"
+                        }
+                    }
+                }
+            }
+        }
+
         // 컨테이너 클리닝
         stage("Docker Container Cleaning") {
             steps{
