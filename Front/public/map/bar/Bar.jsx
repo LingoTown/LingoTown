@@ -10,14 +10,31 @@ Title: Restaurant
 import React, { useRef } from 'react'
 import { useGLTF, useTexture } from '@react-three/drei'
 
+function Plane(props) {
+  const [ref] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0], ...props }))
+  return (
+    <mesh ref={ref}>
+      <planeGeometry args={[100, 100]} />
+    </mesh>
+  )
+}
+
+function Cube(props) {
+  const [ref] = useBox(() => ({ mass: 1, position: [0, 5, 0], ...props }))
+  return (
+    <mesh ref={ref}>
+      <boxGeometry />
+    </mesh>
+  )
+}
+
 export function Bar(props) {
   const { nodes, materials } = useGLTF('./map/bar/scene.gltf')
-  const textures = useTexture({
-    map:"./map/bar/textures/Material_30_baseColor.jpeg"
-  })
+  // const textures = useTexture({
+  //   map:"./map/bar/textures/Material_30_baseColor.jpeg"
+  // })
   return (
     <group {...props} dispose={null} scale={0.03}>
-
       {/* 영역 가림보 */}
       <group position={[28.36, 26.181, 227.136]} rotation={[-Math.PI / 2, 0, 0]}>
         <mesh geometry={nodes['SCREEN040_Material_#27_0'].geometry} material={materials.Material_27} position={[222.296, -26.906, 0]} rotation={[Math.PI / 2, -Math.PI / 2, 0]} />
@@ -183,7 +200,7 @@ export function Bar(props) {
         <mesh geometry={nodes.Cylinder028__0.geometry} material={materials.Rectangle002__0} position={[0, 0, -4.056]} scale={[1.17, 1.17, 1.988]} />
         <mesh geometry={nodes.Cylinder029__0.geometry} material={materials.Rectangle002__0} position={[0, 0, -3.997]} />
       </group>
-      <mesh geometry={nodes.Rectangle002__0.geometry} material={materials.Rectangle002__0} position={[226, -7.874, 408.105]} rotation={[-Math.PI / 2, 0, 0]} scale={[1.5,1.5,100]} map={textures.map}/>
+      <mesh geometry={nodes.Rectangle002__0.geometry} material={materials.Rectangle002__0} position={[226, -7.874, 408.105]} rotation={[-Math.PI / 2, 0, 0]} scale={[1.5,1.5,100]}/>
       <mesh geometry={nodes['Rectangle001_Material_#30_0'].geometry} material={materials.Material_30} position={[22.685, 0, 254.042]} rotation={[-Math.PI / 2, 0, 0]} />
       {/* <mesh geometry={nodes['FLOORB_Material_#24_0'].geometry} material={materials.Material_24} position={[-351.331, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} /> */}
       {/* <mesh geometry={nodes['FLOOR_Material_#31_0'].geometry} material={materials.Material_31} position={[-311.961, 0, -21.549]} rotation={[-Math.PI / 2, 0, 0]} />
