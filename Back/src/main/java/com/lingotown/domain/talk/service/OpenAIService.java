@@ -17,6 +17,7 @@ import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
 import com.lingotown.global.service.S3Service;
+import com.lingotown.global.tts.TTSService;
 import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,7 @@ public class OpenAIService {
     private final CacheService cacheService;
     private final TalkService talkService;
     private final S3Service s3Service;
+    private final TTSService ttsService;
 
 
     @Value("${OPEN_AI.URL}")
@@ -53,7 +55,7 @@ public class OpenAIService {
 
     @TrackExecutionTime
     @Transactional
-    public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws IOException {
+    public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws Exception {
 
         Gson gson = new Gson();
         RestTemplate restTemplate = new RestTemplate();
@@ -101,7 +103,7 @@ public class OpenAIService {
         messages.add(messageDtoUser);
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(40)
+                .max_tokens(80)
                 .messages(messages)
                 .build();
 
@@ -124,118 +126,62 @@ public class OpenAIService {
         chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
-        //DB에 저장
-        CreateTalkDetailReqDto userReqDto
-                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), true, talkReqDto.getPrompt(), talkReqDto.getTalkFile());
-        createTalkDetail(userReqDto);
+        // 사용자 질문 DB 저장
+        CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(true)
+                .content(talkReqDto.getPrompt())
+                .talkFile(talkReqDto.getTalkFile())
+                .build();
 
-        CreateTalkDetailReqDto systemReqDto
-                = new CreateTalkDetailReqDto(talkReqDto.getTalkId(), false, responseDto.getContent(), talkReqDto.getTalkFile());
-        createTalkDetail(systemReqDto);
+        DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
+
+    
+        /* GPT 응답 TTS 변환 및 DB 저장 */
+        
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+
 
         // 비동기 문법 체크
-//        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
-//            .subscribe(
-//                    res -> {
-//                        // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
-//                        // 예: 응답을 분석하고 데이터베이스에 저장하기
-//
-//                        TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData())
-//                                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-//
-//                        // 문법 조언 DB 저장
-//                        talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
-//                        // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
-//                        talkDetailRepository.save(talkDetail);
-//                    },
-//                    err -> {
-//                        // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
-//                        log.error("Error occurred: ", err);
-//                    }
-//            );
+        webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
+            .subscribe(
+                    res -> {
+                        // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
+                        // 예: 응답을 분석하고 데이터베이스에 저장하기
+
+                        TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+                                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                        // 문법 조언 DB 저장
+                        talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+                        // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+                        talkDetailRepository.save(talkDetail);
+                    },
+                    err -> {
+                        // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+                        log.error("Error occurred: ", err);
+                    }
+            );
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
                 .responseMessage(responseDto.getContent())
+                .responseS3URL(systemResDataResponse.getData().getTalkFile())
                 .build();
 
         return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
-
-    //NPC와 대화하기
-    @Transactional
-    public Long createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto) throws IOException {
-        Long talkId = createTalkDetailReqDto.getTalkId();
-        Talk talk = getTalkEntity(talkId);
-
-        boolean isMember = createTalkDetailReqDto.isMember();
-        String content = createTalkDetailReqDto.getContent();
-        MultipartFile talkFile = createTalkDetailReqDto.getTalkFile();
-        String fileUrl = s3Service.uploadFile(talkFile);
-
-        TalkDetail talkDetail = TalkDetail
-                .builder()
-                .isMember(isMember)
-                .content(content)
-                .talkFile(fileUrl)
-                .talk(talk)
-                .build();
-
-        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
-        return savedTalkDetail.getId();
-    }
-
-    //문법오류 판단하기
-//    public String checkGrammar(TestDto test) {
-//        Gson gson = new Gson();
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(API_KEY);
-//
-//        //요청을 담을 메세지 리스트
-//        List<OpenAIMessageDto> messages = new ArrayList<>();
-//
-//        String check = "You are an English teacher from now on. "
-//                + "Please make sure there are no grammar or vocabulary errors in this sentence and correct it in the correct sentence" +
-//                "Explain in Korean what went wrong " +
-//                "The current user is Korean, and I am learning English from you. " +
-//                "If there's no error, please return 'Perfect'";
-//
-//
-//        OpenAIMessageDto messageDtoAI = OpenAIMessageDto
-//                .builder()
-//                .role("assistant")
-//                .content(check)
-//                .build();
-//
-//        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-//                .builder()
-//                .role("user")
-//                .content(test.getPrompt())
-//                .build();
-//
-//        messages.add(messageDtoAI);
-//        messages.add(messageDtoUser);
-//
-//        OpenAIReqDto requestDto = OpenAIReqDto
-//                .builder()
-//                .messages(messages)
-//                .build();
-//
-//        String jsonString = gson.toJson(requestDto);
-//        String body = String.format(jsonString);
-//
-//        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-//        ResponseEntity<OpenAIResDto> response
-//                = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
-//
-//        return response.getBody().getChoices()[0].getMessage().getContent();
-//    }
-
 
     //상황 설정하기
     private String createConcept(Long talkId){
