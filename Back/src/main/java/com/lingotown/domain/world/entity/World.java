@@ -22,8 +22,7 @@ public class World {
     private Long id;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Theme theme;
+    private String theme;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

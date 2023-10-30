@@ -2,6 +2,7 @@ package com.lingotown.domain.talk.service;
 
 
 import com.lingotown.domain.member.entity.Member;
+import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.response.CreateTalkResDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.talk.entity.MemberNPC;
@@ -9,7 +10,6 @@ import com.lingotown.domain.talk.repository.MemberNPCRepository;
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.service.NPCService;
-import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
@@ -132,7 +132,6 @@ public class TalkService {
         return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), createTalk);
     }
-
 
     //NPC와 대화하기
     @Transactional
