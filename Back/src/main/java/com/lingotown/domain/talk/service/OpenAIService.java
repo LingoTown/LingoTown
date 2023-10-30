@@ -187,63 +187,11 @@ public class OpenAIService {
         return savedTalkDetail.getId();
     }
 
-    //문법오류 판단하기
-//    public String checkGrammar(TestDto test) {
-//        Gson gson = new Gson();
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.setBearerAuth(API_KEY);
-//
-//        //요청을 담을 메세지 리스트
-//        List<OpenAIMessageDto> messages = new ArrayList<>();
-//
-//        String check = "You are an English teacher from now on. "
-//                + "Please make sure there are no grammar or vocabulary errors in this sentence and correct it in the correct sentence" +
-//                "Explain in Korean what went wrong " +
-//                "The current user is Korean, and I am learning English from you. " +
-//                "If there's no error, please return 'Perfect'";
-//
-//
-//        OpenAIMessageDto messageDtoAI = OpenAIMessageDto
-//                .builder()
-//                .role("assistant")
-//                .content(check)
-//                .build();
-//
-//        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-//                .builder()
-//                .role("user")
-//                .content(test.getPrompt())
-//                .build();
-//
-//        messages.add(messageDtoAI);
-//        messages.add(messageDtoUser);
-//
-//        OpenAIReqDto requestDto = OpenAIReqDto
-//                .builder()
-//                .messages(messages)
-//                .build();
-//
-//        String jsonString = gson.toJson(requestDto);
-//        String body = String.format(jsonString);
-//
-//        HttpEntity<String> entity = new HttpEntity<>(body, headers);
-//        ResponseEntity<OpenAIResDto> response
-//                = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
-//
-//        return response.getBody().getChoices()[0].getMessage().getContent();
-//    }
-
 
     //상황 설정하기
     private String createConcept(Long talkId){
         NPC npc = getNPCEntity(talkId);
-        System.out.println("id : " +npc.getId());
 
-        System.out.println("npcJob: " +npc.getNpcRole());
-        System.out.println();
 
         String npcJob = npc.getNpcRole();
         String npcName = npc.getName();
@@ -252,18 +200,17 @@ public class OpenAIService {
         String npcGender = npc.getGenderType().toString();
         String npcSituation = npc.getSituation();
 
-        String concept =  "\n" +
+        return "\n" +
                 "We are trying to do situational comedy. " +
                 "The user is a beginner who has just started learning " + language + ". " +
                 "The user's " + language +" level is Beginner, and " +
                 "All you have to do is respond appropriately to what the user says. " +
                 "The level of difficulty in responding should be relaxed so that users can understand it. " +
                 "Lower the level of difficulty in responding " +
+                "Please ask the appropriate questions so that the conversation can continue. " +
                 "And also, Please respond in complete sentences without exceeding max_token. " +
                 "Now, " + "you are " +npcName +", and " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge
                 + ", and " +npcSituation;
-        System.out.println("concept : " +concept);
-        return concept;
     }
 
 

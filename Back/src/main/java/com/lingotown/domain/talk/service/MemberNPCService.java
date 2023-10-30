@@ -59,7 +59,7 @@ public class MemberNPCService {
                     .npcName(npc.getName())
                     .npcImage(npc.getNpcImage())
                     .language(world.getLanguage().toString())
-                    .theme(world.getTheme().toString())
+                    .theme(world.getTheme())
                     .lastVisited(talkList.get(0).getCreatedAt())
                     .build();
 
