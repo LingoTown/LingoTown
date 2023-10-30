@@ -33,7 +33,7 @@ public class TalkController {
     }
 
     @PostMapping(value = "", consumes = {"multipart/form-data"})
-    public DataResponse<CreateOpenAIResDto> askGPT(@ModelAttribute TalkReqDto talkReqDto) throws IOException {
+    public DataResponse<CreateOpenAIResDto> askGPT(@ModelAttribute TalkReqDto talkReqDto) throws Exception {
         return openAIService.askGPT(talkReqDto);
     }
 
