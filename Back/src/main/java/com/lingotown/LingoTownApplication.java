@@ -12,4 +12,7 @@ public class LingoTownApplication {
         SpringApplication.run(LingoTownApplication.class, args);
     }
 
+    static {
+        System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+    }
 }

@@ -29,7 +29,7 @@ public class NPC {
     private String npcImage;
 
     @Column(nullable = false)
-    private String firstMessage;
+    private String situation;
 
     @Column(nullable = false)
     private String voice;
@@ -39,12 +39,10 @@ public class NPC {
     private GenderType genderType;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private NPCRole npcRole;
+    private String npcRole;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private NPCAge npcAge;
+    private int npcAge;
 
     @JoinColumn(name="world_id")
     @ManyToOne(fetch = FetchType.LAZY)

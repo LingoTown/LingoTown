@@ -58,8 +58,8 @@ public class WorldService {
                         .name(npc.getName())
                         .npcRole(npc.getNpcRole().toString())
                         .genderType(npc.getGenderType().toString())
-                        .npcAge(npc.getNpcAge().toString())
-                        .firstMessage(npc.getFirstMessage())
+                        .npcAge(npc.getNpcAge())
+                        .situation(npc.getSituation())
                         .voice(npc.getVoice())
                         .topicList(topicResDtoList)
                         .build();

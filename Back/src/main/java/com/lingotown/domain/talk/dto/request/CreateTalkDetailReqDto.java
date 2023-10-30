@@ -1,16 +1,20 @@
 package com.lingotown.domain.talk.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreateTalkDetailReqDto {
 
-    private final Long talkId;
-    private final boolean isMember;
-    private final String content;
-    private final MultipartFile talkFile;
+    private Long talkId;
+    private boolean isMember;
+    private String content;
+    private MultipartFile talkFile;
 
 }
