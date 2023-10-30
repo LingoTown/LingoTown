@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 
-export const PlayerMove = (playerRef: any, keysPressed: any, camera: THREE.Camera, cameraOffset: any) => {
+export const PlayerMove = (playerRef: any, keysPressed: any, camera: THREE.Camera, cameraOffset: any, isMove:any) => {
   if (playerRef.current) {
-    const speed = 0.4;
+    const speed = 0.2;
     const rotationSpeed = 0.03;
     const moveForward = new THREE.Vector3();
 
@@ -32,8 +32,10 @@ export const PlayerMove = (playerRef: any, keysPressed: any, camera: THREE.Camer
     const offset = cameraOffset.current.clone().applyQuaternion(playerRef.current.quaternion);
     const desiredCameraPosition = currentPos.add(offset);
 
-    camera.position.lerp(desiredCameraPosition, 1);
-    camera.lookAt(playerRef.current.position);
+    if (isMove.current) {
+      camera.position.lerp(desiredCameraPosition, 1);
+      camera.lookAt(playerRef.current.position);
+    }
   }
 };
 

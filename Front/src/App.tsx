@@ -18,7 +18,7 @@ const App = () => {
         <Route path="/google/callback" element={ <GoogleCallback/> }/>
         <Route path="/main" element={ <MainPage/> }/>
         <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
-        <Route path="/polyginia" element={ <CanvasPage theme={ <PolyginiaComp/> }/> }/>
+        <Route path="/polygonia" element={ <CanvasPage theme={ <PolyginiaComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>

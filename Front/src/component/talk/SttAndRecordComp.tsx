@@ -7,9 +7,6 @@ import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { userAtom } from '../../atom/UserAtom';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { CurrentNpc } from '../theme/ThemeType';
-
-
 
 declare global {
   interface Window {
@@ -21,12 +18,11 @@ declare global {
 type STTAndRecordProps = {
   lang: string;
   talkId: number;
-  currentNpc: React.MutableRefObject<CurrentNpc | undefined>;
 };
 
-export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, currentNpc}) => {
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
 
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream>();
   const [media, setMedia] = useState<MediaRecorder>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode>();
@@ -35,9 +31,12 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, current
   const talkState = useRecoilValue(talkStateAtom);
   const user = useRecoilValue(userAtom);
   const isMounted = useRef({ offRec: false, onRec: false, reset: false });
+  const flag = useRef<boolean>(true);
 
   useEffect(() => {
-    setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
+    if (flag.current) {
+      setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
+    }
   }, [transcript]);
 
   if (!browserSupportsSpeechRecognition) {
@@ -82,21 +81,16 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, current
   const offRecAudio = () => {
     if (media && stream) {
       media.ondataavailable = function (e) {
-        const sound = new File([e.data], "soundBlob", {
-          lastModified: new Date().getTime(),
-          type: "audio",
-        });
+        const sound = new File([e.data], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
         const data = new FormData();
         data.append("talkFile", sound);
         data.append("talkId", String(talkId));
         data.append("prompt", transcript);
+        console.log(talkId)
         doTalking(data);
       };
-
-      stream.getAudioTracks().forEach(function (track) {
-        track.stop();
-      });
-
+      console.log(transcript)
+      stream.getAudioTracks().forEach(function (track) { track.stop() });
       media.stop();
       if (analyser && source) {
         analyser.disconnect();
@@ -109,11 +103,10 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, current
   };
 
   const resetRecAudio = () => {
+    console.log(transcript);
     if (media) {
-
       if (stream)
         stream.getAudioTracks().forEach(function (track) { track.stop(); });
-
       media.stop();
       if (analyser && source) {
         analyser.disconnect();
@@ -122,12 +115,20 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, current
       resetTranscript();
       SpeechRecognition.stopListening();
     }
+    console.log(transcript);
   };
 
+  // const endRecAudio = () => {
+
+  // }
+
   const doTalking = async(param: FormData) => {
+    setTalkBalloon(prev => ({ ...prev, sentence: "Loading..." }));
+    flag.current = false;
     await talking(param, ({data}) => {
       const result = data.data as talkingType;
-      setTalkBalloon(prev => ({ ...prev, sentence: result.responseMessage, img: currentNpc.current?.img }));
+      setTalkBalloon(prev => ({ ...prev, sentence: result.responseMessage }));
+      flag.current = true;
     }, (error) => {
       console.log(error);
     })
@@ -135,7 +136,6 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({lang, talkId, current
     
   useEffect(() => {
     if (isMounted.current.onRec) {
-      setTalkBalloon(prev => ({ ...prev, img: user.profileImg }));
       onRecAudio();
     } else {
       isMounted.current.onRec = true;

@@ -15,7 +15,8 @@ export type AnimationAction = {
 export type NpcInfo = {
   id: number;
   name: string;
-  img: string;
+  targetPosition: any;
+  targetRotation: any;
   ref: React.RefObject<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>>;
 };
 
@@ -23,4 +24,6 @@ export type CurrentNpc = {
   id: number;
   name: string | null;
   img: any;
+  targetPosition: any;
+  targetRotation: any;
 }
