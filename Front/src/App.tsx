@@ -8,6 +8,7 @@ import { ThreeDemensionCanvas } from "./pages/ThreeDemensionCanvas";
 import { CanvasPage } from "./pages/CanvasPage";
 import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolyginiaComp } from "./component/theme/PolyginiaComp";
+import {ParkComp} from "./component/theme/ParkComp";
 
 
 const App = () => {
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/main" element={ <MainPage/> }/>
         <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
         <Route path="/polyginia" element={ <CanvasPage theme={ <PolyginiaComp/> }/> }/>
+        <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
       </Routes>
     </BrowserRouter>
