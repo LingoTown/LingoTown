@@ -27,3 +27,9 @@ export type CurrentNpc = {
   targetPosition: any;
   targetRotation: any;
 }
+
+export type NPCData = {
+  path: string,
+  position: [number, number, number],
+  rotation: [number, number, number]
+};
