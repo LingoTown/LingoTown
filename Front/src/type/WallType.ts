@@ -1,7 +1,7 @@
 export type wallType = {
-    size: [number, number, number],
-    position: [number, number, number],
-    color: string,
+    size: any,
+    position: any,
+    wallKey: string,
     name: string,
     mass: number // mass 속성 추가
 };

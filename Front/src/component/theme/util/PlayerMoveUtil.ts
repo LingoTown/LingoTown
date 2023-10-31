@@ -81,6 +81,7 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
         deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
       }
       playerRef.current.rotateY(deltaRotation);
+      // playerRef.current.rotation();
       // 실시간으로 물리 몸의 회전 업데이트
       setPlayerRotation([playerRotation[0], playerRotation[1]+deltaRotation, playerRotation[2]]);
       playerApi.rotation.set(playerRotation[0], playerRotation[1] + deltaRotation, playerRotation[2]);
