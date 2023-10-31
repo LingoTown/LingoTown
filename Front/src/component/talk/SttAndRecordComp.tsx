@@ -23,10 +23,10 @@ type STTAndRecordProps = {
 export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
 
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
-  const [stream, setStream] = useState<MediaStream>();
-  const [media, setMedia] = useState<MediaRecorder>();
-  const [source, setSource] = useState<MediaStreamAudioSourceNode>();
-  const [analyser, setAnalyser] = useState<ScriptProcessorNode>();
+  const [stream, setStream] = useState<MediaStream | null>();
+  const [media, setMedia] = useState<MediaRecorder | null>();
+  const [source, setSource] = useState<MediaStreamAudioSourceNode | null>();
+  const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   const talkState = useRecoilValue(talkStateAtom);
   const user = useRecoilValue(userAtom);
@@ -86,10 +86,9 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
         data.append("talkFile", sound);
         data.append("talkId", String(talkId));
         data.append("prompt", transcript);
-        console.log(talkId)
         doTalking(data);
       };
-      console.log(transcript)
+
       stream.getAudioTracks().forEach(function (track) { track.stop() });
       media.stop();
       if (analyser && source) {
@@ -99,40 +98,46 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
 
       resetTranscript();
       SpeechRecognition.stopListening();
+      stopMicrophoneAccess();
     }
   };
-
-  const resetRecAudio = () => {
-    console.log(transcript);
-    if (media) {
-      if (stream)
-        stream.getAudioTracks().forEach(function (track) { track.stop(); });
-      media.stop();
-      if (analyser && source) {
-        analyser.disconnect();
-        source.disconnect();
-      }
-      resetTranscript();
-      SpeechRecognition.stopListening();
-    }
-    console.log(transcript);
-  };
-
-  // const endRecAudio = () => {
-
-  // }
 
   const doTalking = async(param: FormData) => {
     setTalkBalloon(prev => ({ ...prev, sentence: "Loading..." }));
     flag.current = false;
     await talking(param, ({data}) => {
       const result = data.data as talkingType;
-      setTalkBalloon(prev => ({ ...prev, sentence: result.responseMessage }));
+      setTalkBalloon(prev => ({
+        ...prev,
+        sentence: result.responseMessage,
+        audio: result.responseS3URL
+      }));
       flag.current = true;
     }, (error) => {
       console.log(error);
     })
   }
+
+  const stopMicrophoneAccess = () => {
+    if (stream) {
+      stream.getAudioTracks().forEach(track => track.stop());
+      setStream(null);
+    }
+  
+    if (media) {
+      media.stop();
+      setMedia(null);
+    }
+    
+    if (analyser && source) {
+      analyser.disconnect();
+      source.disconnect();
+      setAnalyser(null);
+      setSource(null);
+    }
+  
+    SpeechRecognition.stopListening();
+  };
     
   useEffect(() => {
     if (isMounted.current.onRec) {
@@ -152,7 +157,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
 
   useEffect(() => {
     if (isMounted.current.reset) {
-      resetRecAudio();
+      stopMicrophoneAccess();
     } else {
       isMounted.current.reset = true;
     }

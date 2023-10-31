@@ -6,23 +6,29 @@ import { useSetRecoilState, useRecoilState } from "recoil"
 export const TalkBalloonComp = () => {
 
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
-  const setTalkState = useSetRecoilState(talkStateAtom);
   const [toggle, setToggle] = useState<boolean>(true);
+  const setTalkState = useSetRecoilState(talkStateAtom);
+
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
     setToggle(!toggle);
   };
+
   const handleOffRec = () => {
     setTalkState(prevState => ({ ...prevState, offRec: !prevState.offRec }));
     setToggle(!toggle);
   };
-  const handleReset = () => { setTalkState(prevState => ({ ...prevState, reset: !prevState.reset })) };
-  const handleEnd = () => {
-    setTalkState(prevState => ({ ...prevState, offRec: !prevState.offRec }));
-    setTalkBalloon(prevState => ({...prevState, isShow: false}));
-    handleOffRec();
+
+  const handleReset = () => { 
+    setTalkState(prevState => ({ ...prevState, reset: !prevState.reset }));
+    setToggle(!toggle);
   };
 
+  const handleEnd = () => {
+    handleReset();
+    setToggle(!toggle);
+    setTalkBalloon(prevState => ({...prevState, isShow: false}));
+  };
 
   return(
     <>
@@ -53,5 +59,4 @@ export const TalkBalloonComp = () => {
       </div>
     </>
   )
-
 }

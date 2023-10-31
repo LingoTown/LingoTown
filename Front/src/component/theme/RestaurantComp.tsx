@@ -53,7 +53,7 @@ export const RestaurantComp: React.FC = () => {
 
   // value
   const CIRCLE_RADIUS = 3;
-  const LANGUAGE = "ko-KR";
+  const LANGUAGE = "en-US";
   const SENTENCE = "Would you like to start a conversation with ";
 
   // function
