@@ -1,7 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { MinsungRoute } from "./router/Minsung";
+import LoginPage from "./pages/LoginPage";
+import KakaoCallback from "./component/login/KakaoCallbackComp";
+import GoogleCallback from "./component/login/GoogleCallbackComp";
+import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
 import { CanvasPage } from "./pages/CanvasPage";
+import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolygoniaComp } from "./component/theme/PolygoniaComp";
 import { ParkComp } from "./component/theme/ParkComp";
 
@@ -10,7 +14,11 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <MinsungRoute />
+        <Route path="/" element={ <LoginPage/> }/>
+        <Route path="/main" element={ <MainPage/> }></Route>
+        <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
+        <Route path="/google/callback" element={ <GoogleCallback/> }/>
+        <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
         <Route path="/polygonia" element={ <CanvasPage theme={ <PolygoniaComp/> }/> }/>
         <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
