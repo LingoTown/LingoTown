@@ -20,11 +20,11 @@ export const ParkComp: React.FC = () => {
 
   //wall
   const container = [
-    { size: [80, 2, 40], position: [-15, -1.5, 0], key: 'C01', name: 'floor', mass:0}, // bottom
-    { size: [75, 27, 3], position: [-15, 10, -19], key: 'C02', name: 'wall', mass:0}, // back wall
-    { size: [3, 27, 40], position: [23, 10, 0], key: 'C03',  name: 'wall', mass:0}, // right wall
-    { size: [75, 27, 3], position: [-15, 10, 19], key: 'C04', name: 'wall', mass:0}, // front wall,
-    { size: [3, 27, 40], position: [-52, 10, 0], key: 'C05', name: 'wall', mass:0}, // left wall
+    { size: [80, 2, 40], position: [-15, -1.5, 0], wallKey: 'C01', name: 'floor', mass:0}, // bottom
+    { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'C02', name: 'wall', mass:0}, // back wall
+    { size: [3, 27, 40], position: [23, 10, 0], wallKey: 'C03',  name: 'wall', mass:0}, // right wall
+    { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'C04', name: 'wall', mass:0}, // front wall,
+    { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'C05', name: 'wall', mass:0}, // left wall
   ];
 
   // player
@@ -129,7 +129,7 @@ export const ParkComp: React.FC = () => {
     <>
       {/* wall */}
       <group>
-        {container.map(props => <Wall {...props}/> )}
+        { container.map((props, index) => <Wall key={index} {...props}/> ) }
       </group>
 
       <STTAndRecord lang={LANGUAGE} talkId={talkId} currentNpc={currentNpc}/>

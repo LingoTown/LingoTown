@@ -1,4 +1,3 @@
-import React, { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
 export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, camera: THREE.Camera, cameraOffset: any, container: any, playerPosition: any, setPlayerPosition: any, playerRotation: any, setPlayerRotation: any) => {
   
@@ -68,7 +67,7 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
       // oppositePosition.z += 1; // 이동하고 싶은 거리 조절
       playerApi.position.set(playerPosition[0], playerPosition[1], playerPosition[2]);
       playerRef.current.position.copy(oppositePosition);
-      setPlayerPosition((prevPos: any) => [
+      setPlayerPosition(() => [
         oppositePosition.x,
         0,
         oppositePosition.z
@@ -84,6 +83,7 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
         deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
       }
       playerRef.current.rotateY(deltaRotation);
+      // playerRef.current.rotation();
       // 실시간으로 물리 몸의 회전 업데이트
       setPlayerRotation([playerRotation[0], playerRotation[1]+deltaRotation, playerRotation[2]]);
       playerApi.rotation.set(playerRotation[0], playerRotation[1] + deltaRotation, playerRotation[2]);

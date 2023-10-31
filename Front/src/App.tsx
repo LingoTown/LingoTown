@@ -4,11 +4,10 @@ import KakaoCallback from "./component/login/KakaoCallbackComp";
 import GoogleCallback from "./component/login/GoogleCallbackComp";
 import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
-import { ThreeDemensionCanvas } from "./pages/ThreeDemensionCanvas";
 import { CanvasPage } from "./pages/CanvasPage";
 import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolyginiaComp } from "./component/theme/PolyginiaComp";
-import {ParkComp} from "./component/theme/ParkComp";
+import { ParkComp } from "./component/theme/ParkComp";
 
 
 const App = () => {
@@ -19,7 +18,6 @@ const App = () => {
         <Route path="/kakao/callback" element={ <KakaoCallback/> }> </Route>
         <Route path="/google/callback" element={ <GoogleCallback/> }> </Route>
         <Route path="/main" element={ <MainPage/> }></Route>
-        <Route path="/explore" element={ <ThreeDemensionCanvas/> }></Route>
         <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
         <Route path="/google/callback" element={ <GoogleCallback/> }/>
         <Route path="/main" element={ <MainPage/> }/>
