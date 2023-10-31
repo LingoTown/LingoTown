@@ -1,18 +1,10 @@
 import React from 'react';
 import { useBox } from '@react-three/cannon';
+import { wallType } from '../../../type/WallType';
 
-type ContainerWallProps = {
-  size: [number, number, number];
-  position: [number, number, number];
-  color: string;
-  name: string;
-  mass: number; // mass 속성 추가
-};
-
-const ContainerWall: React.FC<ContainerWallProps> = ({
+export const Wall: React.FC<wallType> = ({
   size,
   position,
-  color,
   name,
   mass,
 }) => {
@@ -21,15 +13,13 @@ const ContainerWall: React.FC<ContainerWallProps> = ({
     position,
     mass,
     friction: 1,    // Adjust the value as needed
-    restitution: 0  // Set to 0 to avoid bouncing
+    restitution: 0,  // Set to 0 to avoid bouncing
   }));
 
   return (
     <mesh ref={ref} name={name}>
       <boxGeometry args={size}/>
-      <meshStandardMaterial color={color} transparent opacity={1} />
+      <meshStandardMaterial transparent opacity={0}/>
     </mesh>
   );
 };
-
-export default ContainerWall;

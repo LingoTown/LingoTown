@@ -4,7 +4,7 @@ import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import {Bar} from "../../../public/map/bar/Bar";
 import * as THREE from 'three';
 import { Physics, usePlane, useBox, useCylinder, useHingeConstraint, useSphere, useConvexPolyhedron } from '@react-three/cannon'
-import ContainerWall from "../util/block/Wall";
+import { Wall } from "../util/block/Wall";
 
 const container = [
   { size: [50, 2, 35], position: [10, -1.5, 10], color: 0xbb00bb, key: 'C01', name: 'floor', mass:0}, // bottom
@@ -37,7 +37,7 @@ export const BarTheme = () => {
   const [npc, setNpc] = useState("");
   
   
-  //캐릭터 물리중력
+  //캐릭터 물리엔진
   let [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
   let [playerRotation, setPlayerRotation]= useState([0, 0, 0]);
   const [humanRef, api] = useCylinder(() => ({ 

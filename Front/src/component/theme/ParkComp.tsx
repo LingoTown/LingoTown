@@ -13,12 +13,36 @@ import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { PlayerMove, SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-
+import { Wall } from '../util/block/Wall';
+import { useCylinder } from '@react-three/cannon'
 
 export const ParkComp: React.FC = () => {
+
+  //wall
+  const container = [
+    { size: [80, 2, 40], position: [-15, -1.5, 0], key: 'C01', name: 'floor', mass:0}, // bottom
+    { size: [75, 27, 3], position: [-15, 10, -19], key: 'C02', name: 'wall', mass:0}, // back wall
+    { size: [3, 27, 40], position: [23, 10, 0], key: 'C03',  name: 'wall', mass:0}, // right wall
+    { size: [75, 27, 3], position: [-15, 10, 19], key: 'C04', name: 'wall', mass:0}, // front wall,
+    { size: [3, 27, 40], position: [-52, 10, 0], key: 'C05', name: 'wall', mass:0}, // left wall
+  ];
+
   // player
   const playerFile = useGLTF("./player/m_1.glb");
-  const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  // const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  
+  //Player cannon
+  const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
+  const [playerRotation, setPlayerRotation]= useState([0, 0, 0]);
+  const [playerRef, playerApi] = useCylinder(() => ({ 
+    mass: 0, 
+    position: [-49, 0, 0], 
+    rotation:[0,1,0], 
+    args:[0.5,0,0.1],
+    friction: 1,     // Adjust the value as needed
+    restitution: 0,   // Set to 0 to avoid bouncing
+    allowSleep:true,
+  }));
 
   // camera action
   const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
@@ -46,7 +70,7 @@ export const ParkComp: React.FC = () => {
 
   // value
   const CIRCLE_RADIUS = 3;
-  const LANGUAGE = "en-US";
+  const LANGUAGE = "ja";
 
   // function
   const customConfirm = useCustomConfirm();
@@ -54,7 +78,7 @@ export const ParkComp: React.FC = () => {
   const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
 
   useFrame(() => {
-    PlayerMove(playerRef, keysPressed, camera, cameraOffset);
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, playerPosition, setPlayerPosition, playerRotation, setPlayerRotation);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
@@ -103,6 +127,11 @@ export const ParkComp: React.FC = () => {
 
   return(
     <>
+      {/* wall */}
+      <group>
+        {container.map(props => <Wall {...props}/> )}
+      </group>
+
       <STTAndRecord lang={LANGUAGE} talkId={talkId} currentNpc={currentNpc}/>
       <primitive scale={1}  ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Park/>
