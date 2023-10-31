@@ -29,7 +29,10 @@ export type CurrentNpc = {
 }
 
 export type NPCData = {
-  path: string,
-  position: [number, number, number],
-  rotation: [number, number, number]
+  id: number;
+  name: string;
+  path: string;
+  position: [number, number, number];
+  rotation: [number, number, number];
+  scale: number;
 };
