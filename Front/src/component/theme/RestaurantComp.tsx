@@ -11,9 +11,10 @@ import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Restaurant } from "../../../public/map/restaurant/Restaurant";
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { PlayerMove, SetAction } from "./util/PlayerMoveUtil";
+import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
+import { PlayerMove } from './util/MSPlayerUtil';
 
 export const RestaurantComp: React.FC = () => {
   // player
