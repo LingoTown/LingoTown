@@ -8,7 +8,7 @@ interface IntroducePage {
 
 export const IntroducePage: React.FC<IntroducePage> = (props: IntroducePage): JSX.Element => {
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load('../public/map/introduce/textures/bgggg.png');
+  const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
 
   return(
     <>

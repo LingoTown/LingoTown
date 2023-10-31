@@ -34,9 +34,9 @@ export const NPCStage: React.FC<{
   ];
 
   const map = useTexture(texture);
-  const map2D = useTexture("./public/map/introduce/textures/intro.jpg");
+  const map2D = useTexture("../map/introduce/intro.jpg");
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load('../public/map/introduce/textures/bgggg.png');
+  const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
 
   const portalMaterial = useRef();
 
