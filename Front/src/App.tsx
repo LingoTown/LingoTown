@@ -8,7 +8,7 @@ import { CanvasPage } from "./pages/CanvasPage";
 import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolygoniaComp } from "./component/theme/PolygoniaComp";
 import { ParkComp } from "./component/theme/ParkComp";
-
+import DeparturePage from "./pages/DeparturePage";
 
 const App = () => {
   return (
@@ -22,6 +22,8 @@ const App = () => {
         <Route path="/polygonia" element={ <CanvasPage theme={ <PolygoniaComp/> }/> }/>
         <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
+        <Route path="/departurePage" element={ <DeparturePage/> }/>
+
       </Routes>
     </BrowserRouter>
   )
