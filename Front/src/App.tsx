@@ -7,7 +7,7 @@ import NotFound from './pages/NotFoundPage';
 import { CanvasPage } from "./pages/CanvasPage";
 import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolyginiaComp } from "./component/theme/PolyginiaComp";
-
+import DeparturePage from "./pages/DeparturePage";
 
 const App = () => {
   return (
@@ -20,6 +20,8 @@ const App = () => {
         <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
         <Route path="/polyginia" element={ <CanvasPage theme={ <PolyginiaComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
+        <Route path="/departurePage" element={ <DeparturePage/> }/>
+
       </Routes>
     </BrowserRouter>
   )
