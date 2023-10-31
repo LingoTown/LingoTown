@@ -13,7 +13,7 @@ import { KeyPressed, AnimationAction } from "./ThemeType";
 import ConfirmContext from "../util/confirm/ConfirmContext";
 
 
-export const PolyginiaComp: React.FC = () => {
+export const PolygoniaComp: React.FC = () => {
   const player = useGLTF("./player/m_1.glb");
   const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
   const keysPressed = useRef<KeyPressed>({ ArrowUp: false, ArrowLeft: false, ArrowRight: false, ArrowDown: false });
