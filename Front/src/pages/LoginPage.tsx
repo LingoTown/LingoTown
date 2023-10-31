@@ -24,13 +24,13 @@ const LoginPage = () => {
       </div>
       <div className="z-10 mt-7">
         <img 
-          className="h-10 rounded cursor-pointer" 
+          className="h-12 rounded cursor-pointer" 
           src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/kakaobtn.png' onClick={() => { kakaoLogin() }}/>
         <img 
-          className="h-10 rounded mt-4 cursor-pointer" 
+          className="h-12 rounded mt-2 cursor-pointer" 
           src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/googlebtn.png' onClick={() => { googleLogin() }}/>
         <img 
-          className="h-10 rounded mt-4 cursor-pointer" 
+          className="h-12 rounded mt-2 cursor-pointer bg-[#ddd]" 
           src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/exp.png' onClick={() => { navigate("/restaurant") }}/>
       </div>
     </div>

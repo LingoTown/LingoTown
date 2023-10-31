@@ -1,0 +1,11 @@
+Model Information:
+* title:	Gbus Bus Stop
+* source:	https://sketchfab.com/3d-models/gbus-bus-stop-ba4808305d8544eca08c0dcffda79ef4
+* author:	sheba1998 (https://sketchfab.com/sheba1998)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Gbus Bus Stop" (https://sketchfab.com/3d-models/gbus-bus-stop-ba4808305d8544eca08c0dcffda79ef4) by sheba1998 (https://sketchfab.com/sheba1998) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

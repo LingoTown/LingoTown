@@ -7,18 +7,20 @@ import { HttpForm } from "../api/Http";
 import { useSetRecoilState } from "recoil";
 import { myPageNPCListType } from "../component/Country";
 import Country from "../component/Country";
+import { useCustomAlert, useCustomConfirm } from "../component/util/ModalUtil";
 
 const MainPage = () => {
+  const customAlert = useCustomAlert();
   const [nickEditMode, setNickMode] = useState(false);
   const [nick, setNick] = useState('');
   const [myList, setMyList] = useState<myPageNPCListType>({});
-
+  const customConfirm = useCustomConfirm();
   const navigate = useNavigate();
   const user = useRecoilValue(userAtom);
   const setUser = useSetRecoilState(userAtom);
-  const logout = () =>{
+  const logout = async() =>{
     localStorage.removeItem("userAtom");
-    alert("로그아웃 되었습니다.")
+    await customAlert("", "로그아웃 되었습니다.")
     navigate("/")
   }
   const groupByCountry = (arr:any) => {
@@ -44,8 +46,9 @@ const MainPage = () => {
       })
   }, [])
 
-  const deleteAccount = () => {
-    if(confirm("탈퇴하시겠습니까?")){
+  const deleteAccount = async() => {
+    const flag = await customConfirm("Notice", "회원 탈퇴하시겠습니까?")
+    if(flag){
       HttpJson.delete("/api/member/leave")
       .then((res)=>{
         res;
@@ -64,6 +67,15 @@ const MainPage = () => {
   }
 
   const saveNickname = async() => {
+    if(nick == ""){
+      console.log("there's no nickname");
+      setNickMode(false);
+      return;
+    }
+    if(nick.length >= 15){
+      customAlert("Notice", "15자 이하의 닉네임을 설정해주세요.");
+      return;
+    }
     const data = {
       nickname : nick
     }
@@ -107,12 +119,10 @@ const MainPage = () => {
   return(
     <>
       <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
-        <div className="w-full flex justify-between text-5xl font-bold text-white font-['passero-one']">
-          <div className="ml-8 cursor-pointer" onClick={() => {
-            alert("구현중 입니다.")
-          }}>GO TO MAIN</div>
+        <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
+          
           <div className="mr-8 cursor-pointer" onClick={() => {
-            navigate("/");
+            navigate("/departurePage");
           }}>Close</div>
         </div>
         <div className=''>
@@ -150,16 +160,7 @@ const MainPage = () => {
               <div className='font-bold text-white flex-1 pl-7'>
                 <div className="m-5 font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
                 {/* 나라별로 모아서 토글만들기 */}
-                <Country myList={myList}></Country>
-                {/* <div className="flex space-x-4 mb-4">
-                  <div className="cursor-pointer w-6 h-6 bg-[#ddd] "
-                    onClick={() => setShowBoxes(showBoxes === 'box1' ? null : 'box1')}>
-                  </div>
-                  <div className="cursor-pointer w-6 h-6 bg-transparent border-t-6 border-l-3 border-r-3 border-transparent border-b-6 border-red-500"
-                    onClick={() => setShowBoxes(showBoxes === 'box2' ? null : 'box2')}>
-                  </div>
-                </div> */}
-
+                <Country myList={myList}></Country>  
               </div>
             </div>
           </div>

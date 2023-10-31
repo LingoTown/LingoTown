@@ -22,7 +22,7 @@ const CustomAlert = ({ title, message, onClose }: AlertType) => {
         <div className="mb-5 text-gray-600 font-bold text-lg">{message}</div>
         <div className="mt-6 flex justify-end space-x-2">
           <button onClick={onClose} className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring focus:ring-blue-300 focus:ring-opacity-50 transition-colors" autoFocus>
-            확인
+            OK
           </button>
         </div>
       </div>
