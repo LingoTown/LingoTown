@@ -31,10 +31,10 @@ const CustomConfirm = ({ title, message, onClickOK, onClickCancel }: ConfirmType
         <div className="mb-5 text-gray-600 font-bold text-lg">{message}</div>
         <div className="mt-5 flex justify-end space-x-2">
           <button ref={okButtonRef} onClick={onClickOK} className="py-2 px-4 bg-blue-500 text-white rounded focus:ring focus:ring-blue-400 focus:ring-opacity-50">
-            확인
+            OK
           </button>
           <button ref={cancelButtonRef} onClick={onClickCancel} className="py-2 px-4 bg-gray-200 text-gray-700 rounded focus:ring focus:ring-gray-400 focus:ring-opacity-50" autoFocus>
-            취소
+            Cancel
           </button>
         </div>
       </div>
