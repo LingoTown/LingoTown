@@ -36,11 +36,11 @@ const CustomPrompt = ({ title, message, _default, onClickOK, onClickCancel }: Pr
           autoFocus
         />
         <div className="mt-6 flex justify-end space-x-2">
-          <button onClick={onClickCancel} className="py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:ring focus:ring-gray-300 focus:ring-opacity-50 transition-colors" type="reset">
-            cancel
-          </button>
           <button className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring focus:ring-blue-300 focus:ring-opacity-50 transition-colors" type="submit">
-            ok
+            OK
+          </button>
+          <button onClick={onClickCancel} className="py-2 px-4 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 focus:ring focus:ring-gray-300 focus:ring-opacity-50 transition-colors" type="reset">
+            Cancel
           </button>
         </div>
       </form>

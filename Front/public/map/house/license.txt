@@ -1,0 +1,11 @@
+Model Information:
+* title:	Studio Office Interior
+* source:	https://sketchfab.com/3d-models/studio-office-interior-6e41320708f74a6ba974ff8c26746ed8
+* author:	adynhaidar (https://sketchfab.com/adynhaidar)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Studio Office Interior" (https://sketchfab.com/3d-models/studio-office-interior-6e41320708f74a6ba974ff8c26746ed8) by adynhaidar (https://sketchfab.com/adynhaidar) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

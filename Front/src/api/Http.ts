@@ -12,7 +12,7 @@ HttpJson.interceptors.request.use(onRequest, onErrorRequest);
 
 const HttpForm = axios.create({
     baseURL : import.meta.env.VITE_SERVER as string,
-    timeout : 10000,
+    timeout : 100000,
     headers : {'Content-Type' : 'multipart/form-data'}
 });
 

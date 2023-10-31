@@ -11,5 +11,5 @@ export type startTalkType = {
 
 export type talkingType = {
   responseMessage: string,
-  file: string
+  responseS3URL: string
 }

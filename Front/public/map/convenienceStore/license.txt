@@ -1,0 +1,11 @@
+Model Information:
+* title:	The Convenience Store
+* source:	https://sketchfab.com/3d-models/the-convenience-store-d81380e64c2c4b85b4cf58910f649312
+* author:	Merow (https://sketchfab.com/TehMerow)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "The Convenience Store" (https://sketchfab.com/3d-models/the-convenience-store-d81380e64c2c4b85b4cf58910f649312) by Merow (https://sketchfab.com/TehMerow) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
