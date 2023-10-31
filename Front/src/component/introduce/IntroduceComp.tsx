@@ -155,7 +155,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <NPCStage
-        texture="../public/map/introduce/park.jpg"
+        texture="../map/introduce/park.jpg"
         name="Jerry"
         age="8"
         color={new THREE.Color("black")}
@@ -169,7 +169,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="../public/map/introduce/park.jpg"
+        texture="../map/introduce/park.jpg"
         name="Sanha"
         age="20"
         color={new THREE.Color("black")}
@@ -183,7 +183,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="../public/map/introduce/park.jpg"
+        texture="../map/introduce/park.jpg"
         name="Marco"
         age="18"
         color={new THREE.Color("black")}
@@ -197,7 +197,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="../public/map/introduce/park.jpg"
+        texture="../map/introduce/park.jpg"
         name="Jerome"
         age="30"
         color={new THREE.Color("black")}
@@ -211,7 +211,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="../public/map/introduce/city.jpg"
+        texture="../map/introduce/city.jpg"
         name="Noah"
         age="20"
         color={new THREE.Color("black")}
@@ -225,7 +225,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="../public/map/introduce/cafeteria.jpg"
+        texture="../map/introduce/cafeteria.jpg"
         name="Luke"
         age="20"
         color={new THREE.Color("black")}
@@ -239,7 +239,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="../public/map/introduce/cafeteria.jpg"
+        texture="../map/introduce/cafeteria.jpg"
         name="Olivia"
         age="20"
         color={new THREE.Color("black")}
