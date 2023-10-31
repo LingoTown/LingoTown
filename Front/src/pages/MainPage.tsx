@@ -7,8 +7,10 @@ import { HttpForm } from "../api/Http";
 import { useSetRecoilState } from "recoil";
 import { myPageNPCListType } from "../component/Country";
 import Country from "../component/Country";
+import { useCustomAlert } from "../component/util/ModalUtil";
 
 const MainPage = () => {
+  const customAlert = useCustomAlert();
   const [nickEditMode, setNickMode] = useState(false);
   const [nick, setNick] = useState('');
   const [myList, setMyList] = useState<myPageNPCListType>({});
@@ -64,6 +66,15 @@ const MainPage = () => {
   }
 
   const saveNickname = async() => {
+    if(nick == ""){
+      console.log("there's no nickname");
+      setNickMode(false);
+      return;
+    }
+    if(nick.length >= 15){
+      customAlert("Notice", "15자 이하의 닉네임을 설정해주세요.");
+      return;
+    }
     const data = {
       nickname : nick
     }
