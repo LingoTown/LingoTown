@@ -91,7 +91,7 @@ public class OpenAIService {
         }
 
         // user 인풋
-        if(!talkReqDto.getTalkFile().equals(null)) {
+        if(talkReqDto.getTalkFile() != null) {
             OpenAIMessageDto messageDtoUser = OpenAIMessageDto
                     .builder()
                     .role("user")
@@ -151,7 +151,7 @@ public class OpenAIService {
 
 
         // 비동기 문법 체크
-        if(!talkReqDto.getTalkFile().equals(null)) {
+        if(talkReqDto.getTalkFile() != null) {
             webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
                     .subscribe(
                             res -> {
@@ -181,7 +181,7 @@ public class OpenAIService {
                 .responseS3URL(systemResDataResponse.getData().getTalkFile())
                 .build();
 
-        return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
+        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
@@ -211,9 +211,9 @@ public class OpenAIService {
                 " and " + npcJob + ", and " + "your age is " + npcAge
                 + ". and This is your situation. " +npcSituation;
 
-        if(!topic.equals(null)) {
-            concept += " Then you can ask questions or talk about this " +topic+ " first " +
-                    "so that the user can talk about " +topic;
+        if(topic != null) {
+            concept += " Now let's talk about " +topic+
+                    ". Ask questions or stories about " +topic+ " to the user according to the situation. ";
         }
 
         return concept;
@@ -224,8 +224,6 @@ public class OpenAIService {
         Talk talk = talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
 
-        NPC npc = talk.getMemberNPC().getNpc();
-        return npc;
+        return talk.getMemberNPC().getNpc();
     }
-
 }
