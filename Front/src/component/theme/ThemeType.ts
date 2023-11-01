@@ -35,4 +35,14 @@ export type NPCData = {
   position: [number, number, number];
   rotation: [number, number, number];
   scale: number;
+  circleArgs: [number, number];
+  circlePosition: [number, number, number];
+  circleRotation: [number, number, number];
+  circleAttach: string;
+  circleColor: string;
+  circleEmissive: string;
+  circleEmissiveIntensity: number;
+  circleSide: THREE.Side;
+  circleTransparent: boolean;
+  circleOpacity: number;
 };

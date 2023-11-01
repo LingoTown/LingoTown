@@ -89,8 +89,10 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
 
     const currentPos = playerRef.current.position.clone();
     const offset = cameraOffset.current.clone().applyQuaternion(playerRef.current.quaternion);
+
     const desiredCameraPosition = currentPos.add(offset);
 
+    /* 캐릭터 뒤통수 보는 카메라 */
     if (isMove.current) {
       camera.position.lerp(desiredCameraPosition, 1);
       camera.lookAt(playerRef.current.position);

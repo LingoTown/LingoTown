@@ -30,6 +30,7 @@ export const PlayerMove = (playerRef: any, keysPressed: any, camera: THREE.Camer
 
     const currentPos = playerRef.current.position.clone();
     const offset = cameraOffset.current.clone().applyQuaternion(playerRef.current.quaternion);
+    // offset.y += 2;
     const desiredCameraPosition = currentPos.add(offset);
 
     if (isMove.current) {
