@@ -6,7 +6,7 @@ import { talkingType } from '../../type/TalkType';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { userAtom } from '../../atom/UserAtom';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 
 declare global {
   interface Window {
@@ -27,18 +27,16 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
   const [media, setMedia] = useState<MediaRecorder | null>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode | null>();
   const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>();
-  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const talkState = useRecoilValue(talkStateAtom);
   const user = useRecoilValue(userAtom);
-  const isMounted = useRef({ offRec: false, onRec: false, reset: false });
+  const isMounted = useRef({ offRec: false, onRec: false, reset: false, finish: false });
   const flag = useRef<boolean>(true);
 
   useEffect(() => {
     if (flag.current) {
       setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
     }
-    console.log(transcript);
-    console.log(transcript.length)
   }, [transcript]);
 
   if (!browserSupportsSpeechRecognition) {
@@ -117,11 +115,13 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
     }, (error) => {
       console.log(error);
     })
+    setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
 
   const stopMicrophoneAccess = () => {
     if (stream) {
       stream.getAudioTracks().forEach(track => track.stop());
+      stream.getAudioTracks().forEach(function (track) { track.stop(); });
       setStream(null);
     }
   
@@ -130,15 +130,19 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
       setMedia(null);
     }
     
-    if (analyser && source) {
+    if (analyser) {
       analyser.disconnect();
-      source.disconnect();
       setAnalyser(null);
+    }
+    
+    if (source) {
+      source.disconnect();
       setSource(null);
     }
-  
-    SpeechRecognition.stopListening();
+
     resetTranscript();
+    SpeechRecognition.stopListening();
+    console.log("delete")
   };
     
   useEffect(() => {
@@ -166,5 +170,24 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
       isMounted.current.reset = true;
     }
   }, [talkState.reset]);
+
+  useEffect(() => {
+    if (isMounted.current.finish) {
+      stopMicrophoneAccess();
+    } else {
+      isMounted.current.finish = true;
+    }
+  }, [talkState.finish]);
+
+  useEffect(() => {
+    return () => {
+      stopMicrophoneAccess();
+    };
+  }, []);
+
+  return(
+    <>
+    </>
+  )
 
 };

@@ -4,6 +4,7 @@ type TalkStateAtom = {
   onRec: boolean;
   offRec: boolean;
   reset: boolean;
+  finish: boolean;
 };
 
 export const talkStateAtom = atom<TalkStateAtom>({
@@ -12,5 +13,6 @@ export const talkStateAtom = atom<TalkStateAtom>({
     onRec: false,
     offRec: false, 
     reset: false,
+    finish: false,
   },
 });
