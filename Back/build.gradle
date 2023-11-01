@@ -1,0 +1,80 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.7.16'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
+    /* 2023.10.25 : Sonarqube */
+    id 'org.sonarqube' version '4.2.1.3168'
+}
+
+/* 2023.10.25 : Sonarqube */
+sonar {
+    properties {
+        property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
+        property "sonar.projectName", "S09P31B305"
+    }
+}
+
+group = 'LingoTown'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '11'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    /* 2023.10.17 */
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //gpt
+    implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
+
+    /* 2023.10.24 : 배포 모니터링 */
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    /* 23.10.26 WebClient 위한 WebFlux 의존성 추가 */
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    /* AOP : 실행시간 측정 용 */
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    /* 2023.10.30 : TTS */
+    implementation 'com.google.cloud:google-cloud-texttospeech:2.28.0'
+
+    /* 2023.10.30 : Multipart 변환기 */
+    implementation 'org.springframework:spring-test:5.3.30'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
