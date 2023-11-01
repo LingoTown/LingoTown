@@ -1,6 +1,7 @@
 package com.lingotown.domain.talk.service;
 
 import com.google.gson.Gson;
+import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.*;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class OpenAIService {
 
     private final WebClientUtil webClientUtil;
     private final TalkRepository talkRepository;
+    private final MemberRepository memberRepository;
     private final TalkDetailRepository talkDetailRepository;
     private final CacheService cacheService;
     private final TalkService talkService;
@@ -52,7 +55,7 @@ public class OpenAIService {
 
     @TrackExecutionTime
     @Transactional
-    public DataResponse<CreateOpenAIResDto> askGPT(TalkReqDto talkReqDto) throws Exception {
+    public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, TalkReqDto talkReqDto) throws Exception {
         Gson gson = new Gson();
 
         RestTemplate restTemplate = new RestTemplate();
@@ -69,9 +72,9 @@ public class OpenAIService {
 
 
         //이전 대화가 없을 경우
-        if(cacheService.hasCache(talkReqDto.getTalkId())) {
-
-            String concept = createConcept(talkReqDto.getTalkId(), talkReqDto.getTopic());
+        if(!cacheService.hasCache(talkReqDto.getTalkId())) {
+            System.out.println("여기 안오나??");
+            String concept = createConcept(principal, talkReqDto.getTalkId(), talkReqDto.getTopic());
 
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
@@ -89,6 +92,8 @@ public class OpenAIService {
                     = cacheService.getAllPreviousChatData(talkReqDto.getTalkId());
             messages.addAll(previousChatDataList);
         }
+
+
 
         // user 인풋
         if(talkReqDto.getTalkFile() != null) {
@@ -124,6 +129,10 @@ public class OpenAIService {
         chatList.addAll(messages);
         chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
+
+        for(OpenAIMessageDto content : chatList){
+            System.out.println(content.getRole() + " : " +content.getContent());
+        }
 
         // 사용자 질문 DB 저장
         CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
@@ -188,7 +197,7 @@ public class OpenAIService {
 
 
     //상황 설정하기
-    private String createConcept(Long talkId, String topic){
+    private String createConcept(Principal principal, Long talkId, String topic){
         NPC npc = getNPCEntity(talkId);
 
         String npcJob = npc.getNpcRole();
@@ -198,9 +207,12 @@ public class OpenAIService {
         String npcGender = npc.getGenderType().toString();
         String npcSituation = npc.getSituation();
 
+        String nickname = getNickname(principal);
+
         String concept =  "\n" +
                 "We are trying to do situational comedy. " +
                 "The user is a beginner who has just started learning " + language + ". " +
+                "user nickname is " +nickname+ ". " +
                 "The user's " + language +" level is Beginner, and " +
                 "All you have to do is respond appropriately to what the user says. " +
                 "The level of difficulty in responding should be relaxed so that users can understand it. " +
@@ -225,5 +237,11 @@ public class OpenAIService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
 
         return talk.getMemberNPC().getNpc();
+    }
+
+    private String getNickname(Principal principal){
+        Long memberId = Long.valueOf(principal.getName());
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND)).getNickname();
     }
 }
