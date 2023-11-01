@@ -18,7 +18,7 @@ import { PlayerMove } from './util/MSPlayerUtil';
 
 export const RestaurantComp: React.FC = () => {
   // player
-  const playerFile = useGLTF("./player/m_1.glb");
+  const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_1.glb");
   const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
 
   // camera action
@@ -30,20 +30,20 @@ export const RestaurantComp: React.FC = () => {
   const lerpFactor = 0.04;
 
   // NPC
-  const fox = useGLTF("./npc/fox.glb");
+  const fox = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/fox.glb");
   const foxPosition = new THREE.Vector3(-3.44, 1.8, 2.33);
   const foxRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
   const foxCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   
-  const rabbit = useGLTF("./npc/rabbit.glb");
+  const rabbit = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/rabbit.glb");
   const rabbitPosition = new THREE.Vector3(-6.4, 1.8, 8.51);
   const rabbitRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
   const rabbitCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 1, name: "Rabbit", targetPosition: rabbitPosition, targetRotation:rabbitRotation, ref: rabbitCircleRef },
-    { id: 2, name: "Fox", targetPosition: foxPosition, targetRotation:foxRotation, ref: foxCircleRef },
+    { id: 6, name: "Rabbit", targetPosition: rabbitPosition, targetRotation:rabbitRotation, ref: rabbitCircleRef },
+    { id: 14, name: "Fox", targetPosition: foxPosition, targetRotation:foxRotation, ref: foxCircleRef },
   ];
 
   // state
@@ -88,6 +88,7 @@ export const RestaurantComp: React.FC = () => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
       setTalkId(result.talkId)
+      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);
     }); 
@@ -102,7 +103,7 @@ export const RestaurantComp: React.FC = () => {
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
             animate();
-            setTalkBalloon(prev => ({ ...prev, isShow: true, profileImg: currentNpc.current.img }));
+            setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);
             return
           }
