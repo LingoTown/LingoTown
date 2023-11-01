@@ -34,8 +34,8 @@ public class TalkController {
     }
 
     @PostMapping(value = "", consumes = {"multipart/form-data"})
-    public DataResponse<CreateOpenAIResDto> askGPT(@ModelAttribute TalkReqDto talkReqDto) throws Exception {
-        return openAIService.askGPT(talkReqDto);
+    public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
+        return openAIService.askGPT(principal, talkReqDto);
     }
 
     @GetMapping("/list/{memberNPCId}")
@@ -63,9 +63,5 @@ public class TalkController {
         return talkService.increaseIntimacy(increaseIntimacyReqDto);
     }
 
-//    @PostMapping("/test")
-//    public String test(@RequestBody TestDto test) throws IOException {
-//        return openAIService.checkGrammar(test);
-//    }
 
 }
