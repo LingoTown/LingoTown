@@ -12,7 +12,8 @@ import * as THREE from "three";
 import { NPCStage } from "./NPCStage";
 
 export const IntroduceComp: React.FC = () => {
-  const cityW = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_4.glb');
+  const companyM1 = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb');
+  const companyM2 = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb');
   const restaurantM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_25.glb');
   const restaurantW = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb');
   const parkBasketballM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb');
@@ -20,7 +21,8 @@ export const IntroduceComp: React.FC = () => {
   const parkSoccerM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_9.glb');
   const parkKidM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb');
 
-  const cityWRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const companyM1Ref = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const companyM2Ref = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const restaurantMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const restaurantWRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const parkBasketballMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
@@ -28,7 +30,8 @@ export const IntroduceComp: React.FC = () => {
   const parkSoccerMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const parkKidMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
 
-  const { actions : cityWActions } = useAnimations(cityW.animations, cityW.scene);
+  const { actions: companyM1Actions } = useAnimations(companyM1.animations, companyM1.scene);
+  const { actions : companyM2Actions } = useAnimations(companyM2.animations, companyM2.scene);
   const { actions : restaurantMActions } = useAnimations(restaurantM.animations, restaurantM.scene);
   const { actions: restaurantWActions } = useAnimations(restaurantW.animations, restaurantW.scene);
   const { actions: parkBasketballMActions } = useAnimations(parkBasketballM.animations, parkBasketballM.scene);
@@ -39,7 +42,8 @@ export const IntroduceComp: React.FC = () => {
   const [active, setActive] = useState<string | null>(null);
   const [enabled, setEnabled] = useState<boolean | undefined>(false);
 
-  const [cityWHovered, setCityWHovered] = useState<string | null>(null);
+  const [companyM1Hovered, setCompanyM1Hovered] = useState<string | null>(null);
+  const [companyM2Hovered, setCompanyM2Hovered] = useState<string | null>(null);
   const [restaurantMHovered, setRestaurantMHovered] = useState<string | null>(null);
   const [restaurantWHovered, setRestaurantWHovered] = useState<string | null>(null);
   const [parkBasketballMHovered, setParkBasketballMHovered] = useState<string | null>(null);
@@ -47,7 +51,8 @@ export const IntroduceComp: React.FC = () => {
   const [parkSoccerMHovered, setParkSoccerMHovered] = useState<string | null>(null);
   const [parkKidMHovered, setParkKidMHovered] = useState<string | null>(null);
 
-  useCursor(cityWHovered == "Noah");
+  useCursor(companyM1Hovered == "Jayden");
+  useCursor(companyM2Hovered == "Kevin");
   useCursor(restaurantMHovered == "Luke");
   useCursor(restaurantWHovered == "Olivia");
   useCursor(parkBasketballMHovered == "Marco");
@@ -76,12 +81,20 @@ export const IntroduceComp: React.FC = () => {
   }, [active, sceneInstance]);
 
   useEffect(() => {
-    const anim = cityWHovered ? 'Victory' : 'Idle';
-    cityWActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = companyM1Hovered ? 'Victory' : 'Idle';
+    companyM1Actions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      cityWActions[anim]?.fadeOut(0.5);
+      companyM1Actions[anim]?.fadeOut(0.5);
     }
-  }, [cityWHovered, cityWActions]);
+  }, [companyM1Hovered, companyM1Actions]);
+
+  useEffect(() => {
+    const anim = companyM2Hovered ? 'Victory' : 'Idle';
+    companyM2Actions[anim]?.reset()?.fadeIn(0.5)?.play();
+    return () => {
+      companyM2Actions[anim]?.fadeOut(0.5);
+    }
+  }, [companyM2Hovered, companyM2Actions]);
 
   useEffect(() => {
     const anim = restaurantMHovered ? 'Victory' : 'Idle';
@@ -142,10 +155,20 @@ export const IntroduceComp: React.FC = () => {
         font="../font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="black"
-        position={[0, -0.2, 0.051]}
+        position={[-4.5, 1.8, 0.051]}
         anchorY={"bottom"}
       >
-        City
+        Park
+      </Text>
+
+      <Text
+        font="../font/PasseroOne-Regular.ttf"
+        fontSize={0.2}
+        color="black"
+        position={[1.5, 1.8, 0.051]}
+        anchorY={"bottom"}
+      >
+        Company
       </Text>
 
       <Text
@@ -162,10 +185,10 @@ export const IntroduceComp: React.FC = () => {
         font="../font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="black"
-        position={[-4.5, 1.8, 0.051]}
+        position={[1.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Park
+        Hotel
       </Text>
 
       <NPCStage
@@ -225,15 +248,30 @@ export const IntroduceComp: React.FC = () => {
 
       <NPCStage
         texture="../map/introduce/city.jpg"
-        name="Noah"
-        age="20"
+        name="Jayden"
+        age="30"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setCityWHovered}
-        position-y={-1}
+        setHovered={setCompanyM1Hovered}
+        position-x={1.5}
+        position-y={1}
       >
-        <primitive scale={1} ref={cityWRef} position-y={-0.75} rotation={[0, 0, 0]} object={cityW.scene} />
+        <primitive scale={1} ref={companyM1Ref} position-y={-0.75} rotation={[0, 0, 0]} object={companyM1.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="../map/introduce/city.jpg"
+        name="Kevin"
+        age="30"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setCompanyM2Hovered}
+        position-x={3}
+        position-y={1}
+      >
+        <primitive scale={1} ref={companyM2Ref} position-y={-0.75} rotation={[0, 0, 0]} object={companyM2.scene} />
       </NPCStage>
 
       <NPCStage

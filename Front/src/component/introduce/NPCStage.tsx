@@ -28,7 +28,8 @@ export const NPCStage: React.FC<{
     { "Sanha": "runner" },
     { "Marco": "captain of the 'Daejeon \n Hana Citizen' team." },
     { "Jerome": "coach of the 'ojossi' \n soccer team" },
-    { "Noah": "'Lingo Gelato' employee \n who sells gelato and \n various drinks." },
+    { "Jayden": "head of the human resources \n department of the \n 'SAMSUNG' company." },
+    { "Kevin": "the host of the new mobile project \n presentation at SAMSUNG." },
     { "Olivia": "‘LingoMongo’ restaurant chef" },
     { "Luke": "‘LingoMongo’ restaurant chef" }
   ];
