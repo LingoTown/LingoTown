@@ -28,7 +28,8 @@ public enum ExceptionStatus {
     FORBIDDEN_FAILED(4003, "콘텐츠에 접근할 수 없어, 정보를 조회할 수 없습니다."),
     TOKEN_NOT_FOUND_IN_COOKIE(-1002, "토큰이 쿠키에 없습니다."),
     DATA_NOT_FOUND(5000, "데이터가 존재하지 않습니다."),
-    TALK_DETAIL_NOT_FOUND(5006, "해당 문장(TALK DETAIL)이 존재하지 않습니다");
+    TALK_DETAIL_NOT_FOUND(5006, "해당 문장(TALK DETAIL)이 존재하지 않습니다"),
+    TOPIC_NOT_FOUND(5007, "해당 토픽이 존재하지 않습니다");
 
     private final int code;
     private final String message;

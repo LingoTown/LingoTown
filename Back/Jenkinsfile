@@ -1,5 +1,6 @@
 pipeline {
     agent any
+
     stages {
         stage("Set Variable") {
             steps {
@@ -98,7 +99,8 @@ pipeline {
         stage("Docker Container Run") {
             steps {
                 script {
-                    sh "docker run -d -p 8081:8081 --name ${CONTAINER_NAME_BE} ${IMAGE_NAME_BE} -e TZ=Asia/Seoul"
+                    // 환경변수 및 파일시스템 마운트 (Jenkins는 이미 Host로부터 마운트 받음)
+                    sh "docker run -d -p 8081:8081 -e GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS} -v /home/ubuntu/key/lingotown-403602-68f9b360791b.json:/home/ubuntu/key/lingotown-403602-68f9b360791b.json --name ${CONTAINER_NAME_BE} ${IMAGE_NAME_BE} -e TZ=Asia/Seoul"
                 }
             }
         }
