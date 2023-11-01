@@ -98,6 +98,7 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
     }
     camera.position.lerp(desiredCameraPosition, 1);
     camera.lookAt(playerRef.current.position.x, playerRef.current.position.y, playerRef.current.position.z);
+    
   }
 };
 
