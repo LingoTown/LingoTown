@@ -38,9 +38,9 @@ public class TalkController {
         return openAIService.askGPT(principal, talkReqDto);
     }
 
-    @GetMapping("/list/{memberNPCId}")
-    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("memberNPCId") Long memberNPCId){
-        return talkService.readTalkList(principal, memberNPCId);
+    @GetMapping("/list/{npcId}")
+    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("npcId") Long npcId){
+        return talkService.readTalkList(principal, npcId);
     }
 
     @GetMapping("/list")

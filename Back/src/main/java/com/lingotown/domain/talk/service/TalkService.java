@@ -2,6 +2,7 @@ package com.lingotown.domain.talk.service;
 
 
 import com.lingotown.domain.member.entity.Member;
+import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.response.CreateTalkResDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkListResDto;
@@ -43,19 +44,20 @@ public class TalkService {
     private final S3Service s3Service;
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
-    private final MemberNPCRepository memberNPCRepository;
+    private final MemberNPCRepository memberNpcRepository;
 
     //해당 NPC와 대화 내역
-    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long memberNPCId){
-        MemberNPC memberNPC = getMemberNPCEntity(memberNPCId);
+    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long npcId){
+        Long logInMemberId = Long.valueOf(principal.getName());
+        MemberNPC memberNPC = memberNpcRepository.findByMemberIdNPCId(logInMemberId, npcId);
 
         Long memberId = memberNPC.getMember().getId();
-        Long logInMemberId = Long.valueOf(principal.getName());
         if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
 
         List<ReadTalkListResDto> talkListResDtoList = new ArrayList<>();
 
-        List<Talk> talkList = memberNPCRepository.findTalkList(memberNPCId);
+        Long memberNPCId = memberNPC.getId();
+        List<Talk> talkList = memberNpcRepository.findTalkList(memberNPCId);
         for(Talk talk : talkList){
             ReadTalkListResDto talkListDto = ReadTalkListResDto.builder()
                     .talkId(talk.getId())
@@ -180,11 +182,6 @@ public class TalkService {
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
-    }
-
-    private MemberNPC getMemberNPCEntity(Long memberNPCId){
-        return memberNPCRepository.findById(memberNPCId)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
     }
 
 }
