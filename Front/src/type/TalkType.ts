@@ -1,4 +1,4 @@
-type topic = {
+export type topic = {
   topicId: number,
   keyword: string
 }

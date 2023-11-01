@@ -18,22 +18,26 @@ export const MapUtilComp = () => {
     setTalkBalloon(prevState => ({...prevState, isMove: true}));
     if (flag) {
       navigate("/");
-    } 
+    }
   }
 
   return(
     <>
-      <div className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-3">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50"
+      <div className="absolute top-0 left-0 z-10 mt-2 ml-2">
+        <button 
+          className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
           onClick={ exit }
-        >나가기
-        </button>
-        <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-          onClick={ () => customAlert("토끼", "토끼와 대화를 시작하시겠습니까?")}
-        >설정</button>
-        <button className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50"
-          onClick={() => customPrompt("닉네임 변경", "변경할 닉네임을 입력해 주세요")}
-        >정보</button>
+        >Back To Main</button>
+      </div>
+      <div className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-2">
+        <button
+          className="px-4 py-2 bg-gray-500 text-white text-lg rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 font-['passero-one']"
+          onClick={ () => customAlert("Setting", "설정창 구현 중입니다.")}
+        >Setting</button>
+        <button 
+          className="px-4 py-2 bg-gray-500 text-white text-lg rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 font-['passero-one']"
+          onClick={() => customPrompt("Info", "해당 테마의 정보를 확인 할 수 있습니다.")}
+        >Info</button>
       </div>
     </>
   )
