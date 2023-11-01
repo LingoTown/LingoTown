@@ -1,6 +1,7 @@
 import {
   Environment,
   MeshPortalMaterial,
+  PortalMaterialType,
   RoundedBox,
   Text,
   useTexture
@@ -18,17 +19,17 @@ export const NPCStage: React.FC<{
   color: THREE.Color;
   active: string | null;
   setActive: (name: string | null) => void;
-  hovered: string | null;
   setHovered: (name: string | null) => void;
 }> = ({
-  children, texture, name, age, color, active, setActive, hovered, setHovered, ...props
+  children, texture, name, age, color, active, setActive, setHovered, ...props
 }) => {
   const information = [
     { "Jerry": "little kid playing in the park" },
     { "Sanha": "runner" },
     { "Marco": "captain of the 'Daejeon \n Hana Citizen' team." },
     { "Jerome": "coach of the 'ojossi' \n soccer team" },
-    { "Noah": "'Lingo Gelato' employee \n who sells gelato and \n various drinks." },
+    { "Jayden": "head of the human resources \n department of the \n 'SAMSUNG' company." },
+    { "Kevin": "the host of the new mobile project \n presentation at SAMSUNG." },
     { "Olivia": "‘LingoMongo’ restaurant chef" },
     { "Luke": "‘LingoMongo’ restaurant chef" }
   ];
@@ -38,11 +39,13 @@ export const NPCStage: React.FC<{
   const textureLoader = new THREE.TextureLoader();
   const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
 
-  const portalMaterial = useRef();
+  const portalMaterial = useRef<PortalMaterialType | null>(null);
 
   useFrame((_state, delta) => {
-    const worldOpen = active === name;
-    easing.damp(portalMaterial.current, "blend", worldOpen ? 1 : 0, 0.2, delta)
+    if (portalMaterial.current !== null) {
+      const worldOpen = active === name;
+      easing.damp(portalMaterial.current, "blend", worldOpen ? 1 : 0, 0.2, delta);
+    }
   })
 
   return (
