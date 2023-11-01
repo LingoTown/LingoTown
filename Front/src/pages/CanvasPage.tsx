@@ -14,7 +14,12 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   const talkBalloon = useRecoilValue(talkBalloonAtom);
   return(
     <>
+    {
+      talkBalloon.isShow?
+      null
+      :
       <MapUtilComp />
+    }
       <Canvas style={{ height:"100vh" }}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
           <Debug scale={1} color='green'>
