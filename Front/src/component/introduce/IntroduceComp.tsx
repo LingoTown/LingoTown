@@ -47,15 +47,15 @@ export const IntroduceComp: React.FC = () => {
   const [parkSoccerMHovered, setParkSoccerMHovered] = useState<string | null>(null);
   const [parkKidMHovered, setParkKidMHovered] = useState<string | null>(null);
 
-  useCursor(cityWHovered);
-  useCursor(restaurantMHovered);
-  useCursor(restaurantWHovered);
-  useCursor(parkBasketballMHovered);
-  useCursor(parkRunnerWHovered);
-  useCursor(parkSoccerMHovered);
-  useCursor(parkKidMHovered);
+  useCursor(cityWHovered == "Noah");
+  useCursor(restaurantMHovered == "Luke");
+  useCursor(restaurantWHovered == "Olivia");
+  useCursor(parkBasketballMHovered == "Marco");
+  useCursor(parkRunnerWHovered == "Sanha");
+  useCursor(parkSoccerMHovered == "Jerome");
+  useCursor(parkKidMHovered == "Jerry");
 
-  const controlsRef = useRef<CameraControls>();
+  const controlsRef = useRef<CameraControls | null>(null);
 
   const sceneInstance = useThree(state => state.scene);
 
@@ -78,43 +78,57 @@ export const IntroduceComp: React.FC = () => {
   useEffect(() => {
     const anim = cityWHovered ? 'Victory' : 'Idle';
     cityWActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => cityWActions[anim]?.fadeOut(0.5);
+    return () => {
+      cityWActions[anim]?.fadeOut(0.5);
+    }
   }, [cityWHovered, cityWActions]);
 
   useEffect(() => {
     const anim = restaurantMHovered ? 'Victory' : 'Idle';
     restaurantMActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => restaurantMActions[anim]?.fadeOut(0.5);
+    return () => {
+      restaurantMActions[anim]?.fadeOut(0.5);
+    }
   }, [restaurantMHovered, restaurantMActions]);
 
   useEffect(() => {
     const anim = restaurantWHovered ? 'Victory' : 'Idle';
     restaurantWActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => restaurantWActions[anim]?.fadeOut(0.5);
+    return () => {
+      restaurantWActions[anim]?.fadeOut(0.5);
+    }
   }, [restaurantWHovered, restaurantWActions]);
 
   useEffect(() => {
     const anim = parkBasketballMHovered ? 'Victory' : 'Idle';
     parkBasketballMActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => parkBasketballMActions[anim]?.fadeOut(0.5);
+    return () => {
+      parkBasketballMActions[anim]?.fadeOut(0.5);
+    }
   }, [parkBasketballMHovered, parkBasketballMActions]);
   
   useEffect(() => {
     const anim = parkRunnerWHovered ? 'Victory' : 'Idle';
     parkRunnerWActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => parkRunnerWActions[anim]?.fadeOut(0.5);
+    return () => {
+      parkRunnerWActions[anim]?.fadeOut(0.5);
+    }
   }, [parkRunnerWHovered, parkRunnerWActions]);
 
   useEffect(() => {
     const anim = parkSoccerMHovered ? 'Victory' : 'Idle';
     parkSoccerMActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => parkSoccerMActions[anim]?.fadeOut(0.5);
+    return () => {
+      parkSoccerMActions[anim]?.fadeOut(0.5);
+    }
   }, [parkSoccerMHovered, parkSoccerMActions]);
 
   useEffect(() => {
     const anim = parkKidMHovered ? 'Victory' : 'Idle';
     parkKidMActions[anim]?.reset()?.fadeIn(0.5)?.play();
-    return () => parkKidMActions[anim]?.fadeOut(0.5);
+    return () => {
+      parkKidMActions[anim]?.fadeOut(0.5);
+    }
   }, [parkKidMHovered, parkKidMActions]);
 
   return (
@@ -161,9 +175,9 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={parkKidMHovered}
         setHovered={setParkKidMHovered}
-        position={[-4.5, 1, 0]}
+        position-x={-4.5}
+        position-y={1}
       >
         <primitive scale={1} ref={parkKidMRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkKidM.scene} />
       </NPCStage>
@@ -175,9 +189,9 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={parkRunnerWHovered}
         setHovered={setParkRunnerWHovered}
-        position={[-3, 1, 0]}
+        position-x={-3}
+        position-y={1}
       >
         <primitive scale={1} ref={parkRunnerWRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkRunnerW.scene} />
       </NPCStage>
@@ -189,9 +203,9 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={parkBasketballMHovered}
         setHovered={setParkBasketballMHovered}
-        position={[-1.5, 1, 0]}
+        position-x={-1.5}
+        position-y={1}
       >
         <primitive scale={1} ref={parkBasketballMRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkBasketballM.scene} />
       </NPCStage>
@@ -203,9 +217,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={parkSoccerMHovered}
         setHovered={setParkSoccerMHovered}
-        position={[0, 1, 0]}
+        position-y={1}
       >
         <primitive scale={1} ref={parkSoccerMRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkSoccerM.scene} />
       </NPCStage>
@@ -217,9 +230,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={cityWHovered}
         setHovered={setCityWHovered}
-        position={[0, -1, 0]}
+        position-y={-1}
       >
         <primitive scale={1} ref={cityWRef} position-y={-0.75} rotation={[0, 0, 0]} object={cityW.scene} />
       </NPCStage>
@@ -231,9 +243,9 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={restaurantMHovered}
         setHovered={setRestaurantMHovered}
-        position={[-4.5, -1, 0]}
+        position-x={-4.5}
+        position-y={-1}
       >
         <primitive scale={1} ref={restaurantMRef} position-y={-0.75} rotation={[0, 0, 0]} object={restaurantM.scene} />
       </NPCStage>
@@ -245,9 +257,9 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        hovered={restaurantWHovered}
         setHovered={setRestaurantWHovered}
-        position={[-3, -1, 0]}
+        position-x={-3}
+        position-y={-1}
       >
         <primitive scale={1} ref={restaurantWRef} position-y={-0.75} rotation={[0, 0, 0]} object={restaurantW.scene} />
       </NPCStage>
