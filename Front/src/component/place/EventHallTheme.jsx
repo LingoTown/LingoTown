@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import {EventHall} from "../../../public/map/eventHall/EventHall";
+// import {EventHall} from "../../../public/map/eventHall/EventHall";
 import * as THREE from 'three';
 
 export const EventHallTheme = () => {
