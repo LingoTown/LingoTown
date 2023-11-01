@@ -15,7 +15,12 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   const talkBalloon = useRecoilValue(talkBalloonAtom);
   return(
     <>
+    {
+      talkBalloon.isShow?
+      null
+      :
       <MapUtilComp />
+    }
       <Canvas style={{ height:"100vh" }}>
         {/* <OrbitControls /> */}
 

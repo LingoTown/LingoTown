@@ -37,6 +37,8 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
     if (flag.current) {
       setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
     }
+    console.log(transcript);
+    console.log(transcript.length)
   }, [transcript]);
 
   if (!browserSupportsSpeechRecognition) {
@@ -112,7 +114,6 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
         sentence: result.responseMessage,
         audio: result.responseS3URL
       }));
-      flag.current = true;
     }, (error) => {
       console.log(error);
     })
@@ -137,11 +138,13 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
     }
   
     SpeechRecognition.stopListening();
+    resetTranscript();
   };
     
   useEffect(() => {
     if (isMounted.current.onRec) {
       onRecAudio();
+      flag.current = true;
     } else {
       isMounted.current.onRec = true;
     }
@@ -158,6 +161,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
   useEffect(() => {
     if (isMounted.current.reset) {
       stopMicrophoneAccess();
+      onRecAudio();
     } else {
       isMounted.current.reset = true;
     }
