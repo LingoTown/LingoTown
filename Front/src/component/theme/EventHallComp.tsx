@@ -9,7 +9,7 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { EventHall } from "../../../public/map/eventhall/EventHall";
+import { EventHall } from "../../../public/map/eventHall/EventHall";
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
