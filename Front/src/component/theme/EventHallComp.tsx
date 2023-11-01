@@ -270,9 +270,6 @@ export const EventHallComp: React.FC = () => {
         CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
     });
 
-    const circleArgs = [3, 32];
-    const circlePosition = [-3.4, 0.03, 0];
-
     return(
         <>
             <EventHall />
