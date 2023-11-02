@@ -54,14 +54,34 @@ export const PlayerMove = (playerRef: any, playerApi: any,  keysPressed: any, ca
     }else {
       // 벽에 부딪혔을 때의 처리
       const oppositePosition = playerRef.current.position.clone();
-      if(collidesWallKey == "C02"){// back wall
-        oppositePosition.z += 0.5;
-      }else if(collidesWallKey == "C03" || collidesWallKey == "C06" || collidesWallKey == "C07"){// right wall
-        oppositePosition.x -= 0.5;
-      }else if(collidesWallKey == "C04" || collidesWallKey == "C08"){// front wall
-        oppositePosition.z -= 0.5;
-      }else if(collidesWallKey == "C05"){// left wall
-        oppositePosition.x += 0.5;
+      const match = collidesWallKey.match(/^[A-Za-z]+/); // 알파벳 문자에 해당하는 부분을 찾음
+      
+      // 컨테이너 Id 분리
+      let direction = "";
+      let type = "";
+
+      if(match) {
+        direction = match[0].slice(0, 1);
+        type = match[0].slice(1, 2);
+      }
+      else
+        console.log("해당 컨테이너 Id를 분리할 수 없습니다.");
+
+      // 벽일때
+      if(type == "W") {
+
+        // Back Wall
+        if(direction == "B")
+            oppositePosition.z += 0.5;
+        // Right Wall
+        else if(direction == "R")
+            oppositePosition.x -= 0.5;
+        // Front Wall
+        else if(direction == "F")
+            oppositePosition.z -= 0.5;  
+        // Left Wall
+        else if(direction == "L")
+            oppositePosition.x += 0.5;
       }
 
       playerApi.position.set(oppositePosition.x, oppositePosition.y, oppositePosition.z);
@@ -86,10 +106,10 @@ export const PlayerMove = (playerRef: any, playerApi: any,  keysPressed: any, ca
     const offset = cameraOffset.current.clone().applyQuaternion(playerRef.current.quaternion);
     const desiredCameraPosition = currentPos.add(offset);
 
-    if (isMove.current) {
-      camera.position.lerp(desiredCameraPosition, 1);
-      camera.lookAt(playerRef.current.position);
-    }
+    // if (isMove.current) {
+    //   camera.position.lerp(desiredCameraPosition, 1);
+    //   camera.lookAt(playerRef.current.position);
+    // }
   }
 };
 

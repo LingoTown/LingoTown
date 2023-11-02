@@ -1,0 +1,268 @@
+{
+  "accessors": [
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 5480,
+      "max": [
+        0.8818100094795227,
+        0.8818100094795227,
+        0.8818100094795227
+      ],
+      "min": [
+        -0.8818100094795227,
+        -0.8818100094795227,
+        -0.8818100094795227
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 65760,
+      "componentType": 5126,
+      "count": 5480,
+      "max": [
+        0.9983717799186707,
+        0.9990564584732056,
+        0.9983717799186707
+      ],
+      "min": [
+        -0.9983717799186707,
+        -0.9990151524543762,
+        -0.9983717799186707
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 32040,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 131520,
+      "componentType": 5126,
+      "count": 2768,
+      "max": [
+        0.8613100051879883,
+        0.8613100051879883,
+        0.8613100051879883
+      ],
+      "min": [
+        -0.8613100051879883,
+        -0.8613100051879883,
+        -0.8613100051879883
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 164736,
+      "componentType": 5126,
+      "count": 2768,
+      "max": [
+        0.9984630942344666,
+        0.9990564584732056,
+        0.9984630942344666
+      ],
+      "min": [
+        -0.9984630942344666,
+        -0.9990151524543762,
+        -0.9984630942344666
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 128160,
+      "componentType": 5125,
+      "count": 16020,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Blenderkurt (https://sketchfab.com/kurtstangl)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/soccer-ball-d4c560493a0846c5943f3aeea58acb72",
+      "title": "Soccer Ball"
+    },
+    "generator": "Sketchfab-12.65.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 192240,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 197952,
+      "byteOffset": 192240,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 390192,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsRequired": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseFactor": [
+            0.8000000119,
+            0.8000000119,
+            0.8000000119,
+            1.0
+          ],
+          "glossinessFactor": 0.9631205648,
+          "specularFactor": [
+            0.08000000119,
+            0.08000000119,
+            0.08000000119
+          ]
+        }
+      },
+      "name": "weiß"
+    },
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseFactor": [
+            0.0010106779,
+            0.0010106779,
+            0.0010106779,
+            1.0
+          ],
+          "glossinessFactor": 0.9631205648,
+          "specularFactor": [
+            0.01757135987,
+            0.01757135987,
+            0.01757135987
+          ]
+        }
+      },
+      "name": "schwarz"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Fussball",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0
+          },
+          "indices": 2,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Fussball",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 4,
+            "POSITION": 3
+          },
+          "indices": 5,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "name": "Root"
+    },
+    {
+      "children": [
+        3,
+        4
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.82837,
+        1.0
+      ],
+      "name": "Fussball"
+    },
+    {
+      "mesh": 0,
+      "name": "Fussball"
+    },
+    {
+      "mesh": 1,
+      "name": "Fussball"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}
