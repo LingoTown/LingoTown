@@ -51,6 +51,12 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
+    @Value("${SPEECH_ACE.URL}")
+    private String SPEECH_ENDPOINT_URL;
+
+    @Value("${SPEECH_ACE.KEY}")
+    private String SPEECH_API_KEY;
+
     @TrackExecutionTime
     @Transactional
     public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, TalkReqDto talkReqDto) throws Exception {
@@ -128,10 +134,6 @@ public class OpenAIService {
         chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
-        for(OpenAIMessageDto content : chatList){
-            System.out.println(content.getRole() + " : " +content.getContent());
-        }
-
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
@@ -145,9 +147,10 @@ public class OpenAIService {
 
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
-
-        // 사용자 질문 DB 저장 및 비동기 문법 체크
+        /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
         if(talkReqDto.getTalkFile() != null) {
+
+            //사용자 질문 DB 저장
             CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
                     .talkId(talkReqDto.getTalkId())
                     .isMember(true)
@@ -157,6 +160,7 @@ public class OpenAIService {
 
             DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
 
+            //비동기 문법 처리
             webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
                     .subscribe(
                             res -> {
@@ -176,6 +180,16 @@ public class OpenAIService {
                                 log.error("Error occurred: ", err);
                             }
                     );
+
+            //비동기 발음 처리
+            NPC npc = getNPCEntity(talkReqDto.getTalkId());
+            String language = npc.getWorld().getLanguage().toString();
+
+            String dialect = "";
+            if(language.equals("ENGLISH")) dialect = "us-en";
+            else dialect = "fr-fr";
+
+
         }
 
         //응답 반환
@@ -189,7 +203,7 @@ public class OpenAIService {
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
-    //토픽처리
+    //토픽으로 대화 하기
     @Transactional
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
         TalkReqDto talkReqDto = TalkReqDto
@@ -204,9 +218,7 @@ public class OpenAIService {
     }
 
 
-
-
-    //상황 설정하기
+    //상황 설정 하기
     private String createConcept(Principal principal, Long talkId, String topic){
         NPC npc = getNPCEntity(talkId);
 

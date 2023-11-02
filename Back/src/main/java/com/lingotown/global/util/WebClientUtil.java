@@ -1,10 +1,16 @@
 package com.lingotown.global.util;
 
+import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
+import com.lingotown.domain.talk.dto.request.PronunciationReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
+import com.lingotown.domain.talk.dto.response.PronunciationResDto;
+import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.global.config.WebClientConfig;
+import com.lingotown.global.exception.CustomException;
+import com.lingotown.global.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -37,8 +43,6 @@ public class WebClientUtil {
 
     public <T, V> Mono<T> post(String url, V requestDto, Class<T> responseDtoClass) {
 
-        log.info("url={}", url);
-
         return webClientConfig.webClient().method(HttpMethod.POST)
                 .uri(url)
                 .bodyValue(requestDto)
@@ -47,8 +51,6 @@ public class WebClientUtil {
     }
 
     public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
-        // 이미 외부에서 생성된 requestDto 객체를 이용하여 요청을 보냅니다.
-
 
         // user 인풋
         OpenAIMessageDto messageDtoUser = OpenAIMessageDto
@@ -68,8 +70,6 @@ public class WebClientUtil {
                 .messages(messages)
                 .build();
 
-        log.info(String.valueOf(requestDto));
-
         return webClientConfig.webClient().post()
                 .uri(GPTUrl)
                 .headers(headers -> {
@@ -80,4 +80,27 @@ public class WebClientUtil {
                 .retrieve()
                 .bodyToMono(OpenAIResDto.class);
     }
+
+
+    public Mono<PronunciationResDto> checkPronunciationAsync(String speechKey, String language, String speechUrl, TalkReqDto talkReqDto) {
+
+        PronunciationReqDto reqDto = PronunciationReqDto
+                .builder()
+                .text(talkReqDto.getPrompt())
+                .user_audio_file(talkReqDto.getTalkFile())
+                .build();
+
+
+        return webClientConfig.webClient().post()
+                .uri(uriBuilder -> uriBuilder
+                        .path(speechUrl)
+                        .queryParam("key", speechKey)
+                        .queryParam("dialect", language)
+                        .build()
+                )
+                .body(BodyInserters.fromValue(reqDto))
+                .retrieve()
+                .bodyToMono(PronunciationResDto.class);
+    }
+
 }
