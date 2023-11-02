@@ -3,7 +3,7 @@ import { TalkBalloonComp } from "../component/talk/TalkBalloonComp";
 import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
 import { useRecoilValue } from "recoil"
 import { MapUtilComp } from "../component/talk/MapUtilComp";
-import { Physics } from '@react-three/cannon';
+import { Physics, Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
 interface CanvasPage {
@@ -23,9 +23,14 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
     }
       <Canvas style={{ height:"100vh" }}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
-            {props.theme}
+            <Debug scale={1} color='red'>
+              {props.theme}
+            </Debug>
         </Physics>
+
+
       </Canvas>
+
       { talkBalloon.isShow?<TalkBalloonComp />:null }
     </>
   )
