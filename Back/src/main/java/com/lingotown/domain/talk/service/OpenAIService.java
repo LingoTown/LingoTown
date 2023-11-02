@@ -73,8 +73,10 @@ public class OpenAIService {
 
         //이전 대화가 없을 경우
         if(!cacheService.hasCache(talkReqDto.getTalkId())) {
-            System.out.println("여기 안오나??");
-            String concept = createConcept(principal, talkReqDto.getTalkId(), talkReqDto.getTopic());
+            String concept = "";
+
+            if(talkReqDto.getTalkFile()!=null) concept = createConcept(principal, talkReqDto.getTalkId(), null);
+            else concept = createConcept(principal, talkReqDto.getTalkId(), talkReqDto.getPrompt());
 
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
@@ -92,7 +94,6 @@ public class OpenAIService {
                     = cacheService.getAllPreviousChatData(talkReqDto.getTalkId());
             messages.addAll(previousChatDataList);
         }
-
 
 
         // user 인풋
@@ -193,6 +194,20 @@ public class OpenAIService {
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
+
+    //토픽처리
+    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
+        TalkReqDto talkReqDto = TalkReqDto
+                .builder()
+                .talkId(topicReqDto.getTalkId())
+                .prompt(topicReqDto.getTopic())
+                .talkFile(null)
+                .build();
+
+
+        return askGPT(principal, talkReqDto);
+    }
+
 
 
 
