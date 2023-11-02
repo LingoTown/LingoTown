@@ -36,7 +36,7 @@ export const RestaurantComp: React.FC = () => {
 
   // player
   const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_1.glb");
-  const [playerPosition, setPlayerPosition] = useState([-6, 0, 4]);
+  const [playerPosition, setPlayerPosition] = useState([-5.5, 0, 12]);
   const [playerRotation, setPlayerRotation]= useState([0,3,0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
@@ -175,13 +175,13 @@ export const RestaurantComp: React.FC = () => {
 
       {/* chef */}
       <Circle ref={chefCircleRef} args={[3, 32]} position={[-7.5, 0.1, 2]} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0} />
       </Circle>
       <primitive scale={1} position={[-7.5, 0.1, 2]} rotation={[0, 1.5, 0]} object={chefFile.scene}/>
       
       {/* customer:olivia */}
       <Circle ref={customerCircleRef} args={[3, 32]} position={[-3, 0.1, -8]} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0} />
       </Circle>
       <primitive scale={1} position={[-3, 0.1, -8]} rotation={[0, 0, 0]} object={customerFile.scene} />
     </>
