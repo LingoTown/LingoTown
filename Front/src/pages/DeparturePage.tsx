@@ -8,9 +8,9 @@ const Rows = () => {
     const dep : DepartureType[] = departures;
     const sortTheme = (language : string) => {
         if(language === "English"){
-            navigate("/restaurant");
+            navigate("/themePage?language=0");
         } else if(language === "French"){
-
+            navigate("/themePage?language=1");
         }
     }
     return (
@@ -23,7 +23,7 @@ const Rows = () => {
                 <div className={`flex w-1/6 ${el.Status === "Cancelled"? "text-red-400" : "text-blue-300"}`}>{el.Status}</div>
             </div>
         ))
-    ) 
+    )
 }
 const DeparturePage = () => {
     const navigate = useNavigate();
