@@ -14,7 +14,6 @@ import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-// import { PlayerMove } from './util/MSPlayerUtil';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { PlayerMove } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';

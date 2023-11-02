@@ -33,8 +33,8 @@ export const ParkComp: React.FC = () => {
   // player
   const playerFile = useGLTF("./player/m_1.glb");
   //Player cannon
-  const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
-  const [playerRotation, setPlayerRotation]= useState([0, 0, 0]);
+  const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);
+  const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
@@ -55,15 +55,15 @@ export const ParkComp: React.FC = () => {
 
   // NPC
   const jerryFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb");
-  const jerryPosition = new THREE.Vector3(-5, 1, 2.33);
-  const jerryRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const jerryPosition = new THREE.Vector3(-31, 2.5, 6);
+  const jerryRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-180), 0);
   const jerryCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const jerryAction = useRef<AnimationAction>();
   const jerryActions = useAnimations(jerryFile.animations, jerryFile.scene).actions;
 
   const sanhaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb");
-  const sanhaPosition = new THREE.Vector3(-3, 1.8, -5);
-  const sanhaRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const sanhaPosition = new THREE.Vector3(-27, 1, -2);
+  const sanhaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
@@ -160,24 +160,33 @@ export const ParkComp: React.FC = () => {
 
   //sanha run movement
   useFrame((state) => {
-    const oscillation = Math.sin(state.clock.elapsedTime);
-    const rotationY = -90 * oscillation; // Rotate 180 degrees during oscillation
-    
-    // Check if the model reference is available
-    if (sanhaRef.current) {
-      // Calculate the new x position based on time and a speed factor
-      const newX = -40 + 10 * Math.sin(state.clock.elapsedTime); // You can adjust the speed by changing the factor
-
-      // Check if the model is moving from left to right
-      if (sanhaRef.current.position.x <= -7) {
-        // Update the rotation of the model when reaching the end
-        sanhaRef.current.rotation.y = THREE.MathUtils.degToRad(rotationY);
+    let newX = -50;
+    if (sanhaRef.current && sanhaCircleRef.current) {
+      newX += state.clock.elapsedTime * 5;
+  
+      if (newX >= -25) {
+        sanhaRef.current.position.x = -25;
+        sanhaCircleRef.current.position.x = -25;
+  
+        // Smooth rotation transition
+        const rotationProgress = (newX + 25) / 25; // Value between 0 and 1
+        const rotationY = 1.5 + rotationProgress * 3; // Adjust the factor for rotation speed
+        sanhaRef.current.rotation.y = rotationY;
+  
+        // Stop rotating when reaching the desired rotation
+        if (rotationProgress >= 1) {
+          sanhaRef.current.rotation.y = -1.5;
+        }else if(sanhaRef.current.rotation.y == -1.5){
+          sanhaRef.current.position.x = newX;
+          sanhaCircleRef.current.position.x = newX;
+        }
+      } else {
+        sanhaRef.current.position.x = newX;
+        sanhaCircleRef.current.position.x = newX;
       }
-
-      // Update the position of the model
-      sanhaRef.current.position.x = newX;
     }
   });
+  
 
 
   return(
@@ -193,7 +202,7 @@ export const ParkComp: React.FC = () => {
       <Environment blur={1} background preset="sunset" />
 
       {/* sanha */}
-      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-3.4, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0, -2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
