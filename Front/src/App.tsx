@@ -6,6 +6,7 @@ import MainPage from './pages/MainPage';
 import NotFound from './pages/NotFoundPage';
 import { CanvasPage } from "./pages/CanvasPage";
 import { IntroducePage } from "./pages/IntroducePage";
+import { ThemePage } from "./pages/ThemePage";
 import { RestaurantComp } from "./component/theme/RestaurantComp";
 import { PolygoniaComp } from "./component/theme/PolygoniaComp";
 import { IntroduceComp } from "./component/introduce/IntroduceComp";
@@ -26,7 +27,7 @@ const App = () => {
         <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
         <Route path="/departurePage" element={ <DeparturePage/> }/>
-
+        <Route path="/themePage" element={<ThemePage />} />
       </Routes>
     </BrowserRouter>
   )
