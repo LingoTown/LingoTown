@@ -40,17 +40,15 @@ export const RestaurantComp: React.FC = () => {
   const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_1.glb");
   const [playerPosition, setPlayerPosition] = useState([-5.5, 0, 12]);
   const [playerRotation, setPlayerRotation]= useState([0,3,0]);
-  // const [playerRef, playerApi] = useCylinder(() => ({ 
-  //   mass: 0, 
-  //   position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
-  //   rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-  //   args:[0.5,0,0.1],
-  //   friction: 1,     // Adjust the value as needed
-  //   restitution: 0,   // Set to 0 to avoid bouncing
-  //   allowSleep:true,
-  // }));
-
-  const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const [playerRef, playerApi] = useCylinder(() => ({ 
+    mass: 0, 
+    position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
+    rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
+    args:[0.5,0,0.1],
+    friction: 1,     // Adjust the value as needed
+    restitution: 0,   // Set to 0 to avoid bouncing
+    allowSleep:true,
+  }));
 
 
   // camera action
