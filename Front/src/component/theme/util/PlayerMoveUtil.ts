@@ -1,22 +1,20 @@
 import * as THREE from 'three';
 
-
-export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, camera: THREE.Camera, cameraOffset: any, container: any, playerPosition: any, setPlayerPosition: any, playerRotation: any, setPlayerRotation: any, isMove:any) => {
-  
+export const PlayerMove = (playerRef: any, playerApi: any,  keysPressed: any, camera: THREE.Camera, cameraOffset: any, container: any, setPlayerPosition: any, playerRotation: any, setPlayerRotation: any, isMove:any) => {
   if (playerRef.current) {
-    const speed = 0.1;
+    const speed = 0.2;
     const rotationSpeed = 0.03;
     const moveForward = new THREE.Vector3();
     let newPosition = playerRef.current.position;
 
-    //전진
+    //앞으로 이동
     if (keysPressed.current.ArrowUp) {
       playerRef.current.getWorldDirection(moveForward);
       moveForward.multiplyScalar(speed);
       newPosition = playerRef.current.position.clone().add(moveForward);
-    } 
+    }
 
-    // 뒤로이동
+    //뒤로 이동
     if (keysPressed.current.ArrowDown) {
       playerRef.current.getWorldDirection(moveForward);
       moveForward.multiplyScalar(-speed * 0.3);
@@ -38,7 +36,7 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
 
         if (wallBox.intersectsBox(playerBox)) {
           collidesWithWall = true;
-          collidesWallKey = wall.key;
+          collidesWallKey = wall.wallKey;
           break;
         }
       }
@@ -58,21 +56,19 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
       const oppositePosition = playerRef.current.position.clone();
       if(collidesWallKey == "C02"){// back wall
         oppositePosition.z += 0.5;
-      }else if(collidesWallKey == "C03"){// right wall
+      }else if(collidesWallKey == "C03" || collidesWallKey == "C06" || collidesWallKey == "C07"){// right wall
         oppositePosition.x -= 0.5;
-      }else if(collidesWallKey == "C04"){// front wall
+      }else if(collidesWallKey == "C04" || collidesWallKey == "C08"){// front wall
         oppositePosition.z -= 0.5;
       }else if(collidesWallKey == "C05"){// left wall
         oppositePosition.x += 0.5;
       }
 
-      // oppositePosition.z += 1; // 이동하고 싶은 거리 조절
-      playerApi.position.set(playerPosition[0], playerPosition[1], playerPosition[2]);
+      playerApi.position.set(oppositePosition.x, oppositePosition.y, oppositePosition.z);
       playerRef.current.position.copy(oppositePosition);
-      setPlayerPosition(() => [oppositePosition.x, 0, oppositePosition.z]);
+      setPlayerPosition(() => [oppositePosition.x, oppositePosition.y, oppositePosition.z]);
     }
 
-    //회전
     if (keysPressed.current.ArrowLeft || keysPressed.current.ArrowRight) {
       let deltaRotation = 1;
       if (keysPressed.current.ArrowDown) {
@@ -80,25 +76,20 @@ export const PlayerMove = (playerRef: any, playerApi: any, keysPressed: any, cam
       } else {
         deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
       }
-      playerRef.current.rotateY(deltaRotation);
-      // playerRef.current.rotation();
       // 실시간으로 물리 몸의 회전 업데이트
       setPlayerRotation([playerRotation[0], playerRotation[1]+deltaRotation, playerRotation[2]]);
       playerApi.rotation.set(playerRotation[0], playerRotation[1] + deltaRotation, playerRotation[2]);
+      playerRef.current.rotateY(deltaRotation);
     }
 
     const currentPos = playerRef.current.position.clone();
     const offset = cameraOffset.current.clone().applyQuaternion(playerRef.current.quaternion);
     const desiredCameraPosition = currentPos.add(offset);
 
-    /* 캐릭터 뒤통수 보는 카메라 */
     if (isMove.current) {
       camera.position.lerp(desiredCameraPosition, 1);
       camera.lookAt(playerRef.current.position);
     }
-    camera.position.lerp(desiredCameraPosition, 1);
-    camera.lookAt(playerRef.current.position.x, playerRef.current.position.y, playerRef.current.position.z);
-    
   }
 };
 
