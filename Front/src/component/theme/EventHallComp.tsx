@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useControls } from 'leva';
+// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -16,7 +16,6 @@ import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { Wall } from '../util/block/Wall';
-import { useCylinder } from '@react-three/cannon'
 
 /* 
     EventHall의 특징 : 
@@ -151,11 +150,6 @@ export const EventHallComp: React.FC = () => {
     const playerFile = useGLTF("./player/m_1.glb");
     // 캐릭터 크기
     const playerScale = 1;
-    // 캐릭터 위치 정보
-    // const [playerPosition, setPlayerPosition] = useState([0.25, 0, 23.3]);
-    const [playerPosition, setPlayerPosition] = useState([0.25, 0, 5]);
-    // 캐릭터 회전 정보
-    const [playerRotation, setPlayerRotation] = useState([0, 3.15, 0]);
     
     // 카메라 각도 정보
     const mapCameraAngle = [0, 2.5, -5]
@@ -343,7 +337,7 @@ export const EventHallComp: React.FC = () => {
             <Environment blur={1} background preset="sunset" />
 
             {/* 캐리터 */}
-            <primitive visible={!talkBalloon.isShow} scale={playerScale} ref={playerRef} position={playerPosition} rotation={playerRotation} object={playerFile.scene}/>
+            <primitive visible={!talkBalloon.isShow} scale={playerScale} ref={playerRef} position={[0.25, 0, 5]} rotation={[0, 3.15, 0]} object={playerFile.scene}/>
             
             {/* NPC */}
             <primitive scale={Jayden.npcScale} position={Jayden.npcPosition} rotation={Jayden.npcRotation} object={Jayden.npcModel.scene}/>
