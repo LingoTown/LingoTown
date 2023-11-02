@@ -68,8 +68,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
           mediaRecorder.stop();
           analyser.disconnect();
           audioCtx.createMediaStreamSource(stream).disconnect();
-          mediaRecorder.ondataavailable = function () {
-          };
+          mediaRecorder.ondataavailable = function () {};
         }
       };
     });

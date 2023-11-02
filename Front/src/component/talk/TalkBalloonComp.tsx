@@ -79,7 +79,9 @@ export const TalkBalloonComp = () => {
   }
 
   useEffect(() => {
+    console.log(0)
     if (isMounted.current.audioPlay) {
+      console.log(1)
       handlePlay();
     } else {
       isMounted.current.audioPlay = true;
