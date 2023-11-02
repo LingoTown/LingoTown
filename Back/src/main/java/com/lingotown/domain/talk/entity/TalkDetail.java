@@ -15,8 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "talk_detail")
 public class TalkDetail  extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "talk_detail_id")
     private Long id;
 
