@@ -66,7 +66,8 @@ export const ParkComp: React.FC = () => {
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
-  
+  const sanhaRef = useRef<THREE.Object3D | undefined>();
+
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
     { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
@@ -104,8 +105,8 @@ export const ParkComp: React.FC = () => {
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
     SetAction('Victory', activeAction, actions);
-    SetAction('Idle', jerryAction, jerryActions);
-    SetAction('Idle', sanhaAction, sanhaActions);
+    SetAction('Victory', jerryAction, jerryActions);
+    SetAction('Run', sanhaAction, sanhaActions);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -155,6 +156,27 @@ export const ParkComp: React.FC = () => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
 
+  //sanha run movement
+  useFrame((state, delta) => {
+    const oscillation = Math.sin(state.clock.elapsedTime);
+    const rotationY = -90 * oscillation; // Rotate 180 degrees during oscillation
+    
+    // Check if the model reference is available
+    if (sanhaRef.current) {
+      // Calculate the new x position based on time and a speed factor
+      const newX = -40 + 10 * Math.sin(state.clock.elapsedTime); // You can adjust the speed by changing the factor
+
+      // Check if the model is moving from left to right
+      if (sanhaRef.current.position.x <= -7) {
+        // Update the rotation of the model when reaching the end
+        sanhaRef.current.rotation.y = THREE.MathUtils.degToRad(rotationY);
+      }
+
+      // Update the position of the model
+      sanhaRef.current.position.x = newX;
+    }
+  });
+
 
   return(
     <>
@@ -172,13 +194,13 @@ export const ParkComp: React.FC = () => {
       <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-3.4, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
-      <primitive scale={0.6} position={[-3.4, 0.42, 0]} rotation={[0, 0, 0]} object={sanhaFile.scene}/>
+      <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
       
       {/* jerry */}
-      <Circle ref={jerryCircleRef} args={[3, 32]} position={[-6.4, 0.03, 7]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={jerryCircleRef} args={[3, 32]} position={[-31, 0, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
-      <primitive scale={0.6} position={[-6.4, 0.56, 7]} rotation={[0, 0, 0]} object={jerryFile.scene} />
+      <primitive scale={1} position={[-31, 1.82, 8]} rotation={[0, 3, 0]} object={jerryFile.scene} />
     </>
   )
 } 
