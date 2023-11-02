@@ -5,7 +5,9 @@ import { useSetRecoilState } from 'recoil';
 import {useState} from 'react';
 
 export const MapUtilComp = () => {
-
+  //데이터 형식 
+  //질문리스트, 맞았는지 틀렸는지 => 정답여부는 백에서 처리
+  
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
   const customPrompt = useCustomPrompt();
@@ -13,6 +15,7 @@ export const MapUtilComp = () => {
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   const [openQ, setOpenQ] = useState(false);
   const [showAns, setShowAns] = useState([true,false,false]);
+  const [correct, setCorrect] = useState([true,false,true]);
   const exit = async() => {
     setTalkBalloon(prevState => ({...prevState, isMove: false}));
     const flag = await customConfirm("Notice", "테마에서 떠나시겠습니까?");
@@ -21,7 +24,9 @@ export const MapUtilComp = () => {
       navigate("/");
     }
   }
-
+  const isCorrect = (i:number) => {
+    return 
+  }
   return(
     <>
     <div className='justify-center flex'>
@@ -33,58 +38,44 @@ export const MapUtilComp = () => {
       </div>
       {
         openQ?
-        <div className="z-10 absolute bg-[#fff]/60 p-2 rounded-xl mt-2 h-1/3 w-1/2">
+        <div className="z-10 absolute bg-[#fff]/80 p-2 rounded-xl mt-2 w-1/2">
           <div className="border-[0.5px] border-white w-full rounded-lg h-full p-1 px-3 flex flex-col">
-            <div className="text-[#333] font-['passero-one'] text-[1.5rem] self-center mb-1">Quest List</div>
-
+            <div className="text-[#333] font-['passero-one'] text-[1.5rem] self-center mb-0">Quest List</div>
+            <div className="text-[#333] text-[0.8rem] self-center mb-1">*각 질문을 클릭하여 정답을 입력해주세요</div>
             <div onClick={async()=>{
               console.log("click");
               const flag = await customPrompt("정답을 입력해주세요", "");
               console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#ddd] bg-[#eee] p-1 py-2 rounded-lg">
+            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
               <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
-              <span className="bg-[#99D35F] w-5 h-5 rounded-full flex items-center justify-center">
+              {
+                correct[0]?
+                <span className="bg-[#99D35F] w-5 h-5 rounded-full flex items-center justify-center">
                 <span className="material-icons text-white text-[1.1rem]">check</span>
-              </span>
-              <span className="bg-[#E95454] w-5 h-5 rounded-full flex items-center justify-center">
+                </span>
+                :
+                <span className="bg-[#E95454] w-5 h-5 rounded-full flex items-center justify-center">
                 <span className="font-bolder material-icons text-white text-[0.9rem] mb-1">X</span>
-              </span>
+                </span>
+              }
             </div>
             <div onClick={async()=>{
               console.log("click");
               const flag = await customPrompt("정답을 입력해주세요", "");
               console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#ddd] bg-[#eee] p-1 py-2 rounded-lg">
+            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
               <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
-              <span className="bg-[#99D35F] w-5 h-5 rounded-full flex items-center justify-center">
+              {
+                correct[1]?
+                <span className="bg-[#99D35F] w-5 h-5 rounded-full flex items-center justify-center">
                 <span className="material-icons text-white text-[1.1rem]">check</span>
-              </span>
-              <span className="bg-[#E95454] w-5 h-5 rounded-full flex items-center justify-center">
+                </span>
+                :
+                <span className="bg-[#E95454] w-5 h-5 rounded-full flex items-center justify-center">
                 <span className="font-bolder material-icons text-white text-[0.9rem] mb-1">X</span>
-              </span>
+                </span>
+              }
             </div>
-            <div onClick={async()=>{
-              console.log("click");
-              const flag = await customPrompt("정답을 입력해주세요", "");
-              console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#ddd] bg-[#eee] p-1 py-2 rounded-lg">
-              <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
-              <span className="bg-[#99D35F] w-5 h-5 rounded-full flex items-center justify-center">
-                <span className="material-icons text-white text-[1.1rem]">check</span>
-              </span>
-              <span className="bg-[#E95454] w-5 h-5 rounded-full flex items-center justify-center">
-                <span className="font-bolder material-icons text-white text-[0.9rem] mb-1">X</span>
-              </span>
-            </div>
-              {/* {
-                showAns[0] && (
-                  <div>
-                    정답 : &nbsp;
-                    <input type="text" placeholder='정답을 입력하세요' />
-                  </div>
-                )
-              }  */}
-            
             {/* <div>
               2. 리뷰를 작성하면 할인을 해준대요! 직원에게 몇 % 할인받을 수 있는지 물어보세요!
             </div>
