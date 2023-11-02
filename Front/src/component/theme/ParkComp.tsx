@@ -75,6 +75,13 @@ export const ParkComp: React.FC = () => {
   const marcoAction = useRef<AnimationAction>();
   const marcoActions = useAnimations(marcoFile.animations, marcoFile.scene).actions;
 
+  const liaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb");
+  const liaPosition = new THREE.Vector3(-43, 1, 2);
+  const liaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const liaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const liaAction = useRef<AnimationAction>();
+  const liaActions = useAnimations(liaFile.animations, liaFile.scene).actions;
+
   const soccerBallFile = useGLTF("../../public/objects/soccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
@@ -90,6 +97,7 @@ export const ParkComp: React.FC = () => {
     { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
     { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
     { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
+    { id: 16, name: "lia", targetPosition: liaPosition, targetRotation:liaRotation, ref: liaCircleRef },
   ];
 
   // state
@@ -122,10 +130,11 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
-    SetAction('Victory', activeAction, actions, playerRef);
+    SetAction('Defeat', activeAction, actions, playerRef);
     SetAction('Victory', jerryAction, jerryActions, null);
     SetAction('Run', sanhaAction, sanhaActions, null);
     SetAction('Run', marcoAction, marcoActions, null);
+    SetAction('Walk', liaAction, liaActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -237,6 +246,12 @@ export const ParkComp: React.FC = () => {
       </Circle>
       <primitive scale={1} position={[-10, 0, 8]} rotation={[0, 3, 0]} object={marcoFile.scene} />
     
+      {/* lia */}
+      <Circle ref={liaCircleRef} args={[3, 32]} position={[-45, 0, 2]} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+      </Circle>
+      <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={liaFile.scene}/>
+      
       {/* soccerBall */}
       <primitive ref={soccerBallRef} scale={0.3} position={[-10, 0, 5]} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
     </>
