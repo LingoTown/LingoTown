@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useControls } from 'leva';
+// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
