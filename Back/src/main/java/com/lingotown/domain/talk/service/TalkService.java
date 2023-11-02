@@ -144,6 +144,7 @@ public class TalkService {
         boolean isMember = createTalkDetailReqDto.isMember();
         String content = createTalkDetailReqDto.getContent();
         MultipartFile talkFile = createTalkDetailReqDto.getTalkFile();
+
         String fileUrl = s3Service.uploadFile(talkFile);
 
         TalkDetail talkDetail = TalkDetail

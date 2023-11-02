@@ -40,8 +40,10 @@ public class TalkController {
         return openAIService.askGPT(principal, talkReqDto);
     }
 
-    @PostMapping("/api/talk/topic")
-    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
+    @PostMapping("/topic")
+    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, @RequestBody TopicReqDto topicReqDto) throws Exception {
+        System.out.println("id : " +topicReqDto.getTalkId());
+        System.out.println("topic : " +topicReqDto.getTopic());
         return openAIService.askTopic(principal, topicReqDto);
     }
 
