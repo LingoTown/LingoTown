@@ -16,7 +16,6 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
-import com.lingotown.global.service.S3Service;
 import com.lingotown.global.tts.TTSService;
 import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +42,6 @@ public class OpenAIService {
     private final TalkDetailRepository talkDetailRepository;
     private final CacheService cacheService;
     private final TalkService talkService;
-    private final S3Service s3Service;
     private final TTSService ttsService;
 
 
@@ -135,19 +133,8 @@ public class OpenAIService {
             System.out.println(content.getRole() + " : " +content.getContent());
         }
 
-        // 사용자 질문 DB 저장
-        CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
-                .talkId(talkReqDto.getTalkId())
-                .isMember(true)
-                .content(talkReqDto.getPrompt())
-                .talkFile(talkReqDto.getTalkFile())
-                .build();
 
-        DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
-
-    
         /* GPT 응답 TTS 변환 및 DB 저장 */
-        
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
 
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
@@ -160,8 +147,17 @@ public class OpenAIService {
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
 
-        // 비동기 문법 체크
+        // 사용자 질문 DB 저장 및 비동기 문법 체크
         if(talkReqDto.getTalkFile() != null) {
+            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
+                    .talkId(talkReqDto.getTalkId())
+                    .isMember(true)
+                    .content(talkReqDto.getPrompt())
+                    .talkFile(talkReqDto.getTalkFile())
+                    .build();
+
+            DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
+
             webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
                     .subscribe(
                             res -> {
@@ -183,7 +179,6 @@ public class OpenAIService {
                     );
         }
 
-
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
@@ -196,6 +191,7 @@ public class OpenAIService {
     }
 
     //토픽처리
+    @Transactional
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
         TalkReqDto talkReqDto = TalkReqDto
                 .builder()
