@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.Column;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
