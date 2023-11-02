@@ -232,7 +232,8 @@ public class OpenAIService {
                 "And also, Please respond in complete sentences without exceeding max_token. " +
                 "Now, " + "you are " +npcName +", and " + npcGender +
                 " and " + npcJob + ", and " + "your age is " + npcAge
-                + ". and This is your situation. " +npcSituation;
+                + ". and This is your situation. " +npcSituation+ " " +
+                "You don't have to put your name in front of the response";
 
         if(topic != null) {
             concept += " Now let's talk about " +topic+
