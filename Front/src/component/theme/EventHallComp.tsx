@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
@@ -14,6 +14,7 @@ import { HandleKeyDown, HandleKeyUp } from "./util/SYKeyboardUtil";
 import { PlayerMove, SetAction } from "./util/SYPlayerUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
+import { talkStateAtom } from '../../atom/TalkStateAtom';
 
 /* 
     EventHall의 특징 : 
@@ -162,11 +163,9 @@ export const EventHallComp: React.FC = () => {
     ];   
 
     /* useState */
-
+    const setTalkState = useSetRecoilState(talkStateAtom);
     // 대화창
     const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
-    // 대화 Id
-    const [talkId, setTalkId] = useState<number>(0);
     // 원 내부에 있는지
     const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
 
@@ -205,9 +204,8 @@ export const EventHallComp: React.FC = () => {
     const doStartTalk = async(npcId: number) => {
         await startTalk(npcId, ({data}) => {
             const result = data.data as startTalkType;
-            
-            // 대화하는 상대 설정
-            setTalkId(result.talkId)
+            setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+            setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
         }, (error) => {
             console.log(error);
         }); 
@@ -313,7 +311,7 @@ export const EventHallComp: React.FC = () => {
                 <meshStandardMaterial attach={Kevin.npcCircleAttach} color={Kevin.npcCircleColor} emissive={Kevin.npcCircleEmissive} emissiveIntensity={Kevin.npcCircleEmissiveIntensity} side={Kevin.npcCircleSide} transparent={Kevin.npcCircleTransparent} opacity={Kevin.npcCircleOpacity} />
             </Circle>
 
-            { talkBalloon.isShow? <STTAndRecord lang={ LANGUAGE } talkId={ talkId } /> : null }
+            { talkBalloon.isShow? <STTAndRecord lang={ LANGUAGE } /> : null }
         </>
     )
 }

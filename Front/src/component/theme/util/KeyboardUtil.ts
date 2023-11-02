@@ -20,7 +20,7 @@ export const HandleKeyUp = (SetAction: (actionName: string, activeAction: any, a
       if (['ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
         keysPressed.current[event.key as 'ArrowUp' | 'ArrowLeft' | 'ArrowRight' | 'ArrowDown'] = false;
         if (Object.values(keysPressed.current).every(key => !key)) {
-          SetAction('Defeat', activeAction, actions);
+          SetAction('Idle', activeAction, actions);
         }
       }
     }
