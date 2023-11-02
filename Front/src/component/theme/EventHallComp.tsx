@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useControls } from 'leva';
+// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -10,11 +10,10 @@ import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { EventHall } from "../../../public/map/eventHall/EventHall";
-import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
+import { HandleKeyDown, HandleKeyUp } from "./util/SYKeyboardUtil";
+import { PlayerMove, SetAction } from "./util/SYPlayerUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { PlayerMove } from './util/MSPlayerUtil';
 
 /* 
     EventHall의 특징 : 
@@ -119,6 +118,7 @@ export const EventHallComp: React.FC = () => {
     const SENTENCE = "Would you like to start a conversation with "
     // 캐릭터 불러오기
     const playerFile = useGLTF("./player/m_1.glb");
+    
     // 캐릭터 크기
     const playerScale = 1;
     // 캐릭터 위치 정보
@@ -134,6 +134,8 @@ export const EventHallComp: React.FC = () => {
     const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
     // 움직이는지 : 컴포넌트의 렌더링 사이에서도 값이 유지된다. 초기 값 : true => 움직임이 가능한 상태
     const isMove = useRef(true);
+    // J 키를 눌렀을 때 점프 상태로 설정
+    // const isJumping = useRef(false);
 
     /* Camera Action */
 
@@ -172,9 +174,9 @@ export const EventHallComp: React.FC = () => {
 
     const customConfirm = useCustomConfirm();
     // 키가 눌러졌을 때
-    const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
+    const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
     // 키가 떼졌을 때
-    const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
+    const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
 
     useEffect(() => {
         // animate 함수를 시작하는 부분
@@ -216,7 +218,7 @@ export const EventHallComp: React.FC = () => {
     // 아무것도 안하고 있는 상태
     useEffect(() => {
         // 기본 상태
-        SetAction('Idle', activeAction, actions);
+        SetAction('Idle', activeAction, actions, playerRef);
 
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("keyup", handleKeyUp);
@@ -285,9 +287,9 @@ export const EventHallComp: React.FC = () => {
         isMove.current = talkBalloon.isMove;
     }, [talkBalloon.isMove])
 
-    useFrame(() => {
+    useFrame((_state, deltaTime) => {
         // 플레이어 이동
-        PlayerMove(playerRef, keysPressed, camera, cameraOffset, isMove);
+        PlayerMove(keysPressed, camera, cameraOffset, isMove, deltaTime, playerRef, activeAction, actions);
         // 원 안인지 체크
         CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
     });
