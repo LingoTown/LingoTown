@@ -13,3 +13,8 @@ export type talkingType = {
   responseMessage: string,
   responseS3URL: string
 }
+
+export type talkingTopicType = {
+  talkId: number,
+  topic: string,
+}

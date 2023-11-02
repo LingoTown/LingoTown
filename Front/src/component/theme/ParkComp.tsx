@@ -15,6 +15,7 @@ import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
+import { talkStateAtom } from '../../atom/TalkStateAtom';
 
 export const ParkComp: React.FC = () => {
 
@@ -68,9 +69,9 @@ export const ParkComp: React.FC = () => {
 
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
-  const [talkId, setTalkId] = useState<number>(0);
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   const isMove = useRef(true);
+  const setTalkState = useSetRecoilState(talkStateAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
@@ -99,7 +100,8 @@ export const ParkComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkId(result.talkId)
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);
     }); 
@@ -136,7 +138,7 @@ export const ParkComp: React.FC = () => {
         { container.map((props, index) => <Wall key={index} {...props}/> ) }
       </group>
 
-      <STTAndRecord lang={LANGUAGE} talkId={talkId}/>
+      <STTAndRecord lang={LANGUAGE} />
       <primitive scale={1}  ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Park/>
       <Environment blur={1} background preset="sunset" />
