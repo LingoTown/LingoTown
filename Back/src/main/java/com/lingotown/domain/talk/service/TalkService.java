@@ -145,6 +145,7 @@ public class TalkService {
         String content = createTalkDetailReqDto.getContent();
         MultipartFile talkFile = createTalkDetailReqDto.getTalkFile();
 
+        System.out.println("talkFile : " +talkFile);
         String fileUrl = s3Service.uploadFile(talkFile);
 
         TalkDetail talkDetail = TalkDetail

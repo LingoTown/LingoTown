@@ -42,8 +42,6 @@ public class TalkController {
 
     @PostMapping("/topic")
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, @RequestBody TopicReqDto topicReqDto) throws Exception {
-        System.out.println("id : " +topicReqDto.getTalkId());
-        System.out.println("topic : " +topicReqDto.getTopic());
         return openAIService.askTopic(principal, topicReqDto);
     }
 

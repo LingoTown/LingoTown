@@ -93,7 +93,6 @@ public class OpenAIService {
             messages.addAll(previousChatDataList);
         }
 
-
         // user 인풋
         if(talkReqDto.getTalkFile() != null) {
             OpenAIMessageDto messageDtoUser = OpenAIMessageDto
