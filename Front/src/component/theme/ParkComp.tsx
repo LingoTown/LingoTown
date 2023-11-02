@@ -24,9 +24,14 @@ export const ParkComp: React.FC = () => {
   const container = [
     { size: [80, 2, 40], position: [-15, -1.1, 0], wallKey: 'BF1', name: 'floor', mass:0}, // bottom floor
     { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
-    { size: [3, 27, 40], position: [23, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
+    { size: [3, 27, 40], position: [22, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
     { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
     { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
+
+    // 축구장 벽
+    { size: [35, 10, 0.1], position: [2, 1, -12], wallKey: 'BW2', name: 'wall', mass:0}, // back wall 
+    { size: [45, 10, 0.5], position: [1, 1, 12.5], wallKey: 'FW2', name: 'wall', mass:0}, // front wall
+    { size: [0.5, 10, 20], position: [-22, 1, 0], wallKey: 'RW2',  name: 'wall', mass:0}, //right wall
   ];
 
   // player

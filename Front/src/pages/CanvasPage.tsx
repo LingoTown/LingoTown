@@ -24,7 +24,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
       <Canvas style={{ height:"100vh" }}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
           <Debug scale={1} color='green'>
-          {/* <OrbitControls/> */}
+          <OrbitControls/>
             {props.theme}
           </Debug>
         </Physics>
