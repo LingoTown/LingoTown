@@ -62,9 +62,9 @@ public class TalkController {
         return talkService.removeTalk(principal, talkId);
     }
 
-    @PutMapping("/end")
-    public CommonResponse increaseIntimacy(@RequestBody IncreaseIntimacyReqDto increaseIntimacyReqDto){
-        return talkService.increaseIntimacy(increaseIntimacyReqDto);
+    @PutMapping("/end/{talkId}")
+    public CommonResponse increaseIntimacy(@PathVariable("talkId") Long talkId){
+        return talkService.increaseIntimacy(talkId);
     }
 
 }

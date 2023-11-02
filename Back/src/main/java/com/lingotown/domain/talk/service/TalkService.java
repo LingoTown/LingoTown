@@ -164,14 +164,15 @@ public class TalkService {
 
     //대화 종료 후 친밀도 변경과 캐시 삭제
     @Transactional
-    public CommonResponse increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
-        Talk talk = getTalkEntity(increaseIntimacyReqDto.getTalkId());
+    public CommonResponse increaseIntimacy(Long talkId){
+        Talk talk = getTalkEntity(talkId);
         int talkCount = talk.getTalkDetailList().size();
 
         MemberNPC memberNPC = talk.getMemberNPC();
+        System.out.println("talkCount : " +talkCount);
         memberNPC.increaseIntimacy(talkCount);
 
-        cacheService.deleteTalkData(increaseIntimacyReqDto.getTalkId());
+        cacheService.deleteTalkData(talkId);
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 
