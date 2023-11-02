@@ -14,8 +14,9 @@ export const MapUtilComp = () => {
   const navigate = useNavigate();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   const [openQ, setOpenQ] = useState(false);
-  const [showAns, setShowAns] = useState([true,false,false]);
+  // const [showAns, setShowAns] = useState([true,false,false]);
   const [correct, setCorrect] = useState([true,false,true]);
+  setCorrect;
   const exit = async() => {
     setTalkBalloon(prevState => ({...prevState, isMove: false}));
     const flag = await customConfirm("Notice", "테마에서 떠나시겠습니까?");
@@ -24,9 +25,7 @@ export const MapUtilComp = () => {
       navigate("/");
     }
   }
-  const isCorrect = (i:number) => {
-    return 
-  }
+  
   return(
     <>
     <div className='justify-center flex'>
