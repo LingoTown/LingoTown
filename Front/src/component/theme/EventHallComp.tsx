@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-// import { useControls } from 'leva';
+import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -34,6 +34,10 @@ export const EventHallComp: React.FC = () => {
         position: [-10.0, 0.0, 21.5],
         rotation: [0, 180, 0],
         scale: 1,
+        cameraPosition: [-10.0, 1.0, 20.0],
+        cameraRotation: [0.00,
+            THREE.MathUtils.degToRad(179.00),
+            0.00],
         circleArgs: [3, 32],
         circlePosition: [-10.0, 0.0, 21.5],
         circleRotation: [90, 0, 0],
@@ -45,13 +49,16 @@ export const EventHallComp: React.FC = () => {
         circleTransparent: true,
         circleOpacity: 0.2
     };
+
     const KevinData: NPCData = {
         id: 3,
         name: "Kevin",
         path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb",
-        position: [17.0, 0.9, -2.5],
+        position: [17.00, 0.9, -2.5],
         rotation: [0, 0, 0],
         scale: 1,
+        cameraPosition: [17.00, 1.90, -1.40],
+        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
         circleArgs: [3, 32],
         circlePosition: [17.0, 0.9, -2.5],
         circleRotation: [90, 0, 0],
@@ -69,7 +76,7 @@ export const EventHallComp: React.FC = () => {
     const Jayden = useNPC(JaydenData);
     const Kevin = useNPC(KevinData);
 
-    function useNPC({id, name, path, position, rotation, scale, 
+    function useNPC({id, name, path, position, rotation, scale, cameraPosition, cameraRotation, 
                     circleArgs, circlePosition, circleRotation, 
                     circleAttach, circleColor, circleEmissive, circleEmissiveIntensity, 
                     circleSide, circleTransparent, circleOpacity}: NPCData) {
@@ -81,6 +88,8 @@ export const EventHallComp: React.FC = () => {
         const npcPosition = position;
         const npcRotation = rotation.map(deg => THREE.MathUtils.degToRad(deg));
         const npcScale = scale;
+        const npcCameraPosition = cameraPosition;
+        const npcCameraRotation = cameraRotation;
         const npcCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
         const npcCircleArgs = circleArgs;
         const npcCirclePosition = circlePosition;
@@ -93,7 +102,7 @@ export const EventHallComp: React.FC = () => {
         const npcCircleTransparent = circleTransparent;
         const npcCircleOpacity = circleOpacity;
     
-        return { npcId, npcName, npcModel, npcPosition, npcRotation, npcScale, 
+        return { npcId, npcName, npcModel, npcPosition, npcRotation, npcScale, npcCameraPosition, npcCameraRotation,
                 npcCircleRef, npcCircleArgs, npcCirclePosition, npcCircleRotation,
                 npcCircleAttach, npcCircleColor, npcCircleEmissive, npcCircleEmissiveIntensity,
                 npcCircleSide, npcCircleTransparent, npcCircleOpacity };
@@ -117,7 +126,7 @@ export const EventHallComp: React.FC = () => {
     // 캐릭터 회전 정보
     const playerRotation = [0, 3.15, 0]
     // 카메라 각도 정보
-    const cameraRotation = [0, 2.5, -5]
+    const mapCameraAngle = [0, 2.5, -5]
 
     /* useRef */
 
@@ -129,8 +138,8 @@ export const EventHallComp: React.FC = () => {
     /* Camera Action */
 
     // 카메라 오프셋 저장 (카메라 각도)
-    const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(cameraRotation[0], cameraRotation[1], cameraRotation[2]));
-    // 키보드의 화살표 키 상태 저장
+    const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(mapCameraAngle[0], mapCameraAngle[1], mapCameraAngle[2]));
+    // 키보드의 화살표 키 상태 mapCameraAngle
     const keysPressed = useRef<KeyPressed>({ ArrowUp: false, ArrowLeft: false, ArrowRight: false, ArrowDown: false });
     // 현재 활성화된 애니메이션 액션을 저장
     const activeAction = useRef<AnimationAction>();
@@ -146,8 +155,8 @@ export const EventHallComp: React.FC = () => {
 
     // 이 맵의 NPC 리스트
     const npcInfoList: NpcInfo[] = [
-        { id: Jayden.npcId, name: Jayden.npcName, targetPosition: Jayden.npcPosition, targetRotation: Jayden.npcRotation, ref: Jayden.npcCircleRef },
-        { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcPosition, targetRotation: Kevin.npcRotation, ref: Kevin.npcCircleRef },
+        { id: Jayden.npcId, name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
+        { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
     ];   
 
     /* useState */
@@ -166,15 +175,28 @@ export const EventHallComp: React.FC = () => {
     const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
     // 키가 떼졌을 때
     const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
-    
+
+    useEffect(() => {
+        // animate 함수를 시작하는 부분
+        const requestId = requestAnimationFrame(animate);
+      
+        return () => {
+          cancelAnimationFrame(requestId); // 컴포넌트 언마운트시 애니메이션 프레임을 취소
+        };
+      }, []);
+
     const animate = () => {
         requestAnimationFrame(animate);
-
-        // 카메라 회전
-        camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
-        camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
-        camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
-        camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
+      
+        if (currentNpc.current.targetPosition && currentNpc.current.targetRotation) {
+          // Lerp(선형 보간)을 사용하여 부드럽게 위치를 변경
+          camera.position.lerp(new THREE.Vector3(...currentNpc.current.targetPosition), lerpFactor);
+          
+          // Quaternion을 사용하여 부드럽게 회전을 변경
+          const targetEuler = new THREE.Euler(...currentNpc.current.targetRotation);
+          const targetQuaternion = new THREE.Quaternion().setFromEuler(targetEuler);
+          camera.quaternion.slerp(targetQuaternion, lerpFactor);
+        }
     }
 
     // 대화 시작
@@ -307,4 +329,19 @@ export const EventHallComp: React.FC = () => {
         rotation={KevinControls.rotation.map(deg => THREE.MathUtils.degToRad(deg))}
         object={Kevin.npcModel.scene}
     />
+
+    const KevinControls = useControls('Kevin', {
+        cameraPosition: {
+            value: [-3.44, 1.8, 2.33], // 배열로 전달
+            step: 0.1, // 이러한 추가 옵션을 제공할 수 있습니다
+        },
+        cameraRotation: {
+            value: [
+            THREE.MathUtils.degToRad(-30.34),
+            0,
+            0,
+            ], // 배열로 전달
+            step: THREE.MathUtils.degToRad(1),
+        },
+    });
 */
