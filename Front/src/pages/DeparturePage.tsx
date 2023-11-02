@@ -14,8 +14,8 @@ const Rows = () => {
         }
     }
     return (
-        dep.map((el)=>(
-            <div onClick={()=>{sortTheme(el.language)}} className="hover:bg-[#ddd]/40 cursor-pointer text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1">
+        dep.map((el, i)=>(
+            <div key={i} onClick={()=>{sortTheme(el.language)}} className="hover:bg-[#ddd]/40 cursor-pointer text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1">
                 <div className="flex w-1/6 text-yellow-300">{el.time}</div>
                 <div className="flex w-2/6 font-bold text-[1.3rem]">{el.destination}</div>
                 <div className="flex w-1/6">{el.Flight}</div>
@@ -33,12 +33,12 @@ const DeparturePage = () => {
         <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
         
         <div className="w-full px-5 flex justify-between text-5xl font-bold text-white font-['passero-one']">
-          <div className="ml-8 cursor-pointer" onClick={async() => {
+          <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg cursor-pointer" onClick={async() => {
             localStorage.removeItem("userAtom");
             await customAlert("Notice", "로그아웃 되었습니다.")
             navigate("/")
           }}>Logout</div>
-          <div className="mr-8 cursor-pointer" onClick={() => {
+          <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg cursor-pointer" onClick={() => {
             navigate("/Main");
           }}>MyPage</div>
         </div>
@@ -56,51 +56,6 @@ const DeparturePage = () => {
                 <div className="w-1/6">Status</div>
             </div>
             <Rows></Rows>
-           
-            {/* <div className="text-[1.3rem] flex flex-row justify-between bg-[#222] p-2 rounded-lg mb-1">
-                <div className="">Row 2 Col 1</div>
-                <div>Row 2 Col 2</div>
-                <div>Row 2 Col 3</div>
-                <div>Row 2 Col 4</div>
-                <div className="">Row 2 Col 5</div>
-            </div>
-            <div className="text-[1.4rem] flex flex-row justify-between bg-[#222] p-2 rounded-lg mb-1">
-                <div className="">Row 2 Col 1</div>
-                <div>Row 2 Col 2</div>
-                <div>Row 2 Col 3</div>
-                <div>Row 2 Col 4</div>
-                <div className="">Row 2 Col 5</div>
-            </div> */}
-        
-        
-            {/* <tr>
-                <td>Row 3 Col 1</td>
-                <td>Row 3 Col 2</td>
-                <td>Row 3 Col 3</td>
-                <td>Row 3 Col 4</td>
-                <td>Row 3 Col 5</td>
-            </tr>
-            <tr>
-                <td>Row 4 Col 1</td>
-                <td>Row 4 Col 2</td>
-                <td>Row 4 Col 3</td>
-                <td>Row 4 Col 4</td>
-                <td>Row 4 Col 5</td>
-            </tr>
-            <tr>
-                <td>Row 5 Col 1</td>
-                <td>Row 5 Col 2</td>
-                <td>Row 5 Col 3</td>
-                <td>Row 5 Col 4</td>
-                <td>Row 5 Col 5</td>
-            </tr>
-            <tr>
-                <td>Row 6 Col 1</td>
-                <td>Row 6 Col 2</td>
-                <td>Row 6 Col 3</td>
-                <td>Row 6 Col 4</td>
-                <td>Row 6 Col 5</td>
-            </tr> */}
             </div>
           </div>
           
