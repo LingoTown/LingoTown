@@ -1,5 +1,6 @@
 package com.lingotown.domain.npc.entity;
 
+import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.NPCAge;
@@ -50,5 +51,8 @@ public class NPC {
 
     @OneToMany(mappedBy = "npc", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Topic> topicList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "npc", fetch = FetchType.LAZY)
+    private List<MemberNPC> memberNpcList = new ArrayList<>();
 
 }

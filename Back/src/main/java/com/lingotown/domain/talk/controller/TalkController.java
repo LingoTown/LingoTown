@@ -1,6 +1,7 @@
 package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.talk.dto.request.TestDto;
+import com.lingotown.domain.talk.dto.request.TopicReqDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
 import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
@@ -10,6 +11,7 @@ import com.lingotown.domain.talk.service.OpenAIService;
 import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +40,14 @@ public class TalkController {
         return openAIService.askGPT(principal, talkReqDto);
     }
 
-    @GetMapping("/list/{memberNPCId}")
-    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("memberNPCId") Long memberNPCId){
-        return talkService.readTalkList(principal, memberNPCId);
+    @PostMapping("/api/talk/topic")
+    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
+        return openAIService.askTopic(principal, topicReqDto);
+    }
+
+    @GetMapping("/list/{npcId}")
+    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("npcId") Long npcId){
+        return talkService.readTalkList(principal, npcId);
     }
 
     @GetMapping("/list")
@@ -62,6 +69,5 @@ public class TalkController {
     public CommonResponse increaseIntimacy(@RequestBody IncreaseIntimacyReqDto increaseIntimacyReqDto){
         return talkService.increaseIntimacy(increaseIntimacyReqDto);
     }
-
 
 }
