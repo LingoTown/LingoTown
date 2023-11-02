@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
@@ -77,7 +77,7 @@ export const ParkComp: React.FC = () => {
 
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
-  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const isMove = useRef(true);
   const setTalkState = useSetRecoilState(talkStateAtom);
 
@@ -159,7 +159,7 @@ export const ParkComp: React.FC = () => {
   }, [talkBalloon.isMove])
 
   //sanha run movement
-  useFrame((state, delta) => {
+  useFrame((state) => {
     const oscillation = Math.sin(state.clock.elapsedTime);
     const rotationY = -90 * oscillation; // Rotate 180 degrees during oscillation
     
