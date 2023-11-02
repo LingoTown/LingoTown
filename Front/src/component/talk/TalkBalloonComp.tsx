@@ -90,7 +90,7 @@ export const TalkBalloonComp = () => {
     <>
       {
         talkBalloon.sentence == ""?
-        <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
+        <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
           onClick={() => { setShowList(!showList) }}
         >Topics</button>
         :
@@ -118,7 +118,7 @@ export const TalkBalloonComp = () => {
       }
       {
         showSentenceModal?
-        <div className="absolute top-52 right-2 w-[330px] h-[300px] bg-gray-100 rounded-lg px-4 py-2">
+        <div className="absolute top-52 right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">
             Previous conversation
           </div>
@@ -130,7 +130,7 @@ export const TalkBalloonComp = () => {
         :
         null
       }
-      <div className="absolute bottom-4 left-4 right-4 min-h-[190px] bg-white bg-opacity-75 p-4 border border-gray-500 shadow-lg rounded-lg">
+      <div className="absolute bottom-4 left-2 right-2 min-h-[190px] bg-white bg-opacity-75 p-4 border border-gray-500 shadow-lg rounded-lg">
         <p className="absolute top-[23px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-green-700 font-['passero-one']">
           {
             talkBalloon.isLoading?
@@ -166,7 +166,6 @@ export const TalkBalloonComp = () => {
                 {talkBalloon.sentence}
               </>
             }
-          
           </p>
         </div>
         <div className="absolute top-0 right-0 z-10 flex space-x-2 mr-2 mt-2">

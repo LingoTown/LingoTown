@@ -1,14 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { useCustomAlert, useCustomConfirm, useCustomPrompt } from "../util/ModalUtil"
+import { useCustomConfirm, useCustomPrompt } from "../util/ModalUtil"
 import { talkBalloonAtom } from '../../atom/TalkBalloonAtom';
 import { useSetRecoilState } from 'recoil';
 import {useState} from 'react';
 
 export const MapUtilComp = () => {
-  //데이터 형식 
-  //질문리스트, 맞았는지 틀렸는지 => 정답여부는 백에서 처리
+  // 데이터 형식 
+  // 질문리스트, 맞았는지 틀렸는지 => 정답여부는 백에서 처리
   
-  const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
   const customPrompt = useCustomPrompt();
   const navigate = useNavigate();
@@ -91,10 +90,6 @@ export const MapUtilComp = () => {
       }
       
       <div className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-2">
-        <button
-          className="px-4 py-2 bg-gray-500 text-white text-lg rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 font-['passero-one']"
-          onClick={ () => customAlert("Setting", "설정창 구현 중입니다.")}
-        >Setting</button>
         <button
           className="px-4 py-2 bg-gray-500 text-white text-lg rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 font-['passero-one']"
           onClick={() => customPrompt("Info", "해당 테마의 정보를 확인 할 수 있습니다.")}

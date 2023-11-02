@@ -71,7 +71,23 @@ export function Restaurant(props) {
         <mesh geometry={nodes.pCube40_restaurante_lado_hava_0.geometry} material={materials.restaurante_lado_hava} />
         <mesh geometry={nodes.pCube41_anden_der1_0.geometry} material={materials.anden_der1} />
         <mesh geometry={nodes.pCube42_anden_izq1_0.geometry} material={materials.anden_izq1} />
-        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} />
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} scale={1}/>
+        {/*  */}
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[1400, 1, 1]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[2800, 1, 1]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[2800, 1, 1400]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[1, 1, 1400]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[1, 1, 2800]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[2800, 1, 2800]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[1400, 1, 1400]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[1400, 1, 2800]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[2800, 1, 1400]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[-1400, 1, 1400]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[-2800, 1, 2800]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[-1400, 1, 2800]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[-1400, 1,-1400]}/>
+        <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} position={[1, 1,-2800]}/>        
+        {/*  */}
       </group>
       <group scale={0.01}>
         <group position={[0, 0, 200.322]}>

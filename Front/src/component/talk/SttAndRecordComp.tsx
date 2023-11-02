@@ -85,7 +85,6 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
         data.append("talkFile", sound);
         data.append("talkId", String(talkState.talkId));
         data.append("prompt", transcript);
-        data.append("topic", "");
         doTalking(data);
       };
 

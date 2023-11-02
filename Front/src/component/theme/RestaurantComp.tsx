@@ -110,7 +110,7 @@ export const RestaurantComp: React.FC = () => {
 
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
-    SetAction('Victory', activeAction, actions);
+    SetAction('Defeat', activeAction, actions);
     SetAction('Idle', chefAction, chefActions);
     SetAction('Idle', customerAction, customerActions);
 
