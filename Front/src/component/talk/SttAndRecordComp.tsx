@@ -68,8 +68,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
           mediaRecorder.stop();
           analyser.disconnect();
           audioCtx.createMediaStreamSource(stream).disconnect();
-          mediaRecorder.ondataavailable = function () {
-          };
+          mediaRecorder.ondataavailable = function () {};
         }
       };
     });
@@ -85,7 +84,6 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
         data.append("talkFile", sound);
         data.append("talkId", String(talkState.talkId));
         data.append("prompt", transcript);
-        data.append("topic", "");
         doTalking(data);
       };
 

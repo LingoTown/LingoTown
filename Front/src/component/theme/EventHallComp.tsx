@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-// import { useControls } from 'leva';
+import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -10,12 +10,13 @@ import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { EventHall } from "../../../public/map/eventHall/EventHall";
-import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
+import { HandleKeyDown, HandleKeyUp } from "./util/SYKeyboardUtil";
+import { PlayerMove, SetAction } from "./util/SYPlayerUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { PlayerMove } from './util/MSPlayerUtil';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
+import { Wall } from '../util/block/Wall';
+import { useCylinder } from '@react-three/cannon'
 
 /* 
     EventHall의 특징 : 
@@ -110,6 +111,33 @@ export const EventHallComp: React.FC = () => {
     }
 
 
+    /* Wall */
+
+    // wall : 튕김
+    // floor : 안튕김
+    const container = [
+
+        /* Container Convention : 
+            첫번째 자리 : Bottom : B, Back : B, Right : R, Front : F, Left : L
+            두번째 자리 : Floor : F, Wall : W         (F : 안튕겨짐, W : 튕겨짐)
+            세번째 자리 : 숫자 (1 2 3 ...)
+        */
+
+        // 전체 바닥
+        { size: [100, 1, 100], position: [0, -1, 0], wallKey: 'BW1', name: 'wall', mass:0}, 
+
+        { size: [10, 1, 10], position: [0, 1, 30], wallKey: 'BW1', name: 'wall', mass:0}, 
+        // 무대 바닥
+        // { size: [44, 0.1, 16], position: [0, 1, 0], wallKey: 'BF2', name: 'floor', mass:0},
+        
+
+
+        { size: [15, 10, 3], position: [0, 1, 0], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
+        // { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall 
+        // { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'FW1', name: 'wall', mass:0}, // front wall 
+        // { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall 
+    ];
+    
     /* Value */
 
     // 원 반지름
@@ -118,20 +146,34 @@ export const EventHallComp: React.FC = () => {
     const LANGUAGE = "en-US"
     // 문장
     const SENTENCE = "Would you like to start a conversation with "
+
     // 캐릭터 불러오기
     const playerFile = useGLTF("./player/m_1.glb");
     // 캐릭터 크기
     const playerScale = 1;
     // 캐릭터 위치 정보
-    const playerPosition = [0.25, 0, 23.3]
+    // const [playerPosition, setPlayerPosition] = useState([0.25, 0, 23.3]);
+    const [playerPosition, setPlayerPosition] = useState([0.25, 0, 5]);
     // 캐릭터 회전 정보
-    const playerRotation = [0, 3.15, 0]
+    const [playerRotation, setPlayerRotation] = useState([0, 3.15, 0]);
+    
     // 카메라 각도 정보
     const mapCameraAngle = [0, 2.5, -5]
+    // 
 
     /* useRef */
 
     // 캐릭터 Ref
+    // const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+    // const [playerRef, playerApi] = useCylinder(() => ({ 
+    //     mass: 0, 
+    //     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
+    //     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
+    //     args:[0.5,0,0.1],
+    //     friction: 1,     // Adjust the value as needed
+    //     restitution: 0,   // Set to 0 to avoid bouncing
+    //     allowSleep:true,
+    //   }));
     const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
     // 움직이는지 : 컴포넌트의 렌더링 사이에서도 값이 유지된다. 초기 값 : true => 움직임이 가능한 상태
     const isMove = useRef(true);
@@ -171,9 +213,9 @@ export const EventHallComp: React.FC = () => {
 
     const customConfirm = useCustomConfirm();
     // 키가 눌러졌을 때
-    const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
+    const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
     // 키가 떼졌을 때
-    const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
+    const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
 
     useEffect(() => {
         // animate 함수를 시작하는 부분
@@ -182,19 +224,19 @@ export const EventHallComp: React.FC = () => {
         return () => {
           cancelAnimationFrame(requestId); // 컴포넌트 언마운트시 애니메이션 프레임을 취소
         };
-      }, []);
+    }, []);
 
     const animate = () => {
         requestAnimationFrame(animate);
       
         if (currentNpc.current.targetPosition && currentNpc.current.targetRotation) {
-          // Lerp(선형 보간)을 사용하여 부드럽게 위치를 변경
-          camera.position.lerp(new THREE.Vector3(...currentNpc.current.targetPosition), lerpFactor);
-          
-          // Quaternion을 사용하여 부드럽게 회전을 변경
-          const targetEuler = new THREE.Euler(...currentNpc.current.targetRotation);
-          const targetQuaternion = new THREE.Quaternion().setFromEuler(targetEuler);
-          camera.quaternion.slerp(targetQuaternion, lerpFactor);
+            // Lerp(선형 보간)을 사용하여 부드럽게 위치를 변경
+            camera.position.lerp(new THREE.Vector3(...currentNpc.current.targetPosition), lerpFactor);
+            
+            // Quaternion을 사용하여 부드럽게 회전을 변경
+            const targetEuler = new THREE.Euler(...currentNpc.current.targetRotation);
+            const targetQuaternion = new THREE.Quaternion().setFromEuler(targetEuler);
+            camera.quaternion.slerp(targetQuaternion, lerpFactor);
         }
     }
 
@@ -214,7 +256,7 @@ export const EventHallComp: React.FC = () => {
     // 아무것도 안하고 있는 상태
     useEffect(() => {
         // 기본 상태
-        SetAction('Idle', activeAction, actions);
+        SetAction('Idle', activeAction, actions, playerRef);
 
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("keyup", handleKeyUp);
@@ -278,30 +320,36 @@ export const EventHallComp: React.FC = () => {
         isMove.current = !talkBalloon.isShow;
     }, [talkBalloon.isShow])
 
-    // 
+    // ??
     useEffect(() => {
         isMove.current = talkBalloon.isMove;
     }, [talkBalloon.isMove])
 
-    useFrame(() => {
-        // 플레이어 이동
-        PlayerMove(playerRef, keysPressed, camera, cameraOffset, isMove);
+    useFrame((_state, deltaTime) => {
+
+        // 플레이어 움직임
+        PlayerMove(keysPressed, camera, cameraOffset, isMove, deltaTime, playerRef, activeAction, actions, 
+                container);
         // 원 안인지 체크
         CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
     });
 
     return(
         <>
+            {/* 맵 */}
             <EventHall />
 
+            {/* 조명 */}
             <Environment blur={1} background preset="sunset" />
 
-            <axesHelper scale={100} />
-
+            {/* 캐리터 */}
             <primitive visible={!talkBalloon.isShow} scale={playerScale} ref={playerRef} position={playerPosition} rotation={playerRotation} object={playerFile.scene}/>
+            
+            {/* NPC */}
             <primitive scale={Jayden.npcScale} position={Jayden.npcPosition} rotation={Jayden.npcRotation} object={Jayden.npcModel.scene}/>
             <primitive scale={Kevin.npcScale} position={Kevin.npcPosition} rotation={Kevin.npcRotation} object={Kevin.npcModel.scene}/>
         
+            {/* 대화 범위 원 */}
             <Circle ref={Jayden.npcCircleRef} args={Jayden.npcCircleArgs} position={Jayden.npcCirclePosition} rotation={Jayden.npcCircleRotation} >
                 <meshStandardMaterial attach={Jayden.npcCircleAttach} color={Jayden.npcCircleColor} emissive={Jayden.npcCircleEmissive} emissiveIntensity={Jayden.npcCircleEmissiveIntensity} side={Jayden.npcCircleSide} transparent={Jayden.npcCircleTransparent} opacity={Jayden.npcCircleOpacity} />
             </Circle>
@@ -309,7 +357,21 @@ export const EventHallComp: React.FC = () => {
                 <meshStandardMaterial attach={Kevin.npcCircleAttach} color={Kevin.npcCircleColor} emissive={Kevin.npcCircleEmissive} emissiveIntensity={Kevin.npcCircleEmissiveIntensity} side={Kevin.npcCircleSide} transparent={Kevin.npcCircleTransparent} opacity={Kevin.npcCircleOpacity} />
             </Circle>
 
+            {/* 말풍선 */}
             { talkBalloon.isShow? <STTAndRecord lang={ LANGUAGE } /> : null }
+
+            {/* 벽 / 바닥 */}
+            <group>
+                { 
+                    container.map((props, index) => 
+                        <Wall 
+                            key={index} 
+                            {...props}                        
+                        /> ) 
+                }
+            </group>
+
+            <axesHelper scale={100} />
         </>
     )
 }
