@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
@@ -15,6 +15,7 @@ import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { PlayerMove } from './util/MSPlayerUtil';
+import { talkStateAtom } from '../../atom/TalkStateAtom';
 
 export const RestaurantComp: React.FC = () => {
   // player
@@ -48,8 +49,8 @@ export const RestaurantComp: React.FC = () => {
 
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
-  const [talkId, setTalkId] = useState<number>(0);
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
+  const setTalkState = useSetRecoilState(talkStateAtom);
   const isMove = useRef(true);
 
   // value
@@ -87,7 +88,7 @@ export const RestaurantComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkId(result.talkId)
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
       setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);
@@ -127,7 +128,7 @@ export const RestaurantComp: React.FC = () => {
 
   return(
     <>
-      { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} talkId={talkId} /> : null }
+      { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
       <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Restaurant/>
       <Environment blur={1} background preset="sunset" />

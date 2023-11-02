@@ -17,10 +17,9 @@ declare global {
 
 type STTAndRecordProps = {
   lang: string;
-  talkId: number;
 };
 
-export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
+export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
 
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
@@ -30,7 +29,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const talkState = useRecoilValue(talkStateAtom);
   const user = useRecoilValue(userAtom);
-  const isMounted = useRef({ offRec: false, onRec: false, reset: false, finish: false });
+  const isMounted = useRef({ offRec: false, onRec: false, reset: false, finish: false, selectTopic: false });
   const flag = useRef<boolean>(true);
 
   useEffect(() => {
@@ -84,8 +83,9 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
         const sound = new File([e.data], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
         const data = new FormData();
         data.append("talkFile", sound);
-        data.append("talkId", String(talkId));
+        data.append("talkId", String(talkState.talkId));
         data.append("prompt", transcript);
+        data.append("topic", "");
         doTalking(data);
       };
 
@@ -103,14 +103,16 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
   };
 
   const doTalking = async(param: FormData) => {
-    setTalkBalloon(prev => ({ ...prev, sentence: "Loading..." }));
+    setTalkBalloon(prev => ({ ...prev, isLoading:true }));
     flag.current = false;
     await talking(param, ({data}) => {
       const result = data.data as talkingType;
       setTalkBalloon(prev => ({
         ...prev,
         sentence: result.responseMessage,
-        audio: result.responseS3URL
+        prevSectence: result.responseMessage,
+        audio: result.responseS3URL,
+        isLoading: false,
       }));
     }, (error) => {
       console.log(error);
@@ -142,11 +144,11 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
 
     resetTranscript();
     SpeechRecognition.stopListening();
-    console.log("delete")
   };
     
   useEffect(() => {
     if (isMounted.current.onRec) {
+      resetTranscript();
       onRecAudio();
       flag.current = true;
     } else {
@@ -180,14 +182,17 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
   }, [talkState.finish]);
 
   useEffect(() => {
+    if (isMounted.current.selectTopic) {
+      flag.current = false;
+    } else {
+      isMounted.current.selectTopic = true;
+    }
+  }, [talkState.selectTopic])
+
+  useEffect(() => {
     return () => {
       stopMicrophoneAccess();
     };
   }, []);
-
-  return(
-    <>
-    </>
-  )
 
 };
