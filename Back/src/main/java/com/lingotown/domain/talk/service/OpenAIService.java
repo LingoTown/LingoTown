@@ -51,11 +51,11 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
-    @Value("${SPEECH_ACE.URL}")
-    private String SPEECH_ENDPOINT_URL;
-
-    @Value("${SPEECH_ACE.KEY}")
-    private String SPEECH_API_KEY;
+//    @Value("${SPEECH_ACE.URL}")
+//    private String SPEECH_ENDPOINT_URL;
+//
+//    @Value("${SPEECH_ACE.KEY}")
+//    private String SPEECH_API_KEY;
 
     @TrackExecutionTime
     @Transactional
