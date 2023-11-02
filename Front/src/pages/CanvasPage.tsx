@@ -28,8 +28,6 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
             {props.theme}
           </Debug>
         </Physics>
-
-
       </Canvas>
 
       { talkBalloon.isShow?<TalkBalloonComp />:null }

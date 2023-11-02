@@ -11,10 +11,9 @@ import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Park } from '../../../public/map/park/Park';
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { PlayerMove } from './util/PlayerMoveUtil';
+import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder, useSphere } from '@react-three/cannon'
 import { talkStateAtom } from '../../atom/TalkStateAtom';
@@ -77,7 +76,7 @@ export const ParkComp: React.FC = () => {
   const marcoActions = useAnimations(marcoFile.animations, marcoFile.scene).actions;
 
   const soccerBallFile = useGLTF("../../public/objects/soccerBall/scene.gltf");
-  const [soccerBallRef, soccerBallApi] = useSphere(() => ({
+  const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
     position: [-10, 0, 5],
     rotation: [0, 0, 0],
@@ -106,8 +105,8 @@ export const ParkComp: React.FC = () => {
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
-  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
     requestAnimationFrame(animate);
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
@@ -116,17 +115,17 @@ export const ParkComp: React.FC = () => {
     camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
   }
 
-  useFrame(() => {
-    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove);
+  useFrame((_state, deltaTime) => {
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
-    SetAction('Victory', activeAction, actions);
-    SetAction('Victory', jerryAction, jerryActions);
-    SetAction('Run', sanhaAction, sanhaActions);
-    SetAction('Run', marcoAction, marcoActions);
+    SetAction('Victory', activeAction, actions, playerRef);
+    SetAction('Victory', jerryAction, jerryActions, null);
+    SetAction('Run', sanhaAction, sanhaActions, null);
+    SetAction('Run', marcoAction, marcoActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
