@@ -36,8 +36,8 @@ export const ParkComp: React.FC = () => {
   const [playerRotation, setPlayerRotation]= useState([0, 0, 0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
-    position: [-49, 0, 0], 
-    rotation:[0,1,0], 
+    position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
+    rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
     args:[0.5,0,0.1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
@@ -82,7 +82,7 @@ export const ParkComp: React.FC = () => {
   const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
 
   useFrame(() => {
-    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, playerPosition, setPlayerPosition, playerRotation, setPlayerRotation, isMove);
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 

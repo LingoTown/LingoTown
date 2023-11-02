@@ -63,14 +63,6 @@ export function Restaurant(props) {
           <mesh geometry={nodes.pCube45_silla1_0_5.geometry} material={materials.silla1} position={[199.534, 0, -868.82]} rotation={[0, Math.PI / 2, 0]} />
           <mesh geometry={nodes.pCube46_silla1_0_5.geometry} material={materials.silla1} position={[-658.889, 0, -1065.572]} rotation={[-Math.PI, 0, -Math.PI]} />
         </group>
-        <group position={[-543.376, 0, -979.86]}>
-          <mesh geometry={nodes.pCube47_silla1_0_6.geometry} material={materials.silla1} position={[-863.667, 0, -223.273]} rotation={[0, -Math.PI / 2, 0]} />
-          <mesh geometry={nodes.pCube26_silla1_0_6.geometry} material={materials.silla1} position={[-8.673, 0, 0]} />
-          <mesh geometry={nodes.pCylinder1_mesa1_0_6.geometry} material={materials.mesa1} position={[-318.077, 0, 91.261]} rotation={[0, -Math.PI / 6, 0]} />
-          <mesh geometry={nodes.pCylinder2_sombrilla1_0_6.geometry} material={materials.sombrilla1} />
-          <mesh geometry={nodes.pCube45_silla1_0_6.geometry} material={materials.silla1} position={[199.534, 0, -868.82]} rotation={[0, Math.PI / 2, 0]} />
-          <mesh geometry={nodes.pCube46_silla1_0_6.geometry} material={materials.silla1} position={[-658.889, 0, -1065.572]} rotation={[-Math.PI, 0, -Math.PI]} />
-        </group>
         <mesh geometry={nodes.pCube34_esquina_restaurante_hava1_0.geometry} material={materials.esquina_restaurante_hava1} />
         <mesh geometry={nodes.pCube35_edificio_izq1_0.geometry} material={materials.edificio_izq1} position={[-22.682, 0, 0]} />
         <mesh geometry={nodes.pCube37_restaurante2_0.geometry} material={materials.restaurante2} />
