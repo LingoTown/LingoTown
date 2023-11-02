@@ -9,32 +9,31 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import {Park} from '../../../public/map/park/Park';
+import { Park } from '../../../public/map/park/Park';
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { PlayerMove } from './util/PlayerMoveUtil';
+import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
-import { useCylinder } from '@react-three/cannon'
+import { useCylinder, useSphere } from '@react-three/cannon'
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 
 export const ParkComp: React.FC = () => {
 
   //wall
   const container = [
-    { size: [80, 2, 40], position: [-15, -1.5, 0], wallKey: 'C01', name: 'floor', mass:0}, // bottom
-    { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'C02', name: 'wall', mass:0}, // back wall
-    { size: [3, 27, 40], position: [23, 10, 0], wallKey: 'C03',  name: 'wall', mass:0}, // right wall
-    { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'C04', name: 'wall', mass:0}, // front wall,
-    { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'C05', name: 'wall', mass:0}, // left wall
+    { size: [80, 2, 40], position: [-15, -1.1, 0], wallKey: 'BF1', name: 'floor', mass:0}, // bottom floor
+    { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
+    { size: [3, 27, 40], position: [23, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
+    { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
+    { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
   ];
 
   // player
   const playerFile = useGLTF("./player/m_1.glb");
   //Player cannon
-  const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
-  const [playerRotation, setPlayerRotation]= useState([0, 0, 0]);
+  const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);
+  const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
@@ -55,24 +54,42 @@ export const ParkComp: React.FC = () => {
 
   // NPC
   const jerryFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb");
-  const jerryPosition = new THREE.Vector3(-5, 1, 2.33);
-  const jerryRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const jerryPosition = new THREE.Vector3(-31, 2.5, 6);
+  const jerryRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-180), 0);
   const jerryCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const jerryAction = useRef<AnimationAction>();
   const jerryActions = useAnimations(jerryFile.animations, jerryFile.scene).actions;
 
   const sanhaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb");
-  const sanhaPosition = new THREE.Vector3(-3, 1.8, -5);
-  const sanhaRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const sanhaPosition = new THREE.Vector3(-27, 1, -2);
+  const sanhaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
   const sanhaRef = useRef<THREE.Object3D | undefined>();
 
+  const marcoFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb");
+  const marcoPosition = new THREE.Vector3(-10, 1, 6);
+  const marcoRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-180), 0);
+  const marcoCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const marcoAction = useRef<AnimationAction>();
+  const marcoActions = useAnimations(marcoFile.animations, marcoFile.scene).actions;
+
+  const soccerBallFile = useGLTF("../../public/objects/soccerBall/scene.gltf");
+  const [soccerBallRef] = useSphere(() => ({
+    mass: 9, // Adjust the mass as needed
+    position: [-10, 0, 5],
+    rotation: [0, 0, 0],
+    args: [0.3], // Adjust the size of the cylinder as needed
+    friction: 0.5, // Adjust the friction as needed
+    restitution: 0.7, // Adjust the restitution (bounciness) as needed
+  }));
+
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
     { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
     { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
+    { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
   ];
 
   // state
@@ -88,8 +105,8 @@ export const ParkComp: React.FC = () => {
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
-  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
     requestAnimationFrame(animate);
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
@@ -98,16 +115,17 @@ export const ParkComp: React.FC = () => {
     camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
   }
 
-  useFrame(() => {
-    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove);
+  useFrame((_state, deltaTime) => {
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
-    SetAction('Victory', activeAction, actions);
-    SetAction('Victory', jerryAction, jerryActions);
-    SetAction('Run', sanhaAction, sanhaActions);
+    SetAction('Victory', activeAction, actions, playerRef);
+    SetAction('Victory', jerryAction, jerryActions, null);
+    SetAction('Run', sanhaAction, sanhaActions, null);
+    SetAction('Run', marcoAction, marcoActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -160,24 +178,33 @@ export const ParkComp: React.FC = () => {
 
   //sanha run movement
   useFrame((state) => {
-    const oscillation = Math.sin(state.clock.elapsedTime);
-    const rotationY = -90 * oscillation; // Rotate 180 degrees during oscillation
-    
-    // Check if the model reference is available
-    if (sanhaRef.current) {
-      // Calculate the new x position based on time and a speed factor
-      const newX = -40 + 10 * Math.sin(state.clock.elapsedTime); // You can adjust the speed by changing the factor
-
-      // Check if the model is moving from left to right
-      if (sanhaRef.current.position.x <= -7) {
-        // Update the rotation of the model when reaching the end
-        sanhaRef.current.rotation.y = THREE.MathUtils.degToRad(rotationY);
+    let newX = -50;
+    if (sanhaRef.current && sanhaCircleRef.current) {
+      newX += state.clock.elapsedTime * 5;
+  
+      if (newX >= -25) {
+        sanhaRef.current.position.x = -25;
+        sanhaCircleRef.current.position.x = -25;
+  
+        // Smooth rotation transition
+        const rotationProgress = (newX + 25) / 25; // Value between 0 and 1
+        const rotationY = 1.5 + rotationProgress * 3; // Adjust the factor for rotation speed
+        sanhaRef.current.rotation.y = rotationY;
+  
+        // Stop rotating when reaching the desired rotation
+        if (rotationProgress >= 1) {
+          sanhaRef.current.rotation.y = -1.5;
+        }else if(sanhaRef.current.rotation.y == -1.5){
+          sanhaRef.current.position.x = newX;
+          sanhaCircleRef.current.position.x = newX;
+        }
+      } else {
+        sanhaRef.current.position.x = newX;
+        sanhaCircleRef.current.position.x = newX;
       }
-
-      // Update the position of the model
-      sanhaRef.current.position.x = newX;
     }
   });
+  
 
 
   return(
@@ -193,7 +220,7 @@ export const ParkComp: React.FC = () => {
       <Environment blur={1} background preset="sunset" />
 
       {/* sanha */}
-      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-3.4, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0, -2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
@@ -203,6 +230,15 @@ export const ParkComp: React.FC = () => {
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-31, 1.82, 8]} rotation={[0, 3, 0]} object={jerryFile.scene} />
+
+      {/* marco */}
+      <Circle ref={marcoCircleRef} args={[3, 32]} position={[-10, 0, 8]} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+      </Circle>
+      <primitive scale={1} position={[-10, 0, 8]} rotation={[0, 3, 0]} object={marcoFile.scene} />
+    
+      {/* soccerBall */}
+      <primitive ref={soccerBallRef} scale={0.3} position={[-10, 0, 5]} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
     </>
   )
 } 

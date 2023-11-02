@@ -12,8 +12,6 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
         const rotationSpeed = 0.03;
         const moveForward = new THREE.Vector3();
 
-        let newPosition = playerRef.current.position;
-
         // 처음 속도가 설정되지 않았다면 정의한다.
         if (playerRef.current.velocity === undefined) 
             playerRef.current.velocity = { y: 0 };
@@ -27,14 +25,14 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
             playerRef.current.getWorldDirection(moveForward);
             moveForward.multiplyScalar(speed);
             // playerRef.current.position.add(moveForward);
-            newPosition = playerRef.current.position.clone().add(moveForward);
+            playerRef.current.position.clone().add(moveForward);
         }
     
         if (keysPressed.current.ArrowDown) {
             playerRef.current.getWorldDirection(moveForward);
             moveForward.multiplyScalar(-speed * 0.3);
             // playerRef.current.position.add(moveForward);
-            newPosition = playerRef.current.position.clone().add(moveForward);
+            playerRef.current.position.clone().add(moveForward);
         }
     
         // 회전 로직

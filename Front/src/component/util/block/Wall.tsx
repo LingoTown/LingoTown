@@ -20,7 +20,7 @@ export const Wall: React.FC<wallType> = ({
   return (
     <mesh ref={ref} name={name} key={wallKey}>
       <boxGeometry args={size}/>
-      <meshStandardMaterial transparent opacity={0}/>
+      {/* <meshStandardMaterial transparent opacity={0}/> */}
     </mesh>
   );
 };

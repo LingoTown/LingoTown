@@ -11,27 +11,25 @@ import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Restaurant } from "../../../public/map/restaurant/Restaurant";
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-// import { PlayerMove } from './util/MSPlayerUtil';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { PlayerMove } from './util/PlayerMoveUtil';
+import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
 
 export const RestaurantComp: React.FC = () => {
   //wall
   const container = [
-    { size: [15, 2, 38], position: [-5, -1.1, -5], wallKey: 'C01', name: 'floor', mass:0}, // bottom
-    { size: [15, 10, 3], position: [-5, 5, -20], wallKey: 'C02', name: 'wall', mass:0}, // back wall
-    { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'C03',  name: 'wall', mass:0}, // right wall
-    { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'C04', name: 'wall', mass:0}, // front wall,
-    { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'C05', name: 'wall', mass:0}, // left wall
+    { size: [15, 2, 38], position: [-5, -1.1, -5], wallKey: 'BF1', name: 'floor', mass:0}, // bottom
+    { size: [15, 10, 3], position: [-5, 5, -20], wallKey: 'BW1', name: 'wall', mass:0}, // back wall
+    { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
+    { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
+    { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
 
     // 추가벽
-    { size: [3, 7, 15], position: [-0.4, 2, 6], wallKey: 'C06',  name: 'wall', mass:0},
-    { size: [3, 7, 20], position: [1, 2, -10], wallKey: 'C07',  name: 'wall', mass:0},
+    { size: [3, 7, 15], position: [-0.4, 2, 6], wallKey: 'RW1',  name: 'wall', mass:0},
+    { size: [3, 7, 20], position: [1, 2, -10], wallKey: 'RW1',  name: 'wall', mass:0},
   ];
 
 
@@ -93,8 +91,8 @@ export const RestaurantComp: React.FC = () => {
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
-  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
     requestAnimationFrame(animate);
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
@@ -103,16 +101,16 @@ export const RestaurantComp: React.FC = () => {
     camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
   }
 
-  useFrame(() => {
-    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove);
+  useFrame((_state, deltaTime) => {
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
-    SetAction('Defeat', activeAction, actions);
-    SetAction('Idle', chefAction, chefActions);
-    SetAction('Idle', customerAction, customerActions);
+    SetAction('Defeat', activeAction, actions, playerRef);
+    SetAction('Idle', chefAction, chefActions, null);
+    SetAction('Idle', customerAction, customerActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
