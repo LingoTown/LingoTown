@@ -24,3 +24,5 @@ export const Wall: React.FC<wallType> = ({
     </mesh>
   );
 };
+
+// mass : 바닥이랑 벽은 0
