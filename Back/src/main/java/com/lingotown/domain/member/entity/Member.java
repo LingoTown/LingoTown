@@ -81,7 +81,6 @@ public class Member extends BaseTimeEntity {
         this.profile = profile;
     }
 
-
     // 재가입
     public void tempRejoin() {
         this.deletedAt = null;
