@@ -145,7 +145,6 @@ public class TalkService {
         String content = createTalkDetailReqDto.getContent();
         MultipartFile talkFile = createTalkDetailReqDto.getTalkFile();
 
-        System.out.println("talkFile : " +talkFile);
         String fileUrl = s3Service.uploadFile(talkFile);
 
         TalkDetail talkDetail = TalkDetail
@@ -163,20 +162,17 @@ public class TalkService {
                 ResponseStatus.DELETED_SUCCESS.getMessage(), savedTalkDetail);
     }
 
-    //대화 종료 후 친밀도 변경과 리스폰 지역 설정, 캐시 삭제
+    //대화 종료 후 친밀도 변경과 캐시 삭제
     @Transactional
-    public CommonResponse increaseIntimacy(IncreaseIntimacyReqDto increaseIntimacyReqDto){
-        Talk talk = getTalkEntity(increaseIntimacyReqDto.getTalkId());
+    public CommonResponse increaseIntimacy(Long talkId){
+        Talk talk = getTalkEntity(talkId);
+        int talkCount = talk.getTalkDetailList().size();
+
         MemberNPC memberNPC = talk.getMemberNPC();
-        NPC npc = memberNPC.getNpc();
+        System.out.println("talkCount : " +talkCount);
+        memberNPC.increaseIntimacy(talkCount);
 
-        Member member = memberNPC.getMember();
-        member.settingResponse(npc.getWorld());
-
-        memberNPC.increaseIntimacy();
-
-        cacheService.deleteTalkData(increaseIntimacyReqDto.getTalkId());
-
+        cacheService.deleteTalkData(talkId);
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 

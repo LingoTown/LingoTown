@@ -1,6 +1,5 @@
 package com.lingotown.domain.talk.controller;
 
-import com.lingotown.domain.talk.dto.request.TestDto;
 import com.lingotown.domain.talk.dto.request.TopicReqDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
@@ -11,11 +10,9 @@ import com.lingotown.domain.talk.service.OpenAIService;
 import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -65,9 +62,9 @@ public class TalkController {
         return talkService.removeTalk(principal, talkId);
     }
 
-    @PutMapping("/end")
-    public CommonResponse increaseIntimacy(@RequestBody IncreaseIntimacyReqDto increaseIntimacyReqDto){
-        return talkService.increaseIntimacy(increaseIntimacyReqDto);
+    @PutMapping("/end/{talkId}")
+    public CommonResponse increaseIntimacy(@PathVariable("talkId") Long talkId){
+        return talkService.increaseIntimacy(talkId);
     }
 
 }
