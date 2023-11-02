@@ -51,9 +51,6 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-    @JoinColumn(name="world_id")
-    @OneToOne(fetch = FetchType.LAZY)
-    private World world;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<MemberNPC> memberNPCList = new ArrayList<>();
@@ -84,8 +81,6 @@ public class Member extends BaseTimeEntity {
         this.profile = profile;
     }
 
-    //사용자 리스폰 지역 설정
-    public void settingResponse(World world) { this.world = world; }
 
     // 재가입
     public void tempRejoin() {
