@@ -35,6 +35,8 @@ export type NPCData = {
   position: [number, number, number];
   rotation: [number, number, number];
   scale: number;
+  cameraPosition: [number, number, number];
+  cameraRotation: [number, number, number];
   circleArgs: [number, number];
   circlePosition: [number, number, number];
   circleRotation: [number, number, number];
