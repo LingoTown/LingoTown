@@ -11,6 +11,7 @@ interface myListProps {
 
 function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (npcId:number) => void}) {
     const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
+    npcNum
     const {myList} = props
     const [openToggle, setToggle] = useState(Array(Object.keys(myList).length).fill(false));
     const [openBox, setBox] = useState(Array(Object.keys(myList).length).fill(false));

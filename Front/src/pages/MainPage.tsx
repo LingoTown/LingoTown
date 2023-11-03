@@ -23,6 +23,7 @@ const MainPage = () => {
   const [talkList, setTalkList] = useState<talkListType[]>()
   const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
   const [talkId, setTalkId] = useRecoilState(talkIdAtom);
+  talkId;
   scriptVer;
   const customConfirm = useCustomConfirm();
   const navigate = useNavigate();
@@ -200,7 +201,10 @@ const MainPage = () => {
                 {
                   scriptVer && !detailVer && //talk list 나타나는 부분 
                   <>
+                  <div className="flex flex-row justify-between">
                   <div className="m-5 font-['passero-one'] font-[30] text-white underline text-[2rem] ">My Talk Script</div>
+                  <div onClick={()=>{setScriptVer(false)}} className="cursor-pointer m-5 align-center font-['passero-one'] font-[30] text-white text-[1.3rem]" > {"<--  "}go back</div>
+                  </div>
                   {
                     talkList?.map((arr, i)=>(
                       <div onClick={()=>{setDetailVer(true); setTalkId(arr.talkId)}} key={i} className="group font-['passero-one'] text-[1.2rem] font-[30] flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/60 rounded-lg">
