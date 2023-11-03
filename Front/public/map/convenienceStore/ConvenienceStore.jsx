@@ -11,7 +11,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function ConvenienceStore(props) {
-  const { nodes, materials } = useGLTF('./map/convenienceStore/scene.gltf')
+  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/ConvenienceStore/scene.gltf')
   return (
     <group {...props} dispose={null} scale={2}>
       <group position={[4.856, 1.07, 0.873]} rotation={[0, 1.429, 0]} scale={0.171}>
