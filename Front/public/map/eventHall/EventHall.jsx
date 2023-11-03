@@ -7,11 +7,16 @@ Source: https://sketchfab.com/3d-models/venue-stage-for-great-events-d74b3baa5a7
 Title: venue stage for great events
 */
 
-import React, { useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function EventHall(props) {
   const { nodes, materials } = useGLTF('./map/eventHall/scene.gltf')
+  useEffect(() => {
+    if (props.onLoaded) {
+      props.onLoaded();
+    }
+  }, [props, props.onLoaded]);
   return (
     <group {...props} dispose={null}>
       <group scale={0.01}>
