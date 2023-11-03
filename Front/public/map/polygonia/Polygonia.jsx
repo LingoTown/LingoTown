@@ -3,7 +3,7 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 
 export function Polygonia(props) {
   const group = useRef()
-  const { nodes, materials, animations } = useGLTF('../map/polygonia/scene.gltf')
+  const { nodes, materials, animations } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Polygonia/scene.gltf')
   const { actions } = useAnimations(animations, group)
   return (
     <group ref={group} {...props} dispose={null}>
