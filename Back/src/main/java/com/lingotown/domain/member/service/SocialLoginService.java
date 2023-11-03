@@ -143,8 +143,9 @@ public class SocialLoginService {
         JsonElement element = JsonParser.parseString(result.toString());
 
         String email = "";
-        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-        if (has_email) {
+        System.out.println(element.getAsJsonObject());
+        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
+        if (!has_email) {
             email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
         }
 
