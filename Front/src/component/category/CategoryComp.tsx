@@ -10,17 +10,17 @@ import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
 
-const Park = lazy(() => import('../../../public/map/park/Park').then(module => {
+const Park = lazy(() => import('../../../public/map/Park').then(module => {
   return { default: module.Park }
 }));
-const EventHall = lazy(() => import('../../../public/map/eventHall/EventHall').then(module => {
+const EventHall = lazy(() => import('../../../public/map/EventHall').then(module => {
   return { default: module.EventHall }
 }));
-const Restaurant = lazy(() => import('../../../public/map/restaurant/Restaurant').then(module => {
+const Restaurant = lazy(() => import('../../../public/map/Restaurant').then(module => {
   return { default: module.Restaurant }
 }));
-const House = lazy(() => import('../../../public/map/house/House').then(module => {
-  return { default: module.House }
+const Church = lazy(() => import('../../../public/map/Church').then(module => {
+  return { default: module.Church }
 }));
 
 export const CategoryComp: React.FC<{
@@ -46,7 +46,7 @@ export const CategoryComp: React.FC<{
 
   const Loading: React.FC = () => {
     const textureLoader = new THREE.TextureLoader();
-    const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
+    const backgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
 
     return (
       <group>
@@ -104,7 +104,7 @@ export const CategoryComp: React.FC<{
             {texture === 1 && <Park position={[0, -1, 0]} rotation={[0, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
             {texture === 2 && <EventHall position={[0, -2, 0]} rotation={[0 * Math.PI / 180, 0, 0]} onLoaded={() => handleLoad()} />}
             {texture === 3 && <Restaurant position={[3, -2, 0]} rotation={[0, 10 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 4 && <House position={[-3, 1, 3]} rotation={[0, -50 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 4 && <Church position={[-3, 1, 3]} rotation={[0, -50 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
           </Suspense>
         </MeshPortalMaterial>
 

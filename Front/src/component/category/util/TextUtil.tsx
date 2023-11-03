@@ -12,7 +12,7 @@ export const TextUtil: React.FC<{
 }) => {
   return (
     <Text
-      font="../font/PasseroOne-Regular.ttf"
+      font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
       fontSize={size}
       color={color}
       position={[x, y, z]}
