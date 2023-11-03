@@ -2,23 +2,26 @@ package com.lingotown.domain.talk.service;
 
 
 import com.lingotown.domain.member.entity.Member;
-import com.lingotown.domain.npc.repository.NPCRepository;
+import com.lingotown.domain.member.entity.MemberQuiz;
+import com.lingotown.domain.member.repository.MemberQuizRepository;
+import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.response.CreateTalkResDto;
+import com.lingotown.domain.talk.dto.response.QuizResDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.domain.talk.repository.MemberNPCRepository;
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
-import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.service.NPCService;
-import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
-import com.lingotown.domain.talk.repository.QuizRepository;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.domain.world.entity.Quiz;
+import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.world.repository.QuizRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
@@ -44,10 +47,12 @@ public class TalkService {
     private final CacheService cacheService;
     private final NPCService npcService;
     private final S3Service s3Service;
+    private final MemberRepository memberRepository;
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
     private final MemberNPCRepository memberNpcRepository;
     private final QuizRepository quizRepository;
+    private MemberQuizRepository memberQuizRepository;
 
     //해당 NPC와 대화 내역
     public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long npcId){
@@ -114,7 +119,7 @@ public class TalkService {
                 .topicList(topicResDtoList)
                 .build();
 
-        return new DataResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
+        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), createTalk);
     }
 
@@ -146,12 +151,39 @@ public class TalkService {
     }
 
     //퀴즈 풀이
-//    @Transactional
-//    public DataResponse<String> solveQuiz(Principal principal, QuizReqDto quizReqDto){
-//        Long quizId = quizReqDto.getQuizId();
-//
-//
-//    }
+    @Transactional
+    public DataResponse<QuizResDto> solveQuiz(Principal principal, QuizReqDto quizReqDto){
+        String result = "fail";
+
+        Long quizId = quizReqDto.getQuizId();
+        Quiz quiz = quizRepository.findById(quizId)
+                .orElseThrow(()-> new CustomException(ExceptionStatus.QUIZ_NOT_FOUND));
+
+        String answer = quiz.getAnswer();
+
+        if(answer.equals(quizReqDto.getResult())) {
+            Long memberId = Long.valueOf(principal.getName());
+            Member member = getMemberEntity(memberId);
+            World world = quiz.getWorld();
+
+            MemberQuiz memberQuiz = MemberQuiz
+                    .builder()
+                    .member(member)
+                    .world(world)
+                    .build();
+
+            memberQuizRepository.save(memberQuiz);
+            result = "success";
+        }
+
+        QuizResDto quizResDto = QuizResDto
+                .builder()
+                .result(result)
+                .build();
+
+        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
+                ResponseStatus.CREATED_SUCCESS.getMessage(), quizResDto);
+    }
 
     //해당 대화 삭제
     @Transactional
@@ -182,7 +214,6 @@ public class TalkService {
         int talkCount = talk.getTalkDetailList().size();
 
         MemberNPC memberNPC = talk.getMemberNPC();
-        System.out.println("talkCount : " +talkCount);
         memberNPC.increaseIntimacy(talkCount);
 
         cacheService.deleteTalkData(talkId);
@@ -193,6 +224,11 @@ public class TalkService {
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
+    }
+
+    private Member getMemberEntity(Long memberId){
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
     }
 
 }

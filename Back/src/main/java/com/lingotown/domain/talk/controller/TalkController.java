@@ -43,10 +43,10 @@ public class TalkController {
         return openAIService.askTopic(principal, topicReqDto);
     }
 
-//    @PostMapping("/quiz")
-//    public DataResponse<String> solveQuiz(Principal principal, @RequestBody QuizReqDto quizReqDto){
-//
-//    }
+    @PostMapping("/quiz")
+    public DataResponse<QuizResDto> solveQuiz(Principal principal, @RequestBody QuizReqDto quizReqDto){
+        return talkService.solveQuiz(principal, quizReqDto);
+    }
 
     @GetMapping("/list/{npcId}")
     public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("npcId") Long npcId){
