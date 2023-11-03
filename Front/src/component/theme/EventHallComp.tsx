@@ -172,7 +172,7 @@ export const EventHallComp: React.FC = () => {
     ];
     
     /* Value */
-    const playerPosition = [0.25, 0, 5];
+    const playerPosition = [0.25, 0, 25];
     const playerRotation = [0, 3.15, 0];
 
     // 캐릭터 불러오기
