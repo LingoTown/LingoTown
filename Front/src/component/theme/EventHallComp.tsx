@@ -176,7 +176,7 @@ export const EventHallComp: React.FC = () => {
     const playerRotation = [0, 3.15, 0];
 
     // 캐릭터 불러오기
-    const playerFile = useGLTF("./player/m_1.glb");
+    const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Player/m_1.glb");
     // 캐릭터 크기
     const playerScale = 1;
     

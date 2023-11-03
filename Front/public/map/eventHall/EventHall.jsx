@@ -11,7 +11,8 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function EventHall(props) {
-  const { nodes, materials } = useGLTF('./map/eventHall/scene.gltf')
+  const { nodes, materials } = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/EventHall/scene.gltf")
+
   return (
     <group {...props} dispose={null}>
       <group scale={0.01}>
