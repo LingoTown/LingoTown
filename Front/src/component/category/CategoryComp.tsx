@@ -96,19 +96,20 @@ export const CategoryComp: React.FC<{
           ref={portalMaterial}
         >
           <ambientLight intensity={0.5} />
-          <Environment preset="sunset" />
+          <Environment preset="dawn" />
 
           {children}
 
           <Suspense fallback={<Loading />}>
-            {texture === 1 && <Park onLoaded={() => handleLoad()} />}
-            {texture === 2 && <EventHall onLoaded={() => handleLoad()} />}
-            {texture === 3 && <Restaurant onLoaded={() => handleLoad()} />}
-            {texture === 4 && <House onLoaded={() => handleLoad()} />}
+            {texture === 1 && <Park position={[0, -1, 0]} rotation={[0, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 2 && <EventHall position={[0, -2, 0]} rotation={[0 * Math.PI / 180, 0, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 3 && <Restaurant position={[3, -2, 0]} rotation={[0, 10 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 4 && <House position={[-3, 1, 3]} rotation={[0, -50 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
           </Suspense>
         </MeshPortalMaterial>
 
-        {!isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} /> : <></>}
+        {texture === 4 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} /> : <></>}
+        {(texture === 1 || texture === 2 || texture === 3) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[language]} /> : <></>}
       </RoundedBox>
     </group>
   )
