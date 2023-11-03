@@ -11,7 +11,6 @@ import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Restaurant(props) {
-
   const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Restaurant/scene.gltf')
 
   useEffect(() => {

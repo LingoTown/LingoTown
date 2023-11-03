@@ -24,20 +24,22 @@ export const NPCStage: React.FC<{
   children, texture, name, age, color, active, setActive, setHovered, ...props
 }) => {
   const information = [
-    { "Jerry": "little kid playing in the park" },
-    { "Sanha": "runner" },
-    { "Marco": "captain of the 'Daejeon \n Hana Citizen' team." },
-    { "Jerome": "coach of the 'ojossi' \n soccer team" },
-    { "Jayden": "head of the human resources \n department of the \n 'SAMSUNG' company." },
-    { "Kevin": "the host of the new mobile project \n presentation at SAMSUNG." },
-    { "Olivia": "‘LingoMongo’ restaurant chef" },
-    { "Luke": "‘LingoMongo’ restaurant chef" }
+    { "Jerry": "Little kid playing in the park." },
+    { "Sanha": "Runner." },
+    { "Marco": "Captain of the 'Daejeon \n Hana Citizen' team." },
+    { "Lia": "'SSAFY' high school student \n and are classmates with user." },
+    { "Jayden": "Head of the human resources \n department of the \n 'SAMSUNG' company." },
+    { "Kevin": "The host of the new mobile project \n presentation at SAMSUNG." },
+    { "Daen": "The presenter at SSAFY." },
+    { "Olivia": "‘LingoMongo’ restaurant chef." },
+    { "Luke": "Customer of ‘LingoMongo’ Restaurant." },
+    { "Isabel": "Musician who sings on the street." }
   ];
 
   const map = useTexture(texture);
-  const map2D = useTexture("../map/introduce/intro.jpg");
+  const map2D = useTexture("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/intro.jpg");
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
+  const backgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
 
   const portalMaterial = useRef<PortalMaterialType | null>(null);
 
@@ -52,7 +54,7 @@ export const NPCStage: React.FC<{
     <group {...props}>
       <primitive object={backgroundTexture} attach="background" />
       <Text
-        font="../font/PasseroOne-Regular.ttf"
+        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="white"
         position={[0, -0.7, 0.051]}
@@ -101,7 +103,7 @@ export const NPCStage: React.FC<{
           </mesh>
 
           <Text
-            font="../font/PasseroOne-Regular.ttf"
+            font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
             fontSize={0.3}
             color="black"
             position={[5, 1, 0.051]}
@@ -110,7 +112,7 @@ export const NPCStage: React.FC<{
           </Text>
 
           <Text
-            font="../font/PasseroOne-Regular.ttf"
+            font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
             fontSize={0.3}
             color="black"
             position={[5, 0.5, 0.051]}
@@ -119,7 +121,7 @@ export const NPCStage: React.FC<{
           </Text>
 
           <Text
-            font="../font/PasseroOne-Regular.ttf"
+            font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
             fontSize={0.3}
             color="black"
             position={[5, -0.5, 0.051]}

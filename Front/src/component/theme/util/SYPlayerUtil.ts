@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { wallType } from '../../../type/WallType';
 
 export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset: any, isMove:any, 
                             // Jump Logic에 필요
@@ -24,20 +25,17 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
         if (keysPressed.current.ArrowUp) {
             playerRef.current.getWorldDirection(moveForward);
             moveForward.multiplyScalar(speed);
-            // playerRef.current.position.add(moveForward);
             playerRef.current.position.clone().add(moveForward);
         }
     
         if (keysPressed.current.ArrowDown) {
             playerRef.current.getWorldDirection(moveForward);
             moveForward.multiplyScalar(-speed * 0.3);
-            // playerRef.current.position.add(moveForward);
             playerRef.current.position.clone().add(moveForward);
         }
     
         // 회전 로직
         if (keysPressed.current.ArrowLeft || keysPressed.current.ArrowRight) {
-            // let deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
 
             let deltaRotation = 1;
 
@@ -46,10 +44,6 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
                 deltaRotation = keysPressed.current.ArrowLeft ? -rotationSpeed : rotationSpeed;
             else 
                 deltaRotation = keysPressed.current.ArrowLeft ? rotationSpeed : -rotationSpeed;
-            
-            // 실시간으로 물리 몸의 회전 업데이트 : 캐릭터의 회전 상태를 다른 시스템이나 상태 관리 시스템에도 동기화시키기 위한 것
-            // setPlayerRotation([playerRotation[0], playerRotation[1]+deltaRotation, playerRotation[2]]);
-            // playerApi.rotation.set(playerRotation[0], playerRotation[1] + deltaRotation, playerRotation[2]);
 
             playerRef.current.rotateY(deltaRotation);
         }
@@ -68,6 +62,9 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
             // 플레이어가 착지했는지 확인한다.
             if (playerRef.current.position.y <= 0) {
                     
+                playerRef.current.position.y = getCurrentFloorHeight(playerRef.current.position, container)
+                console.log(playerRef.current.position.y)
+
                 // 땅에 위치를 리셋한다.
                 playerRef.current.position.y = 0; 
 
@@ -121,65 +118,56 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
                     break;
                 }
             }
+
+            else {
+                const floorHighestY = wall.position[1] + (wall.size[1] / 2);
+
+                // floor의 AABB 설정
+                const floorBox = new THREE.Box3(
+                    new THREE.Vector3(
+                        wall.position[0] - wall.size[0] / 2, // minX
+                        wall.position[1] - wall.size[1] / 2, // minY
+                        wall.position[2] - wall.size[2] / 2  // minZ
+                    ),
+                    new THREE.Vector3(
+                        wall.position[0] + wall.size[0] / 2, // maxX
+                        wall.position[1] + wall.size[1] / 2, // maxY
+                        wall.position[2] + wall.size[2] / 2  // maxZ
+                    )
+                );
+
+                // playerBox를 현재 플레이어 위치로 업데이트
+                const playerBox = new THREE.Box3().setFromObject(playerRef.current);
+
+                // playerBox의 bottom edge
+                const playerBottomY = playerRef.current.position.y - playerRef.current.scale.y * 0.5;
+
+                // 바닥의 충돌 박스와 플레이어 박스가 교차하면서, 바닥의 가장 높은 Y 좌표보다 플레이어의 bottom edge가 낮은 경우
+                if (floorBox.intersectsBox(playerBox) && playerBottomY < floorHighestY) {
+                    // 점프 중이 아니고, 바닥에 닿았으면
+                    if (!playerRef.current.isJumping || playerRef.current.velocity.y <= 0) {
+                        // 플레이어의 Y 위치를 바닥의 가장 높은 Y 좌표로 설정
+                        playerRef.current.position.y = floorHighestY;
+                        // Y 방향 속도를 0으로 설정
+                        playerRef.current.velocity.y = 0;
+                        // 점프 상태 해제
+                        playerRef.current.isJumping = false;
+                    }
+                }
+            }
         }
 
         // 충돌이 발생하지 않았다면, 캐릭터의 위치를 업데이트합니다.
-        if (!collidesWithWall) {
-
-            // playerApi.position.set(newPosition.x, newPosition.y, newPosition.z);
+        if (!collidesWithWall) 
             playerRef.current.position.add(moveForward);
-            
-            // 이거 점프때 이렇게 해도 되는건가 .. 흠..
-            // setPlayerPosition((prevPos: any) => [
-            //     prevPos[0] + moveForward.x,
-            //     0,
-            //     prevPos[2] + moveForward.z
-            // ]);
-
-        }
         
         else {
-
-            // 벽에 부딪혔을 때의 처리
-            const oppositePosition = playerRef.current.position.clone();
-            
-            // 알파벳 문자에 해당하는 부분을 찾음
-            const match = collidesWallKey.match(/^[A-Za-z]+/);
-
-            // 컨테이너 Id 분리
-            let direction = "";
-            let type = "";
-
-            if(match) {
-                direction = match[0].slice(0, 1);
-                type = match[0].slice(1, 2);
-            }
-            else
-                console.log("해당 컨테이너 Id를 분리할 수 없습니다.");
-
-
-            // 벽일때
-            if(type == "W") {
-
-                // Back Wall
-                if(direction == "B")
-                    oppositePosition.z += 0.5;
-                // Right Wall
-                else if(direction == "R")
-                    oppositePosition.x -= 0.5;
-                // Front Wall
-                else if(direction == "F")
-                    oppositePosition.z -= 0.5;  
-                // Left Wall
-                else if(direction == "L")
-                    oppositePosition.x += 0.5;
-            }
-
-            // playerApi.position.set(oppositePosition.x, oppositePosition.y, oppositePosition.z);
-            playerRef.current.position.copy(oppositePosition);
-            // setPlayerPosition(() => [oppositePosition.x, oppositePosition.y, oppositePosition.z]);
+            const newPosition = handleCollision(playerRef, collidesWallKey, 0.5, container)
+        
+            playerRef.current.position.copy(newPosition);
         }
   
+
         /* 카메라 따라가기 로직 */
         
         const currentPos = playerRef.current.position.clone();
@@ -229,4 +217,68 @@ export const SetAction = (actionName: string, activeAction: any, actions: any, p
             playerRef.current.velocity.y = 7;
         }
     }
-  }; 
+}; 
+
+
+export const getCurrentFloorHeight = (playerPosition: THREE.Vector3, container: any): number => {
+
+    let highestFloorY = 0;
+
+    for(const floor of container) {
+        if(floor.name == "floor") {
+
+            const floorTopY = floor.position[1] + (floor.size[1] / 2);
+
+            if(playerPosition.y <= floorTopY && floorTopY > highestFloorY)
+                highestFloorY = floorTopY;
+        }
+    }
+
+    return highestFloorY;
+}
+
+export const handleCollision = (playerRef: any, collidesWallKey: string, bounceBackAmount: number, container: wallType[]): THREE.Vector3 => {
+    // 현재 플레이어 위치를 복제한다.
+    const oppositePosition = playerRef.current.position.clone();
+
+    // 컨테이너 내에서 충돌한 벽의 회전 정보를 가져온다.
+    const wall = container.find(w => w.wallKey === collidesWallKey);
+    
+    // wall.rotation이 존재하면 Euler로 변환, 그렇지 않다면 기본 Euler 생성
+    const wallRotation = wall && wall.rotation
+    ? new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromEuler(new THREE.Euler(wall.rotation.x, wall.rotation.y, wall.rotation.z)))
+    : new THREE.Euler();
+
+    // 벽의 종류와 방향을 결정한다.
+    let direction = "";
+    let type = "";
+
+    if (collidesWallKey) {
+        direction = collidesWallKey.slice(0, 1);
+        type = collidesWallKey.slice(1, 2);
+    } else {
+        console.error("해당 컨테이너 Id를 분리할 수 없습니다.");
+        return oppositePosition;
+    }
+
+    // 벽의 종류에 따라 반대 방향으로 위치를 조정한다.
+    // 플레이어 회전을 적용하기 전에 벽의 회전을 먼저 적용한다.
+    if (type === "W") {
+        switch (direction) {
+            case "F":
+                oppositePosition.add(new THREE.Vector3(0, 0, bounceBackAmount).applyEuler(wallRotation));
+                break;
+            case "R":
+                oppositePosition.add(new THREE.Vector3(bounceBackAmount, 0, 0).applyEuler(wallRotation));
+                break;
+            case "B":
+                oppositePosition.add(new THREE.Vector3(0, 0, -bounceBackAmount).applyEuler(wallRotation));
+                break;
+            case "L":
+                oppositePosition.add(new THREE.Vector3(-bounceBackAmount, 0, 0).applyEuler(wallRotation));
+                break;
+        }
+    }
+
+    return oppositePosition;
+}
