@@ -192,32 +192,38 @@ export const ParkComp: React.FC = () => {
 
   //sanha run movement
   useFrame((state) => {
-    let newX = -50;
     if (sanhaRef.current && sanhaCircleRef.current) {
-      newX += state.clock.elapsedTime * 5;
-  
-      if (newX >= -25) {
-        sanhaRef.current.position.x = -25;
-        sanhaCircleRef.current.position.x = -25;
-  
+      if(sanhaRef.current.position.x >= -25) {//목표 지점 도달
+        
         // Smooth rotation transition
-        const rotationProgress = (newX + 25) / 25; // Value between 0 and 1
-        const rotationY = 1.5 + rotationProgress * 3; // Adjust the factor for rotation speed
-        sanhaRef.current.rotation.y = rotationY;
-  
+        const rotationY = 1.5 + 0.1 * 3; // Adjust the factor for rotation speed
+
         // Stop rotating when reaching the desired rotation
-        if (rotationProgress >= 1) {
+        if (sanhaRef.current.rotation.y >= 1) { //1.5로 달리다가 -1.5가 됨
           sanhaRef.current.rotation.y = -1.5;
-        }else if(sanhaRef.current.rotation.y == -1.5){
-          sanhaRef.current.position.x = newX;
-          sanhaCircleRef.current.position.x = newX;
+        }else if(sanhaRef.current.rotation.y == -1.5){ //여기도 있어야함
+          sanhaRef.current.position.x -= 0.03; //달리기 속도 조절
+          sanhaCircleRef.current.position.x = sanhaRef.current.position.x;
+        }else{       
+          sanhaRef.current.rotation.y = rotationY;
         }
-      } else {
-        sanhaRef.current.position.x = newX;
-        sanhaCircleRef.current.position.x = newX;
+          
+      }
+      else if(sanhaRef.current.position.x < -25 && sanhaRef.current.rotation.y == 1.5){
+        sanhaRef.current.position.x += 0.03; //달리기 속도 조절
+        sanhaCircleRef.current.position.x = sanhaRef.current.position.x;
+      }else if(sanhaRef.current.rotation.y == -1.5){//돌았을 때, sanhaRef.current.rotation.y == -1.5 일 때
+        if(sanhaRef.current.position.x <= -50){
+          sanhaRef.current.rotation.y = 1.5;
+        }
+        sanhaRef.current.position.x -= 0.03; //달리기 속도 조절
+        sanhaCircleRef.current.position.x = sanhaRef.current.position.x;
       }
     }
   });
+
+
+
   
 
 

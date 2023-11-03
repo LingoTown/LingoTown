@@ -145,7 +145,7 @@ export const PlayerMove = (playerRef: any, playerApi: any,  keysPressed: any, ca
             oppositePosition.x -= 0.005;
         // Front Wall
         else if(direction == "F")
-            oppositePosition.z -= 0.005;
+            oppositePosition.z -= 0.005;  
         // Left Wall
         else if(direction == "L")
             oppositePosition.x += 0.005;
@@ -159,10 +159,10 @@ export const PlayerMove = (playerRef: any, playerApi: any,  keysPressed: any, ca
     const offset = cameraOffset.current.clone().applyQuaternion(playerRef.current.quaternion);
     const desiredCameraPosition = currentPos.add(offset);
 
-    // if (isMove.current) {
-    //   camera.position.lerp(desiredCameraPosition, 1);
-    //   camera.lookAt(playerRef.current.position);
-    // }
+    if (isMove.current) {
+      camera.position.lerp(desiredCameraPosition, 1);
+      camera.lookAt(playerRef.current.position);
+    }
   }
 };
 
