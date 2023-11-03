@@ -4,7 +4,13 @@ import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.entity.Member;
+import com.lingotown.domain.member.entity.MemberQuiz;
+import com.lingotown.domain.member.repository.MemberQuizRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
+import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
+import com.lingotown.domain.world.entity.Quiz;
+import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.world.repository.WorldRepository;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -19,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +36,8 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final WorldRepository worldRepository;
+    private final MemberQuizRepository memberQuizRepository;
     private final S3Service s3Service;
 
     //사용자 정보 조회
@@ -37,6 +47,30 @@ public class MemberService {
         Member member = getMemberEntity(memberId);
         MemberInfoResponseDto memberInfoDto = MemberInfoResponseDto.of(member);
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberInfoDto);
+    }
+
+    //테마가 가진 quiz 중 멤버가 푼 quiz 조회
+    public DataResponse<List<ReadMemberQuizResDto>> readSolvedQuiz(Principal principal, Long worldId){
+        Long memberId = Long.valueOf(principal.getName());
+
+        World world = getWorldEntity(worldId);
+        List<Quiz> quizList = world.getQuizList();
+
+        List<ReadMemberQuizResDto> memberQuizResList = new ArrayList<>();
+        for(Quiz quiz : quizList){
+
+            Optional<MemberQuiz> memberQuiz = memberQuizRepository.findByMemberIdAndQuizId(memberId, quiz.getId());
+            if(memberQuiz.isPresent()) continue;
+
+            ReadMemberQuizResDto memberQuizResDto = ReadMemberQuizResDto
+                    .builder()
+                    .quizId(memberQuiz.get().getId())
+                    .build();
+            memberQuizResList.add(memberQuizResDto);
+        }
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberQuizResList);
     }
 
     //사용자 탈퇴
@@ -104,4 +138,10 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
     }
+
+    private World getWorldEntity(Long worldId){
+        return worldRepository.findById(worldId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.WORLD_NOT_FOUND));
+    }
+
 }

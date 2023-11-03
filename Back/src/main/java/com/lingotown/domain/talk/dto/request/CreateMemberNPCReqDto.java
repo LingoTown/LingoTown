@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class CreateMemberNPCReqDto {
-    Long npcId;
+    private Long npcId;
 }
