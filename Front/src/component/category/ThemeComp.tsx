@@ -117,7 +117,7 @@ export const ThemeComp: React.FC = () => {
         <BackToCategoryComp
           x={0}
           y={2}
-          z={0}
+          z={2}
           name={text[language][1]}
           color="black"
           active={active}
@@ -142,9 +142,9 @@ export const ThemeComp: React.FC = () => {
         position-y={-1.35}
       >
         <BackToCategoryComp
-          x={-5}
-          y={2}
-          z={0}
+          x={-2.5}
+          y={0}
+          z={1}
           name={text[language][2]}
           color="white"
           active={active}
@@ -169,9 +169,9 @@ export const ThemeComp: React.FC = () => {
         position-y={-1.35}
       >
         <BackToCategoryComp
-          x={0}
-          y={1.5}
-          z={0}
+          x={-5}
+          y={2.5}
+          z={3}
           name={text[language][3]}
           color="white"
           active={active}
