@@ -1,6 +1,6 @@
 package com.lingotown.domain.member.entity;
 
-import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.world.entity.Quiz;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,14 +22,14 @@ public class MemberQuiz {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @JoinColumn(name = "world_id")
+    @JoinColumn(name = "quiz_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private World world ;
+    private Quiz quiz;
 
     @Builder
-    public MemberQuiz(Member member, World world){
+    public MemberQuiz(Member member,Quiz quiz){
         this.member = member;
-        this.world = world;
+        this.quiz = quiz;
     }
 
 }

@@ -52,7 +52,7 @@ public class TalkService {
     private final TalkDetailRepository talkDetailRepository;
     private final MemberNPCRepository memberNpcRepository;
     private final QuizRepository quizRepository;
-    private MemberQuizRepository memberQuizRepository;
+    private final MemberQuizRepository memberQuizRepository;
 
     //해당 NPC와 대화 내역
     public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long npcId){
@@ -164,12 +164,11 @@ public class TalkService {
         if(answer.equals(quizReqDto.getResult())) {
             Long memberId = Long.valueOf(principal.getName());
             Member member = getMemberEntity(memberId);
-            World world = quiz.getWorld();
 
             MemberQuiz memberQuiz = MemberQuiz
                     .builder()
                     .member(member)
-                    .world(world)
+                    .quiz(quiz)
                     .build();
 
             memberQuizRepository.save(memberQuiz);
