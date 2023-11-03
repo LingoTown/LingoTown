@@ -4,6 +4,7 @@ package com.lingotown.domain.talk.service;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.npc.repository.NPCRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
+import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.response.CreateTalkResDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkListResDto;
 import com.lingotown.domain.talk.entity.MemberNPC;
@@ -15,6 +16,7 @@ import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
+import com.lingotown.domain.talk.repository.QuizRepository;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.exception.CustomException;
@@ -45,6 +47,7 @@ public class TalkService {
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
     private final MemberNPCRepository memberNpcRepository;
+    private final QuizRepository quizRepository;
 
     //해당 NPC와 대화 내역
     public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long npcId){
@@ -89,26 +92,6 @@ public class TalkService {
 
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
                 ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkDetailResDtoList);
-    }
-
-    //해당 대화 삭제
-    @Transactional
-    public CommonResponse removeTalk(Principal principal, Long talkId){
-        Talk talk = getTalkEntity(talkId);
-
-        Long memberId = talk.getMemberNPC().getMember().getId();
-        Long logInMemberId = Long.valueOf(principal.getName());
-        if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
-
-        talk.deleteTalkHistory();
-
-        List<TalkDetail> talkDetailList = talk.getTalkDetailList();
-        for(TalkDetail talkDetail : talkDetailList) {
-            talkDetail.deleteTalkDetail();
-        }
-
-        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(),
-                ResponseStatus.DELETED_SUCCESS.getMessage());
     }
 
     //NPC와 대화 시작하기
@@ -161,6 +144,36 @@ public class TalkService {
         return new DataResponse<>(ResponseStatus.DELETED_SUCCESS.getCode(),
                 ResponseStatus.DELETED_SUCCESS.getMessage(), savedTalkDetail);
     }
+
+    //퀴즈 풀이
+//    @Transactional
+//    public DataResponse<String> solveQuiz(Principal principal, QuizReqDto quizReqDto){
+//        Long quizId = quizReqDto.getQuizId();
+//
+//
+//    }
+
+    //해당 대화 삭제
+    @Transactional
+    public CommonResponse removeTalk(Principal principal, Long talkId){
+        Talk talk = getTalkEntity(talkId);
+
+        Long memberId = talk.getMemberNPC().getMember().getId();
+        Long logInMemberId = Long.valueOf(principal.getName());
+        if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
+
+        talk.deleteTalkHistory();
+
+        List<TalkDetail> talkDetailList = talk.getTalkDetailList();
+        for(TalkDetail talkDetail : talkDetailList) {
+            talkDetail.deleteTalkDetail();
+        }
+
+        return new CommonResponse(ResponseStatus.DELETED_SUCCESS.getCode(),
+                ResponseStatus.DELETED_SUCCESS.getMessage());
+    }
+
+
 
     //대화 종료 후 친밀도 변경과 캐시 삭제
     @Transactional
