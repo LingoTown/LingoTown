@@ -6,13 +6,22 @@ import {
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { useRef, useState } from "react";
+import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
-import { EventHall } from '../../../public/map/eventHall/EventHall';
-import { House } from '../../../public/map/house/House';
-import { Park } from '../../../public/map/park/Park';
-import { Restaurant } from '../../../public/map/restaurant/Restaurant';
 import { TextUtil } from './util/TextUtil';
+
+const Park = lazy(() => import('../../../public/map/park/Park').then(module => {
+  return { default: module.Park }
+}));
+const EventHall = lazy(() => import('../../../public/map/eventHall/EventHall').then(module => {
+  return { default: module.EventHall }
+}));
+const Restaurant = lazy(() => import('../../../public/map/restaurant/Restaurant').then(module => {
+  return { default: module.Restaurant }
+}));
+const House = lazy(() => import('../../../public/map/house/House').then(module => {
+  return { default: module.House }
+}));
 
 export const CategoryComp: React.FC<{
   children: React.ReactNode;
@@ -28,6 +37,27 @@ export const CategoryComp: React.FC<{
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
   const text = useState(["Preview", "Avant-première"])[0];
+
+  const [isLoading, setLoading] = useState(true);
+
+  const handleLoad = () => {
+    setLoading(false);
+  };
+
+  const Loading: React.FC = () => {
+    const textureLoader = new THREE.TextureLoader();
+    const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
+
+    return (
+      <group>
+        <mesh position={[0, 0, 0]}>
+          <planeGeometry args={[3.5, 2.5, 1]} />
+          <meshBasicMaterial map={backgroundTexture} />
+        </mesh>
+        <TextUtil x={0} y={0} z={0} size={0.2} color="white" name="Loading" />
+      </group>
+    )
+  };
 
   const portalMaterial = useRef<PortalMaterialType | null>(null);
 
@@ -70,15 +100,15 @@ export const CategoryComp: React.FC<{
 
           {children}
 
-          {
-            texture === 1 ? <Park /> :
-            texture === 2 ? <EventHall /> :
-            texture === 3 ? <Restaurant /> :
-            texture === 4 ? <House /> :
-            null
-          }
+          <Suspense fallback={<Loading />}>
+            {texture === 1 && <Park onLoaded={() => handleLoad()} />}
+            {texture === 2 && <EventHall onLoaded={() => handleLoad()} />}
+            {texture === 3 && <Restaurant onLoaded={() => handleLoad()} />}
+            {texture === 4 && <House onLoaded={() => handleLoad()} />}
+          </Suspense>
         </MeshPortalMaterial>
-        <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} />
+
+        {!isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} /> : <></>}
       </RoundedBox>
     </group>
   )
