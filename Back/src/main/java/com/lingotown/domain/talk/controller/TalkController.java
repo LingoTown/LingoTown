@@ -1,5 +1,6 @@
 package com.lingotown.domain.talk.controller;
 
+import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.request.TopicReqDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
@@ -40,6 +41,11 @@ public class TalkController {
     @PostMapping("/topic")
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, @RequestBody TopicReqDto topicReqDto) throws Exception {
         return openAIService.askTopic(principal, topicReqDto);
+    }
+
+    @PostMapping("/quiz")
+    public DataResponse<QuizResDto> solveQuiz(Principal principal, @RequestBody QuizReqDto quizReqDto){
+        return talkService.solveQuiz(principal, quizReqDto);
     }
 
     @GetMapping("/list/{npcId}")
