@@ -7,11 +7,16 @@ Source: https://sketchfab.com/3d-models/studio-office-interior-6e41320708f74a6ba
 Title: Studio Office Interior
 */
 
-import React, { useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function House(props) {
   const { nodes, materials } = useGLTF('./map/house/scene.gltf')
+  useEffect(() => {
+    if (props.onLoaded) {
+      props.onLoaded();
+    }
+  }, [props, props.onLoaded]);
   return (
     <group {...props} dispose={null}>
       <group scale={0.0015}>
