@@ -51,9 +51,11 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<MemberNPC> memberNPCList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    List<MemberQuiz> memberQuizList = new ArrayList<>();
 
     @Builder
     public Member(String loginId, LoginType loginType, String nickname, String profile, String email) {

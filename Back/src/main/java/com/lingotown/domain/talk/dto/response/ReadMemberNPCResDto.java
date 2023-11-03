@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ReadMemberNPCResDto {
-    Long memberNPCId;
-    int talkCount;
-    int intimacy;
+    private Long memberNPCId;
+    private int talkCount;
+    private int intimacy;
 
-    Long npcId;
-    String npcName;
-    String npcImage;
-    String language;
-    String theme;
+    private Long npcId;
+    private String npcName;
+    private String npcImage;
+    private String language;
+    private String theme;
 
-    LocalDateTime lastVisited;
+    private LocalDateTime lastVisited;
 }

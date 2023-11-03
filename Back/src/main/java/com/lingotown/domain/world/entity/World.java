@@ -29,4 +29,8 @@ public class World {
 
     @OneToMany(mappedBy = "world", cascade = CascadeType.ALL)
     private List<NPC> npcList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "world", cascade = CascadeType.REMOVE)
+    private List<Quiz> quizList = new ArrayList<>();
+
 }
