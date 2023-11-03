@@ -134,13 +134,13 @@ export const EventHallComp: React.FC = () => {
         { size: [13, 2, 8], position: [14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF5', name: 'floor', mass:0},
 
         // 무대 계단 2층
-        { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF3', name: 'floor', mass:0},
+        { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF6', name: 'floor', mass:0},
         // 무대 계단 1층
-        { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF4', name: 'floor', mass:0},
+        { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF7', name: 'floor', mass:0},
         // 무대 바닥 왼쪽 계단 레이어
-        { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF5', name: 'floor', mass:0},
+        { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF8', name: 'floor', mass:0},
         // 무대 바닥 오른쪽 계단 레이어
-        { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF6', name: 'floor', mass:0},
+        { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF9', name: 'floor', mass:0},
 
         /* 벽 */
 
@@ -153,26 +153,26 @@ export const EventHallComp: React.FC = () => {
         // 무대 뒤 뒷벽 대각선 왼쪽
         { size: [17.5, 10, 0.8], position: [-15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
         // 무대 뒤 옆벽 대각선 왼쪽
-        { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
+        { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW1', name: 'wall', mass:0}, 
         // 무대 뒤 앞벽 대각선 오른쪽
-        { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW2', name: 'wall', mass:0}, 
+        { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW3', name: 'wall', mass:0}, 
         // 무대 뒤 뒷벽 대각선 오른쪽
-        { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
+        { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW3', name: 'wall', mass:0}, 
         // 무대 뒤 옆벽 대각선 오른쪽
         { size: [1, 10, 1.6], position: [22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
         
         // 전체 맵 뒷벽
-        { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW2', name: 'wall', mass:0}, 
+        { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW4', name: 'wall', mass:0}, 
         // 전체 맵 왼벽
-        { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW2', name: 'wall', mass:0}, 
+        { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW1', name: 'wall', mass:0}, 
         // 전체 맵 오른벽
-        { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW2', name: 'wall', mass:0}, 
+        { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW3', name: 'wall', mass:0}, 
         // 전체 맵 앞벽
-        { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW2', name: 'wall', mass:0},
+        { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW4', name: 'wall', mass:0},
     ];
     
     /* Value */
-    const playerPosition = [0.25, 0, 5];
+    const playerPosition = [0.25, 0, 28];
     const playerRotation = [0, 3.15, 0];
 
     // 캐릭터 불러오기
@@ -216,7 +216,13 @@ export const EventHallComp: React.FC = () => {
     const npcInfoList: NpcInfo[] = [
         { id: Jayden.npcId, name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
         { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
-    ];   
+    ]; 
+    
+    // 이 맵의 비대화 NPC 리스트 (상호작용 소품 + 비대화 NPC)
+    const nonTalkInfoList = [
+        { id: , name: , cameraPosition: , cameraRotation: , cameraRef: },
+        { id: , name: , cameraPosition: , cameraRotation: , cameraRef: },
+    ]
 
     /* useState */
     const setTalkState = useSetRecoilState(talkStateAtom);
@@ -350,6 +356,53 @@ export const EventHallComp: React.FC = () => {
         CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
     });
 
+    const highTableData: NPCData = {
+        id: 0,
+        name: "highTable",
+        path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/HighTable/scene.gltf",
+        position: [0.25, 0, 22],
+        rotation: [0, 0, 0],
+        scale: 1.5,
+        cameraPosition: [17.00, 1.90, -1.40],
+        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
+        circleArgs: [3, 32],
+        circlePosition: [0.25, 0, 22],
+        circleRotation: [90, 0, 0],
+        circleAttach: "material",
+        circleColor: "red",
+        circleEmissive: "red",
+        circleEmissiveIntensity: 5,
+        circleSide: THREE.DoubleSide,
+        circleTransparent: true,
+        circleOpacity: 0.2
+    }
+
+    const beamProjectorData: NPCData = {
+        id: 0,
+        name: "beamProjector",
+        path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/BeamProjector/scene.gltf",
+        position: [0.25, 1.9, 22],
+        rotation: [THREE.MathUtils.degToRad(180), 0, 0],
+        scale: 1.5,
+        cameraPosition: [17.00, 1.90, -1.40],
+        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
+        circleArgs: [3, 32],
+        circlePosition: [0.25, 0, 22],
+        circleRotation: [90, 0, 0],
+        circleAttach: "material",
+        circleColor: "red",
+        circleEmissive: "red",
+        circleEmissiveIntensity: 5,
+        circleSide: THREE.DoubleSide,
+        circleTransparent: true,
+        circleOpacity: 1
+    }
+
+    /* NPC */
+
+    const highTable = useNPC(highTableData);
+    const beamProjector = useNPC(beamProjectorData)
+
     return(
         <>
             {/* 맵 */}
@@ -386,6 +439,14 @@ export const EventHallComp: React.FC = () => {
                         /> ) 
                 }
             </group>
+
+            {/* High Table */}
+            <primitive scale={highTable.npcScale} position={highTable.npcPosition} rotation={highTable.npcRotation} object={highTable.npcModel.scene} />
+            <Circle ref={highTable.npcCircleRef} args={highTable.npcCircleArgs} position={highTable.npcCirclePosition} rotation={highTable.npcCircleRotation} >
+                <meshStandardMaterial attach={highTable.npcCircleAttach} color={highTable.npcCircleColor} emissive={highTable.npcCircleEmissive} emissiveIntensity={highTable.npcCircleEmissiveIntensity} side={highTable.npcCircleSide} transparent={highTable.npcCircleTransparent} opacity={highTable.npcCircleOpacity} />
+            </Circle>
+            {/* Beam Projector */}
+            <primitive scale={1.5} position={[0.25, 1.9, 22]} rotation={[THREE.MathUtils.degToRad(180), 0, 0]} object={beamProjector.npcModel.scene} />
 
             {/* <axesHelper scale={100} /> */}
         </>
