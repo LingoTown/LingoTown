@@ -7,19 +7,11 @@ Source: https://sketchfab.com/3d-models/restaurant-street-5ecfaba4569643279ffe9e
 Title: Restaurant Street
 */
 
-import React, { useEffect } from 'react'
+import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Restaurant(props) {
-
   const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Restaurant/scene.gltf')
-
-  useEffect(() => {
-    if (props.onLoaded) {
-      props.onLoaded();
-    }
-  }, [props, props.onLoaded]);
-
   return (
     <group {...props} dispose={null}>
       <group scale={0.01}>
