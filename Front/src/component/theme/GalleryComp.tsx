@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -14,26 +13,24 @@ import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { SetAction } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-// import { PlayerMove } from './util/MSPlayerUtil';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { PlayerMove } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
-import { OrbitControls } from '@react-three/drei';
-// import { Restaurant } from '../../../public/map/restaurant/Restaurant';
 
 export const GalleryComp: React.FC = () => {
+
   //wall
   const container = [
-    { size: [70, 10, 3], position: [4, 5, 9], wallKey: 'FW1', name: 'wall', mass:0}, // 
+    { size: [70, 10, 3], position: [0, 5, 9], wallKey: 'FW1', name: 'wall', mass:0}, // 
     { size: [3, 10, 35], position: [30, 5, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // Right
-    { size: [70, 10, 3], position: [-4, 5, -11], wallKey: 'BW1', name: 'wall', mass:0}, // Back
+    { size: [70, 10, 3], position: [-1, 5, -14], wallKey: 'BW1', name: 'wall', mass:0}, // Back
     { size: [3, 10, 40], position: [-25, 5, 3], wallKey: 'LW1', name: 'wall', mass:0}, // 
   ];
 
   // player
   const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_1.glb");
-  const [playerPosition, setPlayerPosition] = useState([-17, 0.53, 0.8]);
+  const [playerPosition, setPlayerPosition] = useState([-20, 0, 0]);
   const [playerRotation, setPlayerRotation]= useState([0,1.56,0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
@@ -56,15 +53,15 @@ export const GalleryComp: React.FC = () => {
 
   // NPC
   const chefFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb");
-  const chefPosition = new THREE.Vector3(-5, 1, 2.0);
-  const chefRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
+  const chefPosition = new THREE.Vector3(-10, 1, -9);
+  const chefRotation = new THREE.Vector3(0, -3, 0);
   const chefCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const chefAction = useRef<AnimationAction>();
   const chefActions = useAnimations(chefFile.animations, chefFile.scene).actions;
 
   const customerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_2.glb");
-  const customerPosition = new THREE.Vector3(-3, 2, -5);
-  const customerRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const customerPosition = new THREE.Vector3(4, 1, -0.9);
+  const customerRotation = new THREE.Vector3(0, -1.5, 0);
   const customerCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const customerAction = useRef<AnimationAction>();
   const customerActions = useAnimations(customerFile.animations, customerFile.scene).actions;
@@ -164,18 +161,19 @@ export const GalleryComp: React.FC = () => {
         { container.map((props, index) => <Wall key={index} {...props}/> ) }
       </group>
       { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
-      <OrbitControls />
-      <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[10, 0.53, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+      <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Gallery />
       <Environment blur={1} background preset="forest" />
-      <Circle ref={chefCircleRef} args={[3, 32]} position={[-8.5, 0, 3]} rotation={[-Math.PI / 2, 0, 0]} >
+
+      <Circle ref={chefCircleRef} args={[3, 32]} position={[-9, 0, -6]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0} />
       </Circle>
-      <primitive scale={1} position={[-8.5, 0, 0]} rotation={[0, -2, 0]} object={chefFile.scene}/>
-      <Circle ref={customerCircleRef} args={[3, 32]} position={[2, 0, 1]} rotation={[-Math.PI / 2, 0, 0]} >
+      <primitive scale={1} position={[-9, 0, -6]} rotation={[0, -3, 0]} object={chefFile.scene}/>
+      
+      <Circle ref={customerCircleRef} args={[3, 32]} position={[7, 0, -1]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0} />
       </Circle>
-      <primitive scale={1} position={[2, 0, 1]} rotation={[0, -1.6, 0]} object={customerFile.scene} />
+      <primitive scale={1} position={[7, 0, -1]} rotation={[0, -1.6, 0]} object={customerFile.scene} />
     </>
   )
 } 
