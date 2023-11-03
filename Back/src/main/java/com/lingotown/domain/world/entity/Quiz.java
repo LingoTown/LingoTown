@@ -3,7 +3,6 @@ package com.lingotown.domain.world.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.persistence.*;
 
@@ -18,10 +17,10 @@ public class Quiz {
     private Long id;
 
     @Column(nullable = false)
-    private String quizContent;
+    private String question;
 
     @Column(nullable = false)
-    private String quizAnswer;
+    private String answer;
 
     @JoinColumn(name = "world_id")
     @ManyToOne(fetch = FetchType.LAZY)
