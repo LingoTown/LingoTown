@@ -67,7 +67,11 @@ public class TalkService {
         Long memberNPCId = memberNPC.getId();
         List<Talk> talkList = memberNpcRepository.findTalkList(memberNPCId);
         for(Talk talk : talkList){
-            ReadTalkListResDto talkListDto = ReadTalkListResDto.builder()
+            List<TalkDetail> talkDetailList = talk.getTalkDetailList();
+            if(talkDetailList.size()<=0) continue;
+
+            ReadTalkListResDto talkListDto = ReadTalkListResDto
+                    .builder()
                     .talkId(talk.getId())
                     .talkDate(talk.getCreatedAt())
                     .build();
