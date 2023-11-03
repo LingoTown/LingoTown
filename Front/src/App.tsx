@@ -12,6 +12,7 @@ import { PolygoniaComp } from "./component/theme/PolygoniaComp";
 import { IntroduceComp } from "./component/introduce/IntroduceComp";
 import { ParkComp } from "./component/theme/ParkComp";
 import { EventHallComp } from "./component/theme/EventHallComp";
+import { GalleryComp } from "./component/theme/GalleryComp";
 import DeparturePage from "./pages/DeparturePage";
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
         <Route path="/introduce" element={ <IntroducePage theme={ <IntroduceComp/> }/> }/>
         <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
         <Route path="/eventhall" element={ <CanvasPage theme={ <EventHallComp/> }/> }/>
+        <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
         <Route path="/*" element={ <NotFound/> }/>
         <Route path="/departurePage" element={ <DeparturePage/> }/>
         <Route path="/themePage" element={<ThemePage />} />
