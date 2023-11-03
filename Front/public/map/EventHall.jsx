@@ -7,11 +7,37 @@ Source: https://sketchfab.com/3d-models/venue-stage-for-great-events-d74b3baa5a7
 Title: venue stage for great events
 */
 
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
+import { useLoader, useFrame } from '@react-three/fiber'
+import { TextureLoader, VideoTexture } from 'three'
+
 
 export function EventHall(props) {
+  /* Map */
   const { nodes, materials } = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/EventHall/scene.gltf")
+
+   /* Custom Image */
+  // const customImage = useLoader(TextureLoader, 'https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/누끼다영.png')
+
+  /* Custom Video */
+  const video = document.createElement('video')
+  video.src = 'https://b305finalproject.s3.ap-northeast-2.amazonaws.com/UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4'
+  video.crossOrigin = 'anonymous'
+  video.loop = true
+  video.muted = true
+
+  const customVideo = new VideoTexture(video)
+
+  // 자동 재생 설정
+  useEffect(() => {
+    video.play()
+  }, [video])
+  
+  // 동영상 업데이트
+  useFrame(() => {
+    customVideo.needsUpdate = true
+  })
 
   return (
     <group {...props} dispose={null}>
@@ -61,8 +87,16 @@ export function EventHall(props) {
           <mesh geometry={nodes.spot1_spot1b_0.geometry} material={materials.spot1b} />
         </group>
         <mesh geometry={nodes.house_house_0.geometry} material={materials.house} position={[0, 535.806, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[3699.588, 2374.425, 536.399]} />
-        <mesh geometry={nodes.screen1_screen1_0.geometry} material={materials.screen1} position={[0, 122.369, -1074.066]} rotation={[-Math.PI / 2, 0, 0]} scale={[1278.599, 25.094, 41.23]} />
-        <mesh geometry={nodes.screen2_screen2_0.geometry} material={materials.screen2} position={[2127.661, 269.9, -498.132]} rotation={[-Math.PI / 2, 0, 0]} scale={[52.544, 52.544, 39.788]} />
+
+        {/* 메인 스크린 */}
+        <mesh geometry={nodes.screen1_screen1_0.geometry} material={materials.screen1} position={[0, 122.369, -1073.066]} rotation={[-Math.PI / 2, 0, 0]} scale={[2478.599, 25.094, 41.23]}>
+          <meshStandardMaterial map={customVideo} />
+        </mesh>
+
+        {/* 우측 사이드 스크린 */}
+        <mesh geometry={nodes.screen2_screen2_0.geometry} material={materials.screen2} position={[2127.661, 269.9, -498.132]} rotation={[-Math.PI / 2, 0, 0]} scale={[52.544, 52.544, 39.788]}>
+          <meshStandardMaterial map={customVideo} />
+        </mesh>
         <mesh geometry={nodes.plant_plant_0.geometry} material={materials.plant} position={[963.995, 75.672, -988.265]} rotation={[Math.PI, 0.626, -Math.PI]} scale={[60.897, 62.308, 59.578]} />
       </group>
     </group>
