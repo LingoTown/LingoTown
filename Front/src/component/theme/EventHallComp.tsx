@@ -1,3 +1,4 @@
+import { EventHall } from "../../../public/map/EventHall";
 import * as THREE from 'three';
 // import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +10,6 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { EventHall } from "../../../public/map/eventHall/EventHall";
 import { HandleKeyDown, HandleKeyUp } from "./util/SYKeyboardUtil";
 import { PlayerMove, SetAction } from "./util/SYPlayerUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
