@@ -1,0 +1,11 @@
+Model Information:
+* title:	VR Gallery No 4 Building with artwork by DrCG
+* source:	https://sketchfab.com/3d-models/vr-gallery-no-4-building-with-artwork-by-drcg-5db9b3158b064e34a1c9c7bb6ae16df4
+* author:	DrCG (https://sketchfab.com/drcg)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "VR Gallery No 4 Building with artwork by DrCG" (https://sketchfab.com/3d-models/vr-gallery-no-4-building-with-artwork-by-drcg-5db9b3158b064e34a1c9c7bb6ae16df4) by DrCG (https://sketchfab.com/drcg) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
