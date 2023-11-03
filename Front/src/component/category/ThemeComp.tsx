@@ -13,7 +13,7 @@ import { MapEnterComp } from "./MapEnterComp";
 import { TextUtil } from "./util/TextUtil";
 
 export const ThemeComp: React.FC = () => {
-  const text: string[][] = useState([["park", "company", "restaurant", "hotel"], ["Parc", "entreprise", "restaurant", "hôtel"]])[0];
+  const text: string[][] = useState([["park", "company", "restaurant", "museum"], ["Parc", "entreprise", "restaurant", "musée"]])[0];
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -73,7 +73,7 @@ export const ThemeComp: React.FC = () => {
       <MapEnterComp x={-1} y={2.13} z={0.051} path="park" name={text[language][0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
       <MapEnterComp x={3} y={2.13} z={0.051} path="company" name={text[language][1]} active={active} enabled={enabled} setHovered={setCompanyEnterHovered} language={language} />
       <MapEnterComp x={-1} y={-0.27} z={0.051} path="restaurant" name={text[language][2]} active={active} enabled={enabled} setHovered={setRestaurantEnterHovered} language={language} />
-      <MapEnterComp x={3} y={-0.27} z={0.051} path="hotel" name={text[language][3]} active={active} enabled={enabled} setHovered={setHotelEnterHovered} language={language} />
+      <MapEnterComp x={3} y={-0.27} z={0.051} path="museum" name={text[language][3]} active={active} enabled={enabled} setHovered={setHotelEnterHovered} language={language} />
 
       <CategoryComp
         texture={1}
