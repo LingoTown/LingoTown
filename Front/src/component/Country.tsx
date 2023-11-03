@@ -1,5 +1,7 @@
 import {useState, useEffect} from "react"
 import { myPageNPCType } from "../type/MyPageNpcType";
+import { npcStateAtom } from "../atom/ScriptAtom";
+import { useRecoilState } from "recoil";
 export type myPageNPCListType = {
     [key:string]: myPageNPCType[];
 }
@@ -8,6 +10,7 @@ interface myListProps {
 }
 
 function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (npcId:number) => void}) {
+    const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
     const {myList} = props
     const [openToggle, setToggle] = useState(Array(Object.keys(myList).length).fill(false));
     const [openBox, setBox] = useState(Array(Object.keys(myList).length).fill(false));
@@ -23,11 +26,7 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
             return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+bronze.png"
         }
     }
-		const setScriptAtom = (npcId : number) => {
-				//해당 npc가 가지고 있는 대화 리스트 조회 = talkId & talkDate
-				//talkId 마다 talkDetailId, content, talkFile, createdAt, member이 있음.
-				//
-		}
+
     return (
         Object.entries(props.myList).map(([key, val], i:number) => (
         <div >
@@ -55,10 +54,9 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
                 openBox[i]?
                 val.map((arr)=>(
                     <div onClick={()=>{
-											console.log(arr.npcId);
+                      setNpcNum(arr.npcId);
 											props.getTalkList(arr.npcId);
 											props.onBoxClick();
-											setScriptAtom(arr.npcId);
 											}} className="flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/40 rounded-lg">
                     <div className="w-full px-5 py-3 bg-[#ddd]/70 rounded-lg flex flex-row place-content-between items-center">
                         <div className="flex items-center">

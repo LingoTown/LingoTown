@@ -1,5 +1,10 @@
 import { atom } from "recoil";
 
+export const npcStateAtom = atom<number>({
+  key: 'npcStateAtom',
+  default: 0,
+});
+
 type TalkStateAtom = {
   onRec: boolean;
   offRec: boolean;
@@ -12,5 +17,4 @@ export const talkStateAtom = atom<TalkStateAtom>({
     onRec: false,
     offRec: false, 
     reset: false,
-  },
-});
+  }})
