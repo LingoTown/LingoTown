@@ -8,12 +8,16 @@ import { useSetRecoilState } from "recoil";
 import { myPageNPCListType } from "../component/Country";
 import Country from "../component/Country";
 import { useCustomAlert, useCustomConfirm } from "../component/util/ModalUtil";
+import { talkListType } from "../type/TalkListType";
 
 const MainPage = () => {
   const customAlert = useCustomAlert();
   const [nickEditMode, setNickMode] = useState(false);
   const [nick, setNick] = useState('');
   const [myList, setMyList] = useState<myPageNPCListType>({});
+  const [scriptVer, setScriptVer] = useState(false);
+  const [talkList, setTalkList] = useState<talkListType[]>()
+  scriptVer;
   const customConfirm = useCustomConfirm();
   const navigate = useNavigate();
   const user = useRecoilValue(userAtom);
@@ -23,6 +27,7 @@ const MainPage = () => {
     await customAlert("", "로그아웃 되었습니다.")
     navigate("/")
   }
+  //list 국가별로 바꾸기 - npcid, talkcount
   const groupByCountry = (arr:any) => {
     return arr.reduce((arr:any, obj:any) => {
       const language = obj.language;
@@ -33,6 +38,11 @@ const MainPage = () => {
       return arr;
     },[])
   }
+
+  useEffect(()=>{
+    console.log(scriptVer);
+  }, [scriptVer])
+
   useEffect(()=> {
     HttpJson.get("/api/talk/list")
       .then((res) => {
@@ -114,7 +124,22 @@ const MainPage = () => {
       })
       .catch(console.log);
   }
+  const getTalkList = (npcId:number) => {
+    console.log(npcId);
+    HttpJson.get(`/api/talk/list/${npcId}`)
+    .then((res) => {
+      setTalkList(res.data.data);
+      console.log(res.data.data);
+    })
+    .catch(console.log);
+  }
+  const deleteTalk = (talkId:number) => {
+    HttpJson.delete(`/api/talk/${talkId}`)
+    .then(()=>{
 
+    })
+    .catch(console.log)
+  }
 
   return(
     <>
@@ -126,7 +151,7 @@ const MainPage = () => {
           }}>Close</div>
         </div>
         <div className=''>
-            <div className='mt-10 w-[70rem] h-[37rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
+            <div className='mt-10 w-[80rem] h-[40rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
             {/* 왼쪽 부분 */}
             <div className='font-bold font-[30] text-[1.4rem] text-white flex-1 border-r border-white border-opacity-50 flex flex-col'>
                 <div className="relative w-40 h-40 mt-5 self-center">
@@ -145,10 +170,15 @@ const MainPage = () => {
                     </div>
                     :
                     <div>Name : {user.nickname} &nbsp; <span onClick={editNickname} className="material-icons">edit</span></div>
-
                   }
                   <div>Account : {user.social}</div>
-                  <div>({user.email})</div>
+                  {
+                    user.email? 
+                    <div>({user.email})</div>
+                    :
+                    <></>
+                  }
+                  
                 </div>
                 <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem] cursor-pointer " >
                   <div className="hover:text-[2rem]" onClick={logout}>Logout</div>
@@ -157,10 +187,39 @@ const MainPage = () => {
         
             </div>
             {/* 오른쪽 부분 */}
-              <div className='font-bold text-white flex-1 pl-7'>
-                <div className="m-5 font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
+              <div className='font-bold h-full overflow-y-scroll flex-1 pl-7'>
                 {/* 나라별로 모아서 토글만들기 */}
-                <Country myList={myList}></Country>  
+                {
+                  scriptVer && //talk list 나타나는 부분 
+                  <>
+                  <div className="m-5 font-['passero-one'] font-[30] text-white underline text-[2rem] ">My Talks with NPC</div>
+                  {
+                    talkList?.map((arr, i)=>(
+                      <div key={i} className="group font-['passero-one'] text-[1.2rem] font-[30] flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/60 rounded-lg">
+                      <div className="w-full px-5 py-2 bg-[#fff]/70 rounded-lg flex flex-row items-center justify-between">
+                        <div className="flex flex-row">
+                          <div className="text-[1.3rem] text-[#2E8BA8]">#{i+1} &nbsp;&nbsp;</div>
+                          <div className="">Date : {arr.talkDate.slice(0,10)} &nbsp;|&nbsp; </div>
+                          <div>&nbsp; Time : {arr.talkDate.slice(11, )}</div>
+                        </div>
+                          <div onClick={()=>{
+                            deleteTalk(arr.talkId);
+                          }} className="hover:text-[1.7rem] align-end material-icons opacity-0 group-hover:opacity-80 text-red-700 text-[1.5rem] transform transition duration-300 ease-in-out">delete</div>
+                      </div>
+                      </div>
+                    ))
+                  }
+                  </>
+                  }
+                  {
+                    !scriptVer && //npc list 나타나는 부분 
+                    <>
+                      <div className="m-5 text-white font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
+                      <Country myList={myList} onBoxClick={()=>{setScriptVer(true)}} getTalkList={(npcId:number)=>getTalkList(npcId)}/>
+                    </>
+
+                  }
+                
               </div>
             </div>
           </div>
