@@ -17,8 +17,10 @@ import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder, useSphere } from '@react-three/cannon'
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { Sanha } from '../../../public/name/Sanha';
-import { Bonnie } from '../../../public/name/Bonnie';
+import { Sanha } from '../../../public/name/park/Sanha.tsx';
+import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
+import { Jerry } from '../../../public/name/park/Jerry.tsx';
+import { Marco } from '../../../public/name/park/Marco.tsx';
 // import { Jaden } from '../../../public/name/Jaden';
  
 export const ParkComp: React.FC = () => {
@@ -259,12 +261,14 @@ export const ParkComp: React.FC = () => {
       <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
       
       {/* jerry */}
+      <Jerry />
       <Circle ref={jerryCircleRef} args={[3, 32]} position={[-31, 0.1, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-31, 1.82, 8]} rotation={[0, 3, 0]} object={jerryFile.scene} />
 
       {/* marco */}
+      <Marco />
       <Circle ref={marcoCircleRef} args={[3, 32]} position={[-10, 0.1, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
