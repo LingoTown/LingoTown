@@ -17,7 +17,12 @@ import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder, useSphere } from '@react-three/cannon'
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-
+import { Sanha } from '../../../public/name/park/Sanha.tsx';
+import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
+import { Jerry } from '../../../public/name/park/Jerry.tsx';
+import { Marco } from '../../../public/name/park/Marco.tsx';
+// import { Jaden } from '../../../public/name/Jaden';
+ 
 export const ParkComp: React.FC = () => {
   //wall
   const container = [
@@ -43,7 +48,7 @@ export const ParkComp: React.FC = () => {
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0.1,1],
+    args:[0.5,0,0.1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
     allowSleep:true,
@@ -72,7 +77,7 @@ export const ParkComp: React.FC = () => {
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
-  const [sanhaTalk, setSanhaTalk] = useState(false);
+  const [sanhaTalk, setSanhaTalk] = useState(false); //산하가 말하냐 마냐에 따라 움직임 여부를 결정
 
   const marcoFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb");
   const marcoPosition = new THREE.Vector3(-10, 1, 6);
@@ -81,12 +86,12 @@ export const ParkComp: React.FC = () => {
   const marcoAction = useRef<AnimationAction>();
   const marcoActions = useAnimations(marcoFile.animations, marcoFile.scene).actions;
 
-  const liaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb");
-  const liaPosition = new THREE.Vector3(-43, 1, 2);
-  const liaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
-  const liaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const liaAction = useRef<AnimationAction>();
-  const liaActions = useAnimations(liaFile.animations, liaFile.scene).actions;
+  const bonnieFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb");
+  const bonniePosition = new THREE.Vector3(-43, 1, 2);
+  const bonnieRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const bonnieCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const bonnieAction = useRef<AnimationAction>();
+  const bonnieActions = useAnimations(bonnieFile.animations, bonnieFile.scene).actions;
 
   const soccerBallFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/SoccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
@@ -103,7 +108,7 @@ export const ParkComp: React.FC = () => {
     { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
     { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
     { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
-    { id: 16, name: "bonnie", targetPosition: liaPosition, targetRotation:liaRotation, ref: liaCircleRef },
+    { id: 16, name: "bonnie", targetPosition: bonniePosition, targetRotation:bonnieRotation, ref: bonnieCircleRef },
   ];
 
   // state
@@ -140,7 +145,7 @@ export const ParkComp: React.FC = () => {
     SetAction('Victory', jerryAction, jerryActions, null);
     SetAction('Run', sanhaAction, sanhaActions, null);
     SetAction('Run', marcoAction, marcoActions, null);
-    SetAction('Walk', liaAction, liaActions, null);
+    SetAction('Walk', bonnieAction, bonnieActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -204,6 +209,7 @@ export const ParkComp: React.FC = () => {
 
   //sanha run movement
   useFrame(() => {
+    // console.log(sanhaNameRef.current);
     if (sanhaTalk == false && sanhaRef.current && sanhaCircleRef.current) {
       if(sanhaRef.current.position.x >= -25) {//목표 지점 도달
         
@@ -248,28 +254,33 @@ export const ParkComp: React.FC = () => {
       <Environment blur={1} background preset="sunset" />
 
       {/* sanha */}
-      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0, -2]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0.1, -2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+        <Sanha position={[-7, -1, 0]} rotation={[Math.PI / 2, Math.PI/180, 0]}/>
       </Circle>
       <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
       
       {/* jerry */}
-      <Circle ref={jerryCircleRef} args={[3, 32]} position={[-31, 0, 8]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Jerry />
+      <Circle ref={jerryCircleRef} args={[3, 32]} position={[-31, 0.1, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-31, 1.82, 8]} rotation={[0, 3, 0]} object={jerryFile.scene} />
 
       {/* marco */}
-      <Circle ref={marcoCircleRef} args={[3, 32]} position={[-10, 0, 8]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Marco />
+      <Circle ref={marcoCircleRef} args={[3, 32]} position={[-10, 0.1, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-10, 0, 8]} rotation={[0, 3, 0]} object={marcoFile.scene} />
     
-      {/* lia */}
-      <Circle ref={liaCircleRef} args={[3, 32]} position={[-45, 0, 2]} rotation={[-Math.PI / 2, 0, 0]} >
+      {/* bonnie */}
+      {/* <Jaden position={[0,0.5,0]}/> */}
+      <Circle ref={bonnieCircleRef} args={[3, 32]} position={[-45, 0.1, 2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+        <Bonnie position={[7, 0.7, 0]} rotation={[Math.PI / 2, Math.PI, 0]} />
       </Circle>
-      <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={liaFile.scene}/>
+      <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={bonnieFile.scene}/>
       
       {/* soccerBall */}
       <primitive ref={soccerBallRef} scale={0.3} position={[-10, 0, 5]} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
