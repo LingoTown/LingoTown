@@ -50,7 +50,7 @@ export const ParkComp: React.FC = () => {
   }));
 
   // camera action
-  const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
+  const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -5.5));
   const keysPressed = useRef<KeyPressed>({ ArrowUp: false, ArrowLeft: false, ArrowRight: false, ArrowDown: false });
   const activeAction = useRef<AnimationAction>();
   const { actions } = useAnimations(playerFile.animations, playerFile.scene);

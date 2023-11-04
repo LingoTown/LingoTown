@@ -22,14 +22,6 @@ export function Restaurant(props) {
   return (
     <group {...props} dispose={null}>
       <group scale={0.01}>
-        <group position={[0, 0, -196.255]}>
-          <mesh geometry={nodes.pCube47_silla1_0.geometry} material={materials.silla1} position={[-863.667, 0, -223.273]} rotation={[0, -Math.PI / 2, 0]} />
-          <mesh geometry={nodes.pCube26_silla1_0.geometry} material={materials.silla1} position={[-8.673, 0, 0]} />
-          <mesh geometry={nodes.pCylinder1_mesa1_0.geometry} material={materials.mesa1} position={[-318.077, 0, 91.261]} rotation={[0, -Math.PI / 6, 0]} />
-          <mesh geometry={nodes.pCylinder2_sombrilla1_0.geometry} material={materials.sombrilla1} />
-          <mesh geometry={nodes.pCube45_silla1_0.geometry} material={materials.silla1} position={[199.534, 0, -868.82]} rotation={[0, Math.PI / 2, 0]} />
-          <mesh geometry={nodes.pCube46_silla1_0.geometry} material={materials.silla1} position={[-658.889, 0, -1065.572]} rotation={[-Math.PI, 0, -Math.PI]} />
-        </group>
         <group position={[-251.669, 0, -333.528]}>
           <mesh geometry={nodes.pCube47_silla1_0_1.geometry} material={materials.silla1} position={[-863.667, 0, -223.273]} rotation={[0, -Math.PI / 2, 0]} />
           <mesh geometry={nodes.pCube26_silla1_0_1.geometry} material={materials.silla1} position={[-8.673, 0, 0]} />
