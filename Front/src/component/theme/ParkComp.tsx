@@ -17,7 +17,8 @@ import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder, useSphere } from '@react-three/cannon'
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-
+import { Sanha } from '../../../public/name/Sanha';
+ 
 export const ParkComp: React.FC = () => {
   //wall
   const container = [
@@ -43,7 +44,7 @@ export const ParkComp: React.FC = () => {
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0.1,1],
+    args:[0.5,0,0.1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
     allowSleep:true,
@@ -67,12 +68,13 @@ export const ParkComp: React.FC = () => {
 
   const sanhaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb");
   const sanhaRef = useRef<THREE.Object3D | undefined>();
+  const sanhaNameRef = useRef<THREE.Object3D | undefined>();
   const sanhaPosition = new THREE.Vector3(sanhaRef.current?.position.x===undefined?-50:sanhaRef.current?.position.x-2, 1, sanhaRef.current?.position.z);
   const sanhaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
-  const [sanhaTalk, setSanhaTalk] = useState(false);
+  const [sanhaTalk, setSanhaTalk] = useState(false); //산하가 말하냐 마냐에 따라 움직임 여부를 결정
 
   const marcoFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb");
   const marcoPosition = new THREE.Vector3(-10, 1, 6);
@@ -204,6 +206,7 @@ export const ParkComp: React.FC = () => {
 
   //sanha run movement
   useFrame(() => {
+    // console.log(sanhaNameRef.current);
     if (sanhaTalk == false && sanhaRef.current && sanhaCircleRef.current) {
       if(sanhaRef.current.position.x >= -25) {//목표 지점 도달
         
@@ -250,6 +253,7 @@ export const ParkComp: React.FC = () => {
       {/* sanha */}
       <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0.1, -2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+        <Sanha position={[-7, -1, 0]} rotation={[Math.PI / 2, Math.PI/180, 0]}/>
       </Circle>
       <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
       
