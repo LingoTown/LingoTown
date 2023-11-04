@@ -10,13 +10,15 @@ import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Gallery } from "../../../public/map/gallery/Gallery";
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
+import { SetAction, PlayerMove } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { PlayerMove } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
+import { Barry } from '../../../public/name/gallery/Barry'
+import { Jimmy } from '../../../public/name/gallery/Jimmy'
+import { Jina } from '../../../public/name/gallery/Jina'
 
 export const GalleryComp: React.FC = () => {
 
@@ -44,7 +46,7 @@ export const GalleryComp: React.FC = () => {
 
 
   // camera action
-  const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
+  const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -5.5));
   const keysPressed = useRef<KeyPressed>({ ArrowUp: false, ArrowLeft: false, ArrowRight: false, ArrowDown: false });
   const activeAction = useRef<AnimationAction>();
   const { actions } = useAnimations(playerFile.animations, playerFile.scene);
@@ -53,8 +55,8 @@ export const GalleryComp: React.FC = () => {
 
   // NPC
   const chefFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb");
-  const chefPosition = new THREE.Vector3(-10, 1, -9);
-  const chefRotation = new THREE.Vector3(0, -3, 0);
+  const chefPosition = new THREE.Vector3(-8.8, 1, -9);
+  const chefRotation = new THREE.Vector3(0, -3.3, 0);
   const chefCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const chefAction = useRef<AnimationAction>();
   const chefActions = useAnimations(chefFile.animations, chefFile.scene).actions;
@@ -163,6 +165,9 @@ export const GalleryComp: React.FC = () => {
       { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
       <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Gallery />
+      <Jina />
+      <Jimmy />
+      <Barry />
       <Environment blur={1} background preset="forest" />
 
       <Circle ref={chefCircleRef} args={[3, 32]} position={[-9, 0, -6]} rotation={[-Math.PI / 2, 0, 0]} >
