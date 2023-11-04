@@ -248,25 +248,25 @@ export const ParkComp: React.FC = () => {
       <Environment blur={1} background preset="sunset" />
 
       {/* sanha */}
-      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0, -2]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={sanhaCircleRef} args={[3, 32]} position={[-50, 0.1, -2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive ref={sanhaRef} scale={1} position={[-50, 0.1, -2]} rotation={[0, 1.5, 0]} object={sanhaFile.scene}/>
       
       {/* jerry */}
-      <Circle ref={jerryCircleRef} args={[3, 32]} position={[-31, 0, 8]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={jerryCircleRef} args={[3, 32]} position={[-31, 0.1, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-31, 1.82, 8]} rotation={[0, 3, 0]} object={jerryFile.scene} />
 
       {/* marco */}
-      <Circle ref={marcoCircleRef} args={[3, 32]} position={[-10, 0, 8]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={marcoCircleRef} args={[3, 32]} position={[-10, 0.1, 8]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-10, 0, 8]} rotation={[0, 3, 0]} object={marcoFile.scene} />
     
       {/* lia */}
-      <Circle ref={liaCircleRef} args={[3, 32]} position={[-45, 0, 2]} rotation={[-Math.PI / 2, 0, 0]} >
+      <Circle ref={liaCircleRef} args={[3, 32]} position={[-45, 0.1, 2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
       </Circle>
       <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={liaFile.scene}/>
