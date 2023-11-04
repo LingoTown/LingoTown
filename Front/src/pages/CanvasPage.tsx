@@ -3,7 +3,7 @@ import { TalkBalloonComp } from "../component/talk/TalkBalloonComp";
 import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
 import { useRecoilValue } from "recoil"
 import { MapUtilComp } from "../component/talk/MapUtilComp";
-import { Physics, Debug } from '@react-three/cannon';
+import { Physics } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
 interface CanvasPage {

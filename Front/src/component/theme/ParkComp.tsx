@@ -88,7 +88,7 @@ export const ParkComp: React.FC = () => {
   const liaAction = useRef<AnimationAction>();
   const liaActions = useAnimations(liaFile.animations, liaFile.scene).actions;
 
-  const soccerBallFile = useGLTF("../../public/objects/soccerBall/scene.gltf");
+  const soccerBallFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/SoccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
     position: [-10, 1, 5],
