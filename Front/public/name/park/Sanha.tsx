@@ -1,0 +1,41 @@
+import { useRef } from 'react'
+import { useGLTF } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
+
+export function Sanha(props: any) {
+  const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any;
+
+  // 각 mesh에 대한 참조를 생성합니다.
+  const S = useRef<THREE.Mesh>(null);
+  const A1 = useRef<THREE.Mesh>(null);
+  const N = useRef<THREE.Mesh>(null);
+  const H = useRef<THREE.Mesh>(null);
+  const A2 = useRef<THREE.Mesh>(null);
+
+  // 매 프레임마다 실행될 콜백 함수입니다.
+  useFrame(() => {
+    // 시간에 따라 다르게 회전하도록 합니다.
+    const time = Date.now() * 0.005; // 현재 시간을 초 단위로 가져옵니다.
+
+    // 각 mesh의 회전을 업데이트합니다.
+    if (S.current) S.current.rotation.y = Math.sin(time) * 0.2;
+    if (A1.current) A1.current.rotation.y = Math.sin(time) * 0.2;
+    if (N.current) N.current.rotation.y = Math.sin(time) * 0.2;
+    if (H.current) H.current.rotation.y = Math.sin(time) * 0.2;
+    if (A2.current) A2.current.rotation.y = Math.sin(time) * 0.2;
+  });
+
+  return (
+    <group {...props} dispose={null}>
+      <group scale={0.01} rotation={[0, 300, 0]} position={[7, 0, -0.6]}>
+        <mesh ref={S} geometry={nodes.AS_text_0.geometry} material={materials.text} position={[-120, -82, 1]}/>
+        <mesh ref={A1} geometry={nodes.AA_text_0.geometry} material={materials.text} position={[1, 1, 1]} />
+        <mesh ref={N} geometry={nodes.AN_text_0.geometry} material={materials.text} position={[-120, 40, 1]} />
+        <mesh ref={H} geometry={nodes.AH_text_0.geometry} material={materials.text} position={[40, 40, 1]}/>
+        <mesh ref={A2} geometry={nodes.AA_text_0.geometry} material={materials.text} position={[110, 1, 1]} />
+      </group>
+    </group>
+  )
+}
+
+useGLTF.preload('/scene.gltf')

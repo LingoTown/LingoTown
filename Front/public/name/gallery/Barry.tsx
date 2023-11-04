@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { useFrame } from "@react-three/fiber"
+import { useFrame } from '@react-three/fiber'
 
 export function Barry() {
   const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any;
