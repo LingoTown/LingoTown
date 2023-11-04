@@ -37,13 +37,13 @@ export const ParkComp: React.FC = () => {
   // player
   const playerFile = useGLTF("./player/m_1.glb");
   //Player cannon
-  const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);
+  const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);    
   const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0,0.1],
+    args:[0.5,0.1,1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
     allowSleep:true,
@@ -66,12 +66,13 @@ export const ParkComp: React.FC = () => {
   const jerryActions = useAnimations(jerryFile.animations, jerryFile.scene).actions;
 
   const sanhaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb");
-  const sanhaPosition = new THREE.Vector3(-27, 1, -2);
+  const sanhaRef = useRef<THREE.Object3D | undefined>();
+  const sanhaPosition = new THREE.Vector3(sanhaRef.current?.position.x===undefined?-50:sanhaRef.current?.position.x-2, 1, sanhaRef.current?.position.z);
   const sanhaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
-  const sanhaRef = useRef<THREE.Object3D | undefined>();
+  const [sanhaTalk, setSanhaTalk] = useState(false);
 
   const marcoFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb");
   const marcoPosition = new THREE.Vector3(-10, 1, 6);
@@ -90,9 +91,9 @@ export const ParkComp: React.FC = () => {
   const soccerBallFile = useGLTF("../../public/objects/soccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
-    position: [-10, 0, 5],
-    rotation: [0, 0, 0],
-    args: [0.3], // Adjust the size of the cylinder as needed
+    position: [-10, 1, 5],
+    rotation: [0, Math.PI/2, 0],
+    args: [0.2], // Adjust the size of the cylinder as needed
     friction: 0.5, // Adjust the friction as needed
     restitution: 0.7, // Adjust the restitution (bounciness) as needed
   }));
@@ -165,6 +166,10 @@ export const ParkComp: React.FC = () => {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
+          if(npc == "sanha"){ //산하랑 말하면 산하 행동 멈추기
+            setSanhaTalk(true);
+            if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
+          }
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
             animate();
@@ -184,6 +189,13 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     isMove.current = !talkBalloon.isShow;
+
+    if(sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
+      setSanhaTalk(false);
+      if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
+        sanhaRef.current.rotation.y = 1.5;
+      }
+    }
   }, [talkBalloon.isShow])
 
   useEffect(() => {
@@ -191,8 +203,8 @@ export const ParkComp: React.FC = () => {
   }, [talkBalloon.isMove])
 
   //sanha run movement
-  useFrame((state) => {
-    if (sanhaRef.current && sanhaCircleRef.current) {
+  useFrame(() => {
+    if (sanhaTalk == false && sanhaRef.current && sanhaCircleRef.current) {
       if(sanhaRef.current.position.x >= -25) {//목표 지점 도달
         
         // Smooth rotation transition
@@ -223,10 +235,6 @@ export const ParkComp: React.FC = () => {
   });
 
 
-
-  
-
-
   return(
     <>
       {/* wall */}
@@ -235,7 +243,7 @@ export const ParkComp: React.FC = () => {
       </group>
 
       <STTAndRecord lang={LANGUAGE} />
-      <primitive scale={1}  ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+      <primitive scale={1} visible={!talkBalloon.isShow} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Park/>
       <Environment blur={1} background preset="sunset" />
 
