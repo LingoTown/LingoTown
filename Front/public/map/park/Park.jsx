@@ -7,11 +7,19 @@ Source: https://sketchfab.com/3d-models/playground-childrens-park-3d-4b41db7cde9
 Title: Playground - Children's park - 3D
 */
 
-import React, { useRef } from 'react'
+import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Park(props) {
-  const { nodes, materials } = useGLTF('./map/park/scene.gltf')
+
+  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Park/scene.gltf')
+
+  useEffect(() => {
+    if (props.onLoaded) {
+      props.onLoaded();
+    }
+  }, [props, props.onLoaded]);
+
   return (
     <group {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={8.873}>

@@ -4,7 +4,7 @@ import { ThemeComp } from "../component/category/ThemeComp";
 
 export const ThemePage = () => {
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load('../map/introduce/bgggg.png');
+  const backgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
 
   return(
     <>

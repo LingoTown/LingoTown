@@ -1,3 +1,4 @@
+import { EventHall } from "../../../public/map/EventHall";
 import * as THREE from 'three';
 // import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +10,6 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { EventHall } from "../../../public/map/eventHall/EventHall";
 import { HandleKeyDown, HandleKeyUp } from "./util/SYKeyboardUtil";
 import { PlayerMove, SetAction } from "./util/SYPlayerUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
@@ -36,11 +36,9 @@ export const EventHallComp: React.FC = () => {
         rotation: [0, 180, 0],
         scale: 1,
         cameraPosition: [-10.0, 1.0, 20.0],
-        cameraRotation: [0.00,
-            THREE.MathUtils.degToRad(179.00),
-            0.00],
+        cameraRotation: [0.00, THREE.MathUtils.degToRad(179.00), 0.00],
         circleArgs: [3, 32],
-        circlePosition: [-10.0, 0.0, 21.5],
+        circlePosition: [-10.0, 0.05, 21.5],
         circleRotation: [90, 0, 0],
         circleAttach: "material",
         circleColor: "pink",
@@ -55,13 +53,13 @@ export const EventHallComp: React.FC = () => {
         id: 3,
         name: "Kevin",
         path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb",
-        position: [17.00, 0.9, -2.5],
+        position: [17.00, 1, -2.5],
         rotation: [0, 0, 0],
         scale: 1,
         cameraPosition: [17.00, 1.90, -1.40],
         cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
         circleArgs: [3, 32],
-        circlePosition: [17.0, 0.9, -2.5],
+        circlePosition: [17.0, 1.05, -2.5],
         circleRotation: [90, 0, 0],
         circleAttach: "material",
         circleColor: "red",
@@ -119,26 +117,71 @@ export const EventHallComp: React.FC = () => {
         /* Container Convention : 
             첫번째 자리 : Bottom : B, Back : B, Right : R, Front : F, Left : L
             두번째 자리 : Floor : F, Wall : W         (F : 안튕겨짐, W : 튕겨짐)
-            세번째 자리 : 숫자 (1 2 3 ...)
+            세번째 자리 : 숫자 (1 2 3 ...)position
         */
 
+        /* 바닥 */
+
         // 전체 바닥
-        { size: [100, 1, 100], position: [0, -1, 0], wallKey: 'BW1', name: 'wall', mass:0}, 
+        { size: [200, 2, 200], position: [0, -1, 30], wallKey: 'BF1', name: 'floor', mass:0},
+        // 무대 바닥 메인
+        { size: [42, 2, 6], position: [0, 0, -1.5], wallKey: 'BF2', name: 'floor', mass:0},
+        // 무대 바닥 뒷부분
+        { size: [24, 2, 6], position: [0, 0, -7.5], wallKey: 'BF3', name: 'floor', mass:0},
+        // 무대 바닥 좌측 대각
+        { size: [13, 2, 8], position: [-14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF4', name: 'floor', mass:0},
+        // 무대 바닥 우측 대각
+        { size: [13, 2, 8], position: [14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF5', name: 'floor', mass:0},
 
-        { size: [10, 1, 10], position: [0, 1, 30], wallKey: 'BW1', name: 'wall', mass:0}, 
-        // 무대 바닥
-        // { size: [44, 0.1, 16], position: [0, 1, 0], wallKey: 'BF2', name: 'floor', mass:0},
+        // 무대 계단 2층
+        { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF3', name: 'floor', mass:0},
+        // 무대 계단 1층
+        { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF4', name: 'floor', mass:0},
+        // 무대 바닥 왼쪽 계단 레이어
+        { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF5', name: 'floor', mass:0},
+        // 무대 바닥 오른쪽 계단 레이어
+        { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF6', name: 'floor', mass:0},
+
+        /* 벽 */
+
+        // 무대 뒤 앞벽 메인
+        { size: [26, 10, 0.3], position: [0, 1, -10.65], wallKey: 'FW1', name: 'wall', mass:0}, 
+        // 무대 뒤 뒷벽 메인
+        { size: [26, 10, 0.3], position: [0, 1, -10.95], wallKey: 'BW1', name: 'wall', mass:0}, 
+        // 무대 뒤 앞벽 대각선 왼쪽
+        { size: [17.5, 10, 0.8], position: [-15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'FW2', name: 'wall', mass:0}, 
+        // 무대 뒤 뒷벽 대각선 왼쪽
+        { size: [17.5, 10, 0.8], position: [-15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
+        // 무대 뒤 옆벽 대각선 왼쪽
+        { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
+        // 무대 뒤 앞벽 대각선 오른쪽
+        { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW2', name: 'wall', mass:0}, 
+        // 무대 뒤 뒷벽 대각선 오른쪽
+        { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
+        // 무대 뒤 옆벽 대각선 오른쪽
+        { size: [1, 10, 1.6], position: [22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
         
-
-
-        { size: [15, 10, 3], position: [0, 1, 0], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
-        // { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall 
-        // { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'FW1', name: 'wall', mass:0}, // front wall 
-        // { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall 
+        // 전체 맵 뒷벽
+        { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW2', name: 'wall', mass:0}, 
+        // 전체 맵 왼벽
+        { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW2', name: 'wall', mass:0}, 
+        // 전체 맵 오른벽
+        { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW2', name: 'wall', mass:0}, 
+        // 전체 맵 앞벽
+        { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW2', name: 'wall', mass:0},
     ];
     
     /* Value */
+    const playerPosition = [0.25, 0, 5];
+    const playerRotation = [0, 3.15, 0];
 
+    // 캐릭터 불러오기
+    const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Player/m_1.glb");
+    // 캐릭터 크기
+    const playerScale = 1;
+    
+    // 카메라 각도 정보
+    const mapCameraAngle = [0, 2.5, -5]
     // 원 반지름
     const CIRCLE_RADIUS = 3;
     // 언어
@@ -146,28 +189,7 @@ export const EventHallComp: React.FC = () => {
     // 문장
     const SENTENCE = "Would you like to start a conversation with "
 
-    // 캐릭터 불러오기
-    const playerFile = useGLTF("./player/m_1.glb");
-    // 캐릭터 크기
-    const playerScale = 1;
-    
-    // 카메라 각도 정보
-    const mapCameraAngle = [0, 2.5, -5]
-    // 
-
     /* useRef */
-
-    // 캐릭터 Ref
-    // const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-    // const [playerRef, playerApi] = useCylinder(() => ({ 
-    //     mass: 0, 
-    //     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
-    //     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    //     args:[0.5,0,0.1],
-    //     friction: 1,     // Adjust the value as needed
-    //     restitution: 0,   // Set to 0 to avoid bouncing
-    //     allowSleep:true,
-    //   }));
     const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
     // 움직이는지 : 컴포넌트의 렌더링 사이에서도 값이 유지된다. 초기 값 : true => 움직임이 가능한 상태
     const isMove = useRef(true);
@@ -337,7 +359,7 @@ export const EventHallComp: React.FC = () => {
             <Environment blur={1} background preset="sunset" />
 
             {/* 캐리터 */}
-            <primitive visible={!talkBalloon.isShow} scale={playerScale} ref={playerRef} position={[0.25, 0, 5]} rotation={[0, 3.15, 0]} object={playerFile.scene}/>
+            <primitive visible={!talkBalloon.isShow} scale={playerScale} ref={playerRef} position={playerPosition} rotation={playerRotation} object={playerFile.scene}/>
             
             {/* NPC */}
             <primitive scale={Jayden.npcScale} position={Jayden.npcPosition} rotation={Jayden.npcRotation} object={Jayden.npcModel.scene}/>
@@ -365,7 +387,7 @@ export const EventHallComp: React.FC = () => {
                 }
             </group>
 
-            <axesHelper scale={100} />
+            {/* <axesHelper scale={100} /> */}
         </>
     )
 }

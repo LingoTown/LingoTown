@@ -12,53 +12,63 @@ import * as THREE from "three";
 import { NPCStage } from "./NPCStage";
 
 export const IntroduceComp: React.FC = () => {
-  const companyM1 = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb');
-  const companyM2 = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb');
-  const restaurantM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_25.glb');
-  const restaurantW = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb');
-  const parkBasketballM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb');
-  const parkRunnerW = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb');
-  const parkSoccerM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_9.glb');
-  const parkKidM = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb');
+  const jerry = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb');
+  const sanha = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb');
+  const marco = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb');
+  const bonnie = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb');
+  const jayden = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb');
+  const kevin = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb');
+  const daen = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_16.glb');
+  const olivia = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb');
+  const luke = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_25.glb');
+  const isabel = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_13.glb');
 
-  const companyM1Ref = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const companyM2Ref = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const restaurantMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const restaurantWRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const parkBasketballMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const parkRunnerWRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const parkSoccerMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const parkKidMRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const jerryRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const sanhaRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const marcoRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const bonnieRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const jaydenRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const kevinRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const daenRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const oliviaRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const lukeRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const isabelRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
 
-  const { actions: companyM1Actions } = useAnimations(companyM1.animations, companyM1.scene);
-  const { actions : companyM2Actions } = useAnimations(companyM2.animations, companyM2.scene);
-  const { actions : restaurantMActions } = useAnimations(restaurantM.animations, restaurantM.scene);
-  const { actions: restaurantWActions } = useAnimations(restaurantW.animations, restaurantW.scene);
-  const { actions: parkBasketballMActions } = useAnimations(parkBasketballM.animations, parkBasketballM.scene);
-  const { actions: parkRunnerWActions } = useAnimations(parkRunnerW.animations, parkRunnerW.scene);
-  const { actions: parkSoccerMActions } = useAnimations(parkSoccerM.animations, parkSoccerM.scene);
-  const { actions: parkKidMActions } = useAnimations(parkKidM.animations, parkKidM.scene);
+  const { actions: jerryActions } = useAnimations(jerry.animations, jerry.scene);
+  const { actions: sanhaActions } = useAnimations(sanha.animations, sanha.scene);
+  const { actions : marcoActions } = useAnimations(marco.animations, marco.scene);
+  const { actions : bonnieActions } = useAnimations(bonnie.animations, bonnie.scene);
+  const { actions: jaydenActions } = useAnimations(jayden.animations, jayden.scene);
+  const { actions: kevinActions } = useAnimations(kevin.animations, kevin.scene);
+  const { actions: daenActions } = useAnimations(daen.animations, daen.scene);
+  const { actions: oliviaActions } = useAnimations(olivia.animations, olivia.scene);
+  const { actions: lukeActions } = useAnimations(luke.animations, luke.scene);
+  const { actions: isabelActions } = useAnimations(isabel.animations, isabel.scene);
 
   const [active, setActive] = useState<string | null>(null);
   const [enabled, setEnabled] = useState<boolean | undefined>(false);
 
-  const [companyM1Hovered, setCompanyM1Hovered] = useState<string | null>(null);
-  const [companyM2Hovered, setCompanyM2Hovered] = useState<string | null>(null);
-  const [restaurantMHovered, setRestaurantMHovered] = useState<string | null>(null);
-  const [restaurantWHovered, setRestaurantWHovered] = useState<string | null>(null);
-  const [parkBasketballMHovered, setParkBasketballMHovered] = useState<string | null>(null);
-  const [parkRunnerWHovered, setParkRunnerWHovered] = useState<string | null>(null);
-  const [parkSoccerMHovered, setParkSoccerMHovered] = useState<string | null>(null);
-  const [parkKidMHovered, setParkKidMHovered] = useState<string | null>(null);
+  const [jerryHovered, setJerryHovered] = useState<string | null>(null);
+  const [sanhaHovered, setSanhaHovered] = useState<string | null>(null);
+  const [marcoHovered, setMarcoHovered] = useState<string | null>(null);
+  const [bonnieHovered, setBonnieHovered] = useState<string | null>(null);
+  const [jaydenHovered, setJaydenHovered] = useState<string | null>(null);
+  const [kevinHovered, setKevinHovered] = useState<string | null>(null);
+  const [daenHovered, setDaenHovered] = useState<string | null>(null);
+  const [oliviaHovered, setOliviaHovered] = useState<string | null>(null);
+  const [lukeHovered, setLukeHovered] = useState<string | null>(null);
+  const [isabelHovered, setIsabelHovered] = useState<string | null>(null);
 
-  useCursor(companyM1Hovered == "Jayden");
-  useCursor(companyM2Hovered == "Kevin");
-  useCursor(restaurantMHovered == "Luke");
-  useCursor(restaurantWHovered == "Olivia");
-  useCursor(parkBasketballMHovered == "Marco");
-  useCursor(parkRunnerWHovered == "Sanha");
-  useCursor(parkSoccerMHovered == "Jerome");
-  useCursor(parkKidMHovered == "Jerry");
+  useCursor(jerryHovered == "Jerry");
+  useCursor(sanhaHovered == "Sanha");
+  useCursor(marcoHovered == "Marco");
+  useCursor(bonnieHovered == "Bonnie");
+  useCursor(jaydenHovered == "Jayden");
+  useCursor(kevinHovered == "Kevin");
+  useCursor(daenHovered == "Daen");
+  useCursor(oliviaHovered == "Olivia");
+  useCursor(lukeHovered == "Luke");
+  useCursor(isabelHovered == "Isabel");
 
   const controlsRef = useRef<CameraControls | null>(null);
 
@@ -81,68 +91,84 @@ export const IntroduceComp: React.FC = () => {
   }, [active, sceneInstance]);
 
   useEffect(() => {
-    const anim = companyM1Hovered ? 'Victory' : 'Idle';
-    companyM1Actions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = jerryHovered ? 'Victory' : 'Idle';
+    jerryActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      companyM1Actions[anim]?.fadeOut(0.5);
+      jerryActions[anim]?.fadeOut(0.5);
     }
-  }, [companyM1Hovered, companyM1Actions]);
+  }, [jerryHovered, jerryActions]);
 
   useEffect(() => {
-    const anim = companyM2Hovered ? 'Victory' : 'Idle';
-    companyM2Actions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = sanhaHovered ? 'Victory' : 'Idle';
+    sanhaActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      companyM2Actions[anim]?.fadeOut(0.5);
+      sanhaActions[anim]?.fadeOut(0.5);
     }
-  }, [companyM2Hovered, companyM2Actions]);
+  }, [sanhaHovered, sanhaActions]);
 
   useEffect(() => {
-    const anim = restaurantMHovered ? 'Victory' : 'Idle';
-    restaurantMActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = marcoHovered ? 'Victory' : 'Idle';
+    marcoActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      restaurantMActions[anim]?.fadeOut(0.5);
+      marcoActions[anim]?.fadeOut(0.5);
     }
-  }, [restaurantMHovered, restaurantMActions]);
+  }, [marcoHovered, marcoActions]);
 
   useEffect(() => {
-    const anim = restaurantWHovered ? 'Victory' : 'Idle';
-    restaurantWActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = bonnieHovered ? 'Victory' : 'Idle';
+    bonnieActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      restaurantWActions[anim]?.fadeOut(0.5);
+      bonnieActions[anim]?.fadeOut(0.5);
     }
-  }, [restaurantWHovered, restaurantWActions]);
+  }, [bonnieHovered, bonnieActions]);
 
   useEffect(() => {
-    const anim = parkBasketballMHovered ? 'Victory' : 'Idle';
-    parkBasketballMActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = jaydenHovered ? 'Victory' : 'Idle';
+    jaydenActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      parkBasketballMActions[anim]?.fadeOut(0.5);
+      jaydenActions[anim]?.fadeOut(0.5);
     }
-  }, [parkBasketballMHovered, parkBasketballMActions]);
+  }, [jaydenHovered, jaydenActions]);
+
+  useEffect(() => {
+    const anim = kevinHovered ? 'Victory' : 'Idle';
+    kevinActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    return () => {
+      kevinActions[anim]?.fadeOut(0.5);
+    }
+  }, [kevinHovered, kevinActions]);
   
   useEffect(() => {
-    const anim = parkRunnerWHovered ? 'Victory' : 'Idle';
-    parkRunnerWActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = daenHovered ? 'Victory' : 'Idle';
+    daenActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      parkRunnerWActions[anim]?.fadeOut(0.5);
+      daenActions[anim]?.fadeOut(0.5);
     }
-  }, [parkRunnerWHovered, parkRunnerWActions]);
+  }, [daenHovered, daenActions]);
 
   useEffect(() => {
-    const anim = parkSoccerMHovered ? 'Victory' : 'Idle';
-    parkSoccerMActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = oliviaHovered ? 'Victory' : 'Idle';
+    oliviaActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      parkSoccerMActions[anim]?.fadeOut(0.5);
+      oliviaActions[anim]?.fadeOut(0.5);
     }
-  }, [parkSoccerMHovered, parkSoccerMActions]);
+  }, [oliviaHovered, oliviaActions]);
 
   useEffect(() => {
-    const anim = parkKidMHovered ? 'Victory' : 'Idle';
-    parkKidMActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = lukeHovered ? 'Victory' : 'Idle';
+    lukeActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      parkKidMActions[anim]?.fadeOut(0.5);
+      lukeActions[anim]?.fadeOut(0.5);
     }
-  }, [parkKidMHovered, parkKidMActions]);
+  }, [lukeHovered, lukeActions]);
+
+  useEffect(() => {
+    const anim = isabelHovered ? 'Victory' : 'Idle';
+    isabelActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    return () => {
+      isabelActions[anim]?.fadeOut(0.5);
+    }
+  }, [isabelHovered, isabelActions]);
 
   return (
     <>
@@ -152,7 +178,7 @@ export const IntroduceComp: React.FC = () => {
       <CameraControls ref={controlsRef} enabled={enabled} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
 
       <Text
-        font="../font/PasseroOne-Regular.ttf"
+        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="black"
         position={[-4.5, 1.8, 0.051]}
@@ -162,7 +188,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <Text
-        font="../font/PasseroOne-Regular.ttf"
+        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="black"
         position={[1.5, 1.8, 0.051]}
@@ -172,7 +198,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <Text
-        font="../font/PasseroOne-Regular.ttf"
+        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="black"
         position={[-4.5, -0.2, 0.051]}
@@ -182,124 +208,152 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <Text
-        font="../font/PasseroOne-Regular.ttf"
+        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
         fontSize={0.2}
         color="black"
         position={[1.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Hotel
+        Museum
       </Text>
 
       <NPCStage
-        texture="../map/introduce/park.jpg"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
         name="Jerry"
         age="8"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setParkKidMHovered}
+        setHovered={setJerryHovered}
         position-x={-4.5}
         position-y={1}
       >
-        <primitive scale={1} ref={parkKidMRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkKidM.scene} />
+        <primitive scale={1} ref={jerryRef} position-y={-0.75} rotation={[0, 0, 0]} object={jerry.scene} />
       </NPCStage>
 
       <NPCStage
-        texture="../map/introduce/park.jpg"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
         name="Sanha"
-        age="20"
+        age="26"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setParkRunnerWHovered}
+        setHovered={setSanhaHovered}
         position-x={-3}
         position-y={1}
       >
-        <primitive scale={1} ref={parkRunnerWRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkRunnerW.scene} />
+        <primitive scale={1} ref={sanhaRef} position-y={-0.75} rotation={[0, 0, 0]} object={sanha.scene} />
       </NPCStage>
 
       <NPCStage
-        texture="../map/introduce/park.jpg"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
         name="Marco"
+        age="26"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setMarcoHovered}
+        position-x={-1.5}
+        position-y={1}
+      >
+        <primitive scale={1} ref={marcoRef} position-y={-0.75} rotation={[0, 0, 0]} object={marco.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
+        name="Bonnie"
         age="18"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setParkBasketballMHovered}
-        position-x={-1.5}
+        setHovered={setBonnieHovered}
         position-y={1}
       >
-        <primitive scale={1} ref={parkBasketballMRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkBasketballM.scene} />
+        <primitive scale={1} ref={bonnieRef} position-y={-0.75} rotation={[0, 0, 0]} object={bonnie.scene} />
       </NPCStage>
 
       <NPCStage
-        texture="../map/introduce/park.jpg"
-        name="Jerome"
-        age="30"
-        color={new THREE.Color("black")}
-        active={active}
-        setActive={setActive}
-        setHovered={setParkSoccerMHovered}
-        position-y={1}
-      >
-        <primitive scale={1} ref={parkSoccerMRef} position-y={-0.75} rotation={[0, 0, 0]} object={parkSoccerM.scene} />
-      </NPCStage>
-
-      <NPCStage
-        texture="../map/introduce/city.jpg"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
         name="Jayden"
-        age="30"
+        age="33"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setCompanyM1Hovered}
+        setHovered={setJaydenHovered}
         position-x={1.5}
         position-y={1}
       >
-        <primitive scale={1} ref={companyM1Ref} position-y={-0.75} rotation={[0, 0, 0]} object={companyM1.scene} />
+        <primitive scale={1} ref={jaydenRef} position-y={-0.75} rotation={[0, 0, 0]} object={jayden.scene} />
       </NPCStage>
 
       <NPCStage
-        texture="../map/introduce/city.jpg"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
         name="Kevin"
-        age="30"
+        age="33"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setCompanyM2Hovered}
+        setHovered={setKevinHovered}
         position-x={3}
         position-y={1}
       >
-        <primitive scale={1} ref={companyM2Ref} position-y={-0.75} rotation={[0, 0, 0]} object={companyM2.scene} />
+        <primitive scale={1} ref={kevinRef} position-y={-0.75} rotation={[0, 0, 0]} object={kevin.scene} />
       </NPCStage>
 
       <NPCStage
-        texture="../map/introduce/cafeteria.jpg"
-        name="Luke"
-        age="20"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
+        name="Daen"
+        age="27"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setRestaurantMHovered}
+        setHovered={setDaenHovered}
+        position-x={4.5}
+        position-y={1}
+      >
+        <primitive scale={1} ref={daenRef} position-y={-0.75} rotation={[0, 0, 0]} object={daen.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        name="Olivia"
+        age="31"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setOliviaHovered}
         position-x={-4.5}
         position-y={-1}
       >
-        <primitive scale={1} ref={restaurantMRef} position-y={-0.75} rotation={[0, 0, 0]} object={restaurantM.scene} />
+        <primitive scale={1} ref={oliviaRef} position-y={-0.75} rotation={[0, 0, 0]} object={olivia.scene} />
       </NPCStage>
 
       <NPCStage
-        texture="../map/introduce/cafeteria.jpg"
-        name="Olivia"
-        age="20"
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        name="Luke"
+        age="24"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setRestaurantWHovered}
+        setHovered={setLukeHovered}
         position-x={-3}
         position-y={-1}
       >
-        <primitive scale={1} ref={restaurantWRef} position-y={-0.75} rotation={[0, 0, 0]} object={restaurantW.scene} />
+        <primitive scale={1} ref={lukeRef} position-y={-0.75} rotation={[0, 0, 0]} object={luke.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        name="Isabel"
+        age="23"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setIsabelHovered}
+        position-x={-1.5}
+        position-y={-1}
+      >
+        <primitive scale={1} ref={isabelRef} position-y={-0.75} rotation={[0, 0, 0]} object={isabel.scene} />
       </NPCStage>
     </>
   );

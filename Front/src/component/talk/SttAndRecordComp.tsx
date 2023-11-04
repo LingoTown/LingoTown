@@ -114,6 +114,13 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
       }));
     }, (error) => {
       console.log(error);
+      // setTalkBalloon(prev => ({
+      //   ...prev,
+      //   sentence: "",
+      //   prevSectence: "result.responseMessage",
+      //   audio: "",
+      //   isLoading: false,
+      // }));
     })
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
