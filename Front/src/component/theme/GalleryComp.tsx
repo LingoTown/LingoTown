@@ -16,9 +16,9 @@ import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
-import { Barry } from '../../../public/name/gallery/Barry'
-import { Jimmy } from '../../../public/name/gallery/Jimmy'
-import { Jina } from '../../../public/name/gallery/Jina'
+import { Barry } from '../../../public/name/gallery/Barry.tsx'
+import { Jimmy } from '../../../public/name/gallery/Jimmy.tsx'
+import { Jina } from '../../../public/name/gallery/Jina.tsx'
 
 export const GalleryComp: React.FC = () => {
 

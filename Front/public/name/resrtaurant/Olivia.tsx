@@ -2,28 +2,28 @@ import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from "@react-three/fiber"
 
-export function Olivia(props) {
-  const { nodes, materials } = useGLTF('./name/Alphabat.gltf')
+export function Olivia() {
+  const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any
 
-  const O = useRef();
-  const L = useRef();
-  const I1 = useRef();
-  const V = useRef();
-  const I2 = useRef();
-  const A = useRef();
+  const O = useRef<THREE.Mesh>(null);
+  const L = useRef<THREE.Mesh>(null);
+  const I1 = useRef<THREE.Mesh>(null);
+  const V = useRef<THREE.Mesh>(null);
+  const I2 = useRef<THREE.Mesh>(null);
+  const A = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     const time = Date.now() * 0.005;
-    O.current.rotation.y = Math.sin(time) * 0.2;
-    L.current.rotation.y = Math.sin(time) * 0.2;
-    I1.current.rotation.y = Math.sin(time) * 0.2;
-    V.current.rotation.y = Math.sin(time) * 0.2;
-    I2.current.rotation.y = Math.sin(time) * 0.2;
-    A.current.rotation.y = Math.sin(time) * 0.2;
+    if (O.current) O.current.rotation.y = Math.sin(time) * 0.2;
+    if (L.current) L.current.rotation.y = Math.sin(time) * 0.2;
+    if (I1.current) I1.current.rotation.y = Math.sin(time) * 0.2;
+    if (V.current) V.current.rotation.y = Math.sin(time) * 0.2;
+    if (I2.current) I2.current.rotation.y = Math.sin(time) * 0.2;
+    if (A.current) A.current.rotation.y = Math.sin(time) * 0.2;
   });
 
   return (
-    <group {...props} dispose={null}>
+    <group dispose={null}>
       <group scale={0.01} rotation={[0, -300, 0]} position={[-7.4, 0.7, 0.42]}>
         <mesh ref={O} geometry={nodes.AO_text_0.geometry} material={materials.text} position={[-155, 0, 1]} />
         <mesh ref={L} geometry={nodes.AL_text_0.geometry} material={materials.text} position={[-282, -130, 1]} />

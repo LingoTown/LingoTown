@@ -16,9 +16,9 @@ import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
-import { Isabel } from '../../../public/name/resrtaurant/Isabel'
-import { Luke } from '../../../public/name/resrtaurant/Luke'
-import { Olivia } from '../../../public/name/resrtaurant/Olivia'
+import { Isabel } from '../../../public/name/resrtaurant/Isabel.tsx'
+import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
+import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
 
 export const RestaurantComp: React.FC = () => {
   //wall

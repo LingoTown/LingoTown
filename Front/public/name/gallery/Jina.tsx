@@ -2,24 +2,25 @@ import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from "@react-three/fiber"
 
-export function Jina(props) {
-  const { nodes, materials } = useGLTF('./name/Alphabat.gltf')
 
-  const J = useRef();
-  const I = useRef();
-  const N = useRef();
-  const A = useRef();
+export function Jina() {
+  const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any
+
+  const J = useRef<THREE.Mesh>(null);
+  const I = useRef<THREE.Mesh>(null);
+  const N = useRef<THREE.Mesh>(null);
+  const A = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     const time = Date.now() * 0.005;
-    J.current.rotation.y = Math.sin(time) * 0.2;
-    I.current.rotation.y = Math.sin(time) * 0.2;
-    N.current.rotation.y = Math.sin(time) * 0.2;
-    A.current.rotation.y = Math.sin(time) * 0.2;
+    if (J.current) J.current.rotation.y = Math.sin(time) * 0.2;
+    if (I.current) I.current.rotation.y = Math.sin(time) * 0.2;
+    if (N.current) N.current.rotation.y = Math.sin(time) * 0.2;
+    if (A.current) A.current.rotation.y = Math.sin(time) * 0.2;
   });
 
   return (
-    <group {...props} dispose={null}>
+    <group dispose={null}>
       <group scale={0.01} rotation={[0, 600, 0]} position={[-9.6, 0.3, -6]}>
         <mesh ref={J} geometry={nodes.AJ_text_0.geometry} material={materials.text} position={[-155, -85, 1]} />
         <mesh ref={I} geometry={nodes.AI_text_0.geometry} material={materials.text} position={[-22, 82, 1]} />

@@ -2,26 +2,26 @@ import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 import { useFrame } from "@react-three/fiber"
 
-export function Jimmy(props) {
-  const { nodes, materials } = useGLTF('./name/Alphabat.gltf')
+export function Jimmy() {
+  const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any;
 
-  const J = useRef();
-  const I = useRef();
-  const M1 = useRef();
-  const M2 = useRef();
-  const Y = useRef();
+  const J = useRef<THREE.Mesh>(null);
+  const I = useRef<THREE.Mesh>(null);
+  const M1 = useRef<THREE.Mesh>(null);
+  const M2 = useRef<THREE.Mesh>(null);
+  const Y = useRef<THREE.Mesh>(null);
 
   useFrame(() => {
     const time = Date.now() * 0.005;
-    J.current.rotation.y = Math.sin(time) * 0.2;
-    I.current.rotation.y = Math.sin(time) * 0.2;
-    M1.current.rotation.y = Math.sin(time) * 0.2;
-    M2.current.rotation.y = Math.sin(time) * 0.2;
-    Y.current.rotation.y = Math.sin(time) * 0.2;
+    if (J.current) J.current.rotation.y = Math.sin(time) * 0.2;
+    if (I.current) I.current.rotation.y = Math.sin(time) * 0.2;
+    if (M1.current) M1.current.rotation.y = Math.sin(time) * 0.2;
+    if (M2.current) M2.current.rotation.y = Math.sin(time) * 0.2;
+    if (Y.current) Y.current.rotation.y = Math.sin(time) * 0.2;
   });
 
   return (
-    <group {...props} dispose={null}>
+    <group dispose={null}>
       <group scale={0.01} rotation={[0, 300, 0]} position={[7, 0, -0.6]}>
         <mesh ref={J} geometry={nodes.AJ_text_0.geometry} material={materials.text} position={[-155, -85, 1]} />
         <mesh ref={I} geometry={nodes.AI_text_0.geometry} material={materials.text} position={[-22, 82, 1]} />
