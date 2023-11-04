@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { Polygonia } from "../../../public/map/polygonia/Polygonia";
+import { Polygonia } from "../../../public/map/Polygonia";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { useRecoilState } from "recoil";
 import { startTalk} from "../../api/Talk";
