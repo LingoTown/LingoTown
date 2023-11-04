@@ -139,16 +139,16 @@ export const PlayerMove = (playerRef: any, playerApi: any,  keysPressed: any, ca
 
         // Back Wall
         if(direction == "B")
-            oppositePosition.z += 0.5;
+            oppositePosition.z += 0.005;
         // Right Wall
         else if(direction == "R")
-            oppositePosition.x -= 0.5;
+            oppositePosition.x -= 0.005;
         // Front Wall
         else if(direction == "F")
-            oppositePosition.z -= 0.5;  
+            oppositePosition.z -= 0.005;  
         // Left Wall
         else if(direction == "L")
-            oppositePosition.x += 0.5;
+            oppositePosition.x += 0.005;
       }
 
       playerApi.position.set(oppositePosition.x, oppositePosition.y, oppositePosition.z);
