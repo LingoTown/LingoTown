@@ -103,7 +103,7 @@ export const ParkComp: React.FC = () => {
     { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
     { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
     { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
-    { id: 16, name: "lia", targetPosition: liaPosition, targetRotation:liaRotation, ref: liaCircleRef },
+    { id: 16, name: "bonnie", targetPosition: liaPosition, targetRotation:liaRotation, ref: liaCircleRef },
   ];
 
   // state
