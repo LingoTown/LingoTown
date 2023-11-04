@@ -9,7 +9,7 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { Park } from '../../../public/map/park/Park';
+import { Park } from '../../../public/map/Park';
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
@@ -19,26 +19,31 @@ import { useCylinder, useSphere } from '@react-three/cannon'
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 
 export const ParkComp: React.FC = () => {
-
   //wall
   const container = [
-    { size: [80, 2, 40], position: [-15, -1.1, 0], wallKey: 'BF1', name: 'floor', mass:0}, // bottom floor
+    { size: [81, 2, 40], position: [-15, -1.1, 0], wallKey: 'BF1', name: 'floor', mass:0}, // bottom floor
     { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
-    { size: [3, 27, 40], position: [23, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
+    { size: [3, 27, 40], position: [22, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
     { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
     { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
+
+    // 축구장 벽
+    { size: [37, 10, 0.1], position: [2, 1, -12], wallKey: 'BW2', name: 'wall', mass:0}, // back wall 
+    { size: [45, 10, 0.5], position: [1, 1, 12.5], wallKey: 'FW2', name: 'wall', mass:0}, // front wall
+    { size: [0.5, 10, 22], position: [-22, 1, 1.5], wallKey: 'RW2',  name: 'wall', mass:0}, //right wall
+    { size: [0.5, 10, 22], position: [-21, 1, 1.5], wallKey: 'LW2',  name: 'wall', mass:0}, //left wall
   ];
 
   // player
   const playerFile = useGLTF("./player/m_1.glb");
   //Player cannon
-  const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);
+  const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);    
   const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0,0.1],
+    args:[0.5,0.1,1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
     allowSleep:true,
@@ -61,12 +66,13 @@ export const ParkComp: React.FC = () => {
   const jerryActions = useAnimations(jerryFile.animations, jerryFile.scene).actions;
 
   const sanhaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb");
-  const sanhaPosition = new THREE.Vector3(-27, 1, -2);
+  const sanhaRef = useRef<THREE.Object3D | undefined>();
+  const sanhaPosition = new THREE.Vector3(sanhaRef.current?.position.x===undefined?-50:sanhaRef.current?.position.x-2, 1, sanhaRef.current?.position.z);
   const sanhaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
   const sanhaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaAction = useRef<AnimationAction>();
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
-  const sanhaRef = useRef<THREE.Object3D | undefined>();
+  const [sanhaTalk, setSanhaTalk] = useState(false);
 
   const marcoFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb");
   const marcoPosition = new THREE.Vector3(-10, 1, 6);
@@ -75,12 +81,19 @@ export const ParkComp: React.FC = () => {
   const marcoAction = useRef<AnimationAction>();
   const marcoActions = useAnimations(marcoFile.animations, marcoFile.scene).actions;
 
-  const soccerBallFile = useGLTF("../../public/objects/soccerBall/scene.gltf");
+  const liaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb");
+  const liaPosition = new THREE.Vector3(-43, 1, 2);
+  const liaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const liaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const liaAction = useRef<AnimationAction>();
+  const liaActions = useAnimations(liaFile.animations, liaFile.scene).actions;
+
+  const soccerBallFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/SoccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
-    position: [-10, 0, 5],
-    rotation: [0, 0, 0],
-    args: [0.3], // Adjust the size of the cylinder as needed
+    position: [-10, 1, 5],
+    rotation: [0, Math.PI/2, 0],
+    args: [0.2], // Adjust the size of the cylinder as needed
     friction: 0.5, // Adjust the friction as needed
     restitution: 0.7, // Adjust the restitution (bounciness) as needed
   }));
@@ -90,6 +103,7 @@ export const ParkComp: React.FC = () => {
     { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
     { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
     { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
+    { id: 16, name: "bonnie", targetPosition: liaPosition, targetRotation:liaRotation, ref: liaCircleRef },
   ];
 
   // state
@@ -122,10 +136,11 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
-    SetAction('Victory', activeAction, actions, playerRef);
+    SetAction('Defeat', activeAction, actions, playerRef);
     SetAction('Victory', jerryAction, jerryActions, null);
     SetAction('Run', sanhaAction, sanhaActions, null);
     SetAction('Run', marcoAction, marcoActions, null);
+    SetAction('Walk', liaAction, liaActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -151,6 +166,10 @@ export const ParkComp: React.FC = () => {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
+          if(npc == "sanha"){ //산하랑 말하면 산하 행동 멈추기
+            setSanhaTalk(true);
+            if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
+          }
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
             animate();
@@ -170,6 +189,13 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     isMove.current = !talkBalloon.isShow;
+
+    if(sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
+      setSanhaTalk(false);
+      if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
+        sanhaRef.current.rotation.y = 1.5;
+      }
+    }
   }, [talkBalloon.isShow])
 
   useEffect(() => {
@@ -177,34 +203,36 @@ export const ParkComp: React.FC = () => {
   }, [talkBalloon.isMove])
 
   //sanha run movement
-  useFrame((state) => {
-    let newX = -50;
-    if (sanhaRef.current && sanhaCircleRef.current) {
-      newX += state.clock.elapsedTime * 5;
-  
-      if (newX >= -25) {
-        sanhaRef.current.position.x = -25;
-        sanhaCircleRef.current.position.x = -25;
-  
+  useFrame(() => {
+    if (sanhaTalk == false && sanhaRef.current && sanhaCircleRef.current) {
+      if(sanhaRef.current.position.x >= -25) {//목표 지점 도달
+        
         // Smooth rotation transition
-        const rotationProgress = (newX + 25) / 25; // Value between 0 and 1
-        const rotationY = 1.5 + rotationProgress * 3; // Adjust the factor for rotation speed
-        sanhaRef.current.rotation.y = rotationY;
-  
+        const rotationY = 1.5 + 0.1 * 3; // Adjust the factor for rotation speed
+
         // Stop rotating when reaching the desired rotation
-        if (rotationProgress >= 1) {
+        if (sanhaRef.current.rotation.y >= 1) { //1.5로 달리다가 -1.5가 됨
           sanhaRef.current.rotation.y = -1.5;
-        }else if(sanhaRef.current.rotation.y == -1.5){
-          sanhaRef.current.position.x = newX;
-          sanhaCircleRef.current.position.x = newX;
+        }else if(sanhaRef.current.rotation.y == -1.5){ //여기도 있어야함
+          sanhaRef.current.position.x -= 0.03; //달리기 속도 조절
+          sanhaCircleRef.current.position.x = sanhaRef.current.position.x;
+        }else{       
+          sanhaRef.current.rotation.y = rotationY;
         }
-      } else {
-        sanhaRef.current.position.x = newX;
-        sanhaCircleRef.current.position.x = newX;
+          
+      }
+      else if(sanhaRef.current.position.x < -25 && sanhaRef.current.rotation.y == 1.5){
+        sanhaRef.current.position.x += 0.03; //달리기 속도 조절
+        sanhaCircleRef.current.position.x = sanhaRef.current.position.x;
+      }else if(sanhaRef.current.rotation.y == -1.5){//돌았을 때, sanhaRef.current.rotation.y == -1.5 일 때
+        if(sanhaRef.current.position.x <= -50){
+          sanhaRef.current.rotation.y = 1.5;
+        }
+        sanhaRef.current.position.x -= 0.03; //달리기 속도 조절
+        sanhaCircleRef.current.position.x = sanhaRef.current.position.x;
       }
     }
   });
-  
 
 
   return(
@@ -215,7 +243,7 @@ export const ParkComp: React.FC = () => {
       </group>
 
       <STTAndRecord lang={LANGUAGE} />
-      <primitive scale={1}  ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+      <primitive scale={1} visible={!talkBalloon.isShow} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Park/>
       <Environment blur={1} background preset="sunset" />
 
@@ -237,6 +265,12 @@ export const ParkComp: React.FC = () => {
       </Circle>
       <primitive scale={1} position={[-10, 0, 8]} rotation={[0, 3, 0]} object={marcoFile.scene} />
     
+      {/* lia */}
+      <Circle ref={liaCircleRef} args={[3, 32]} position={[-45, 0, 2]} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+      </Circle>
+      <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={liaFile.scene}/>
+      
       {/* soccerBall */}
       <primitive ref={soccerBallRef} scale={0.3} position={[-10, 0, 5]} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
     </>
