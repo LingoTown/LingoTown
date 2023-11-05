@@ -17,7 +17,8 @@ const AppNotFound = () => {
               <p className="text-gray-500 mb-6 font-semibold">죄송합니다. 요청하신 페이지를 찾을 수 없습니다.</p>
               <a 
                 onClick={() => { navigate("/") }}
-                className="text-center block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-10 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105"
+                style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                className="text-center block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-10 py-2 rounded-full shadow-md transition transform hover:scale-105"
               >
                 로그인페이지로 돌아가기
               </a>

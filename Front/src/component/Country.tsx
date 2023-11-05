@@ -34,14 +34,14 @@ function Country(props:myListProps) {
                     update[i] = !update[i];
                     setToggle(update); 
                     setBox(update);
-                }} className="cursor-pointer rotate-90 material-icons text-[1.8rem]">play_arrow</span> 
+                }} className="rotate-90 material-icons text-[1.8rem]">play_arrow</span> 
                 :
                 <span onClick={()=>{
                     const update = [...openToggle];
                     update[i] = !update[i];
                     setToggle(update);
                     setBox(update);
-                }} className="cursor-pointer material-icons text-[1.8rem]">play_arrow</span>
+                }} className="material-icons text-[1.8rem]">play_arrow</span>
             } 
             &nbsp;
            <span className="font-['passero-one'] font-[30] text-[2rem]">{key}</span>
@@ -49,7 +49,7 @@ function Country(props:myListProps) {
             {
                 openBox[i]?
                 val.map((arr)=>(
-                    <div className="flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/40 rounded-lg">
+                    <div className="flex mx-5 mb-2 hover:bg-[#fff]/40 rounded-lg">
                     <div className="w-full px-5 py-3 bg-[#ddd]/70 rounded-lg flex flex-row place-content-between items-center">
                         <div className="flex items-center">
 													<img className="mr-3 w-[3.3rem] h-[3.3rem] rounded-full" src={arr.npcImage} alt="" />

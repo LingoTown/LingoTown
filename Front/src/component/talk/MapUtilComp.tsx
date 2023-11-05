@@ -30,6 +30,7 @@ export const MapUtilComp = () => {
     <div className='justify-center flex'>
       <div className="absolute top-0 left-0 z-10 mt-2 ml-2">
         <button
+          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
           onClick={ exit }
         >Back To Main</button>
@@ -40,11 +41,13 @@ export const MapUtilComp = () => {
           <div className="border-[0.5px] border-white w-full rounded-lg h-full p-1 px-3 flex flex-col">
             <div className="text-[#333] font-['passero-one'] text-[1.5rem] self-center mb-0">Quest List</div>
             <div className="text-[#333] text-[0.8rem] self-center mb-1">*각 질문을 클릭하여 정답을 입력해주세요</div>
-            <div onClick={async()=>{
+            <div
+            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            onClick={async()=>{
               console.log("click");
               const flag = await customPrompt("정답을 입력해주세요", "");
               console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
+            }} className="mb-1 flex items-center gap-2 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
               <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
               {
                 correct[0]?
@@ -57,11 +60,13 @@ export const MapUtilComp = () => {
                 </span>
               }
             </div>
-            <div onClick={async()=>{
+            <div
+            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            onClick={async()=>{
               console.log("click");
               const flag = await customPrompt("정답을 입력해주세요", "");
               console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
+            }} className="mb-1 flex items-center gap-2 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
               <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
               {
                 correct[1]?
@@ -91,10 +96,12 @@ export const MapUtilComp = () => {
       
       <div className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-2">
         <button
+          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
           onClick={() => customPrompt("Info", "해당 테마의 정보를 확인 할 수 있습니다.")}
         >Info</button>
         <button 
+          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
           onClick={() => {setOpenQ(!openQ)}}
         >My Quest</button>

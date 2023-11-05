@@ -121,7 +121,7 @@ const MainPage = () => {
       <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
           
-          <div className="mr-8 cursor-pointer" onClick={() => {
+          <div className="mr-8" onClick={() => {
             navigate("/departurePage");
           }}>Close</div>
         </div>
@@ -133,7 +133,7 @@ const MainPage = () => {
                   <input className="hidden" onChange={(e)=>{handleProfileImg(e)}} type="file" id="myInput"/>
                   <img className="w-full h-full rounded-full object-cover mt-5 self-center " alt="User Profile" src={user.profileImg}/>
                   <span className="rounded-full bg-[#ddd]"></span>
-                  <span onClick={editPic} className="bg-[#ababab] rounded-full p-1 absolute -bottom-2 -right-0 material-icons cursor-pointer">edit</span>
+                  <span onClick={editPic} className="bg-[#ababab] rounded-full p-1 absolute -bottom-2 -right-0 material-icons">edit</span>
                 </div>
                 <div className='flex-1 mt-10 ml-20' >
                   {
@@ -150,7 +150,7 @@ const MainPage = () => {
                   <div>Account : {user.social}</div>
                   <div>({user.email})</div>
                 </div>
-                <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem] cursor-pointer " >
+                <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
                   <div className="hover:text-[2rem]" onClick={logout}>Logout</div>
                   <div className="hover:text-[2rem]" onClick={deleteAccount}>Delete Account</div>
                 </div>
