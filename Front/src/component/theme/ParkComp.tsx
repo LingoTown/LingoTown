@@ -21,7 +21,6 @@ import { Sanha } from '../../../public/name/park/Sanha.tsx';
 import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
 import { Jerry } from '../../../public/name/park/Jerry.tsx';
 import { Marco } from '../../../public/name/park/Marco.tsx';
-// import { Jaden } from '../../../public/name/Jaden';
  
 export const ParkComp: React.FC = () => {
   //wall
@@ -40,7 +39,7 @@ export const ParkComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF("./player/m_1.glb");
+  const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Player/m_1.glb");
   //Player cannon
   const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);    
   const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
@@ -209,7 +208,6 @@ export const ParkComp: React.FC = () => {
 
   //sanha run movement
   useFrame(() => {
-    // console.log(sanhaNameRef.current);
     if (sanhaTalk == false && sanhaRef.current && sanhaCircleRef.current) {
       if(sanhaRef.current.position.x >= -25) {//목표 지점 도달
         
@@ -275,7 +273,6 @@ export const ParkComp: React.FC = () => {
       <primitive scale={1} position={[-10, 0, 8]} rotation={[0, 3, 0]} object={marcoFile.scene} />
     
       {/* bonnie */}
-      {/* <Jaden position={[0,0.5,0]}/> */}
       <Circle ref={bonnieCircleRef} args={[3, 32]} position={[-45, 0.1, 2]} rotation={[-Math.PI / 2, 0, 0]} >
         <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
         <Bonnie position={[7, 0.7, 0]} rotation={[Math.PI / 2, Math.PI, 0]} />
