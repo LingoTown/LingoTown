@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function Luke() {
-  const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any;
+  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/Name/Alphabat.gltf') as any;
 
   const L = useRef<THREE.Mesh>(null);
   const U = useRef<THREE.Mesh>(null);
@@ -29,5 +29,3 @@ export function Luke() {
     </group>
   )
 }
-
-useGLTF.preload('/scene.gltf')
