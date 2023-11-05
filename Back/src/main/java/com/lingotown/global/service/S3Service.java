@@ -23,7 +23,7 @@ public class S3Service {
 
     public String uploadFile(MultipartFile multipartFile) throws IOException {
 
-        String s3FileName = UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
+        String s3FileName = "Record/" + UUID.randomUUID() + "_" + multipartFile.getOriginalFilename();
 
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentType(multipartFile.getContentType());
