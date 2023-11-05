@@ -16,6 +16,9 @@ import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { Wall } from '../util/block/Wall';
+import { DaenName } from '../../../public/name/eventhall/Daen.tsx'
+import { JadenName } from '../../../public/name/eventhall/Jaden.tsx'
+import { KevinName } from '../../../public/name/eventhall/Kevin.tsx'
 
 /* 
     EventHall의 특징 : 
@@ -134,13 +137,13 @@ export const EventHallComp: React.FC = () => {
         { size: [13, 2, 8], position: [14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF5', name: 'floor', mass:0},
 
         // 무대 계단 2층
-        { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF3', name: 'floor', mass:0},
+        { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF6', name: 'floor', mass:0},
         // 무대 계단 1층
-        { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF4', name: 'floor', mass:0},
+        { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF7', name: 'floor', mass:0},
         // 무대 바닥 왼쪽 계단 레이어
-        { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF5', name: 'floor', mass:0},
+        { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF8', name: 'floor', mass:0},
         // 무대 바닥 오른쪽 계단 레이어
-        { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF6', name: 'floor', mass:0},
+        { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF9', name: 'floor', mass:0},
 
         /* 벽 */
 
@@ -153,26 +156,26 @@ export const EventHallComp: React.FC = () => {
         // 무대 뒤 뒷벽 대각선 왼쪽
         { size: [17.5, 10, 0.8], position: [-15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
         // 무대 뒤 옆벽 대각선 왼쪽
-        { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
+        { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW1', name: 'wall', mass:0}, 
         // 무대 뒤 앞벽 대각선 오른쪽
-        { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW2', name: 'wall', mass:0}, 
+        { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW3', name: 'wall', mass:0}, 
         // 무대 뒤 뒷벽 대각선 오른쪽
-        { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
+        { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW3', name: 'wall', mass:0}, 
         // 무대 뒤 옆벽 대각선 오른쪽
         { size: [1, 10, 1.6], position: [22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
         
         // 전체 맵 뒷벽
-        { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW2', name: 'wall', mass:0}, 
+        { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW4', name: 'wall', mass:0}, 
         // 전체 맵 왼벽
-        { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW2', name: 'wall', mass:0}, 
+        { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW1', name: 'wall', mass:0}, 
         // 전체 맵 오른벽
-        { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW2', name: 'wall', mass:0}, 
+        { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW3', name: 'wall', mass:0}, 
         // 전체 맵 앞벽
-        { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW2', name: 'wall', mass:0},
+        { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW4', name: 'wall', mass:0},
     ];
     
     /* Value */
-    const playerPosition = [0.25, 0, 5];
+    const playerPosition = [0.25, 0, 28];
     const playerRotation = [0, 3.15, 0];
 
     // 캐릭터 불러오기
@@ -216,8 +219,8 @@ export const EventHallComp: React.FC = () => {
     const npcInfoList: NpcInfo[] = [
         { id: Jayden.npcId, name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
         { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
-    ];   
-
+    ]; 
+    
     /* useState */
     const setTalkState = useSetRecoilState(talkStateAtom);
     // 대화창
@@ -355,6 +358,10 @@ export const EventHallComp: React.FC = () => {
             {/* 맵 */}
             <EventHall />
 
+            <DaenName />
+            <JadenName />
+            <KevinName />
+
             {/* 조명 */}
             <Environment blur={1} background preset="sunset" />
 
@@ -386,7 +393,7 @@ export const EventHallComp: React.FC = () => {
                         /> ) 
                 }
             </group>
-
+            
             {/* <axesHelper scale={100} /> */}
         </>
     )
