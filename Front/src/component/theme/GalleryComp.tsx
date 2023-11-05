@@ -19,6 +19,7 @@ import { useCylinder } from '@react-three/cannon'
 import { Barry } from '../../../public/name/gallery/Barry.tsx'
 import { Jimmy } from '../../../public/name/gallery/Jimmy.tsx'
 import { Jina } from '../../../public/name/gallery/Jina.tsx'
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
 
 export const GalleryComp: React.FC = () => {
 
@@ -79,6 +80,7 @@ export const GalleryComp: React.FC = () => {
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const setTalkState = useSetRecoilState(talkStateAtom);
   const isMove = useRef(true);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
@@ -110,6 +112,9 @@ export const GalleryComp: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    if(loading) setLoading(() => ({loading:false}));
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
