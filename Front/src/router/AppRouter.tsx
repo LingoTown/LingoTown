@@ -15,6 +15,7 @@ import { EventHallComp } from "../component/theme/EventHallComp";
 import { GalleryComp } from "../component/theme/GalleryComp";
 import DeparturePage from "../pages/DeparturePage";
 import { AuthRouter } from "../router/AuthRouter";
+import LoadingPage from "../pages/LoadingPage";
 
 
 export const AppRouter = () => {
@@ -37,6 +38,7 @@ export const AppRouter = () => {
             <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
             <Route path="/departurePage" element={ <DeparturePage/> }/>
             <Route path="/themePage" element={ <ThemePage />} />
+            <Route path="/loading" element={ <LoadingPage />} />
           </Route>
 
           <Route path="/*" element={ <NotFound/> }/>
