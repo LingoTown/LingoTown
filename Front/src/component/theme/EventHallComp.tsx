@@ -358,10 +358,6 @@ export const EventHallComp: React.FC = () => {
             {/* 맵 */}
             <EventHall />
 
-            <DaenName />
-            <JadenName />
-            <KevinName />
-
             {/* 조명 */}
             <Environment blur={1} background preset="sunset" />
 
@@ -382,6 +378,11 @@ export const EventHallComp: React.FC = () => {
 
             {/* 말풍선 */}
             { talkBalloon.isShow? <STTAndRecord lang={ LANGUAGE } /> : null }
+
+            {/* 이름 */}
+            <DaenName />
+            <JadenName />
+            <KevinName />
 
             {/* 벽 / 바닥 */}
             <group>
