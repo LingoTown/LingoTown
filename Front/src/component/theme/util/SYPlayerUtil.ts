@@ -54,7 +54,7 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
         if (playerRef.current.isJumping || playerRef.current.position.y > 0) {
         
             // 점프 중력 효과
-            playerRef.current.velocity.y -= 9.81 * deltaTime;
+            playerRef.current.velocity.y -= 15.81 * deltaTime;
 
             // 위치 업데이트
             playerRef.current.position.y += playerRef.current.velocity.y * deltaTime;
