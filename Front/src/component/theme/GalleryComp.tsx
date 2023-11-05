@@ -8,7 +8,7 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { Gallery } from "../../../public/map/gallery/Gallery";
+import { Gallery } from "../../../public/map/Gallery.jsx";
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { SetAction, PlayerMove } from "./util/PlayerMoveUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
