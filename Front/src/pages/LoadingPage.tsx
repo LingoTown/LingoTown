@@ -31,10 +31,10 @@ const LoadingPage = () => {
         <div>
           <h1 className="text-5xl font-bold text-[#fff] font-['passero-one'] pb-5">Explore New Language with</h1>
           <h2 className="text-8xl mt-2 font-extrabold text-[#FFE58A] font-['passero-one']">LingoTown</h2>
-          <img className='absolute top-[310px] left-[1000px] w-[50px]' src='https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Effect/shineEffect.png'/>
+          <img className='ml-[520px] mt-[-120px]' src='https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Effect/shineEffect.png'/>
         </div>
       </div>
-      <div className="z-30 mt-10">
+      <div className="z-30 mt-[100px]">
         <Lottie animationData={progress} />
       </div>
     </div>
