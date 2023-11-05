@@ -353,48 +353,6 @@ export const EventHallComp: React.FC = () => {
         CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
     });
 
-    const highTableData: NPCData = {
-        id: 0,
-        name: "highTable",
-        path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/HighTable/scene.gltf",
-        position: [0.25, 0, 22],
-        rotation: [0, 0, 0],
-        scale: 1.5,
-        cameraPosition: [17.00, 1.90, -1.40],
-        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
-        circleArgs: [3, 32],
-        circlePosition: [0.25, 0, 22],
-        circleRotation: [90, 0, 0],
-        circleAttach: "material",
-        circleColor: "red",
-        circleEmissive: "red",
-        circleEmissiveIntensity: 5,
-        circleSide: THREE.DoubleSide,
-        circleTransparent: true,
-        circleOpacity: 0.2
-    }
-
-    const beamProjectorData: NPCData = {
-        id: 0,
-        name: "beamProjector",
-        path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/BeamProjector/scene.gltf",
-        position: [0.25, 1.9, 22],
-        rotation: [THREE.MathUtils.degToRad(180), 0, 0],
-        scale: 1.5,
-        cameraPosition: [17.00, 1.90, -1.40],
-        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
-        circleArgs: [3, 32],
-        circlePosition: [0.25, 0, 22],
-        circleRotation: [90, 0, 0],
-        circleAttach: "material",
-        circleColor: "red",
-        circleEmissive: "red",
-        circleEmissiveIntensity: 5,
-        circleSide: THREE.DoubleSide,
-        circleTransparent: true,
-        circleOpacity: 1
-    }
-
     return(
         <>
             {/* 맵 */}
