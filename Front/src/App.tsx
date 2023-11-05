@@ -18,8 +18,8 @@ import Cursor from "./component/util/Cursor";
 
 const App = () => {
   return (
-    <>
-      <Cursor/>
+    <div style={{ cursor: `url('/navigation_small.png'), url('/navigation_small.png')` }}>
+      {/* <Cursor/> */}
       <BrowserRouter>
         <Routes>
           <Route path="/" element={ <LoginPage/> }/>
@@ -37,7 +37,7 @@ const App = () => {
           <Route path="/themePage" element={<ThemePage />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </div>
   )
 }
 

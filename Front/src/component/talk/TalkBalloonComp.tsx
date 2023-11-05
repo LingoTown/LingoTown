@@ -106,7 +106,7 @@ export const TalkBalloonComp = () => {
               {
                 talkBalloon.topicList.map((value, index) => {
                  return(
-                  <div key={index} className="mb-2 p-2 bg-white rounded-lg shadow-inner font-bolder font-['passero-one'] text-xl cursor-pointer hover:bg-gray-200" 
+                  <div key={index} className="mb-2 p-2 bg-white rounded-lg shadow-inner font-bolder font-['passero-one'] text-xl hover:bg-gray-200" 
                     onClick={() => { selectTopic(value) }}
                   >{value.keyword}</div>
                  ) 

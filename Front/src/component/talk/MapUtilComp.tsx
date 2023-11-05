@@ -44,7 +44,7 @@ export const MapUtilComp = () => {
               console.log("click");
               const flag = await customPrompt("정답을 입력해주세요", "");
               console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
+            }} className="mb-1 flex items-center gap-2 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
               <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
               {
                 correct[0]?
@@ -61,7 +61,7 @@ export const MapUtilComp = () => {
               console.log("click");
               const flag = await customPrompt("정답을 입력해주세요", "");
               console.log(flag);
-            }} className="mb-1 flex items-center gap-2 cursor-pointer hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
+            }} className="mb-1 flex items-center gap-2 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg">
               <div>1. 가장 주력 메뉴가 무엇인지, 오늘의 음식을 추천 받아보세요!</div>
               {
                 correct[1]?

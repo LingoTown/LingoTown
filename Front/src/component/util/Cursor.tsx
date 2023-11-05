@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import { motion } from 'framer-motion';
 
 
@@ -7,7 +7,6 @@ const Cursor = () => {
       x:0,
       y:0
   });
-  console.log(mousePosition);
 
   useEffect(()=>{
     // 마우스 위치 추적 -> cursor 따라가기
@@ -26,14 +25,14 @@ const Cursor = () => {
 
   const variants = {
     default: {
-      x: mousePosition.x - 20,
-      y: mousePosition.y - 20
-    }
+    x: mousePosition.x - 20,
+    y: mousePosition.y - 20
+  }
   }
   return (
     <motion.div 
-      className="z-20 h-10 w-10 fixed top-0 left-0"
-      style={{ backgroundImage: `url('../../../navigation.png')`, backgroundSize: 'cover' }}
+      className="z-20 h-10 w-10 fixed top-0 left-0 pointer-events-none"
+      style={{ backgroundImage: `url('/navigation.png')`, backgroundSize: 'cover' }}
       variants={variants}
       animate="default"
     />
