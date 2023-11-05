@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function Bonnie(props:any) {
-  const { nodes, materials } = useGLTF('./name/Alphabat.gltf') as any;
+  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/Name/Alphabat.gltf') as any;
 
   // 각 mesh에 대한 참조를 생성합니다.
   const B = useRef<THREE.Mesh>(null);
@@ -41,5 +41,3 @@ export function Bonnie(props:any) {
     </group>
   )
 }
-
-useGLTF.preload('/scene.gltf')
