@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -17,6 +16,9 @@ import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
+import { Isabel } from '../../../public/name/resrtaurant/Isabel.tsx'
+import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
+import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
 
 export const RestaurantComp: React.FC = () => {
   //wall
@@ -168,6 +170,10 @@ export const RestaurantComp: React.FC = () => {
       </group>
 
       { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
+
+      <Isabel />
+      <Luke />
+      <Olivia />
       <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
       <Restaurant/>
       <Environment blur={1} background preset="sunset" />

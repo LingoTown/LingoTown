@@ -16,6 +16,9 @@ import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { Wall } from '../util/block/Wall';
+import { DaenName } from '../../../public/name/eventhall/Daen.tsx'
+import { JadenName } from '../../../public/name/eventhall/Jaden.tsx'
+import { KevinName } from '../../../public/name/eventhall/Kevin.tsx'
 
 /* 
     EventHall의 특징 : 
@@ -396,6 +399,10 @@ export const EventHallComp: React.FC = () => {
         <>
             {/* 맵 */}
             <EventHall />
+
+            <DaenName />
+            <JadenName />
+            <KevinName />
 
             {/* 조명 */}
             <Environment blur={1} background preset="sunset" />
