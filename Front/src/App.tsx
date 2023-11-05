@@ -14,26 +14,30 @@ import { ParkComp } from "./component/theme/ParkComp";
 import { EventHallComp } from "./component/theme/EventHallComp";
 import { GalleryComp } from "./component/theme/GalleryComp";
 import DeparturePage from "./pages/DeparturePage";
+import Cursor from "./component/util/Cursor";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={ <LoginPage/> }/>
-        <Route path="/main" element={ <MainPage/> }></Route>
-        <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
-        <Route path="/google/callback" element={ <GoogleCallback/> }/>
-        <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
-        <Route path="/polygonia" element={ <CanvasPage theme={ <PolygoniaComp/> }/> }/>
-        <Route path="/introduce" element={ <IntroducePage theme={ <IntroduceComp/> }/> }/>
-        <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
-        <Route path="/eventhall" element={ <CanvasPage theme={ <EventHallComp/> }/> }/>
-        <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
-        <Route path="/*" element={ <NotFound/> }/>
-        <Route path="/departurePage" element={ <DeparturePage/> }/>
-        <Route path="/themePage" element={<ThemePage />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <Cursor/>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={ <LoginPage/> }/>
+          <Route path="/main" element={ <MainPage/> }></Route>
+          <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
+          <Route path="/google/callback" element={ <GoogleCallback/> }/>
+          <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
+          <Route path="/polygonia" element={ <CanvasPage theme={ <PolygoniaComp/> }/> }/>
+          <Route path="/introduce" element={ <IntroducePage theme={ <IntroduceComp/> }/> }/>
+          <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
+          <Route path="/eventhall" element={ <CanvasPage theme={ <EventHallComp/> }/> }/>
+          <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
+          <Route path="/*" element={ <NotFound/> }/>
+          <Route path="/departurePage" element={ <DeparturePage/> }/>
+          <Route path="/themePage" element={<ThemePage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   )
 }
 

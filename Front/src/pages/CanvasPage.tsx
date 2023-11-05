@@ -6,6 +6,7 @@ import { MapUtilComp } from "../component/talk/MapUtilComp";
 import { Physics } from '@react-three/cannon';
 // import { Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
+import Cursor from "../component/util/Cursor";
 
 interface CanvasPage {
   theme: JSX.Element;
@@ -22,6 +23,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
       :
       <MapUtilComp />
     }
+      {/* <Cursor/> */}
       <Canvas style={{ height:"100vh" }}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
           {/* <Debug scale={1} color='green'> */}
