@@ -1,29 +1,26 @@
 package com.lingotown.global.util;
 
-import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
-import com.lingotown.domain.talk.dto.request.PronunciationReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
-import com.lingotown.domain.talk.dto.response.PronunciationResDto;
-import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.dto.response.speechace.PronunciationResDto;
+import com.lingotown.domain.talk.dto.response.speechace.SpeechScoreResDto;
+import com.lingotown.domain.talk.entity.TalkDetail;
 import com.lingotown.global.config.WebClientConfig;
-import com.lingotown.global.exception.CustomException;
-import com.lingotown.global.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 
 @Slf4j
@@ -33,22 +30,22 @@ public class WebClientUtil {
 
     private final WebClientConfig webClientConfig;
 
-    public <T> T get(String url, Class<T> responseDtoClass) {
-        return webClientConfig.webClient().method(HttpMethod.GET)
-                .uri(url)
-                .retrieve()
-                .bodyToMono(responseDtoClass)
-                .block();
-    }
-
-    public <T, V> Mono<T> post(String url, V requestDto, Class<T> responseDtoClass) {
-
-        return webClientConfig.webClient().method(HttpMethod.POST)
-                .uri(url)
-                .bodyValue(requestDto)
-                .retrieve()
-                .bodyToMono(responseDtoClass);
-    }
+//    public <T> T get(String url, Class<T> responseDtoClass) {
+//        return webClientConfig.webClient().method(HttpMethod.GET)
+//                .uri(url)
+//                .retrieve()
+//                .bodyToMono(responseDtoClass)
+//                .block();
+//    }
+//
+//    public <T, V> Mono<T> post(String url, V requestDto, Class<T> responseDtoClass) {
+//
+//        return webClientConfig.webClient().method(HttpMethod.POST)
+//                .uri(url)
+//                .bodyValue(requestDto)
+//                .retrieve()
+//                .bodyToMono(responseDtoClass);
+//    }
 
     public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
 
@@ -82,25 +79,45 @@ public class WebClientUtil {
     }
 
 
-    public Mono<PronunciationResDto> checkPronunciationAsync(String speechKey, String language, String speechUrl, TalkReqDto talkReqDto) {
+    public Mono<PronunciationResDto> checkPronunciationAsync(String speechKey, String speechUrl, String language, TalkReqDto talkReqDto) throws IOException {
 
-        PronunciationReqDto reqDto = PronunciationReqDto
-                .builder()
-                .text(talkReqDto.getPrompt())
-                .user_audio_file(talkReqDto.getTalkFile())
-                .build();
+        if (!talkReqDto.getTalkFile().isEmpty()) {
+            MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
 
+            bodyBuilder.part("user_audio_file",talkReqDto.getTalkFile().getResource());
+            bodyBuilder.part("question_info", "u1/q1");
+            bodyBuilder.part("include_ielts_feedback", "1");
 
-        return webClientConfig.webClient().post()
-                .uri(uriBuilder -> uriBuilder
-                        .path(speechUrl)
-                        .queryParam("key", speechKey)
-                        .queryParam("dialect", language)
-                        .build()
-                )
-                .body(BodyInserters.fromValue(reqDto))
-                .retrieve()
-                .bodyToMono(PronunciationResDto.class);
+            System.out.println("user_audio_file : " + Arrays.toString(talkReqDto.getTalkFile().getBytes()));
+
+            String fullUrl = UriComponentsBuilder
+                    .fromUriString(speechUrl)
+                    .queryParam("key", speechKey)
+                    .queryParam("dialect", language)
+                    .build()
+                    .toUriString();
+
+            Mono<PronunciationResDto> pronunciationResDto = webClientConfig.webClient().post()
+                    .uri(fullUrl)
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(bodyBuilder.build()))
+                    .retrieve()
+                    .bodyToMono(PronunciationResDto.class);
+
+            pronunciationResDto.subscribe(pronunciationResDtoValue -> {
+                System.out.println("Pronunciation response: " + pronunciationResDtoValue);
+            }, error -> {
+                error.printStackTrace();
+            });
+
+            return pronunciationResDto;
+        } else {
+            // 파일이 비어있는 경우 오류를 처리합니다.
+            System.err.println("The file is empty or not present");
+            return Mono.error(new IllegalStateException("The file is empty or not present"));
+        }
+
     }
+
 
 }
