@@ -8,6 +8,7 @@ Title: venue stage for great events
 */
 
 import React, { useRef, useEffect, useState } from "react";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useLoader, useFrame } from "@react-three/fiber";
@@ -40,46 +41,77 @@ export function EventHall(props) {
 
   const video = useRef(document.createElement("video"));
 
-  useEffect(() => {
-    video.current.src =
-      "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
-    video.current.crossOrigin = "anonymous";
-    video.current.loop = true;
-    video.current.muted = false;
-    // ... 나머지 비디오 설정
-  }, []);
+  // Video 관련 상태 추가
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  // Video 로드 함수
+  const loadVideo = () => {
+    if (!videoLoaded) {
+      video.current.src =
+        "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
+      video.current.crossOrigin = "anonymous";
+      video.current.loop = true;
+      video.current.muted = false;
+      // ... 나머지 비디오 설정
+      setVideoLoaded(true);
+    }
+  };
+
+  // 비디오와 관련된 자원 해제 함수
+  const disposeVideoResources = () => {
+    if (videoLoaded) {
+      if (!video.current.paused) {
+        video.current.pause();
+      }
+      video.current.src = "";
+      video.current.load();
+      customVideo.dispose();
+      video.current.remove();
+      setVideoLoaded(false);
+    }
+  };
 
   const customVideo = new VideoTexture(video.current);
 
-  // 이벤트 핸들러: 스페이스바를 누르면 비디오 재생/정지
   const handleKeyDown = event => {
-    if (event.code === "Enter") {
-      // Calculate the distance between the beamProjector and the camera/player
-      const beamProjectorPosition = new THREE.Vector3().setFromMatrixPosition(
-        beamProjector.scene.matrixWorld
-      );
-      const distance = beamProjectorPosition.distanceTo(camera.position); // Replace `camera.position` with your actual camera or player position vector
+    switch (event.code) {
+      case "KeyK":
+        // 빔프로젝트와 카메라 사이의 거리 계산 로직...
+        const beamProjectorPosition = new THREE.Vector3().setFromMatrixPosition(
+          beamProjector.scene.matrixWorld
+        );
+        const distance = beamProjectorPosition.distanceTo(camera.position); // Replace `camera.position` with your actual camera or player position vector
+        console.log(distance);
 
-      // Only toggle video playback if within 3 units of distance
-      if (distance <= 3) {
-        if (video.current.paused) {
-          video.current.play();
-        } else {
-          video.current.pause();
+        if (distance <= 10) {
+          loadVideo(); // 'K'를 누를 때 비디오 로드
+
+          if (video.current.paused) {
+            video.current.play();
+          } else {
+            video.current.pause();
+          }
         }
-      }
+        break;
+      case "KeyL":
+        disposeVideoResources(); // 'L'을 누를 때 비디오 자원 해제
+        break;
+      default:
+        // 다른 키 처리
+        break;
     }
   };
 
   useEffect(
     () => {
       document.addEventListener("keydown", handleKeyDown);
-
       return () => {
         document.removeEventListener("keydown", handleKeyDown);
+        disposeVideoResources(); // 컴포넌트 언마운트 시 자원 해제
       };
     },
-    [camera.position]
+    // videoLoaded 상태를 의존성 배열에 추가
+    [camera.position, videoLoaded]
   );
 
   useFrame(() => {
