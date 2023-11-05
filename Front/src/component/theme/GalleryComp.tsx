@@ -24,10 +24,23 @@ export const GalleryComp: React.FC = () => {
 
   //wall
   const container = [
-    { size: [70, 10, 3], position: [0, 5, 9], wallKey: 'FW1', name: 'wall', mass:0}, // 
-    { size: [3, 10, 35], position: [30, 5, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // Right
-    { size: [70, 10, 3], position: [-1, 5, -14], wallKey: 'BW1', name: 'wall', mass:0}, // Back
-    { size: [3, 10, 40], position: [-25, 5, 3], wallKey: 'LW1', name: 'wall', mass:0}, // 
+    { size: [3, 10, 35], position: [35, 5, 0], wallKey: 'RW1',  name: 'wall', mass:0}, 
+    { size: [3, 10, 40], position: [-29, 5, 3], wallKey: 'LW1', name: 'wall', mass:0}, 
+
+    { size: [15, 10, 3], position: [27, 5, 7], wallKey: 'FW1', name: 'wall', mass:0},
+    { size: [12, 10, 3], position: [3, 5, 7], wallKey: 'FW1', name: 'wall', mass:0},
+    { size: [16, 10, 3], position: [-21, 5, 7], wallKey: 'FW1', name: 'wall', mass:0},
+    { size: [70, 10, 3], position: [-1, 5, 20], wallKey: 'FW1', name: 'wall', mass:0},
+    { size: [3, 10, 12], position: [20, 5, 13], wallKey: 'RW1', name: 'wall', mass:0},
+    { size: [3, 10, 12], position: [9, 5, 13], wallKey: 'LW1', name: 'wall', mass:0},
+    { size: [3, 10, 12], position: [-1, 5, 13], wallKey: 'RW1', name: 'wall', mass:0},
+    { size: [3, 10, 12], position: [-13, 5, 13], wallKey: 'LW1', name: 'wall', mass:0},
+
+    { size: [15, 10, 3], position: [27, 5, -12], wallKey: 'BW1', name: 'wall', mass:0},
+    { size: [44, 10, 3], position: [-11, 5, -12], wallKey: 'BW1', name: 'wall', mass:0},
+    { size: [70, 10, 3], position: [-1, 5, -20], wallKey: 'BW1', name: 'wall', mass:0},
+    { size: [3, 10, 12], position: [20, 5, -17], wallKey: 'RW1', name: 'wall', mass:0},
+    { size: [3, 10, 12], position: [9, 5, -17], wallKey: 'LW1', name: 'wall', mass:0}, 
   ];
 
   // player
