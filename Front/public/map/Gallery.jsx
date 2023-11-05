@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallary/scene.gltf"
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
   );
   return (
     <group {...props} dispose={null}>
