@@ -40,7 +40,7 @@ export const ParkComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF("./player/m_1.glb");
+  const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Player/m_1.glb");
   //Player cannon
   const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);    
   const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
