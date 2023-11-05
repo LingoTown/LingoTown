@@ -7,8 +7,8 @@ Source: https://sketchfab.com/3d-models/venue-stage-for-great-events-d74b3baa5a7
 Title: venue stage for great events
 */
 
-import React, { useRef, useEffect } from "react";
-
+import React, { useRef, useEffect, useState } from "react";
+import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useLoader, useFrame } from "@react-three/fiber";
 import { MeshStandardMaterial, TextureLoader, VideoTexture } from "three";
@@ -19,6 +19,16 @@ export function EventHall(props) {
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/EventHall/scene.gltf"
   );
 
+  // const highTable = useNPC(highTableData);
+  const beamProjector = useGLTF(
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/BeamProjector/scene.gltf"
+  );
+  const highTable = useGLTF(
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/HighTable/scene.gltf"
+  );
+
+  const { camera } = useThree();
+
   useEffect(
     () => {
       if (props.onLoaded) {
@@ -28,53 +38,54 @@ export function EventHall(props) {
     [props, props.onLoaded]
   );
 
-  /* Custom Image */
-  // const customImage = useLoader(TextureLoader, 'https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/누끼다영.png')
+  const video = useRef(document.createElement("video"));
 
-  /* Custom Video */
-  const video = document.createElement("video");
-  video.src =
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
-  video.crossOrigin = "anonymous";
-  video.loop = true;
-  video.muted = true;
+  useEffect(() => {
+    video.current.src =
+      "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
+    video.current.crossOrigin = "anonymous";
+    video.current.loop = true;
+    video.current.muted = false;
+    // ... 나머지 비디오 설정
+  }, []);
 
-  const customVideo = new VideoTexture(video);
+  const customVideo = new VideoTexture(video.current);
 
-  // 자동 재생 설정
+  // 이벤트 핸들러: 스페이스바를 누르면 비디오 재생/정지
+  const handleKeyDown = event => {
+    if (event.code === "Enter") {
+      // Calculate the distance between the beamProjector and the camera/player
+      const beamProjectorPosition = new THREE.Vector3().setFromMatrixPosition(
+        beamProjector.scene.matrixWorld
+      );
+      const distance = beamProjectorPosition.distanceTo(camera.position); // Replace `camera.position` with your actual camera or player position vector
+
+      // Only toggle video playback if within 3 units of distance
+      if (distance <= 3) {
+        if (video.current.paused) {
+          video.current.play();
+        } else {
+          video.current.pause();
+        }
+      }
+    }
+  };
+
   useEffect(
     () => {
-      // 비디오에 컨트롤러 추가
-      video.controls = true;
-      video.muted = false; // 음소거 해제
+      document.addEventListener("keydown", handleKeyDown);
 
-      // 비디오를 자동으로 재생하지 않고 사용자의 상호작용을 기다립니다.
-      // 비디오 재생을 위한 사용자 상호작용 이벤트 핸들러
-      const playVideo = () => {
-        video
-          .play()
-          .then(() => {
-            // 자동 재생이 시작됨
-          })
-          .catch(error => {
-            // 자동 재생 시작 실패. 사용자에게 수동으로 재생하도록 요구해야 함.
-          });
-      };
-
-      document.body.addEventListener("click", playVideo);
-
-      // 클린업 함수
       return () => {
-        document.body.removeEventListener("click", playVideo);
-        video.pause();
+        document.removeEventListener("keydown", handleKeyDown);
       };
     },
-    [video]
+    [camera.position]
   );
 
-  // 동영상 업데이트
   useFrame(() => {
-    customVideo.needsUpdate = true;
+    if (customVideo) {
+      customVideo.needsUpdate = true;
+    }
   });
 
   return (
@@ -265,6 +276,19 @@ export function EventHall(props) {
           scale={[60.897, 62.308, 59.578]}
         />
       </group>
+
+      <primitive
+        scale={1.5}
+        position={[0.25, 0, 22]}
+        rotation={[0, 0, 0]}
+        object={highTable.scene}
+      />
+      <primitive
+        scale={1.5}
+        position={[0.25, 1.9, 22]}
+        rotation={[THREE.MathUtils.degToRad(180), 0, 0]}
+        object={beamProjector.scene}
+      />
     </group>
   );
 }

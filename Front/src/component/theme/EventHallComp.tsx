@@ -218,12 +218,6 @@ export const EventHallComp: React.FC = () => {
         { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
     ]; 
     
-    // 이 맵의 비대화 NPC 리스트 (상호작용 소품 + 비대화 NPC)
-    const nonTalkInfoList = [
-        { id: , name: , cameraPosition: , cameraRotation: , cameraRef: },
-        { id: , name: , cameraPosition: , cameraRotation: , cameraRef: },
-    ]
-
     /* useState */
     const setTalkState = useSetRecoilState(talkStateAtom);
     // 대화창
@@ -398,11 +392,6 @@ export const EventHallComp: React.FC = () => {
         circleOpacity: 1
     }
 
-    /* NPC */
-
-    const highTable = useNPC(highTableData);
-    const beamProjector = useNPC(beamProjectorData)
-
     return(
         <>
             {/* 맵 */}
@@ -439,15 +428,7 @@ export const EventHallComp: React.FC = () => {
                         /> ) 
                 }
             </group>
-
-            {/* High Table */}
-            <primitive scale={highTable.npcScale} position={highTable.npcPosition} rotation={highTable.npcRotation} object={highTable.npcModel.scene} />
-            <Circle ref={highTable.npcCircleRef} args={highTable.npcCircleArgs} position={highTable.npcCirclePosition} rotation={highTable.npcCircleRotation} >
-                <meshStandardMaterial attach={highTable.npcCircleAttach} color={highTable.npcCircleColor} emissive={highTable.npcCircleEmissive} emissiveIntensity={highTable.npcCircleEmissiveIntensity} side={highTable.npcCircleSide} transparent={highTable.npcCircleTransparent} opacity={highTable.npcCircleOpacity} />
-            </Circle>
-            {/* Beam Projector */}
-            <primitive scale={1.5} position={[0.25, 1.9, 22]} rotation={[THREE.MathUtils.degToRad(180), 0, 0]} object={beamProjector.npcModel.scene} />
-
+            
             {/* <axesHelper scale={100} /> */}
         </>
     )
