@@ -1,10 +1,118 @@
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
+import { useLoader } from "@react-three/fiber";
+import { TextureLoader } from "three";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
   );
+
+  // 우리 사진
+  const image1010A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1010(1).jpg"
+  );
+
+  const image1011A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1011(1).jpg"
+  );
+
+  const image1011B = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1011(2).jpg"
+  );
+
+  const image1012A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1012(1).jpg"
+  );
+  const image1012B = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1012(2).jpg"
+  );
+  const image1013A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1013(1).jpg"
+  );
+  const image1016A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1016(1).jpg"
+  );
+  const image1017A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1017(1).jpg"
+  );
+  const image1018A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1018(1).jpg"
+  );
+  const image1018B = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1018(2).jpg"
+  );
+  const image1018C = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1018(3).jpg"
+  );
+  const image1019A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1019(1).jpg"
+  );
+  const image1019B = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1019(2).jpg"
+  );
+  const image1020A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1020(1).jpg"
+  );
+  const image1023A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1023(1).jpg"
+  );
+  const image1024A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1024(1).jpg"
+  );
+  const image1025A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1025(1).jpg"
+  );
+  const image1026A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1026(1).jpg"
+  );
+  const image1026B = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1026(2).jpg"
+  );
+  const image1027A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1027(1).jpg"
+  );
+  const image1030A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1030(1).jpg"
+  );
+  const image1031A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1031(1).jpg"
+  );
+  const image1101A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1101(1).jpg"
+  );
+  const image1102A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1102(1).jpg"
+  );
+  const image1103A = useLoader(
+    TextureLoader,
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1103(1).jpg"
+  );
+
   return (
     <group {...props} dispose={null}>
       <group scale={0.015}>
@@ -62,9 +170,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_001_Art001_0.geometry}
-            material={materials.Art001}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1010A} />
+          </mesh>
         </group>
         <group
           position={[-1969.801, 184.435, -191.217]}
@@ -73,9 +182,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_002_Art_002_0.geometry}
-            material={materials.Art_002}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1011A} />
+          </mesh>
         </group>
         <group
           position={[-1969.801, 184.435, -191.217]}
@@ -88,6 +198,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1011B */}
+
         <group
           position={[-1969.801, 184.435, -555.019]}
           rotation={[Math.PI / 2, Math.PI / 2, 0]}
@@ -95,9 +208,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_003_Art_003_0.geometry}
-            material={materials.Art_003}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1011B} />
+          </mesh>
         </group>
         <group
           position={[-1969.801, 184.435, -555.019]}
@@ -110,6 +224,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1012A */}
+
         <group
           position={[-1636.547, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
@@ -117,9 +234,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_004_Art_004_0.geometry}
-            material={materials.Art_004}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1012A} />
+          </mesh>
         </group>
         <group
           position={[-1636.547, 184.435, -812.408]}
@@ -132,85 +250,76 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1012B */}
+
         <group
-          position={[-1289.734, 184.435, -804.033]}
+          position={[-1325.734, 184.435, -804.033]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_005_Art_005_0.geometry}
-            material={materials.Art_005}
+            geometry={nodes.Art_Work_004_Art_004_0.geometry}
+            // material={materials.Art_005}
             position={[21.043, -109.836, 5.478]}
-          />
+          >
+            <meshStandardMaterial map={image1012B} />
+          </mesh>
         </group>
         <group
-          position={[-1289.734, 184.435, -812.408]}
+          position={[-1325.734, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_Frame_005_Metal_02_0.geometry}
+            geometry={nodes.Art_Work_Frame_004_Metal_02_0.geometry}
             material={materials.Metal_02}
             position={[21.042, -109.836, 5.478]}
           />
         </group>
+
+        {/* 1013A */}
+
         <group
-          position={[-1124.431, 184.435, -804.033]}
+          position={[-1030.129, 184.435, -804.033]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_006_Art_006_0.geometry}
-            material={materials.Art_006}
+            geometry={nodes.Art_Work_004_Art_004_0.geometry}
             position={[21.043, -109.836, 5.478]}
-          />
+          >
+            <meshStandardMaterial map={image1013A} />
+          </mesh>
         </group>
         <group
-          position={[-1124.431, 184.435, -812.408]}
+          position={[-1030.129, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_Frame_006_Metal_02_0.geometry}
+            geometry={nodes.Art_Work_Frame_004_Metal_02_0.geometry}
             material={materials.Metal_02}
             position={[21.042, -109.836, 5.478]}
           />
         </group>
+
+        {/* 1016A */}
+
         <group
-          position={[-959.129, 184.435, -804.033]}
-          rotation={[0, 0, Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_007_Art_007_0.geometry}
-            material={materials.Art_007}
-            position={[21.043, -109.836, 5.478]}
-          />
-        </group>
-        <group
-          position={[-959.129, 184.435, -812.408]}
-          rotation={[0, 0, Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_Frame_007_Metal_02_0.geometry}
-            material={materials.Metal_02}
-            position={[21.042, -109.836, 5.478]}
-          />
-        </group>
-        <group
-          position={[-643.201, 184.435, -812.408]}
+          position={[-633.201, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
             geometry={nodes.Art_Work_008_Art_008_0.geometry}
-            material={materials.Art_008}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1016A} />
+          </mesh>
         </group>
         <group
-          position={[-643.201, 184.435, -812.408]}
+          position={[-633.201, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
@@ -220,72 +329,36 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1017A */}
+
         <group
-          position={[-275.3, 184.435, -804.033]}
+          position={[-189.998, 184.435, -804.033]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_009_Art_009_0.geometry}
-            material={materials.Art_009}
+            geometry={nodes.Art_Work_004_Art_004_0.geometry}
             position={[21.043, -109.836, 5.478]}
-          />
+          >
+            <meshStandardMaterial map={image1017A} />
+          </mesh>
         </group>
+
         <group
-          position={[-109.998, 184.435, -804.033]}
+          position={[-189.998, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_010_Art_010_0.geometry}
-            material={materials.Art_010}
-            position={[21.043, -109.836, 5.478]}
-          />
-        </group>
-        <group
-          position={[55.304, 184.435, -804.033]}
-          rotation={[0, 0, Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_011_Art_011_0.geometry}
-            material={materials.Art_011}
-            position={[21.043, -109.836, 5.478]}
-          />
-        </group>
-        <group
-          position={[-275.3, 184.435, -812.408]}
-          rotation={[0, 0, Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_Frame_009_Metal_02_0.geometry}
+            geometry={nodes.Art_Work_Frame_004_Metal_02_0.geometry}
             material={materials.Metal_02}
             position={[21.042, -109.836, 5.478]}
           />
         </group>
-        <group
-          position={[-109.998, 184.435, -812.408]}
-          rotation={[0, 0, Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_Frame_010_Metal_02_0.geometry}
-            material={materials.Metal_02}
-            position={[21.042, -109.836, 5.478]}
-          />
-        </group>
-        <group
-          position={[55.304, 184.435, -812.408]}
-          rotation={[0, 0, Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_Frame_011_Metal_02_0.geometry}
-            material={materials.Metal_02}
-            position={[21.042, -109.836, 5.478]}
-          />
-        </group>
+
+        {/* 1018A */}
+
         <group
           position={[426.516, 184.435, -812.408]}
           rotation={[0, 0, Math.PI / 2]}
@@ -293,9 +366,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_012_Art_012_0.geometry}
-            material={materials.Art_012}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1018A} />
+          </mesh>
         </group>
         <group
           position={[426.516, 184.435, -812.408]}
@@ -308,6 +382,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1018B */}
+
         <group
           position={[989.381, 184.435, -1443.712]}
           rotation={[0, 0, Math.PI / 2]}
@@ -315,9 +392,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_013_Art_013_0.geometry}
-            material={materials.Art_013}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1018B} />
+          </mesh>
         </group>
         <group
           position={[989.381, 184.435, -1443.712]}
@@ -330,6 +408,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1018C */}
+
         <group
           position={[1308.559, 184.435, -1039.117]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -337,9 +418,11 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_014_Art_014_0.geometry}
-            material={materials.Art_014}
+            // material={materials.Art_014}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1018C} />
+          </mesh>
         </group>
         <group
           position={[1308.559, 184.435, -1039.117]}
@@ -352,6 +435,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/*  */}
+
         <group
           position={[1591.197, 184.435, -782.813]}
           rotation={[0, 0, Math.PI / 2]}
@@ -359,9 +445,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_015_Art_015_0.geometry}
-            material={materials.Art_015}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1019A} />
+          </mesh>
         </group>
         <group
           position={[1591.197, 184.435, -782.813]}
@@ -374,6 +461,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1019B */}
+
         <group
           position={[2032.794, 184.435, -782.813]}
           rotation={[0, 0, Math.PI / 2]}
@@ -381,9 +471,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_016_Art_016_0.geometry}
-            material={materials.Art_016}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1019B} />
+          </mesh>
         </group>
         <group
           position={[2032.794, 184.435, -782.813]}
@@ -396,6 +487,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1020A */}
+
         <group
           position={[2354.502, 184.435, -526.174]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -403,9 +497,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_017_Art_017_0.geometry}
-            material={materials.Art_017}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1020A} />
+          </mesh>
         </group>
         <group
           position={[2354.502, 184.435, -526.174]}
@@ -418,6 +513,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1023A */}
+
         <group
           position={[2354.502, 184.435, -145.189]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -425,9 +523,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_018_Art_018_0.geometry}
-            material={materials.Art_018}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1023A} />
+          </mesh>
         </group>
         <group
           position={[2354.502, 184.435, -145.189]}
@@ -440,6 +539,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1024A */}
+
         <group
           position={[2354.502, 184.435, 235.797]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -447,9 +549,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_019_Art_019_0.geometry}
-            material={materials.Art_019}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1024A} />
+          </mesh>
         </group>
         <group
           position={[2354.502, 184.435, 235.797]}
@@ -462,6 +565,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1025A */}
+
         <group
           position={[2002.866, 184.435, 442.32]}
           rotation={[Math.PI, 0, -Math.PI / 2]}
@@ -469,9 +575,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_020_Art_020_0.geometry}
-            material={materials.Art_020}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1025A} />
+          </mesh>
         </group>
         <group
           position={[2002.866, 184.435, 442.32]}
@@ -484,6 +591,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1026A */}
+
         <group
           position={[1545.328, 184.435, 442.32]}
           rotation={[Math.PI, 0, -Math.PI / 2]}
@@ -491,9 +601,11 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_021_Art_021_0.geometry}
-            material={materials.Art_021}
+            // material={materials.Art_021}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1026A} />
+          </mesh>
         </group>
         <group
           position={[1545.328, 184.435, 442.32]}
@@ -506,6 +618,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1026B */}
+
         <group
           position={[1326.003, 184.435, 724.845]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -513,9 +628,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_022_Art_022_0.geometry}
-            material={materials.Art_022}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1026B} />
+          </mesh>
         </group>
         <group
           position={[1326.003, 184.435, 724.845]}
@@ -528,6 +644,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1027A */}
+
         <group
           position={[1326.003, 184.435, 1065.074]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -535,9 +654,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_023_Art_023_0.geometry}
-            material={materials.Art_023}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1027A} />
+          </mesh>
         </group>
         <group
           position={[1326.003, 184.435, 1065.074]}
@@ -550,6 +670,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1030A */}
+
         <group
           position={[939.599, 184.435, 1290.321]}
           rotation={[Math.PI, 0, -Math.PI / 2]}
@@ -557,9 +680,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_024_Art_024_0.geometry}
-            material={materials.Art_024}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1030A} />
+          </mesh>
         </group>
         <group
           position={[939.599, 184.435, 1290.321]}
@@ -572,6 +696,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1031A */}
+
         <group
           position={[617.029, 184.435, 1077.03]}
           rotation={[Math.PI / 2, Math.PI / 2, 0]}
@@ -579,9 +706,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_025_Art_025_0.geometry}
-            material={materials.Art_025}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1103A} />
+          </mesh>
         </group>
         <group
           position={[617.029, 184.435, 1077.03]}
@@ -594,6 +722,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1101A */}
+
         <group
           position={[617.029, 184.435, 703.151]}
           rotation={[Math.PI / 2, Math.PI / 2, 0]}
@@ -601,9 +732,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_026_Art_026_0.geometry}
-            material={materials.Art_026}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1101A} />
+          </mesh>
         </group>
         <group
           position={[617.029, 184.435, 703.151]}
@@ -616,6 +748,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1102A */}
+
         <group
           position={[410.693, 184.435, 472.55]}
           rotation={[-Math.PI, 0, -Math.PI / 2]}
@@ -623,9 +758,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_027_Art_027_0.geometry}
-            material={materials.Art_027}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1102A} />
+          </mesh>
         </group>
         <group
           position={[410.693, 184.435, 472.55]}
@@ -638,6 +774,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1103A */}
+
         <group
           position={[60.784, 184.435, 472.55]}
           rotation={[-Math.PI, 0, -Math.PI / 2]}
@@ -645,9 +784,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_028_Art_028_0.geometry}
-            material={materials.Art_028}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1031A} />
+          </mesh>
         </group>
         <group
           position={[60.784, 184.435, 472.55]}
