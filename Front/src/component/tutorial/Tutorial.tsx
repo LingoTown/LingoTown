@@ -1,6 +1,9 @@
 import React from 'react';
 import { useState } from "react";
 
+const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
+const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
+
 const Tutorial = () => {
   const [step, setStep] = useState<number>(0);
   const [isPressed, setIsPressed] = React.useState(false);
@@ -21,6 +24,7 @@ const Tutorial = () => {
   const moveStep = (index: number) => {
     setStep(index);
   }
+  
 
   return (
     <div
@@ -30,11 +34,14 @@ const Tutorial = () => {
         alignItems: 'center',
         justifyContent: 'center',
         boxShadow: "10px 4px 4px 1px rgba(0, 0, 0, 0.25)",
-        height: "520px" 
+        height: "520px",
+        cursor: `url(${cursorLink}), auto`
       }}
       className="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-[700px] w-full md:w-[700px] h-auto rounded-[20px] p-8"
     >
-      <div className="font-[NPSfontBold] text-[#09B1F8] font-['ARLRDBD'] text-[13px] font-bold ml-[95%]">
+      <div 
+        style={{ cursor: `url(${cursorHoverLink}), auto` }} 
+        className="font-[NPSfontBold] text-[#09B1F8] font-['ARLRDBD'] text-[13px] font-bold ml-[95%]">
         SKIP
       </div>
 
@@ -43,15 +50,19 @@ const Tutorial = () => {
         <img className="mx-auto max-w-[300px]" src={img[step]} />
       </div>
 
-      {/* 설명 */}
+      {/* 타이틀 */}
       <div className="font-[NPSfontBold] text-center text-[20px] font-bold mt-10">
         {title[step]}
       </div>
+
+      {/* 설명 */}
       <div className="font-[NPSfontBold] text-center text-[15px] mt-5">
         {statement[step]}
       </div>
 
-      <div className="font-[NPSfontBold] flex justify-center items-center mt-8 space-x-2">
+      <div 
+        style={{ cursor: `url(${cursorLink}), auto` }} 
+        className="font-[NPSfontBold] flex justify-center items-center mt-8 space-x-2">
         <button
           style={applyPressedStyle(isPressed)}
           onMouseDown={handleMouseDown}
@@ -68,7 +79,7 @@ const Tutorial = () => {
         {
           title.map((_, index)=>{
             return(
-              <div onClick={()=>moveStep(index)} key={index} className="w-[6px] h-[7px] rounded-xl" style={index==step?{ backgroundColor: "#09B1F8" }:{ backgroundColor: "black" }} />
+              <div onClick={()=>moveStep(index)} key={index} className="w-[8px] h-[8px] rounded-xl" style={index==step?{ backgroundColor: "#09B1F8" }:{ backgroundColor: "black", cursor: `url(${cursorHoverLink}), auto` }} />
             )
           })
         }
@@ -95,7 +106,8 @@ const buttonStyle = {
 const applyPressedStyle = (isPressed:any) => ({
   ...buttonStyle,
   transform: isPressed ? 'translateY(4px)' : 'translateY(0)',
-  boxShadow: isPressed ? '0 2px #A66615' : '0 6px #A66615'
+  boxShadow: isPressed ? '0 2px #A66615' : '0 6px #A66615', 
+  cursor: `url(${cursorHoverLink}), auto`
 });
 
 export default Tutorial;
