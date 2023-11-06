@@ -205,17 +205,17 @@ export const GalleryComp: React.FC = () => {
 
       {/* NPC */}
       <Circle ref={jinaCircleRef} args={[CIRCLE_RADIUS]} position={jinaPosition} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5} side={THREE.DoubleSide} transparent={true} opacity={1} />
+        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5} side={THREE.DoubleSide} transparent={true} opacity={0.4} />
       </Circle>
       <primitive scale={1} position={jinaPosition} rotation={[0, -3, 0]} object={jinaFile.scene} />
       
       <Circle ref={jimmyCircleRef} args={[CIRCLE_RADIUS]} position={jimmyPosition} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1} side={THREE.DoubleSide} transparent={true} opacity={1} />
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1} side={THREE.DoubleSide} transparent={true} opacity={0.4} />
       </Circle>
       <primitive scale={1} position={jimmyPosition} rotation={[0, -1.6, 0]} object={jimmyFile.scene} />
     
       <Circle ref={barryCircleRef} args={[CIRCLE_RADIUS]} position={barryPosition} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1} side={THREE.DoubleSide} transparent={true} opacity={1} />
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1} side={THREE.DoubleSide} transparent={true} opacity={0.4} />
       </Circle>
       <primitive scale={1} position={barryPosition} rotation={[0, -1.6, 0]} object={barryFile.scene} />
     </>

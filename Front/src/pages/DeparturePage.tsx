@@ -8,9 +8,9 @@ const Rows = () => {
     const dep : DepartureType[] = departures;
     const sortTheme = (language : string) => {
         if(language === "English"){
-            navigate("/themePage?language=0");
+            navigate("/theme?language=0");
         } else if(language === "French"){
-            navigate("/themePage?language=1");
+            navigate("/theme?language=1");
         }
     }
     return (

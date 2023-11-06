@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef} from 'react'
 import { useRecoilState } from "recoil";
 import { talkIdAtom } from "../../atom/ScriptAtom";
-import { HttpJson } from '../../api/Http';
+import { HttpJson } from '../../api/common/Http';
 import { talkDetailType } from '../../type/TalkType';
 import { detailVerAtom } from '../../atom/ScriptAtom';
 import { npcStateName } from '../../atom/ScriptAtom';
