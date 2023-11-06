@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TextUtil } from "./util/TextUtil";
+import { MeshReflectorMaterial } from '@react-three/drei';
 
 export const BackToCategoryComp: React.FC<{
   x: number;
@@ -38,11 +39,19 @@ export const BackToCategoryComp: React.FC<{
           }
         }}
       >
-        <sphereGeometry />
-        <meshStandardMaterial
-          transparent={active !== name}
-          opacity={active !== name ? 0 : 1}
-          color={"white"}
+        <octahedronGeometry />
+        <MeshReflectorMaterial
+          blur={[300, 100]}
+          resolution={1024}
+          mixBlur={1}
+          mixStrength={30}
+          roughness={0}
+          depthScale={.5}
+          minDepthThreshold={0.4}
+          maxDepthThreshold={1.4}
+          color="gray"
+          metalness={1}
+          mirror={0.5}
         />
       </mesh>
       <mesh position={[0, 2, 0]}>
