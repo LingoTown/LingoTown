@@ -35,7 +35,8 @@ const Tutorial = () => {
         justifyContent: 'center',
         boxShadow: "10px 4px 4px 1px rgba(0, 0, 0, 0.25)",
         height: "520px",
-        cursor: `url(${cursorLink}), auto`
+        cursor: `url(${cursorLink}), auto`,
+        userSelect: 'none'
       }}
       className="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-[700px] w-full md:w-[700px] h-auto rounded-[20px] p-8"
     >
