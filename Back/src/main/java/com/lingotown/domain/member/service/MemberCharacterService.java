@@ -12,6 +12,7 @@ import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
+import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class MemberCharacterService {
     }
 
     @Transactional
-    public CommonResponse updateSelectedCharacter(Principal principal, UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
+    public DataResponse<Character> updateSelectedCharacter(Principal principal, UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
         Long memberId = Long.parseLong(principal.getName());
 
         MemberCharacter previousCharacter = memberCharacterRepository.findByMemberIdAndCharacterId(memberId, updateSelectedCharacterRequestDto.getPreviousId())
@@ -76,6 +77,9 @@ public class MemberCharacterService {
         previousCharacter.selectOff();
         nowCharacter.selectOn();
 
-        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+        Character character = characterRepository.findById(nowCharacter.getCharacter().getId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.CHARACTER_NOT_FOUND));
+
+        return new DataResponse<>(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), character);
     }
 }
