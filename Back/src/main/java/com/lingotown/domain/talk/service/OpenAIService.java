@@ -173,13 +173,13 @@ public class OpenAIService {
                     );
 
             //비동기 발음 처리
-//            NPC npc = getNPCEntity(talkReqDto.getTalkId());
-//            String language = npc.getWorld().getLanguage().toString();
-//
-//            String dialect = "";
-//            if(language.equals("ENGLISH")) dialect = "us-en";
-//            else dialect = "fr-fr";
-//
+            NPC npc = getNPCEntity(talkReqDto.getTalkId());
+            String language = npc.getWorld().getLanguage().toString();
+
+            String dialect = "";
+            if(language.equals("ENGLISH")) dialect = "us-en";
+            else dialect = "fr-fr";
+
 //            webClientUtil.checkPronunciationAsync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, dialect, talkReqDto.getTalkFile())
 //                    .subscribe(
 //                            res -> {
