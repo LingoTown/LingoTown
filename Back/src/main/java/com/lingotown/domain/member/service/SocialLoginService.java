@@ -8,6 +8,7 @@ import com.lingotown.domain.member.entity.MemberCharacter;
 import com.lingotown.domain.member.repository.MemberCharacterRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
 
+import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -36,6 +37,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +72,9 @@ public class SocialLoginService {
 
     @Value("${social-login.google.user-info-uri}")
     private String GOOGLE_USER_INFO_URI;
+
+    @Value("s3url")
+    private String S3URL;
 
 
     public DataResponse<LoginResponseDto> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
@@ -204,8 +209,23 @@ public class SocialLoginService {
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
 
-        MemberCharacter memberCharacter = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId())
-                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_CHARACTER_NOT_FOUND));
+        Optional<MemberCharacter> optionalMemberCharacter = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
+
+        Long characterId = null;
+        GenderType characterGender = null;
+        String characterLink = null;
+
+
+        if(optionalMemberCharacter.isEmpty()) {
+            characterId = 1L;
+            characterGender = GenderType.MAN;
+            characterLink = S3URL + "Player/m_1.glb";
+        }
+        else {
+            characterId = optionalMemberCharacter.get().getCharacter().getId();
+            characterGender = optionalMemberCharacter.get().getCharacter().getGender();
+            characterLink = optionalMemberCharacter.get().getCharacter().getLink();
+        }
 
         return LoginResponseDto.builder()
                     .accessToken(accessToken)
@@ -215,9 +235,9 @@ public class SocialLoginService {
                     .social(member.getLoginType().toString())
                     .nickname(member.getNickname())
                     .profileImg(member.getProfile())
-                    .characterId(memberCharacter.getCharacter().getId())
-                    .characterGender(memberCharacter.getCharacter().getGender())
-                    .characterLink(memberCharacter.getCharacter().getLink())
+                    .characterId(characterId)
+                    .characterGender(characterGender)
+                    .characterLink(characterLink)
                     .build();
     }
 
