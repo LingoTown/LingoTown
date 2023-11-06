@@ -68,11 +68,9 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
 															<div>마지막 대화일시 : {arr.lastVisited.split("T")[0]} | {arr.lastVisited.split("T")[1]}</div>
 													</div>
                         </div>
-                        
                         <img className="w-[2rem] h-[2rem]" src={getIntimacy(arr.intimacy)} alt="" />
                     </div>
                     </div>
-                   
                 ))
                  :
                     ""
