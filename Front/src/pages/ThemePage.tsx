@@ -14,7 +14,7 @@ export const ThemePage = () => {
       {
         loading.loading? <LoadingPage/> : null
       }
-      <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+      <Canvas shadows style={{ height:loading.loading?"0.01vh":"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
         <ThemeComp />
         <primitive object={backgroundTexture} attach="background" />
       </Canvas>
