@@ -141,36 +141,36 @@ public class OpenAIService {
         if(talkReqDto.getTalkFile() != null) {
 
             //사용자 질문 DB 저장
-//            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
-//                    .talkId(talkReqDto.getTalkId())
-//                    .isMember(true)
-//                    .content(talkReqDto.getPrompt())
-//                    .talkFile(talkReqDto.getTalkFile())
-//                    .build();
-//
-//            DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
+            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
+                    .talkId(talkReqDto.getTalkId())
+                    .isMember(true)
+                    .content(talkReqDto.getPrompt())
+                    .talkFile(talkReqDto.getTalkFile())
+                    .build();
+
+            DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
 
             //비동기 문법 처리
-//            webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
-//                    .subscribe(
-//                            res -> {
-//                                // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
-//                                // 예: 응답을 분석하고 데이터베이스에 저장하기
-//
-//                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
-//                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-//
-//                                // 문법 조언 DB 저장
-//                                talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
-//
-//                                // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
-//                                talkDetailRepository.save(talkDetail);
-//                            },
-//                            err -> {
-//                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
-//                                log.error("Error occurred: ", err);
-//                            }
-//                    );
+            webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
+                    .subscribe(
+                            res -> {
+                                // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
+                                // 예: 응답을 분석하고 데이터베이스에 저장하기
+
+                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                                // 문법 조언 DB 저장
+                                talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+
+                                // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+                                talkDetailRepository.save(talkDetail);
+                            },
+                            err -> {
+                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+                                log.error("Error occurred: ", err);
+                            }
+                    );
 
             //비동기 발음 처리
 //            NPC npc = getNPCEntity(talkReqDto.getTalkId());
@@ -189,21 +189,21 @@ public class OpenAIService {
 //                            }
 //                    );
 
-            PronunciationResDto resDto = webClientUtil.checkPronunciationSync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, "en-us", talkReqDto.getTalkFile());
-            System.out.println("status : " +resDto.getStatus());
-            System.out.println("quotaRemaining : " +resDto.getQuotaRemaining());
+//            PronunciationResDto resDto = webClientUtil.checkPronunciationSync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, "en-us", talkReqDto.getTalkFile());
+//            System.out.println("status : " +resDto.getStatus());
+//            System.out.println("quotaRemaining : " +resDto.getQuotaRemaining());
 
             /* GPT 응답 TTS 변환 및 DB 저장 */
-//        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
-//
-//        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
-//                .talkId(talkReqDto.getTalkId())
-//                .isMember(false)
-//                .content(responseDto.getContent())
-//                .talkFile(GPTResponseFile)
-//                .build();
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
 
-//        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
         }
 
