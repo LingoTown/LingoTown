@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TextUtil } from "./util/TextUtil";
-import { MeshReflectorMaterial } from '@react-three/drei';
+import { Earth } from "../../../public/smallmap/Earth";
 
 export const BackToCategoryComp: React.FC<{
   x: number;
@@ -39,20 +39,7 @@ export const BackToCategoryComp: React.FC<{
           }
         }}
       >
-        <octahedronGeometry />
-        <MeshReflectorMaterial
-          blur={[300, 100]}
-          resolution={1024}
-          mixBlur={1}
-          mixStrength={30}
-          roughness={0}
-          depthScale={.5}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="gray"
-          metalness={1}
-          mirror={0.5}
-        />
+        <Earth />
       </mesh>
       <mesh position={[0, 2, 0]}>
         <TextUtil x={0} y={0} z={0} color={color} size={0.5} name={text[language]} />
