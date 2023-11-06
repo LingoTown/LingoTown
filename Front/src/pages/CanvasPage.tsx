@@ -6,6 +6,7 @@ import { useRecoilValue } from "recoil"
 import { MapUtilComp } from "../component/talk/MapUtilComp";
 import { Physics } from '@react-three/cannon';
 import LoadingPage from "./LoadingPage";
+import Tutorial from "../component/tutorial/Tutorial";
 // import { Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
@@ -20,6 +21,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
 
   return(
     <>
+      <Tutorial/>
       {
         loading.loading? <LoadingPage/> : null
       }
