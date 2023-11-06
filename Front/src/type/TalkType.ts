@@ -18,3 +18,11 @@ export type talkingTopicType = {
   talkId: number,
   topic: string,
 }
+
+export type talkDetailType = {
+  content : string,
+  createdAt : string,
+  member : boolean,
+  talkDetailId : number,
+  talkFile : string
+}

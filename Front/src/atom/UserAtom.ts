@@ -16,7 +16,10 @@ export const userAtom = atom<userType>({
     nickname : "",
     accessToken : "",
     refreshToken: "",
-    profileImg : ""
+    profileImg : "",
+    characterId : 1,
+    characterGender: "MALE",
+    characterLink: import.meta.env.VITE_S3_URL
   },
   effects_UNSTABLE: [persistAtom],
 });

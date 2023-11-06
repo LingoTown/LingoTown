@@ -16,6 +16,10 @@ import { GalleryComp } from "../component/theme/GalleryComp";
 import DeparturePage from "../pages/DeparturePage";
 import { AuthRouter } from "../router/AuthRouter";
 import LoadingPage from "../pages/LoadingPage";
+import { ExplorePage } from "../pages/ExplorePage";
+import { ExploreComp } from "../component/explore/ExploreComp";
+import { PlayerSelectPage } from "../pages/PlayerSelectPage"
+import { PlayerSelect } from "../component/playerSelect/PlayerSelectComp"
 
 export const AppRouter = () => {
   return(
@@ -27,6 +31,7 @@ export const AppRouter = () => {
           <Route path="/main" element={ <MainPage/> }></Route>
           <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
           <Route path="/google/callback" element={ <GoogleCallback/> }/>
+          <Route path="/explore" element={ <ExplorePage theme={ <ExploreComp/> }/> }/>
           {/* 로그인 후 사용할 수 있는 페이지  */}
           <Route element={ <AuthRouter />} >
             <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
@@ -37,10 +42,11 @@ export const AppRouter = () => {
             <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
             <Route path="/departurePage" element={ <DeparturePage/> }/>
             <Route path="/themePage" element={ <ThemePage />} />
-
-            {/* 로딩페이지 확인용 */}
-            <Route path="/loading" element={ <LoadingPage />} /> 
+            <Route path="/playerSelect" element={ <PlayerSelectPage theme = { <PlayerSelect /> } /> } />
           </Route>
+
+          {/* 로딩페이지 확인용 */}
+          <Route path="/loading" element={ <LoadingPage />} /> 
           <Route path="/*" element={ <NotFound/> }/>
         </Routes>
       </BrowserRouter>

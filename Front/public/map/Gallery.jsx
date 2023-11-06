@@ -1,14 +1,24 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
+import * as THREE from "three";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
   );
 
-  // 우리 사진
+  /* 소품 */
+  const glassTubeC = useGLTF(
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/GlassTube3/scene.gltf"
+  );
+  const eiffelTower = useGLTF(
+    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/Eiffel Tower/scene.gltf"
+  );
+
+  /* 우리 사진 */
+
   const image1010A = useLoader(
     TextureLoader,
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1010(1).jpg"
@@ -111,6 +121,15 @@ export function Gallery(props) {
   const image1103A = useLoader(
     TextureLoader,
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1103(1).jpg"
+  );
+
+  useEffect(
+    () => {
+      if (props.onLoaded) {
+        props.onLoaded();
+      }
+    },
+    [props, props.onLoaded]
   );
 
   return (
@@ -2047,6 +2066,19 @@ export function Gallery(props) {
           rotation={[-Math.PI / 2, 0, Math.PI / 2]}
         />
       </group>
+
+      <primitive
+        scale={0.1}
+        position={[0, 5, -3]}
+        rotation={[THREE.MathUtils.degToRad(90), 0, 0]}
+        object={glassTubeC.scene}
+      />
+      <primitive
+        scale={0.3}
+        position={[0, 0, -3.4]}
+        rotation={[0, 0, 0]}
+        object={eiffelTower.scene}
+      />
     </group>
   );
 }

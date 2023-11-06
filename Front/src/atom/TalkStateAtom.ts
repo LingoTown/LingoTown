@@ -20,3 +20,5 @@ export const talkStateAtom = atom<TalkStateAtom>({
     talkId: 0
   },
 });
+
+

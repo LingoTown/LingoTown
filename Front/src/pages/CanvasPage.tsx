@@ -31,7 +31,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
       }
       <Canvas style={{ height:loading.loading?"0.01vh":"100vh", cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`}}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
-          {/* <Debug scale={1} color='green'> */}
+          {/* <Debug scale={1} color='red'> */}
           {/* <OrbitControls/> */}
             {props.theme}
           {/* </Debug> */}

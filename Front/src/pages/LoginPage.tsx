@@ -11,6 +11,8 @@ const LoginPage = () => {
   const googleLogin = () => {
     window.location.href = import.meta.env.VITE_GOOGLE_LOGIN;
   }
+
+  
   
   return(
   <>
@@ -27,19 +29,19 @@ const LoginPage = () => {
           <h2 className="text-7xl mt-2 font-extrabold text-[#FFE58A] font-['passero-one']">LingoTown!</h2>
         </div>
       </div>
-      <div className="z-10 mt-7">
+      <div className="z-0 mt-7">
         <img 
           style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           className="h-10 rounded" 
-          src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/kakaobtn.png' onClick={() => { kakaoLogin() }}/>
+          src={ import.meta.env.VITE_S3_URL + "Button/KakaoButton.png" } onClick={() => { kakaoLogin() }}/>
         <img 
           style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           className="h-10 rounded mt-2" 
-          src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/googlebtn.png' onClick={() => { googleLogin() }}/>
+          src={ import.meta.env.VITE_S3_URL + "Button/GoogleButton.png" } onClick={() => { googleLogin() }}/>
         <img 
           style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           className="h-10 rounded mt-2 bg-[#ddd]" 
-          src='https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/exp.png' onClick={() => { navigate("/restaurant") }}/>
+          src={ import.meta.env.VITE_S3_URL + "Button/ExploreNowButton.png"} onClick={() => { navigate("/explore") }}/>
       </div>
     </div>
   </>
