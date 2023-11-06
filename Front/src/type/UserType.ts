@@ -9,5 +9,6 @@ export type userType = {
   refreshToken: string | null,
   characterId: number,
   characterGender: string,
-  characterLink: string
+  characterLink: string,
+  lockList: { characterId: number; islocked: boolean }[];
 }
