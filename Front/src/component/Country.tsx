@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react"
+import {useState} from "react"
 import { myPageNPCType } from "../type/MyPageNpcType";
 import { npcStateAtom } from "../atom/ScriptAtom";
 import { useRecoilState } from "recoil";
@@ -9,15 +9,13 @@ interface myListProps {
     myList : myPageNPCListType;
 }
 
-function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (npcId:number) => void}) {
+function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (npcId:number, npcName:string) => void}) {
     const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
     npcNum
     const {myList} = props
     const [openToggle, setToggle] = useState(Array(Object.keys(myList).length).fill(false));
     const [openBox, setBox] = useState(Array(Object.keys(myList).length).fill(false));
-    useEffect(()=>{
-        console.log(myList); 
-    }, [])
+  
     const getIntimacy = (intimacy : number):string => {
         if(intimacy >= 100){
             return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+gold.png"
@@ -30,7 +28,7 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
 
     return (
         Object.entries(props.myList).map(([key, val], i:number) => (
-        <div >
+        <div key={i}>
             {/* 토글, 나라이름 */}
             {
                 openToggle[i]?
@@ -57,10 +55,10 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
             {/* NPC 리스트 */}
             {
                 openBox[i]?
-                val.map((arr)=>(
-                    <div onClick={()=>{
+                val.map((arr, i)=>(
+                    <div key={i} onClick={()=>{
                       setNpcNum(arr.npcId);
-											props.getTalkList(arr.npcId);
+											props.getTalkList(arr.npcId, arr.npcName);
 											props.onBoxClick();
 											}} 
                       className="flex mx-5 mb-2 hover:bg-[#fff]/40 rounded-lg"
