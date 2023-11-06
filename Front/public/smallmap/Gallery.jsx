@@ -1,18 +1,9 @@
 import React, { useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
-import * as THREE from "three";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
-  );
-
-  /* 소품 */
-  const glassTubeC = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/GlassTube3/scene.gltf"
-  );
-  const eiffelTower = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/Eiffel Tower/scene.gltf"
   );
 
   useEffect(
@@ -511,19 +502,6 @@ export function Gallery(props) {
           rotation={[-Math.PI / 2, 0, 0]}
         />
       </group>
-
-      <primitive
-        scale={0.1}
-        position={[0, 5, -3]}
-        rotation={[THREE.MathUtils.degToRad(90), 0, 0]}
-        object={glassTubeC.scene}
-      />
-      <primitive
-        scale={0.3}
-        position={[0, 0, -3.4]}
-        rotation={[0, 0, 0]}
-        object={eiffelTower.scene}
-      />
     </group>
   );
 }

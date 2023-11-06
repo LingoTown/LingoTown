@@ -29,16 +29,6 @@ export function Restaurant(props) {
         <mesh geometry={nodes.pPlane1_suelo1_0.geometry} material={materials.suelo1} scale={1}/>
         {/*  */}
       </group>
-      <group scale={0.01}>
-        <mesh geometry={nodes.poste_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[0, 0, -119.669]} />
-        <mesh geometry={nodes.poste_aiStandardSurface11_0_1.geometry} material={materials.aiStandardSurface11} position={[0, 0, -675.521]} />
-        <mesh geometry={nodes.poste1_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[0, 0, -1375.743]} />
-        <mesh geometry={nodes.poste2_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[0, 0, 1215.692]} />
-        <mesh geometry={nodes.poste3_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[0, 0, 484.228]} />
-        <mesh geometry={nodes.poste6_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[621.208, 0.423, -300.53]} />
-        <mesh geometry={nodes.poste7_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[621.208, 0.423, -1148.913]} />
-        <mesh geometry={nodes.poste8_aiStandardSurface11_0.geometry} material={materials.aiStandardSurface11} position={[621.208, 0.423, -1698.113]} />
-      </group>
     </group>
   )
 }
