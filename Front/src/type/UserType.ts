@@ -7,4 +7,7 @@ export type userType = {
   profileImg: string,
   accessToken: string | null,
   refreshToken: string | null,
+  characterId: number,
+  characterGender: string,
+  characterLink: string
 }
