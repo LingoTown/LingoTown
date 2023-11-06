@@ -15,7 +15,7 @@ const CustomAlert = ({ title, message, onClose }: AlertType) => {
   }, [onClose]);
 
   return (
-    <div className="z-50">
+    <div className="z-20">
       <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClickCapture={(e) => e.stopPropagation()}></div>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 p-6 bg-white rounded-lg shadow-xl border border-gray-200">
         <h2 className="text-xl font-semibold mb-4 border-b pb-2 font-['passero-one']">{title}</h2>
