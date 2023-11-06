@@ -19,7 +19,7 @@ export const userAtom = atom<userType>({
     profileImg : "",
     characterId : 1,
     characterGender: "MALE",
-    characterLink: import.meta.env.S3_URL
+    characterLink: import.meta.env.VITE_S3_URL
   },
   effects_UNSTABLE: [persistAtom],
 });
