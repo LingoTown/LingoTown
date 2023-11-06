@@ -46,9 +46,11 @@ public class MemberNPCService {
             World world = npc.getWorld();
 
             List<Talk> talkList = talkRepository.findTalkList(memberNPC.getId());
-            int count = talkList.size();
 
-            if(count==0)  continue;
+            int count=0;
+            for(Talk talk : talkList) {
+                if (!talk.getTalkDetailList().isEmpty()) count++;
+            }
 
             ReadMemberNPCResDto memberNPCResDto = ReadMemberNPCResDto
                     .builder()

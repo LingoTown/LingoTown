@@ -9,14 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @NoArgsConstructor
 public class PronunciationReqDto {
-    private String text;
     private MultipartFile user_audio_file;
-    private String question_info = "u1/q1";
-    private Integer no_mc = 1;
+    private final String question_info = "u1/q1";
+    private final Integer include_ielts_feedback = 1;
 
     @Builder
-    public PronunciationReqDto(String text, MultipartFile user_audio_file){
-        this.text = text;
+    public PronunciationReqDto(MultipartFile user_audio_file){
         this.user_audio_file = user_audio_file;
     }
 }
