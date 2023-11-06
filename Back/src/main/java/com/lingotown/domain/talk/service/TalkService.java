@@ -157,7 +157,7 @@ public class TalkService {
     //퀴즈 풀이
     @Transactional
     public DataResponse<QuizResDto> solveQuiz(Principal principal, QuizReqDto quizReqDto){
-        String result = "fail";
+        boolean result = false;
 
         Long quizId = quizReqDto.getQuizId();
         Quiz quiz = quizRepository.findById(quizId)
@@ -176,7 +176,7 @@ public class TalkService {
                     .build();
 
             memberQuizRepository.save(memberQuiz);
-            result = "success";
+            result = true;
         }
 
         QuizResDto quizResDto = QuizResDto

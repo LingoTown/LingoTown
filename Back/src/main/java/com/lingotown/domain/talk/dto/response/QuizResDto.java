@@ -11,5 +11,5 @@ import org.checkerframework.checker.units.qual.N;
 @AllArgsConstructor
 @Builder
 public class QuizResDto {
-    private String result;
+    private boolean result;
 }
