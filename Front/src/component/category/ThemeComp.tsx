@@ -48,13 +48,13 @@ export const ThemeComp: React.FC = () => {
       galleryEnterHovered === text[language][3];
 
     if (anyHovered) {
-      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto`;
+      document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`;
     } else {
-      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`;
+      document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`;
     }
 
     return () => {
-      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`;
+      document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`;
     };
   }, [
     parkPreviewHovered,
@@ -85,7 +85,7 @@ export const ThemeComp: React.FC = () => {
 
     if(loading.loading) setLoading(() => ({loading:false}));
 
-  }, [active, sceneInstance]);
+  }, [active, loading, setLoading, sceneInstance]);
 
   return (
     <>
