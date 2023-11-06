@@ -14,7 +14,7 @@ public class SpeechScoreResDto {
     private SpeechTestScoreResDto ielts_score;
     private SpeechTestScoreResDto pte_score;
     private SpeechTestScoreResDto cefr_score;
-    private Grammar[] grammar;
+    //private Grammar[] grammar;
     private Vocab vocab;
     private Coherence coherence;
 }
