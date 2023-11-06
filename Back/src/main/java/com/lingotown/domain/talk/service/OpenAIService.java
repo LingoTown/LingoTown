@@ -6,6 +6,7 @@ import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.*;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
+import com.lingotown.domain.talk.dto.response.speechace.PronunciationResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
@@ -29,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -51,11 +53,11 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
-//    @Value("${SPEECH_ACE.URL}")
-//    private String SPEECH_ENDPOINT_URL;
-//
-//    @Value("${SPEECH_ACE.KEY}")
-//    private String SPEECH_API_KEY;
+    @Value("${SPEECH_ACE.URL}")
+    private String SPEECH_ENDPOINT_URL;
+
+    @Value("${SPEECH_ACE.KEY}")
+    private String SPEECH_API_KEY;
 
     @TrackExecutionTime
     @Transactional
@@ -112,7 +114,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(80)
+                .max_tokens(40)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
@@ -172,6 +174,7 @@ public class OpenAIService {
 
                                 // 문법 조언 DB 저장
                                 talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+
                                 // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
                                 talkDetailRepository.save(talkDetail);
                             },
@@ -189,6 +192,27 @@ public class OpenAIService {
             if(language.equals("ENGLISH")) dialect = "us-en";
             else dialect = "fr-fr";
 
+//            webClientUtil.checkPronunciationAsync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, dialect, talkReqDto.getTalkFile())
+//                    .subscribe(
+//                            res -> {
+////                                TalkDetail talkDetail = talkDetailRepository.findById(2)
+////                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+////
+////                                // 문법 조언 DB 저장
+////                                talkDetail.updateGrammerAdvise(String.valueOf("status : " +res.getStatus()+ ", " +);
+////
+////                                // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+////                                talkDetailRepository.save(talkDetail);
+//                            },
+//                            err -> {
+//                                log.error("Error occurred: ", err);
+//                            }
+//                    );
+
+//            PronunciationResDto resDto = webClientUtil.checkPronunciationSync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, dialect, talkReqDto.getTalkFile());
+//            System.out.println("status : " +resDto.getStatus());
+//            System.out.println("quotaRemaining : " +resDto.getQuotaRemaining());
+//            System.out.println("transcript : " + resDto.getSpeechScore().getTranscript());
 
         }
 
@@ -196,7 +220,7 @@ public class OpenAIService {
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
                 .responseMessage(responseDto.getContent())
-                .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                //.responseS3URL(systemResDataResponse.getData().getTalkFile())
                 .build();
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
