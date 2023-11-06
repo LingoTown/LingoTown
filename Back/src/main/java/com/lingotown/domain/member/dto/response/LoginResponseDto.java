@@ -4,6 +4,8 @@ import com.lingotown.domain.member.entity.Member;
 import com.lingotown.global.data.GenderType;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,8 @@ public class LoginResponseDto {
     private Long characterId;
     private GenderType characterGender;
     private String characterLink;
+
+    private List<CharacterLockResponseDto> lockList;
 
     public static LoginResponseDto of(Member member, String accessToken, String refreshToken) {
 

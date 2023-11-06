@@ -2,6 +2,7 @@ package com.lingotown.domain.member.service;
 
 
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
+import com.lingotown.domain.member.dto.response.CharacterLockResponseDto;
 import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.entity.MemberCharacter;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -231,8 +233,20 @@ public class SocialLoginService {
 
         List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
 
-        if(memberCharacterListByMemberId.size() == 0) {
+        if(memberCharacterListByMemberId.isEmpty()) {
             memberCharacterService.createMemberCharacter(member);
+            memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+        }
+
+        List<CharacterLockResponseDto> lockDtoList = new ArrayList<>();
+
+        for (MemberCharacter memberCharacter : memberCharacterListByMemberId) {
+            CharacterLockResponseDto characterLockResponseDto = CharacterLockResponseDto.builder()
+                    .characterId(memberCharacter.getCharacter().getId())
+                    .islocked(memberCharacter.isLocked())
+                    .build();
+
+            lockDtoList.add(characterLockResponseDto);
         }
 
         return LoginResponseDto.builder()
@@ -246,6 +260,7 @@ public class SocialLoginService {
                     .characterId(characterId)
                     .characterGender(characterGender)
                     .characterLink(characterLink)
+                    .lockList(lockDtoList)
                     .build();
     }
 
