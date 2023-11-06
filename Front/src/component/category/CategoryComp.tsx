@@ -10,16 +10,16 @@ import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
 
-const Park = lazy(() => import('../../../public/map/Park').then(module => {
+const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
 }));
-const EventHall = lazy(() => import('../../../public/map/EventHall').then(module => {
+const EventHall = lazy(() => import('../../../public/smallmap/EventHall').then(module => {
   return { default: module.EventHall }
 }));
-const Restaurant = lazy(() => import('../../../public/map/Restaurant').then(module => {
+const Restaurant = lazy(() => import('../../../public/smallmap/Restaurant').then(module => {
   return { default: module.Restaurant }
 }));
-const Gallery = lazy(() => import('../../../public/map/Gallery').then(module => {
+const Gallery = lazy(() => import('../../../public/smallmap/Gallery').then(module => {
   return { default: module.Gallery }
 }));
 
