@@ -186,10 +186,6 @@ public class OpenAIService {
     //상황 설정하기
     private String createConcept(Long talkId){
         NPC npc = getNPCEntity(talkId);
-        System.out.println("id : " +npc.getId());
-
-        System.out.println("npcJob: " +npc.getNpcRole());
-        System.out.println();
 
         String npcJob = npc.getNpcRole();
         String npcName = npc.getName();
@@ -208,7 +204,8 @@ public class OpenAIService {
                 "And also, Please respond in complete sentences without exceeding max_token. " +
                 "Now, " + "you are " +npcName +", and " + npcGender + " and " + npcJob + ", and " + "your age is " + npcAge
                 + ", and " +npcSituation;
-        System.out.println("concept : " +concept);
+
+
         return concept;
     }
 
