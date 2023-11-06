@@ -2,6 +2,7 @@ import { QuizType } from "../../type/QuizType";
 import React, { Dispatch, SetStateAction } from 'react';
 import { submitQuiz } from "../../api/Quiz";
 import { useCustomPrompt } from "../util/ModalUtil";
+import toast, { Toaster } from 'react-hot-toast';
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -30,23 +31,42 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       "quizId" : quizId,
       "result" : submit
     }
-
+    setIsOpenQuizModal(true);
     await submitQuiz(json, ({data}) => {
       const result = data.data as resutltType;
       if (result.result) {
-        // alert("정답")
+        showToaster("정답입니다!", "✔️");
       } else {
-        // alert("오답")
+        showToaster("오답입니다", "❌");
       }
       setQuizLender(prev => !prev);
     }, (error) => {
       console.log(error);
     })
-    setIsOpenQuizModal(true);
+    
+  }
+
+  const showToaster = (sentence:string, emoji:string) => {
+    toast(sentence, {
+      duration: 2000,
+      icon: emoji,
+      style: {
+        fontSize: "15px",
+      },
+      iconTheme: {
+        primary: '#000',
+        secondary: '#fff',
+      },
+      ariaProps: {
+        role: 'status',
+        'aria-live': 'polite',
+      },
+    });
   }
 
   return(
     <>
+      <Toaster position="top-center" />
       {
         isOpenQuizModal?
         <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10">
