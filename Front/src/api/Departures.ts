@@ -21,11 +21,11 @@ export const departures = [{
     language : "English"
 },{
     time : "13:25pm",
-    destination : "Sainte-Mère-Église",
+    destination : "Tokyo",
     Flight : "KA5513",
     Gate : "A12",
     Status : "Cancelled",
-    language : "French"
+    language : "Japanese"
 },{
     time : "13:40pm",
     destination : "Paris",
@@ -35,9 +35,9 @@ export const departures = [{
     language : "French"
 },{
     time : "14:15pm",
-    destination : "Aix-en-Provence",
+    destination : "Barcelona",
     Flight : "KA801",
     Gate : "C73",
     Status : "Cancelled",
-    language : "French"
+    language : "Spanish"
 }]
