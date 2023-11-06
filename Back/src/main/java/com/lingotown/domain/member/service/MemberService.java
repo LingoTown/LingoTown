@@ -1,6 +1,5 @@
 package com.lingotown.domain.member.service;
 
-import com.lingotown.domain.character.entity.Character;
 import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
@@ -47,7 +46,9 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final WorldRepository worldRepository;
     private final MemberQuizRepository memberQuizRepository;
+
     private final S3Service s3Service;
+    private final MemberCharacterService memberCharacterService;
 
     //사용자 정보 조회
     public DataResponse<MemberInfoResponseDto> readMemberInfo(Principal principal) {
@@ -126,15 +127,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Member enterMember(HashMap<String, Object> userInfo, LoginType loginType) {
-        log.info(S3url);
-
-        Character defaultCharacter = Character.builder()
-                .id(1L)
-                .gender(GenderType.MAN)
-                .link(S3url + "Player/m_1.glb")
-                .build();
-
+    public void enterMember(HashMap<String, Object> userInfo, LoginType loginType) {
         Member member = Member
                 .builder()
                 .loginId(userInfo.get("loginId").toString())
@@ -144,10 +137,11 @@ public class MemberService {
                 .email(userInfo.get("email").toString())
                 .role(MemberRole.MEMBER)
                 .genderType(GenderType.BLANK)
-                .character(defaultCharacter)
                 .build();
 
-        return memberRepository.save(member);
+        Member savedMember = memberRepository.save(member);
+
+        memberCharacterService.createMemberCharacter(savedMember);
     }
 
     boolean isEmpty(String loginId, LoginType loginType) {
