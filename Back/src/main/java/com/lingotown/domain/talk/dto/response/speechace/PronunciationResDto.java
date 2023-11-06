@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class PronunciationResDto {
     private String status;
-    private Long quota_remaining;
+    private int quotaRemaining;
     private SpeechScoreResDto speechScore;
     private List<ScoreIssueResDto> score_issue_list;
 }
