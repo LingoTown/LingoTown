@@ -28,12 +28,15 @@ export const NPCStage: React.FC<{
     { "Sanha": "Runner." },
     { "Marco": "Captain of the 'Daejeon \n Hana Citizen' team." },
     { "Lia": "'SSAFY' high school student \n and are classmates with user." },
-    { "Jayden": "Head of the human resources \n department of the \n 'SAMSUNG' company." },
+    { "Jaden": "Head of the human resources \n department of the \n 'SAMSUNG' company." },
     { "Kevin": "The host of the new mobile project \n presentation at SAMSUNG." },
     { "Daen": "The presenter at SSAFY." },
     { "Olivia": "‘LingoMongo’ restaurant chef." },
     { "Luke": "Customer of ‘LingoMongo’ Restaurant." },
-    { "Isabel": "Musician who sings on the street." }
+    { "Isabel": "Musician who sings on the street." },
+    { "Jina": "'SSAFY' High School student, \n friend of user" },
+    { "Jimmy": "Sheriff" },
+    { "Barry": "Tourist" },
   ];
 
   const map = useTexture(texture);
