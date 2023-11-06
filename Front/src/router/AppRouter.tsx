@@ -17,6 +17,8 @@ import DeparturePage from "../pages/DeparturePage";
 import { AuthRouter } from "../router/AuthRouter";
 import { ExplorePage } from "../pages/ExplorePage";
 import { ExploreComp } from "../component/explore/ExploreComp";
+import { PlayerSelectPage } from "../pages/PlayerSelectPage"
+import { PlayerSelect } from "../component/playerSelect/PlayerSelectComp"
 
 export const AppRouter = () => {
   return(
@@ -39,6 +41,7 @@ export const AppRouter = () => {
             <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
             <Route path="/departurePage" element={ <DeparturePage/> }/>
             <Route path="/themePage" element={ <ThemePage />} />
+            <Route path="/playerSelect" element={ <PlayerSelectPage theme = { <PlayerSelect /> } /> } />
           </Route>
 
           <Route path="/*" element={ <NotFound/> }/>
