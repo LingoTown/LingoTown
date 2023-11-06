@@ -218,6 +218,18 @@ public class OpenAIService {
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
+    @Transactional
+    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
+        TalkReqDto talkReqDto = TalkReqDto
+                .builder()
+                .talkId(topicReqDto.getTalkId())
+                .prompt(topicReqDto.getTopic())
+                .talkFile(null)
+                .build();
+
+
+        return askGPT(principal, talkReqDto);
+    }
 
     //상황 설정 하기
     private String createConcept(Principal principal, Long talkId, String topic){
