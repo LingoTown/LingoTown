@@ -137,18 +137,6 @@ public class OpenAIService {
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
 
-        /* GPT 응답 TTS 변환 및 DB 저장 */
-        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
-
-        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
-                .talkId(talkReqDto.getTalkId())
-                .isMember(false)
-                .content(responseDto.getContent())
-                .talkFile(GPTResponseFile)
-                .build();
-
-        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
-
         /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
         if(talkReqDto.getTalkFile() != null) {
 
@@ -185,34 +173,37 @@ public class OpenAIService {
                     );
 
             //비동기 발음 처리
-            NPC npc = getNPCEntity(talkReqDto.getTalkId());
-            String language = npc.getWorld().getLanguage().toString();
-
-            String dialect = "";
-            if(language.equals("ENGLISH")) dialect = "us-en";
-            else dialect = "fr-fr";
-
+//            NPC npc = getNPCEntity(talkReqDto.getTalkId());
+//            String language = npc.getWorld().getLanguage().toString();
+//
+//            String dialect = "";
+//            if(language.equals("ENGLISH")) dialect = "us-en";
+//            else dialect = "fr-fr";
+//
 //            webClientUtil.checkPronunciationAsync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, dialect, talkReqDto.getTalkFile())
 //                    .subscribe(
 //                            res -> {
-////                                TalkDetail talkDetail = talkDetailRepository.findById(2)
-////                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-////
-////                                // 문법 조언 DB 저장
-////                                talkDetail.updateGrammerAdvise(String.valueOf("status : " +res.getStatus()+ ", " +);
-////
-////                                // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
-////                                talkDetailRepository.save(talkDetail);
 //                            },
 //                            err -> {
 //                                log.error("Error occurred: ", err);
 //                            }
 //                    );
 
-//            PronunciationResDto resDto = webClientUtil.checkPronunciationSync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, dialect, talkReqDto.getTalkFile());
+//            PronunciationResDto resDto = webClientUtil.checkPronunciationSync(SPEECH_API_KEY, SPEECH_ENDPOINT_URL, "en-us", talkReqDto.getTalkFile());
 //            System.out.println("status : " +resDto.getStatus());
 //            System.out.println("quotaRemaining : " +resDto.getQuotaRemaining());
-//            System.out.println("transcript : " + resDto.getSpeechScore().getTranscript());
+
+            /* GPT 응답 TTS 변환 및 DB 저장 */
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
         }
 
