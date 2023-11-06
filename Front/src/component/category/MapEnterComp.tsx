@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { TextUtil } from "./util/TextUtil";
+import { loadingAtom } from '../../atom/LoadingAtom';
+import { useRecoilState } from "recoil";
 
 export const MapEnterComp: React.FC<{
   x: number;
@@ -19,12 +21,15 @@ export const MapEnterComp: React.FC<{
 
   const text = useState(["Enter", "Entrez"])[0];
 
+  const [loading, setLoading] = useRecoilState(loadingAtom);
+
   return (
     <mesh
       name={name}
       position={[x, y, z]}
       onClick={() => {
         if (!enabled && active !== name) {
+          if(!loading.loading) setLoading(() => ({loading:true}));
           navigate(`/${path}`)
         }
       }}

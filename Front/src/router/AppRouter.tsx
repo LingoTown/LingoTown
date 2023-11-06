@@ -15,6 +15,7 @@ import { EventHallComp } from "../component/theme/EventHallComp";
 import { GalleryComp } from "../component/theme/GalleryComp";
 import DeparturePage from "../pages/DeparturePage";
 import { AuthRouter } from "../router/AuthRouter";
+import LoadingPage from "../pages/LoadingPage";
 import { ExplorePage } from "../pages/ExplorePage";
 import { ExploreComp } from "../component/explore/ExploreComp";
 import { PlayerSelectPage } from "../pages/PlayerSelectPage"
@@ -44,6 +45,8 @@ export const AppRouter = () => {
             <Route path="/playerSelect" element={ <PlayerSelectPage theme = { <PlayerSelect /> } /> } />
           </Route>
 
+          {/* 로딩페이지 확인용 */}
+          <Route path="/loading" element={ <LoadingPage />} /> 
           <Route path="/*" element={ <NotFound/> }/>
         </Routes>
       </BrowserRouter>

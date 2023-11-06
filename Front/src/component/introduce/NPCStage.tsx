@@ -76,7 +76,7 @@ export const NPCStage: React.FC<{
         scale={[0.5, 0.5, 0.1]}
         onClick={() => setActive(active === name ? null : name)}
         onPointerEnter={() => setHovered(name)}
-        onPointerLeave={() => setHovered(null)}
+        onPointerLeave={() =>  setHovered(null)}
       >
         <MeshPortalMaterial
           side={THREE.DoubleSide}

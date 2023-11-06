@@ -19,8 +19,10 @@ import { useCylinder } from '@react-three/cannon'
 import { Isabel } from '../../../public/name/resrtaurant/Isabel.tsx'
 import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
 import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
 
 export const RestaurantComp: React.FC = () => {
+  
   //wall
   const container = [
     { size: [15, 2, 38], position: [-5, -1.1, -5], wallKey: 'BF1', name: 'floor', mass:0},
@@ -88,6 +90,7 @@ export const RestaurantComp: React.FC = () => {
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const setTalkState = useSetRecoilState(talkStateAtom);
   const isMove = useRef(true);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
@@ -120,6 +123,9 @@ export const RestaurantComp: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    if(loading) setLoading(() => ({loading:false}));
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);

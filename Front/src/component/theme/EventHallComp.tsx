@@ -19,6 +19,7 @@ import { Wall } from '../util/block/Wall';
 import { DaenName } from '../../../public/name/eventhall/Daen.tsx'
 import { JadenName } from '../../../public/name/eventhall/Jaden.tsx'
 import { KevinName } from '../../../public/name/eventhall/Kevin.tsx'
+import { loadingAtom } from "../../atom/LoadingAtom.ts";
 
 /* 
     EventHall의 특징 : 
@@ -227,6 +228,8 @@ export const EventHallComp: React.FC = () => {
     const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
     // 원 내부에 있는지
     const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
+    // 로딩바
+    const [loading, setLoading] = useRecoilState(loadingAtom);
 
     /* Function */
 
@@ -279,6 +282,8 @@ export const EventHallComp: React.FC = () => {
 
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("keyup", handleKeyUp);
+
+        if(loading) setLoading(() => ({loading:false}));
 
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
