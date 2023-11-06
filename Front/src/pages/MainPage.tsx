@@ -150,7 +150,11 @@ const MainPage = () => {
 
   return(
     <>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
+      <div 
+      
+      className="min-h-screen flex flex-col items-center justify-center bg-cover" 
+      style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)',
+               cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`}}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
           <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
             navigate("/departurePage");
@@ -175,13 +179,17 @@ const MainPage = () => {
                     className="bg-[#ababab] rounded-full p-1 absolute -bottom-2 -right-0 material-icons"
                     >edit</span>
                 </div>
-                <div className='mt-10 ml-20 font-[30] border-white border-[1px] rounded-lg w-[70%] p-5' >
+                <div className='mt-10 ml-20 font-[30] text-[1.3rem] border-white border-[1px] rounded-lg w-[70%] p-5' >
                   {
                     nickEditMode?
                     <div>Name : &nbsp;
                       <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" placeholder={user.nickname}/>
                       &nbsp;&nbsp;
-                      <span onClick={saveNickname} className="material-icons">check</span>
+                      <span 
+                        onClick={saveNickname} 
+                        className="material-icons"
+                        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                      >check</span>
                     </div>
                     :
                     <div>Name : {user.nickname} &nbsp; 
@@ -215,7 +223,7 @@ const MainPage = () => {
             }
             
             {/* 오른쪽 부분 */}
-              <div className='font-bold h-full overflow-y-scroll flex-1 pl-7'>
+              <div className='font-bold h-full overflow-y-auto flex-1 pl-7'>
                 {/* 나라별로 모아서 토글만들기 */}
                 {
                   scriptVer && !detailVer && //talk list 나타나는 부분 
@@ -224,7 +232,7 @@ const MainPage = () => {
                   <div className="m-5 font-['passero-one'] font-[30] text-white underline text-[2rem] ">My Talk Script</div>
                   <div 
                     onClick={()=>{setScriptVer(false)}} 
-                    className="cursor-pointer m-5 align-center font-['passero-one'] font-[30] text-white text-[1.3rem]"
+                    className="hover:text-[1.2rem] cursor-pointer m-5 align-center font-['passero-one'] font-[30] text-white text-[1.3rem]"
                     style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }} 
                     > {"<--  "}go back</div>
                   </div>

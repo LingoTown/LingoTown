@@ -18,11 +18,11 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
   
     const getIntimacy = (intimacy : number):string => {
         if(intimacy >= 100){
-            return import.meta.env.VITE_S3_URL + "GoldBar.png"
+            return import.meta.env.VITE_S3_URL + "Icon/GoldBar.png"
         } else if (intimacy >= 50){
-            return import.meta.env.VITE_S3_URL + "SilverBar.png"
+            return import.meta.env.VITE_S3_URL + "Icon/SilverBar.png"
         } else {
-            return import.meta.env.VITE_S3_URL + "BronzeBar.png"
+            return import.meta.env.VITE_S3_URL + "Icon/BronzeBar.png"
         }
     }
 
@@ -56,6 +56,7 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
             {
                 openBox[i]?
                 val.map((arr, i)=>(
+                  <>
                     <div key={i} onClick={()=>{
                       setNpcNum(arr.npcId);
 											props.getTalkList(arr.npcId, arr.npcName);
@@ -76,9 +77,10 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
                         <img className="w-[2rem] h-[2rem]" src={getIntimacy(arr.intimacy)} alt="" />
                     </div>
                     </div>
+                </>
                 ))
                  :
-                    ""
+                ""
             }
            
         </div>
