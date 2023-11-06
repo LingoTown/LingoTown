@@ -3,7 +3,6 @@ import {
   Environment,
   Text,
   useAnimations,
-  useCursor,
   useGLTF
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
@@ -16,34 +15,43 @@ export const IntroduceComp: React.FC = () => {
   const sanha = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb');
   const marco = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb');
   const bonnie = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb');
-  const jayden = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb');
+  const jaden = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb');
   const kevin = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb');
   const daen = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_16.glb');
   const olivia = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb');
   const luke = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_25.glb');
   const isabel = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_13.glb');
+  const jina = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_10.glb');
+  const jimmy = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_16.glb');
+  const barry = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_19.glb');
 
   const jerryRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const marcoRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const bonnieRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const jaydenRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const jadenRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const kevinRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const daenRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const oliviaRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const lukeRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const isabelRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const jinaRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const jimmyRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const barryRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
 
   const { actions: jerryActions } = useAnimations(jerry.animations, jerry.scene);
   const { actions: sanhaActions } = useAnimations(sanha.animations, sanha.scene);
   const { actions : marcoActions } = useAnimations(marco.animations, marco.scene);
   const { actions : bonnieActions } = useAnimations(bonnie.animations, bonnie.scene);
-  const { actions: jaydenActions } = useAnimations(jayden.animations, jayden.scene);
+  const { actions: jadenActions } = useAnimations(jaden.animations, jaden.scene);
   const { actions: kevinActions } = useAnimations(kevin.animations, kevin.scene);
   const { actions: daenActions } = useAnimations(daen.animations, daen.scene);
   const { actions: oliviaActions } = useAnimations(olivia.animations, olivia.scene);
   const { actions: lukeActions } = useAnimations(luke.animations, luke.scene);
   const { actions: isabelActions } = useAnimations(isabel.animations, isabel.scene);
+  const { actions: jinaActions } = useAnimations(jina.animations, jina.scene);
+  const { actions: jimmyActions } = useAnimations(jimmy.animations, jimmy.scene);
+  const { actions: barryActions } = useAnimations(barry.animations, barry.scene);
 
   const [active, setActive] = useState<string | null>(null);
   const [enabled, setEnabled] = useState<boolean | undefined>(false);
@@ -52,23 +60,56 @@ export const IntroduceComp: React.FC = () => {
   const [sanhaHovered, setSanhaHovered] = useState<string | null>(null);
   const [marcoHovered, setMarcoHovered] = useState<string | null>(null);
   const [bonnieHovered, setBonnieHovered] = useState<string | null>(null);
-  const [jaydenHovered, setJaydenHovered] = useState<string | null>(null);
+  const [jadenHovered, setJadenHovered] = useState<string | null>(null);
   const [kevinHovered, setKevinHovered] = useState<string | null>(null);
   const [daenHovered, setDaenHovered] = useState<string | null>(null);
   const [oliviaHovered, setOliviaHovered] = useState<string | null>(null);
   const [lukeHovered, setLukeHovered] = useState<string | null>(null);
   const [isabelHovered, setIsabelHovered] = useState<string | null>(null);
+  const [jinaHovered, setJinaHovered] = useState<string | null>(null);
+  const [jimmyHovered, setJimmyHovered] = useState<string | null>(null);
+  const [barryHovered, setBarryHovered] = useState<string | null>(null);
 
-  useCursor(jerryHovered == "Jerry");
-  useCursor(sanhaHovered == "Sanha");
-  useCursor(marcoHovered == "Marco");
-  useCursor(bonnieHovered == "Bonnie");
-  useCursor(jaydenHovered == "Jayden");
-  useCursor(kevinHovered == "Kevin");
-  useCursor(daenHovered == "Daen");
-  useCursor(oliviaHovered == "Olivia");
-  useCursor(lukeHovered == "Luke");
-  useCursor(isabelHovered == "Isabel");
+  useEffect(() => {
+    const anyHovered =
+      jerryHovered == "Jerry" ||
+      sanhaHovered == "Sanha" ||
+      marcoHovered == "Marco" ||
+      bonnieHovered == "Bonnie" ||
+      jadenHovered == "Jaden" ||
+      kevinHovered == "Kevin" ||
+      daenHovered == "Daen" ||
+      oliviaHovered == "Olivia" ||
+      lukeHovered == "Luke" ||
+      isabelHovered == "Isabel" ||
+      jinaHovered == "Jina" ||
+      jimmyHovered == "Jimmy" ||
+      barryHovered == "Barry";
+
+    if (anyHovered) {
+      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto`;
+    } else {
+      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`;
+    }
+
+    return () => {
+      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`;
+    };
+  }, [
+    jerryHovered,
+    sanhaHovered,
+    marcoHovered,
+    bonnieHovered,
+    jadenHovered,
+    kevinHovered,
+    daenHovered,
+    oliviaHovered,
+    lukeHovered,
+    isabelHovered,
+    jinaHovered,
+    jimmyHovered,
+    barryHovered
+  ]);
 
   const controlsRef = useRef<CameraControls | null>(null);
 
@@ -123,12 +164,12 @@ export const IntroduceComp: React.FC = () => {
   }, [bonnieHovered, bonnieActions]);
 
   useEffect(() => {
-    const anim = jaydenHovered ? 'Victory' : 'Idle';
-    jaydenActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    const anim = jadenHovered ? 'Victory' : 'Idle';
+    jadenActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
-      jaydenActions[anim]?.fadeOut(0.5);
+      jadenActions[anim]?.fadeOut(0.5);
     }
-  }, [jaydenHovered, jaydenActions]);
+  }, [jadenHovered, jadenActions]);
 
   useEffect(() => {
     const anim = kevinHovered ? 'Victory' : 'Idle';
@@ -169,6 +210,30 @@ export const IntroduceComp: React.FC = () => {
       isabelActions[anim]?.fadeOut(0.5);
     }
   }, [isabelHovered, isabelActions]);
+
+  useEffect(() => {
+    const anim = jinaHovered ? 'Victory' : 'Idle';
+    jinaActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    return () => {
+      jinaActions[anim]?.fadeOut(0.5);
+    }
+  }, [jinaHovered, jinaActions]);
+
+  useEffect(() => {
+    const anim = jimmyHovered ? 'Victory' : 'Idle';
+    jimmyActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    return () => {
+      jimmyActions[anim]?.fadeOut(0.5);
+    }
+  }, [jimmyHovered, jimmyActions]);
+
+  useEffect(() => {
+    const anim = barryHovered ? 'Victory' : 'Idle';
+    barryActions[anim]?.reset()?.fadeIn(0.5)?.play();
+    return () => {
+      barryActions[anim]?.fadeOut(0.5);
+    }
+  }, [barryHovered, barryActions]);
 
   return (
     <>
@@ -274,16 +339,16 @@ export const IntroduceComp: React.FC = () => {
 
       <NPCStage
         texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
-        name="Jayden"
+        name="Jaden"
         age="33"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
-        setHovered={setJaydenHovered}
+        setHovered={setJadenHovered}
         position-x={1.5}
         position-y={1}
       >
-        <primitive scale={1} ref={jaydenRef} position-y={-0.75} rotation={[0, 0, 0]} object={jayden.scene} />
+        <primitive scale={1} ref={jadenRef} position-y={-0.75} rotation={[0, 0, 0]} object={jaden.scene} />
       </NPCStage>
 
       <NPCStage
@@ -354,6 +419,48 @@ export const IntroduceComp: React.FC = () => {
         position-y={-1}
       >
         <primitive scale={1} ref={isabelRef} position-y={-0.75} rotation={[0, 0, 0]} object={isabel.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        name="Jina"
+        age="18"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setJinaHovered}
+        position-x={1.5}
+        position-y={-1}
+      >
+        <primitive scale={1} ref={jinaRef} position-y={-0.75} rotation={[0, 0, 0]} object={jina.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        name="Jimmy"
+        age="29"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setJimmyHovered}
+        position-x={3}
+        position-y={-1}
+      >
+        <primitive scale={1} ref={jimmyRef} position-y={-0.75} rotation={[0, 0, 0]} object={jimmy.scene} />
+      </NPCStage>
+
+      <NPCStage
+        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        name="Barry"
+        age="27"
+        color={new THREE.Color("black")}
+        active={active}
+        setActive={setActive}
+        setHovered={setBarryHovered}
+        position-x={4.5}
+        position-y={-1}
+      >
+        <primitive scale={1} ref={barryRef} position-y={-0.75} rotation={[0, 0, 0]} object={barry.scene} />
       </NPCStage>
     </>
   );

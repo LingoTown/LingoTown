@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
@@ -121,6 +121,15 @@ export function Gallery(props) {
   const image1103A = useLoader(
     TextureLoader,
     "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1103(1).jpg"
+  );
+
+  useEffect(
+    () => {
+      if (props.onLoaded) {
+        props.onLoaded();
+      }
+    },
+    [props, props.onLoaded]
   );
 
   return (
