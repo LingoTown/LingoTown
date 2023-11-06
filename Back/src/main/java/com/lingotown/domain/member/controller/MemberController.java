@@ -54,7 +54,7 @@ public class MemberController {
     }
 
     @PutMapping("/select/character")
-    public CommonResponse changeSelectedCharacter(Principal principal, @RequestBody UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
+    public DataResponse changeSelectedCharacter(Principal principal, @RequestBody UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
 
         return memberCharacterService.updateSelectedCharacter(principal, updateSelectedCharacterRequestDto);
     }
