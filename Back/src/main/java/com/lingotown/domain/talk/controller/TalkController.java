@@ -1,0 +1,76 @@
+package com.lingotown.domain.talk.controller;
+
+import com.lingotown.domain.talk.dto.request.QuizReqDto;
+import com.lingotown.domain.talk.dto.request.TopicReqDto;
+import com.lingotown.domain.talk.service.MemberNPCService;
+import com.lingotown.domain.talk.dto.response.*;
+import com.lingotown.domain.talk.dto.request.IncreaseIntimacyReqDto;
+import com.lingotown.domain.talk.dto.request.TalkReqDto;
+import com.lingotown.domain.talk.entity.MemberNPC;
+import com.lingotown.domain.talk.service.OpenAIService;
+import com.lingotown.domain.talk.service.TalkService;
+import com.lingotown.global.response.CommonResponse;
+import com.lingotown.global.response.DataResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/talk")
+public class TalkController {
+
+    private final TalkService talkService;
+    private final OpenAIService openAIService;
+    private final MemberNPCService memberNPCService;
+
+
+    @PostMapping("/start/{npcId}")
+    public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @PathVariable("npcId") Long npcId){
+        MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, npcId);
+        return talkService.createTalk(memberNPC);
+    }
+
+    @PostMapping(value = "", consumes = {"multipart/form-data"})
+    public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
+        return openAIService.askGPT(principal, talkReqDto);
+    }
+
+    @PostMapping("/topic")
+    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, @RequestBody TopicReqDto topicReqDto) throws Exception {
+        return openAIService.askTopic(principal, topicReqDto);
+    }
+
+    @PostMapping("/quiz")
+    public DataResponse<QuizResDto> solveQuiz(Principal principal, @RequestBody QuizReqDto quizReqDto){
+        return talkService.solveQuiz(principal, quizReqDto);
+    }
+
+    @GetMapping("/list/{npcId}")
+    public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, @PathVariable("npcId") Long npcId){
+        return talkService.readTalkList(principal, npcId);
+    }
+
+    @GetMapping("/list")
+    public DataResponse<List<ReadMemberNPCResDto>> readMemberNPCList(Principal principal){
+        return memberNPCService.readMemberNPCList(principal);
+    }
+
+    @GetMapping("/{talkId}")
+    public DataResponse<List<ReadTalkDetailResDto>> readTalkDetailList(Principal principal, @PathVariable("talkId") Long talkId) {
+        return talkService.readTalkDetail(principal,talkId);
+    }
+
+    @DeleteMapping("/{talkId}")
+    public CommonResponse removeTalkList(Principal principal, @PathVariable("talkId") Long talkId) {
+        return talkService.removeTalk(principal, talkId);
+    }
+
+    @PutMapping("/end/{talkId}")
+    public CommonResponse increaseIntimacy(@PathVariable("talkId") Long talkId){
+        return talkService.increaseIntimacy(talkId);
+    }
+
+}
