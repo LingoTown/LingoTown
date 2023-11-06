@@ -10,6 +10,8 @@ import { BackToCategoryComp } from "./BackToCategoryComp";
 import { CategoryComp } from "./CategoryComp";
 import { MapEnterComp } from "./MapEnterComp";
 import { TextUtil } from "./util/TextUtil";
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
+import { useRecoilState } from "recoil";
 
 export const ThemeComp: React.FC = () => {
   const text: string[][] = useState([["park", "company", "restaurant", "gallery"], ["Parc", "entreprise", "restaurant", "galerie"]])[0];
@@ -31,6 +33,8 @@ export const ThemeComp: React.FC = () => {
   const [companyEnterHovered, setCompanyEnterHovered] = useState<string | null>(null);
   const [restaurantEnterHovered, setRestaurantEnterHovered] = useState<string | null>(null);
   const [galleryEnterHovered, setGalleryEnterHovered] = useState<string | null>(null);
+
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   useEffect(() => {
     const anyHovered =
@@ -78,6 +82,9 @@ export const ThemeComp: React.FC = () => {
     } else {
       controlsRef.current?.setLookAt(0, 0, 10, 0, 0, 0, true);
     }
+
+    if(loading.loading) setLoading(() => ({loading:false}));
+
   }, [active, sceneInstance]);
 
   return (

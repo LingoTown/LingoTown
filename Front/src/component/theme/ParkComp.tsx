@@ -21,8 +21,10 @@ import { Sanha } from '../../../public/name/park/Sanha.tsx';
 import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
 import { Jerry } from '../../../public/name/park/Jerry.tsx';
 import { Marco } from '../../../public/name/park/Marco.tsx';
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
  
 export const ParkComp: React.FC = () => {
+
   //wall
   const container = [
     { size: [81, 2, 40], position: [-15, -1.1, 0], wallKey: 'BF1', name: 'floor', mass:0}, // bottom floor
@@ -115,6 +117,7 @@ export const ParkComp: React.FC = () => {
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const isMove = useRef(true);
   const setTalkState = useSetRecoilState(talkStateAtom);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
@@ -148,6 +151,10 @@ export const ParkComp: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    if(loading.loading) setLoading(() => ({loading:false}));
+
+    
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);

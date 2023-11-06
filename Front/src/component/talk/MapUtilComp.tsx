@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { useCustomConfirm, useCustomPrompt } from "../util/ModalUtil"
 import { talkBalloonAtom } from '../../atom/TalkBalloonAtom';
-import { useSetRecoilState } from 'recoil';
-import {useState} from 'react';
+import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useState } from 'react';
+import { loadingAtom } from '../../atom/LoadingAtom';
 
 export const MapUtilComp = () => {
   // 데이터 형식 
@@ -21,9 +22,13 @@ export const MapUtilComp = () => {
     const flag = await customConfirm("Notice", "Would you like to leave the theme?");
     setTalkBalloon(prevState => ({...prevState, isMove: true}));
     if (flag) {
+      if(!loading.loading) setLoading(() => ({loading:true})); //loading 활성화
+      console.log(loading);
       navigate("/");
     }
   }
+
+  const [loading, setLoading] = useRecoilState(loadingAtom);
   
   return(
     <>
