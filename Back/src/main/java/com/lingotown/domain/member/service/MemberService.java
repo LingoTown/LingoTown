@@ -1,5 +1,6 @@
 package com.lingotown.domain.member.service;
 
+import com.lingotown.domain.character.entity.Character;
 import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
@@ -11,6 +12,7 @@ import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
 import com.lingotown.domain.world.entity.Quiz;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.domain.world.repository.WorldRepository;
+import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -19,6 +21,8 @@ import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +34,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class MemberService {
+
+    @Value("s3url")
+    private String S3url;
 
     private final MemberRepository memberRepository;
     private final WorldRepository worldRepository;
@@ -118,6 +126,14 @@ public class MemberService {
 
     @Transactional
     public Member enterMember(HashMap<String, Object> userInfo, LoginType loginType) {
+        log.info(S3url);
+
+        Character defaultCharacter = Character.builder()
+                .id(1L)
+                .gender(GenderType.MAN)
+                .link(S3url + "Player/m_1.glb")
+                .build();
+
         Member member = Member
                 .builder()
                 .loginId(userInfo.get("loginId").toString())
@@ -125,7 +141,9 @@ public class MemberService {
                 .nickname(userInfo.get("nickname").toString())
                 .profile(userInfo.get("profileImg").toString())
                 .email(userInfo.get("email").toString())
+                .character(defaultCharacter)
                 .build();
+
         return memberRepository.save(member);
     }
 

@@ -1,6 +1,6 @@
 package com.lingotown.domain.member.entity;
 
-import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.character.entity.Character;
 import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.global.basetimeentity.BaseTimeEntity;
 import com.lingotown.global.data.GenderType;
@@ -51,6 +51,10 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "character_id")
+    private Character character;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<MemberNPC> memberNPCList = new ArrayList<>();
 
@@ -58,14 +62,19 @@ public class Member extends BaseTimeEntity {
     List<MemberQuiz> memberQuizList = new ArrayList<>();
 
     @Builder
-    public Member(String loginId, LoginType loginType, String nickname, String profile, String email) {
+    public Member(Long id, String loginId, String nickname, String email, String profile, MemberRole role, LoginType loginType, GenderType genderType, LocalDateTime deletedAt, Character character, List<MemberNPC> memberNPCList, List<MemberQuiz> memberQuizList) {
+        this.id = id;
         this.loginId = loginId;
-        this.loginType = loginType;
         this.nickname = nickname;
-        this.profile = profile;
         this.email = email;
-        this.role = MemberRole.MEMBER;
-        this.genderType = GenderType.BLANK;
+        this.profile = profile;
+        this.role = role;
+        this.loginType = loginType;
+        this.genderType = genderType;
+        this.deletedAt = deletedAt;
+        this.character = character;
+        this.memberNPCList = memberNPCList;
+        this.memberQuizList = memberQuizList;
     }
 
     //사용자 탈퇴

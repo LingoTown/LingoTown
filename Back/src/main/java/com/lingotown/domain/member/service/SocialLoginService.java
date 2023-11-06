@@ -191,7 +191,7 @@ public class SocialLoginService {
     private LoginResponseDto getLoginResponseDto(HashMap<String, Object> userInfo, LoginType loginType) {
 
         if (memberService.isEmpty(userInfo.get("loginId").toString(), loginType)) {
-            Member user = memberService.enterMember(userInfo, loginType);
+            memberService.enterMember(userInfo, loginType);
         }
 
         Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get("loginId").toString(), loginType)
