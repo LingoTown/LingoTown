@@ -19,15 +19,17 @@ export const NPCStage: React.FC<{
   color: THREE.Color;
   active: string | null;
   setActive: (name: string | null) => void;
+  enabled: boolean | false;
+  setEnabled: (name: boolean | false) => void;
   setHovered: (name: string | null) => void;
 }> = ({
-  children, texture, name, age, color, active, setActive, setHovered, ...props
+  children, texture, name, age, color, active, setActive, enabled, setEnabled, setHovered, ...props
 }) => {
   const information = [
     { "Jerry": "Little kid playing in the park." },
     { "Sanha": "Runner." },
     { "Marco": "Captain of the 'Daejeon \n Hana Citizen' team." },
-    { "Lia": "'SSAFY' high school student \n and are classmates with user." },
+    { "Bonnie": "'SSAFY' high school student \n and are classmates with user." },
     { "Jaden": "Head of the human resources \n department of the \n 'SAMSUNG' company." },
     { "Kevin": "The host of the new mobile project \n presentation at SAMSUNG." },
     { "Daen": "The presenter at SSAFY." },
@@ -74,9 +76,22 @@ export const NPCStage: React.FC<{
         name={name}
         args={[2, 3, 1]}
         scale={[0.5, 0.5, 0.1]}
-        onClick={() => setActive(active === name ? null : name)}
-        onPointerEnter={() => setHovered(name)}
-        onPointerLeave={() => setHovered(null)}
+        onClick={() => {
+          if (!enabled && active !== name) {
+            setActive(active === name ? null : name);
+            setEnabled(true);
+          }
+        }}
+        onPointerEnter={() => {
+          if (!enabled && active !== name) {
+            setHovered(name);
+          }
+        }}
+        onPointerLeave={() => {
+          if (!enabled && active !== name) {
+            setHovered(null);
+          }
+        }}
       >
         <MeshPortalMaterial
           side={THREE.DoubleSide}
@@ -87,7 +102,14 @@ export const NPCStage: React.FC<{
 
           {children}
 
-          <mesh>
+          <mesh
+            onClick={() => {
+              if (enabled && active === name) {
+                setActive(null);
+                setEnabled(false);
+              }
+            }}
+          >
             <sphereGeometry args={[5, 64, 64]} />
             <meshStandardMaterial
               map={map}
