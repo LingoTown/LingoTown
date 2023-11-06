@@ -54,7 +54,8 @@ export const IntroduceComp: React.FC = () => {
   const { actions: barryActions } = useAnimations(barry.animations, barry.scene);
 
   const [active, setActive] = useState<string | null>(null);
-  const [enabled, setEnabled] = useState<boolean | undefined>(false);
+  const [enabled, setEnabled] = useState<boolean | false>(false);
+  const [cameraEnabled, setCameraEnabled] = useState<boolean | undefined>(false);
 
   const [jerryHovered, setJerryHovered] = useState<string | null>(null);
   const [sanhaHovered, setSanhaHovered] = useState<string | null>(null);
@@ -121,12 +122,12 @@ export const IntroduceComp: React.FC = () => {
       sceneInstance.getObjectByName(active!)?.getWorldPosition(targetPosition);
 
       controlsRef.current?.setLookAt(targetPosition.x + 2, targetPosition.y, targetPosition.z + 5, targetPosition.x + 2, targetPosition.y, targetPosition.z, true);
-      setEnabled(true);
+      setCameraEnabled(true);
     } else {
       controlsRef.current?.setLookAt(0, 0, 10, 0, 0, 0, true);
 
       setTimeout(() => {
-        setEnabled(false);
+        setCameraEnabled(false);
       }, 1000)
     }
   }, [active, sceneInstance]);
@@ -240,7 +241,7 @@ export const IntroduceComp: React.FC = () => {
       <ambientLight intensity={0.5} />
       <Environment preset="sunset" />
 
-      <CameraControls ref={controlsRef} enabled={enabled} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
+      <CameraControls ref={controlsRef} enabled={cameraEnabled} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
 
       <Text
         font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
@@ -289,6 +290,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setJerryHovered}
         position-x={-4.5}
         position-y={1}
@@ -303,6 +306,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setSanhaHovered}
         position-x={-3}
         position-y={1}
@@ -317,6 +322,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setMarcoHovered}
         position-x={-1.5}
         position-y={1}
@@ -331,6 +338,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setBonnieHovered}
         position-y={1}
       >
@@ -344,6 +353,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setJadenHovered}
         position-x={1.5}
         position-y={1}
@@ -358,6 +369,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setKevinHovered}
         position-x={3}
         position-y={1}
@@ -372,6 +385,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setDaenHovered}
         position-x={4.5}
         position-y={1}
@@ -386,6 +401,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setOliviaHovered}
         position-x={-4.5}
         position-y={-1}
@@ -400,6 +417,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setLukeHovered}
         position-x={-3}
         position-y={-1}
@@ -414,6 +433,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setIsabelHovered}
         position-x={-1.5}
         position-y={-1}
@@ -428,6 +449,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setJinaHovered}
         position-x={1.5}
         position-y={-1}
@@ -442,6 +465,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setJimmyHovered}
         position-x={3}
         position-y={-1}
@@ -456,6 +481,8 @@ export const IntroduceComp: React.FC = () => {
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
+        enabled={enabled}
+        setEnabled={setEnabled}
         setHovered={setBarryHovered}
         position-x={4.5}
         position-y={-1}
