@@ -90,7 +90,7 @@ export const ThemeComp: React.FC = () => {
   return (
     <>
       <ambientLight intensity={0.5} />
-      <Environment preset="sunset" />
+      <Environment preset="park" />
 
       <CameraControls ref={controlsRef} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 6} />
 
