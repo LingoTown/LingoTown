@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { TextUtil } from "./util/TextUtil";
 import { loadingAtom } from '../../atom/LoadingAtom';
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 export const MapEnterComp: React.FC<{
   x: number;
