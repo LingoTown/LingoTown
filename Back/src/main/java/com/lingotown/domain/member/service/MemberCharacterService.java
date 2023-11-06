@@ -4,6 +4,7 @@ import com.lingotown.domain.character.dto.CharacterResponseDto;
 import com.lingotown.domain.character.entity.Character;
 import com.lingotown.domain.character.repository.CharacterRepository;
 import com.lingotown.domain.character.service.CharacterService;
+import com.lingotown.domain.member.dto.request.UpdateSelectedCharacterRequestDto;
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.entity.MemberCharacter;
 import com.lingotown.domain.member.repository.MemberCharacterRepository;
@@ -11,12 +12,12 @@ import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
-import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -60,5 +61,21 @@ public class MemberCharacterService {
 
         return new CommonResponse(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage());
+    }
+
+    @Transactional
+    public CommonResponse updateSelectedCharacter(Principal principal, UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        MemberCharacter previousCharacter = memberCharacterRepository.findByMemberIdAndCharacterId(memberId, updateSelectedCharacterRequestDto.getPreviousId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_CHARACTER_NOT_FOUND));
+
+        MemberCharacter nowCharacter = memberCharacterRepository.findByMemberIdAndCharacterId(memberId, updateSelectedCharacterRequestDto.getNowId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_CHARACTER_NOT_FOUND));
+
+        previousCharacter.selectOff();
+        nowCharacter.selectOn();
+
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 }

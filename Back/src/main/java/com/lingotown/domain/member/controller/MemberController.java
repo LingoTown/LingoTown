@@ -1,8 +1,10 @@
 package com.lingotown.domain.member.controller;
 
 import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
+import com.lingotown.domain.member.dto.request.UpdateSelectedCharacterRequestDto;
 import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
+import com.lingotown.domain.member.service.MemberCharacterService;
 import com.lingotown.domain.member.service.MemberService;
 import com.lingotown.domain.member.service.QuizMemberService;
 import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
@@ -24,6 +26,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final QuizMemberService quizMemberService;
+    private final MemberCharacterService memberCharacterService;
 
     @GetMapping
     public DataResponse<MemberInfoResponseDto> readUserInfo(Principal principal) {
@@ -50,4 +53,9 @@ public class MemberController {
         return memberService.editProfile(principal, file);
     }
 
+    @PutMapping("/select/character")
+    public CommonResponse changeSelectedCharacter(Principal principal, @RequestBody UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
+
+        return memberCharacterService.updateSelectedCharacter(principal, updateSelectedCharacterRequestDto);
+    }
 }

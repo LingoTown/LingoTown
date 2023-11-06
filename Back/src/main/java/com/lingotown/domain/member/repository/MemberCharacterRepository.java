@@ -16,4 +16,6 @@ public interface MemberCharacterRepository extends JpaRepository<MemberCharacter
     List<MemberCharacter> findAllByMemberId(Long memberId);
 
     List<MemberCharacter> findByMemberId(Long memberId);
+
+    Optional<MemberCharacter> findByMemberIdAndCharacterId(Long memberId, Long CharacterId);
 }
