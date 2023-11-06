@@ -12,9 +12,6 @@ public interface MemberCharacterRepository extends JpaRepository<MemberCharacter
     @Query("select mc from MemberCharacter as mc where mc.isSelected = true and mc.member.id = :memberId")
     Optional<MemberCharacter> findSelectedCharacterByMemberId(Long memberId);
 
-    @Query("select mc from MemberCharacter as mc where mc.member.id = :memberId")
-    List<MemberCharacter> findAllByMemberId(Long memberId);
-
     List<MemberCharacter> findByMemberId(Long memberId);
 
     Optional<MemberCharacter> findByMemberIdAndCharacterId(Long memberId, Long CharacterId);
