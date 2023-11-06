@@ -12,6 +12,8 @@ import { Wall } from '../util/block/Wall.tsx';
 import { useCylinder } from '@react-three/cannon'
 import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
 import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
+import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { useRecoilValue } from "recoil";
 
 export const ExploreComp: React.FC = () => {
   //wall
@@ -64,6 +66,8 @@ export const ExploreComp: React.FC = () => {
   const customerCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const customerAction = useRef<AnimationAction>();
   const customerActions = useAnimations(customerFile.animations, customerFile.scene).actions;
+
+  const talkBalloon = useRecoilValue(talkBalloonAtom);
   
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
@@ -130,6 +134,10 @@ export const ExploreComp: React.FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isInsideCircle]);
+
+  useEffect(() => {
+    isMove.current = talkBalloon.isMove;
+  }, [talkBalloon.isMove])
 
   return(
     <>

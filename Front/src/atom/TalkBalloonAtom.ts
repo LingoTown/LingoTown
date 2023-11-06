@@ -10,6 +10,7 @@ type TalkBalloonAtom = {
   isMove: boolean;
   topicList: topic[];
   isLoading: boolean;
+  isUser: boolean;
 };
 
 export const talkBalloonAtom = atom<TalkBalloonAtom>({
@@ -23,6 +24,7 @@ export const talkBalloonAtom = atom<TalkBalloonAtom>({
     isMove: true,
     topicList: [],
     isLoading: false,
+    isUser: true,
   }
 });
 
@@ -35,4 +37,5 @@ export const initialTalkBalloon = {
   isMove: true,
   topicList: [],
   isLoading: false,
+  isUser: true,
 };
