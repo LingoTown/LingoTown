@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.N;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateTalkDetailResDto {
-    private Long talkDetailId;
+public class QuizResDto {
+    private String result;
 }

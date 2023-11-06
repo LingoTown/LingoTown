@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReadTopicResDto {
 
-    Long topicId;
-    String keyword;
+    private Long topicId;
+    private String keyword;
 
     public static ReadTopicResDto of(Topic topic){
         return ReadTopicResDto

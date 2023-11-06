@@ -1,4 +1,4 @@
-package com.lingotown.domain.member.dto.response;
+package com.lingotown.domain.world.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class EditProfileResDto {
-    private String profile;
+public class ReadMemberQuizResDto {
+    private Long quizId;
 }

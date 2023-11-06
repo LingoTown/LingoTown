@@ -46,9 +46,11 @@ public class MemberNPCService {
             World world = npc.getWorld();
 
             List<Talk> talkList = talkRepository.findTalkList(memberNPC.getId());
-            int count = talkList.size();
 
-            if(count==0)  continue;
+            int count=0;
+            for(Talk talk : talkList) {
+                if (!talk.getTalkDetailList().isEmpty()) count++;
+            }
 
             ReadMemberNPCResDto memberNPCResDto = ReadMemberNPCResDto
                     .builder()
@@ -59,7 +61,7 @@ public class MemberNPCService {
                     .npcName(npc.getName())
                     .npcImage(npc.getNpcImage())
                     .language(world.getLanguage().toString())
-                    .theme(world.getTheme().toString())
+                    .theme(world.getTheme())
                     .lastVisited(talkList.get(0).getCreatedAt())
                     .build();
 

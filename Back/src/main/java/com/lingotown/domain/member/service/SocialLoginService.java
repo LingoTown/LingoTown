@@ -143,8 +143,9 @@ public class SocialLoginService {
         JsonElement element = JsonParser.parseString(result.toString());
 
         String email = "";
-        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-        if (has_email) {
+        System.out.println(element.getAsJsonObject());
+        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
+        if (!has_email) {
             email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
         }
 
@@ -190,7 +191,7 @@ public class SocialLoginService {
     private LoginResponseDto getLoginResponseDto(HashMap<String, Object> userInfo, LoginType loginType) {
 
         if (memberService.isEmpty(userInfo.get("loginId").toString(), loginType)) {
-            Member user = memberService.enterMember(userInfo, loginType);
+            memberService.enterMember(userInfo, loginType);
         }
 
         Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get("loginId").toString(), loginType)

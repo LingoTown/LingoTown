@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReadWorldInfoResDto {
 
-    Long worldId;
-    String theme;
-    String language;
+    private Long worldId;
+    private String theme;
+    private String language;
 
     public static ReadWorldInfoResDto of(World world) {
         return ReadWorldInfoResDto

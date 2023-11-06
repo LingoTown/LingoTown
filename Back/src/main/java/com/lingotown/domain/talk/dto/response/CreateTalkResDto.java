@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class CreateTalkResDto {
-    Long talkId;
-    Long npcId;
-    List<ReadTopicResDto> topicList;
+    private Long talkId;
+    private Long npcId;
+    private List<ReadTopicResDto> topicList;
 }
