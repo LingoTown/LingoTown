@@ -43,7 +43,7 @@ public class QuizMemberService {
             Optional<MemberQuiz> memberQuiz = memberQuizRepository.findByMemberIdAndQuizId(memberId, quiz.getId());
 
             boolean isSolved = true;
-            if(memberQuiz.isPresent()) isSolved=false;
+            if(memberQuiz.isEmpty()) isSolved=false;
 
             ReadMemberQuizResDto memberQuizResDto = ReadMemberQuizResDto
                     .builder()
