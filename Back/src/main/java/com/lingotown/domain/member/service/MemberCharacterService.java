@@ -30,6 +30,7 @@ public class MemberCharacterService {
 
     private final CharacterService characterService;
 
+    @Transactional
     public CommonResponse createMemberCharacter(Member member) {
         List<CharacterResponseDto> characterResponseDtoList = characterService.getCharacterList().getData();
 
