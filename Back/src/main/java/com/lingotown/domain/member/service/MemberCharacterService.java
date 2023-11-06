@@ -52,6 +52,8 @@ public class MemberCharacterService {
                     .character(character)
                     .build();
 
+
+
             memberCharacterRepository.save(memberCharacter);
         }
 

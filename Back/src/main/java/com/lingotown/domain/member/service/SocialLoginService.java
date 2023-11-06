@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,6 +49,7 @@ public class SocialLoginService {
     private final MemberCharacterRepository memberCharacterRepository;
 
     private final MemberService memberService;
+    private final MemberCharacterService memberCharacterService;
 
     @Value("${social-login.kakao.client}")
     private String KAKAO_CLIENT;
@@ -225,6 +227,12 @@ public class SocialLoginService {
             characterId = optionalMemberCharacter.get().getCharacter().getId();
             characterGender = optionalMemberCharacter.get().getCharacter().getGender();
             characterLink = optionalMemberCharacter.get().getCharacter().getLink();
+        }
+
+        List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+
+        if(memberCharacterListByMemberId.size() == 0) {
+            memberCharacterService.createMemberCharacter(member);
         }
 
         return LoginResponseDto.builder()
