@@ -155,9 +155,11 @@ const MainPage = () => {
     <>
       <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
-          <div className="mr-8 cursor-pointer" onClick={() => {
+          <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
             navigate("/departurePage");
-          }}>Close</div>
+          }}
+          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+          >Close</div>
         </div>
         <div className=''>
             <div className='mt-10 w-[80rem] h-[40rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
