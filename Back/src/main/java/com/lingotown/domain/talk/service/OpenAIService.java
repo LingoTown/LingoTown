@@ -193,7 +193,9 @@ public class OpenAIService {
 //            System.out.println("status : " +resDto.getStatus());
 //            System.out.println("quotaRemaining : " +resDto.getQuotaRemaining());
 
-            /* GPT 응답 TTS 변환 및 DB 저장 */
+        }
+
+        /* GPT 응답 TTS 변환 및 DB 저장 */
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
 
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
@@ -205,8 +207,6 @@ public class OpenAIService {
 
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
-        }
-
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
@@ -216,20 +216,6 @@ public class OpenAIService {
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
-    }
-
-    //토픽으로 대화 하기
-    @Transactional
-    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
-        TalkReqDto talkReqDto = TalkReqDto
-                .builder()
-                .talkId(topicReqDto.getTalkId())
-                .prompt(topicReqDto.getTopic())
-                .talkFile(null)
-                .build();
-
-
-        return askGPT(principal, talkReqDto);
     }
 
 
@@ -256,6 +242,7 @@ public class OpenAIService {
                 "Lower the level of difficulty in responding " +
                 "Please ask the appropriate questions so that the conversation can continue. " +
                 "And also, Please respond in complete sentences without exceeding max_token. " +
+
                 "Now, " + "you are " +npcName +", and " + npcGender +
                 " and " + npcJob + ", and " + "your age is " + npcAge
                 + ". and This is your situation. " +npcSituation+ " " +
