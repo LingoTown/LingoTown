@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReadMemberQuizResDto {
     private Long quizId;
+    private String quiz;
+    private boolean isSolved;
 }

@@ -10,15 +10,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
@@ -165,21 +168,53 @@ public class WebClientUtil {
 
         // RestTemplate를 사용하여 동기 요청을 보냅니다.
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<PronunciationResDto> response = restTemplate.postForEntity(fullUrl, requestEntity, PronunciationResDto.class);
 
-        // 임시 파일을 삭제합니다.
-        boolean deleted = tempFile.delete();
-        if (!deleted) {
-            logger.error("임시 파일을 삭제하는 데 실패했습니다: " + tempFile.getAbsolutePath());
+        // 에러 핸들링을 위한 커스텀 에러 핸들러 설정
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler(){
+            @Override
+            public void handleError(ClientHttpResponse response) throws IOException {
+                // Default behavior, may be omitted if you don't want to handle default cases
+                super.handleError(response);
+            }
+        });
+
+        ResponseEntity<PronunciationResDto> response = null;
+        try {
+            response = restTemplate.postForEntity(fullUrl, requestEntity, PronunciationResDto.class);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            // 오류 응답을 로그에 기록합니다.
+            logger.error("API 요청 중 오류 발생: HTTP 상태 코드: " + e.getStatusCode());
+            logger.error("오류 응답 본문: " + e.getResponseBodyAsString());
+
+            // JSON으로부터 세부 오류 메시지를 파싱하는 로직을 추가합니다.
+            // JSON 파싱은 여기서 예제로 단순화되어 있으나, 실제로는 복잡한 JSON 구조일 수 있습니다.
+            try {
+                JSONObject jsonObject = new JSONObject(e.getResponseBodyAsString());
+                String errorMessage = jsonObject.optString("error_message", "오류 메시지를 파싱할 수 없습니다.");
+                int errorCode = jsonObject.optInt("error_code", -1);
+                logger.error("세부 오류 메시지: " + errorMessage);
+                logger.error("오류 코드: " + errorCode);
+            } catch (JSONException jsonException) {
+                logger.error("JSON 파싱 중 오류 발생", jsonException);
+            }
+            throw e; // Or handle it with custom actions
+        } catch (RestClientException e) {
+            logger.error("API 요청 중 예기치 못한 오류 발생", e);
+            throw new RuntimeException("API 요청 실패", e);
+        } finally {
+            // 임시 파일을 삭제합니다.
+            boolean deleted = tempFile.delete();
+            if (!deleted) {
+                logger.error("임시 파일을 삭제하는 데 실패했습니다: " + tempFile.getAbsolutePath());
+            }
         }
 
-        // 응답 본문을 반환합니다.
-        if (response.getStatusCode() == HttpStatus.OK) {
-            System.out.println("body : " +response.getBody());
-            System.out.println("code : " +response.getStatusCode());
+        // 성공적인 응답 처리
+        if (response != null && response.getStatusCode() == HttpStatus.OK) {
             return response.getBody();
         } else {
-            throw new RuntimeException("요청 중 오류 발생: " + response.getStatusCode());
+            // 이 경우는 일반적으로 에러 핸들러에 의해 처리되므로 발생하지 않을 것입니다.
+            throw new RuntimeException("API 요청이 성공적이지 않았습니다: " + (response != null ? response.getStatusCode() : "응답 없음"));
         }
     }
 }
