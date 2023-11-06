@@ -7,6 +7,7 @@ import { MapUtilComp } from "../component/talk/MapUtilComp";
 import { Physics } from '@react-three/cannon';
 import LoadingPage from "./LoadingPage";
 import Tutorial from "../component/tutorial/Tutorial";
+import { tutorialAtom } from "../atom/TutorialAtom";
 // import { Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
@@ -18,10 +19,14 @@ interface CanvasPage {
 export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element => {
   const loading = useRecoilValue(loadingAtom);
   const talkBalloon = useRecoilValue(talkBalloonAtom);
+  const tutorialRead = useRecoilValue(tutorialAtom);
+  const visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
 
   return(
     <>
-      <Tutorial/>
+      {
+        !loading.loading && (visited == null && !tutorialRead.visit)?<Tutorial/>:null
+      }
       {
         loading.loading? <LoadingPage/> : null
       }

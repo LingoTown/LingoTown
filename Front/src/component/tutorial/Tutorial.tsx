@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState } from "react";
+import { tutorialAtom } from '../../atom/TutorialAtom';
+import { useSetRecoilState } from 'recoil';
 
 const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
 const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
@@ -7,9 +9,10 @@ const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_h
 const Tutorial = () => {
   const [step, setStep] = useState<number>(0);
   const [isPressed, setIsPressed] = React.useState(false);
-  const [img, setImg] = useState<string[]>(["/tutorial/DirectionalKey.png", "/tutorial/SpaceBarkey.png", "/tutorial/A_key.png", "/tutorial/S_key.png", "/tutorial/D_key.png"]);
-  const [title, setTile] = useState<string[]>(["방향키", "스페이스바", "Action키", "Start키", "Done키"]);
-  const [statement, setStatement] = useState<string[]>(["방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]); 
+  const img:string[] = ["/tutorial/DirectionalKey.png", "/tutorial/SpaceBarkey.png", "/tutorial/A_key.png", "/tutorial/S_key.png", "/tutorial/D_key.png"];
+  const title:string[] = ["방향키", "스페이스바", "Action키", "Start키", "Done키"];
+  const statement:string[] = ["방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]; 
+  const setVisit = useSetRecoilState(tutorialAtom);
 
   // 마우스가 버튼 위로 올라왔을 때와 떠났을 때의 이벤트 핸들러
   const handleMouseDown = () => setIsPressed(true);
@@ -17,12 +20,19 @@ const Tutorial = () => {
   const handleMouseLeave = () => setIsPressed(false);
 
   const nextStep = () => {
-    if(step == title.length-1) return;
+    if(step == title.length-1) {
+      setVisit({visit:true}); //1번 읽었다.
+      return;
+    }
     else setStep(step+1);
   }
 
   const moveStep = (index: number) => {
     setStep(index);
+  }
+
+  const skipStep = () => {
+    setVisit({visit:true}); //1번 읽었다.
   }
   
 
@@ -41,6 +51,7 @@ const Tutorial = () => {
       className="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-[700px] w-full md:w-[700px] h-auto rounded-[20px] p-8"
     >
       <div 
+        onClick={skipStep}
         style={{ cursor: `url(${cursorHoverLink}), auto` }} 
         className="font-[NPSfontBold] text-[#09B1F8] font-['ARLRDBD'] text-[13px] font-bold ml-[95%]">
         SKIP
@@ -71,7 +82,7 @@ const Tutorial = () => {
           onMouseLeave={handleMouseLeave}
           onClick={nextStep}
         >
-          Next
+          {title.length-1==step?"End":"Next"}
         </button>
       </div>
 
