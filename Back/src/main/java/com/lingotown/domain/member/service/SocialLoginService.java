@@ -4,6 +4,8 @@ package com.lingotown.domain.member.service;
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
 import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.entity.Member;
+import com.lingotown.domain.member.entity.MemberCharacter;
+import com.lingotown.domain.member.repository.MemberCharacterRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
 
 import com.lingotown.global.data.LoginType;
@@ -41,6 +43,8 @@ import java.util.HashMap;
 public class SocialLoginService {
 
     private final MemberRepository memberRepository;
+    private final MemberCharacterRepository memberCharacterRepository;
+
     private final MemberService memberService;
 
     @Value("${social-login.kakao.client}")
@@ -199,7 +203,22 @@ public class SocialLoginService {
 
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
-        return LoginResponseDto.of(member, accessToken, refreshToken);
+
+        MemberCharacter memberCharacter = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_CHARACTER_NOT_FOUND));
+
+        return LoginResponseDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .email(member.getEmail())
+                    .gender(member.getGenderType().toString())
+                    .social(member.getLoginType().toString())
+                    .nickname(member.getNickname())
+                    .profileImg(member.getProfile())
+                    .characterId(memberCharacter.getCharacter().getId())
+                    .characterGender(memberCharacter.getCharacter().getGender())
+                    .characterLink(memberCharacter.getCharacter().getLink())
+                    .build();
     }
 
 
