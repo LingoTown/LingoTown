@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function Barry() {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/Name/Alphabat.gltf') as any;
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Font/Name/Alphabat.gltf') as any;
 
   const B = useRef<THREE.Mesh>(null);
   const A = useRef<THREE.Mesh>(null);
@@ -22,7 +22,7 @@ export function Barry() {
 
   return (
     <group dispose={null}>
-      <group scale={0.01} rotation={[0, 300, 0]} position={[-2, 0, 2]}>
+      <group scale={0.01} rotation={[0, 300, 0]} position={[-15, -0.2, 2]}>
         <mesh ref={B} geometry={nodes.AB_text_0.geometry} material={materials.text} position={[-155, 25, 1]} />
         <mesh ref={A} geometry={nodes.AA_text_0.geometry} material={materials.text} position={[40, 25, 1]} />
         <mesh ref={R1} geometry={nodes.AR_text_0.geometry} material={materials.text} position={[25, -13, 1]} />

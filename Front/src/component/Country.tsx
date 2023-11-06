@@ -20,11 +20,11 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
     }, [])
     const getIntimacy = (intimacy : number):string => {
         if(intimacy >= 100){
-            return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+gold.png"
+            return import.meta.env.VITE_S3_URL + "GoldBar.png"
         } else if (intimacy >= 50){
-            return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+silver.png"
+            return import.meta.env.VITE_S3_URL + "SilverBar.png"
         } else {
-            return "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/Bar+bronze.png"
+            return import.meta.env.VITE_S3_URL + "BronzeBar.png"
         }
     }
 

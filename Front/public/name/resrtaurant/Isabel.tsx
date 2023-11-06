@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function Isabel() {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/Name/Alphabat.gltf') as any
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Font/Name/Alphabat.gltf') as any
 
   const I = useRef<THREE.Mesh>(null);
   const S = useRef<THREE.Mesh>(null);
@@ -24,7 +24,7 @@ export function Isabel() {
 
   return (
     <group dispose={null}>
-      <group scale={0.01} rotation={[0, 0, 0]} position={[-6, 0.3, -3]}>
+      <group scale={0.01} rotation={[0, 0, 0]} position={[-5.3, 0.3, 9]}>
         <mesh ref={I} geometry={nodes.AI_text_0.geometry} material={materials.text} position={[20, 60, 1]} />
         <mesh ref={S} geometry={nodes.AS_text_0.geometry} material={materials.text} position={[-20, -105, 1]} />
         <mesh ref={A} geometry={nodes.AA_text_0.geometry} material={materials.text} position={[95, -25, 1]} />
