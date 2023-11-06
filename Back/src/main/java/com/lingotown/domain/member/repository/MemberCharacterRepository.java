@@ -14,4 +14,6 @@ public interface MemberCharacterRepository extends JpaRepository<MemberCharacter
 
     @Query("select mc from MemberCharacter as mc where mc.member.id = :memberId")
     List<MemberCharacter> findAllByMemberId(Long memberId);
+
+    List<MemberCharacter> findByMemberId(Long memberId);
 }
