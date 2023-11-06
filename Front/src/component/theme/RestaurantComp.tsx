@@ -23,33 +23,25 @@ import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
 export const RestaurantComp: React.FC = () => {
   //wall
   const container = [
-    { size: [15, 2, 38], position: [-5, -1.1, -5], wallKey: 'BF1', name: 'floor', mass:0}, // bottom
-    { size: [15, 10, 3], position: [-5, 5, -20], wallKey: 'BW1', name: 'wall', mass:0}, // back wall
-    { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
-    { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
-    { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
-
+    { size: [15, 2, 38], position: [-5, -1.1, -5], wallKey: 'BF1', name: 'floor', mass:0},
+    { size: [15, 10, 3], position: [-5, 5, -20], wallKey: 'BW1', name: 'wall', mass:0},
+    { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'RW1',  name: 'wall', mass:0},
+    { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'FW1', name: 'wall', mass:0},
+    { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0},
     // 추가벽
     { size: [3, 7, 15], position: [-0.4, 2, 6], wallKey: 'RW1',  name: 'wall', mass:0},
     { size: [3, 7, 20], position: [1, 2, -10], wallKey: 'RW1',  name: 'wall', mass:0},
   ];
 
-
-
   // player
-  const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_1.glb");
+  const playerFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_1.glb");
   const [playerPosition, setPlayerPosition] = useState([-5.5, 0, 12]);
   const [playerRotation, setPlayerRotation]= useState([0,3,0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
-    mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0,0.1],
-    friction: 1,     // Adjust the value as needed
-    restitution: 0,   // Set to 0 to avoid bouncing
-    allowSleep:true,
+    args:[0.5,0,0.1], friction: 1, restitution: 0, allowSleep:true, mass: 0, 
   }));
-
 
   // camera action
   const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
@@ -60,24 +52,35 @@ export const RestaurantComp: React.FC = () => {
   const lerpFactor = 0.04;
 
   // NPC
-  const chefFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb");
-  const chefPosition = new THREE.Vector3(-5, 1, 2.0);
-  const chefRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
-  const chefCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const chefAction = useRef<AnimationAction>();
-  const chefActions = useAnimations(chefFile.animations, chefFile.scene).actions;
+  const oliviaFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_17.glb");
+  const oliviaPosition = new THREE.Vector3(-7.5, 0.1, 2);
+  const oliviaCameraPosition = new THREE.Vector3(-5, 1, 2.0);
+  const oliviaCameraRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const oliviaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const oliviaAction = useRef<AnimationAction>();
+  const oliviaActions = useAnimations(oliviaFile.animations, oliviaFile.scene).actions;
 
-  const customerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_2.glb");
-  const customerPosition = new THREE.Vector3(-3, 2, -5);
-  const customerRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
-  const customerCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  const customerAction = useRef<AnimationAction>();
-  const customerActions = useAnimations(customerFile.animations, customerFile.scene).actions;
-  
+  const lukeFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_2.glb");
+  const lukePosition = new THREE.Vector3(-3, 0.1, -8);
+  const lukeCameraPosition = new THREE.Vector3(-3, 2, -5);
+  const lukeCameraRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const lukeCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const lukeAction = useRef<AnimationAction>();
+  const lukeActions = useAnimations(lukeFile.animations, lukeFile.scene).actions;
+
+  const isabelFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_13.glb");
+  const isabelPosition = new THREE.Vector3(-5, 0.1, 9);
+  const isabelCameraPosition = new THREE.Vector3(-5, 2, 12);
+  const isabelCameraRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const isabelCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const isabelAction = useRef<AnimationAction>();
+  const isabelActions = useAnimations(isabelFile.animations, isabelFile.scene).actions;
+
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 6, name: "Luke", targetPosition: customerPosition, targetRotation:customerRotation, ref: customerCircleRef },
-    { id: 33, name: "Olivia", targetPosition: chefPosition, targetRotation:chefRotation, ref: chefCircleRef },
+    { id: 6, name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
+    { id: 33, name: "Olivia", targetPosition: oliviaCameraPosition, targetRotation:oliviaCameraRotation, ref: oliviaCircleRef },
+    { id: 26, name: "Isabel", targetPosition: isabelCameraPosition, targetRotation:isabelCameraRotation, ref: isabelCircleRef}
   ];
 
   // state
@@ -111,8 +114,9 @@ export const RestaurantComp: React.FC = () => {
   useEffect(() => {
     // 유저 NPC 기본 포즈 설정
     SetAction('Defeat', activeAction, actions, playerRef);
-    SetAction('Idle', chefAction, chefActions, null);
-    SetAction('Idle', customerAction, customerActions, null);
+    SetAction('Idle', oliviaAction, oliviaActions, null);
+    SetAction('Idle', lukeAction, lukeActions, null);
+    SetAction('Idle', isabelAction, isabelActions, null);
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
@@ -165,30 +169,41 @@ export const RestaurantComp: React.FC = () => {
 
   return(
     <>
+      {/* 벽 */}
       <group>
         { container.map((props, index) => <Wall key={index} {...props}/> ) }
       </group>
 
+      {/* STT */}
       { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
 
+      {/* NPC 이름 */}
       <Isabel />
       <Luke />
       <Olivia />
-      <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+
+      {/* 배경, 조명 */}
       <Restaurant/>
       <Environment blur={1} background preset="sunset" />
 
-      {/* chef */}
-      <Circle ref={chefCircleRef} args={[3, 32]} position={[-7.5, 0.1, 2]} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0} />
+      {/* Player */}
+      <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+
+      {/* NPC */}
+      <Circle ref={oliviaCircleRef} args={[CIRCLE_RADIUS]} position={oliviaPosition} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.3} />
       </Circle>
-      <primitive scale={1} position={[-7.5, 0.1, 2]} rotation={[0, 1.5, 0]} object={chefFile.scene}/>
-      
-      {/* customer:olivia */}
-      <Circle ref={customerCircleRef} args={[3, 32]} position={[-3, 0.1, -8]} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0} />
+      <primitive scale={1} position={oliviaPosition} rotation={[0, 1.5, 0]} object={oliviaFile.scene}/>
+
+      <Circle ref={lukeCircleRef} args={[CIRCLE_RADIUS]} position={lukePosition} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.3} />
       </Circle>
-      <primitive scale={1} position={[-3, 0.1, -8]} rotation={[0, 0, 0]} object={customerFile.scene} />
+      <primitive scale={1} position={lukePosition} rotation={[0, 0, 0]} object={lukeFile.scene} />
+
+      <Circle ref={isabelCircleRef} args={[CIRCLE_RADIUS]} position={isabelPosition} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.3} />
+      </Circle>
+      <primitive scale={1} position={isabelPosition} rotation={[0, 0, 0]} object={isabelFile.scene} />
     </>
   )
 } 

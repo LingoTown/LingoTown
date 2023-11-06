@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber'
 
 
 export function Jina() {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/Name/Alphabat.gltf') as any
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Font/Name/Alphabat.gltf') as any
 
   const J = useRef<THREE.Mesh>(null);
   const I = useRef<THREE.Mesh>(null);
@@ -21,7 +21,7 @@ export function Jina() {
 
   return (
     <group dispose={null}>
-      <group scale={0.01} rotation={[0, 600, 0]} position={[-9.6, 0.3, -6]}>
+      <group scale={0.01} rotation={[0, 600, 0]} position={[-9.6, 0.1, -6]}>
         <mesh ref={J} geometry={nodes.AJ_text_0.geometry} material={materials.text} position={[-155, -85, 1]} />
         <mesh ref={I} geometry={nodes.AI_text_0.geometry} material={materials.text} position={[-22, 82, 1]} />
         <mesh ref={N} geometry={nodes.AN_text_0.geometry} material={materials.text} position={[-130, 40, 1]} />
