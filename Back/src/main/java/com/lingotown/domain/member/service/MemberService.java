@@ -14,6 +14,7 @@ import com.lingotown.domain.world.entity.World;
 import com.lingotown.domain.world.repository.WorldRepository;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.LoginType;
+import com.lingotown.global.data.MemberRole;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.CommonResponse;
@@ -141,6 +142,8 @@ public class MemberService {
                 .nickname(userInfo.get("nickname").toString())
                 .profile(userInfo.get("profileImg").toString())
                 .email(userInfo.get("email").toString())
+                .role(MemberRole.MEMBER)
+                .genderType(GenderType.BLANK)
                 .character(defaultCharacter)
                 .build();
 
