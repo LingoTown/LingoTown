@@ -29,7 +29,7 @@ function ScriptDetail() {
                 {
                   detailList?.map((arr)=>(
                     <>
-                    <div className='flex flex-row'>
+                    <div style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }} className='flex flex-row'>
                     <span className="m-2 material-icons text-red-400 text-[1.2rem] cursor-pointer">mic</span>
                     <div className='m-1 mb-2 text-white font-[30]'>{arr.content}</div>
                     </div>

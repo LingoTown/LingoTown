@@ -168,10 +168,15 @@ const MainPage = () => {
                 <div className="relative w-40 h-40 mt-5 self-center">
                   <input className="hidden" onChange={(e)=>{handleProfileImg(e)}} type="file" id="myInput"/>
                   <img className="w-full h-full rounded-full object-cover mt-5 self-center " alt="User Profile" src={user.profileImg}/>
-                  <span className="rounded-full bg-[#ddd]"></span>
-                  <span onClick={editPic} className="bg-[#ababab] rounded-full p-1 absolute -bottom-2 -right-0 material-icons">edit</span>
+                  <span className="rounded-full bg-[#ddd]">
+
+                  </span>
+                  <span onClick={editPic} 
+                    style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                    className="bg-[#ababab] rounded-full p-1 absolute -bottom-2 -right-0 material-icons"
+                    >edit</span>
                 </div>
-                <div className='flex-1 mt-10 ml-20' >
+                <div className='mt-10 ml-20 font-[30] border-white border-[1px] rounded-lg w-[70%] p-5' >
                   {
                     nickEditMode?
                     <div>Name : &nbsp;
@@ -180,7 +185,14 @@ const MainPage = () => {
                       <span onClick={saveNickname} className="material-icons">check</span>
                     </div>
                     :
-                    <div>Name : {user.nickname} &nbsp; <span onClick={editNickname} className="material-icons">edit</span></div>
+                    <div>Name : {user.nickname} &nbsp; 
+                      <span onClick={editNickname} 
+                        className="material-icons align-middle"
+                        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                      >
+                        edit
+                      </span>
+                    </div>
                   }
                   <div>Account : {user.social}</div>
                   {
@@ -191,9 +203,13 @@ const MainPage = () => {
                   }
                   
                 </div>
-                <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
-                  <div className="hover:text-[2rem]" onClick={logout}>Logout</div>
-                  <div className="hover:text-[2rem]" onClick={deleteAccount}>Delete Account</div>
+                <div 
+                style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
+                  <div className="hover:text-[2rem]  h-[45px]" onClick={logout}>Logout</div>
+                  <div className="hover:text-[2rem]  h-[45px]" 
+                  style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                   onClick={deleteAccount}>Delete Account</div>
                 </div>
         
             </div>
@@ -205,11 +221,19 @@ const MainPage = () => {
                   <>
                   <div className="flex flex-row justify-between">
                   <div className="m-5 font-['passero-one'] font-[30] text-white underline text-[2rem] ">My Talk Script</div>
-                  <div onClick={()=>{setScriptVer(false)}} className="cursor-pointer m-5 align-center font-['passero-one'] font-[30] text-white text-[1.3rem]" > {"<--  "}go back</div>
+                  <div 
+                    onClick={()=>{setScriptVer(false)}} 
+                    className="cursor-pointer m-5 align-center font-['passero-one'] font-[30] text-white text-[1.3rem]"
+                    style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }} 
+                    > {"<--  "}go back</div>
                   </div>
                   {
                     talkList?.map((arr, i)=>(
-                      <div onClick={()=>{setDetailVer(true); setTalkId(arr.talkId)}} key={i} className="group font-['passero-one'] text-[1.2rem] font-[30] flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/60 rounded-lg">
+                      <div 
+                      onClick={()=>{setDetailVer(true); setTalkId(arr.talkId)}} key={i} 
+                      className="group font-['passero-one'] text-[1.2rem] font-[30] flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/60 rounded-lg"
+                      style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                      >
                       <div className="w-full px-5 py-2 bg-[#fff]/70 rounded-lg flex flex-row items-center justify-between">
                         
                         <div className="flex flex-row">

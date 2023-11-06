@@ -39,14 +39,18 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
                     update[i] = !update[i];
                     setToggle(update); 
                     setBox(update);
-                }} className="text-white cursor-pointer rotate-90 material-icons text-[1.8rem]">play_arrow</span> 
+                }} className="text-white cursor-pointer rotate-90 material-icons text-[1.8rem]"
+                style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                >play_arrow</span> 
                 :
                 <span onClick={()=>{
                     const update = [...openToggle];
                     update[i] = !update[i];
                     setToggle(update);
                     setBox(update);
-                }} className="text-white cursor-pointer material-icons text-[1.8rem]">play_arrow</span>
+                }} className="text-white cursor-pointer material-icons text-[1.8rem]"
+                style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                >play_arrow</span>
             } 
             &nbsp;
            <span className="text-white font-['passero-one'] font-[30] text-[2rem]">{key}</span>
@@ -58,7 +62,10 @@ function Country(props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (n
                       setNpcNum(arr.npcId);
 											props.getTalkList(arr.npcId);
 											props.onBoxClick();
-											}} className="flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/40 rounded-lg">
+											}} 
+                      className="flex mx-5 mb-2 hover:bg-[#fff]/40 rounded-lg"
+                      style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                      >
                     <div className="w-full px-5 py-3 bg-[#ddd]/70 rounded-lg flex flex-row place-content-between items-center">
                         <div className="flex items-center">
 													<img className="mr-3 w-[3.3rem] h-[3.3rem] rounded-full" src={arr.npcImage} alt="" />
