@@ -51,10 +51,6 @@ public class Member extends BaseTimeEntity {
 
     private LocalDateTime deletedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "character_id")
-    private Character character;
-
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<MemberNPC> memberNPCList = new ArrayList<>();
 
@@ -62,7 +58,7 @@ public class Member extends BaseTimeEntity {
     List<MemberQuiz> memberQuizList = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String loginId, String nickname, String email, String profile, MemberRole role, LoginType loginType, GenderType genderType, LocalDateTime deletedAt, Character character, List<MemberNPC> memberNPCList, List<MemberQuiz> memberQuizList) {
+    public Member(Long id, String loginId, String nickname, String email, String profile, MemberRole role, LoginType loginType, GenderType genderType, LocalDateTime deletedAt, List<MemberNPC> memberNPCList, List<MemberQuiz> memberQuizList) {
         this.id = id;
         this.loginId = loginId;
         this.nickname = nickname;
@@ -72,7 +68,6 @@ public class Member extends BaseTimeEntity {
         this.loginType = loginType;
         this.genderType = genderType;
         this.deletedAt = deletedAt;
-        this.character = character;
         this.memberNPCList = memberNPCList;
         this.memberQuizList = memberQuizList;
     }
