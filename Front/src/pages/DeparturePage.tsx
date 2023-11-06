@@ -15,7 +15,9 @@ const Rows = () => {
     }
     return (
         dep.map((el, i)=>(
-            <div key={i} onClick={()=>{sortTheme(el.language)}} className="hover:bg-[#ddd]/40 text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1">
+            <div key={i}
+              style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }} 
+              onClick={()=>{sortTheme(el.language)}} className="hover:bg-[#ddd]/40 text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1">
                 <div className="flex w-1/6 text-yellow-300">{el.time}</div>
                 <div className="flex w-2/6 font-bold text-[1.3rem]">{el.destination}</div>
                 <div className="flex w-1/6">{el.Flight}</div>
@@ -30,15 +32,19 @@ const DeparturePage = () => {
     const customAlert = useCustomAlert();
     return (
         <>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>    
+        <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)', cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>    
         
         <div className="w-full px-5 flex justify-between text-5xl font-bold text-white font-['passero-one']">
-          <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg" onClick={async() => {
+          <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg" 
+            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            onClick={async() => {
             localStorage.removeItem("userAtom");
             await customAlert("Notice", "로그아웃 되었습니다.")
             navigate("/")
           }}>Logout</div>
-          <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => {
+          <div 
+            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }} 
+            className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => {
             navigate("/Main");
           }}>MyPage</div>
         </div>

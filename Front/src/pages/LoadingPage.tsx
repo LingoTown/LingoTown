@@ -1,32 +1,36 @@
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Lottie from 'lottie-react';
-import progress from '../../public/progress.json';
 
 
 const LoadingPage = () => {
 
 
-  // const [animationData, setAnimationData] = useState(null);
+  const [animationData, setAnimationData] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchAnimationData = async () => {
-  //     try {
-  //       const response = await fetch('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Effect/progress.json');
-  //       const data = await response.json();
-  //       setAnimationData(data);
-  //     } catch (error) {
-  //       console.error('Error fetching animation data:', error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchAnimationData = async () => {
+      try {
+        const response = await fetch('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Effect/progress.json');
+        const data = await response.json();
+        setAnimationData(data);
+      } catch (error) {
+        console.error('Error fetching animation data:', error);
+      }
+    };
 
-  //   fetchAnimationData();
-  // }, []);
+    fetchAnimationData();
+  }, []);
 
   
   return(
   <>
-    <div className="absolute inset-0 bg-black opacity-50 z-30"></div>
-    <div className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center z-30" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>
+    <div 
+      className="absolute inset-0 bg-black opacity-50 z-30"
+      style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}  
+    ></div>
+    <div 
+      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center z-30" 
+      style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)', cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>
       <div className="text-center z-30">
         <div>
           <h1 className="text-5xl font-bold text-[#fff] font-['passero-one'] pb-5">Explore New Language with</h1>
@@ -35,7 +39,7 @@ const LoadingPage = () => {
         </div>
       </div>
       <div className="z-30 mt-[100px]">
-        <Lottie animationData={progress} />
+        <Lottie animationData={animationData} />
       </div>
     </div>
   </>
