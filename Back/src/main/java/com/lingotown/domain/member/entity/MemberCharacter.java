@@ -40,4 +40,12 @@ public class MemberCharacter {
         this.member = member;
         this.character = character;
     }
+
+    public void selectOff() {
+        this.isSelected = false;
+    }
+
+    public void selectOn() {
+        this.isSelected = true;
+    }
 }
