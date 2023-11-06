@@ -111,6 +111,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
         prevSectence: result.responseMessage,
         audio: result.responseS3URL,
         isLoading: false,
+        isUser: false,
       }));
     }, (error) => {
       console.log(error);

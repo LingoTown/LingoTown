@@ -21,6 +21,11 @@ export const TalkBalloonComp = () => {
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
+    setTalkBalloon(prev => ({
+      ...prev,
+      isUser: true,
+      sentence: "",
+    }));
     setIsRec(true);
   };
 
@@ -51,15 +56,13 @@ export const TalkBalloonComp = () => {
   const selectTopic = async(topic:topic) => {
     const flag = await customConfirm("Topic", topic.keyword);
     if (flag) {
+      setIsRec(false);
       doTalking(topic);
     }
   }
 
   const doTalking = async(topic: topic) => {
-    const param = {
-      talkId: talkState.talkId,
-      topic: topic.keyword,
-    }
+    const param = { talkId: talkState.talkId, topic: topic.keyword }
     setShowList(false);
     setTalkBalloon(prev => ({ ...prev, isLoading:true }));
     setTalkState(prev => ({ ...prev, selectTopic: !prev.selectTopic }));
@@ -71,6 +74,7 @@ export const TalkBalloonComp = () => {
         prevSectence: result.responseMessage,
         audio: result.responseS3URL,
         isLoading: false,
+        isUser: false,
       }));
     }, (error) => {
       console.log(error);
@@ -79,9 +83,7 @@ export const TalkBalloonComp = () => {
   }
 
   useEffect(() => {
-    console.log(0)
     if (isMounted.current.audioPlay) {
-      console.log(1)
       handlePlay();
     } else {
       isMounted.current.audioPlay = true;
@@ -91,7 +93,7 @@ export const TalkBalloonComp = () => {
   return(
     <>
       {
-        talkBalloon.sentence == ""?
+        !talkBalloon.prevSectence?
         <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
         style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           onClick={() => { setShowList(!showList) }}
@@ -163,11 +165,20 @@ export const TalkBalloonComp = () => {
             {
               talkBalloon.isLoading?
               <>
-                I know what you're talking about
+                답변 준비중 입니다.
               </>
               :
               <>
-                {talkBalloon.sentence}
+                {
+                  talkBalloon.isUser?
+                  <span className="text-blue-800">
+                    {talkBalloon.sentence}
+                  </span>
+                  :
+                  <span className="text-pink-800">
+                    {talkBalloon.sentence}
+                  </span>
+                }
               </>
             }
           </p>
@@ -201,10 +212,10 @@ export const TalkBalloonComp = () => {
           </>
           :
           <button 
-            className={`px-2 py-0 text-xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 font-['passero-one'] ${talkBalloon.isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
-            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
-            onClick={handleOnRec}
-            disabled={talkBalloon.isLoading}
+          className={`px-2 py-0 text-xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 font-['passero-one'] ${talkBalloon.isLoading ? 'cursor-not-allowed opacity-50' : 'button-flicker'}`}
+          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            onClick={ handleOnRec }
+            disabled={ talkBalloon.isLoading }
           >
             Start Talk !!
           </button>

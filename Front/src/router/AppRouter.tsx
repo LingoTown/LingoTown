@@ -15,7 +15,8 @@ import { EventHallComp } from "../component/theme/EventHallComp";
 import { GalleryComp } from "../component/theme/GalleryComp";
 import DeparturePage from "../pages/DeparturePage";
 import { AuthRouter } from "../router/AuthRouter";
-
+import { ExplorePage } from "../pages/ExplorePage";
+import { ExploreComp } from "../component/explore/ExploreComp";
 
 export const AppRouter = () => {
   return(
@@ -27,6 +28,7 @@ export const AppRouter = () => {
           <Route path="/main" element={ <MainPage/> }></Route>
           <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
           <Route path="/google/callback" element={ <GoogleCallback/> }/>
+          <Route path="/explore" element={ <ExplorePage theme={ <ExploreComp/> }/> }/>
           {/* 로그인 후 사용할 수 있는 페이지  */}
           <Route element={ <AuthRouter />} >
             <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
