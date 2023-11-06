@@ -10,17 +10,17 @@ import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
 
-const Park = lazy(() => import('../../../public/map/Park').then(module => {
+const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
 }));
-const EventHall = lazy(() => import('../../../public/map/EventHall').then(module => {
+const EventHall = lazy(() => import('../../../public/smallmap/EventHall').then(module => {
   return { default: module.EventHall }
 }));
-const Restaurant = lazy(() => import('../../../public/map/Restaurant').then(module => {
+const Restaurant = lazy(() => import('../../../public/smallmap/Restaurant').then(module => {
   return { default: module.Restaurant }
 }));
-const Church = lazy(() => import('../../../public/map/Church').then(module => {
-  return { default: module.Church }
+const Gallery = lazy(() => import('../../../public/smallmap/Gallery').then(module => {
+  return { default: module.Gallery }
 }));
 
 export const CategoryComp: React.FC<{
@@ -103,13 +103,13 @@ export const CategoryComp: React.FC<{
           <Suspense fallback={<Loading />}>
             {texture === 1 && <Park position={[0, -1, 0]} rotation={[0, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
             {texture === 2 && <EventHall position={[0, -2, 0]} rotation={[0 * Math.PI / 180, 0, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 3 && <Restaurant position={[3, -2, 0]} rotation={[0, 10 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 4 && <Church position={[-3, 1, 3]} rotation={[0, -50 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 3 && <Restaurant position={[3, -2, 0]} rotation={[0, 0 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 4 && <Gallery position={[3, 2, 2]} rotation={[0, 0, 0]} onLoaded={() => handleLoad()} />}
           </Suspense>
         </MeshPortalMaterial>
 
-        {texture === 4 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} /> : <></>}
-        {(texture === 1 || texture === 2 || texture === 3) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[language]} /> : <></>}
+        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} /> : <></>}
+        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[language]} /> : <></>}
       </RoundedBox>
     </group>
   )
