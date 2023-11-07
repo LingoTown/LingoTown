@@ -11,7 +11,7 @@ import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Church(props) {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Church/scene.gltf')
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Map/Church/scene.gltf')
 
   useEffect(() => {
     if (props.onLoaded) {

@@ -52,8 +52,8 @@ export const PlayerSelect: React.FC = () => {
     /* Characters */
     
     const Ch1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
-    const Ch2 = useGLTF(import.meta.env.VITE_S3_URL + "Player/f_1.glb");
-    const Ch3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_20.glb");
+    const Ch2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_20.glb");
+    const Ch3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_13.glb");
     const Ch4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_27.glb");
     const Ch5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
 

@@ -20,6 +20,8 @@ import { Isabel } from '../../../public/name/resrtaurant/Isabel.tsx'
 import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
 import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
+import { userAtom } from '../../atom/UserAtom.ts';
+import { useRecoilValue } from 'recoil';
 
 export const RestaurantComp: React.FC = () => {
   
@@ -36,7 +38,8 @@ export const RestaurantComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_1.glb");
+  const user = useRecoilValue(userAtom);
+  const playerFile = useGLTF(user.characterLink);
   const [playerPosition, setPlayerPosition] = useState([-5.5, 0, 12]);
   const [playerRotation, setPlayerRotation]= useState([0,3,0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
