@@ -10,8 +10,8 @@ import { useCustomConfirm } from "../util/ModalUtil.ts";
 import { PlayerMove, SetAction } from '../theme/util/PlayerMoveUtil.ts';
 import { Wall } from '../util/block/Wall.tsx';
 import { useCylinder } from '@react-three/cannon'
-import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
-import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
+import { Luke } from '../../../public/name/restaurant/Luke.tsx'
+import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { useRecoilValue } from "recoil";
 

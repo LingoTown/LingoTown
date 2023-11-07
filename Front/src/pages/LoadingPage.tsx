@@ -35,7 +35,7 @@ const LoadingPage = () => {
     ></div>
     <div 
       className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center z-30" 
-      style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)', cursor: `url(${cursorLink}), auto` }}>
+      style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url(${cursorLink}), auto` }}>
       <div className="text-center z-30">
         <div>
           <h1 className="text-5xl font-bold text-[#fff] font-['passero-one'] pb-5">Explore New Language with</h1>

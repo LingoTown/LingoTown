@@ -105,7 +105,7 @@ export const GalleryComp: React.FC = () => {
 
   // value
   const CIRCLE_RADIUS = 3;
-  const LANGUAGE = "en-US";
+  const LANGUAGE = "fr-FR";
   const SENTENCE = "Would you like to start a conversation with ";
 
   // function

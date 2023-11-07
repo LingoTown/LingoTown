@@ -25,7 +25,7 @@ export function DaenName() {
 
   return (
     <group dispose={null}>
-      <group scale={0.01} rotation={[0, 300, 0]} position={[7, 1, -0.6]}>
+      <group scale={0.01} rotation={[0, 0, 0]} position={[-6, 1, 0]}>
         <mesh ref={D} geometry={nodes.AD_text_0.geometry} material={materials.text} position={[-5, 85, 1]} />
         <mesh ref={A} geometry={nodes.AA_text_0.geometry} material={materials.text} position={[70, 1, 1]} />
         <mesh ref={E} geometry={nodes.AE_text_0.geometry} material={materials.text} position={[53, 4, 1]} />

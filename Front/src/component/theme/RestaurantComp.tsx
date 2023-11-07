@@ -16,9 +16,9 @@ import { talkStateAtom } from '../../atom/TalkStateAtom';
 import { PlayerMove, SetAction } from './util/MSPlayerUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
-import { Isabel } from '../../../public/name/resrtaurant/Isabel.tsx'
-import { Luke } from '../../../public/name/resrtaurant/Luke.tsx'
-import { Olivia } from '../../../public/name/resrtaurant/Olivia.tsx'
+import { Isabel } from '../../../public/name/restaurant/Isabel.tsx'
+import { Luke } from '../../../public/name/restaurant/Luke.tsx'
+import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { userAtom } from '../../atom/UserAtom.ts';
 import { useRecoilValue } from 'recoil';

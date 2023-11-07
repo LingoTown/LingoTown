@@ -35,7 +35,7 @@ export const EventHallComp: React.FC = () => {
 
     /* NPC Data */    
     const JaydenData: NPCData = {
-        id: 1,
+        id: 6,
         name: "Jayden",
         path: import.meta.env.VITE_S3_URL + "NPC/m_3.glb",
         position: [-10.0, 0.0, 21.5],
@@ -56,7 +56,7 @@ export const EventHallComp: React.FC = () => {
     };
 
     const KevinData: NPCData = {
-        id: 3,
+        id: 15,
         name: "Kevin",
         path: import.meta.env.VITE_S3_URL + "NPC/m_8.glb",
         position: [17.00, 1, -2.5],
@@ -76,10 +76,32 @@ export const EventHallComp: React.FC = () => {
         circleOpacity: 1
     }
 
+    const DaenData: NPCData = {
+        id: 31,
+        name: "Daen",
+        path: import.meta.env.VITE_S3_URL + "NPC/f_16.glb",
+        position: [-6, 1, 0],
+        rotation: [0, 0, 0],
+        scale: 1,
+        cameraPosition: [-6.00, 1.90, 1.1],
+        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
+        circleArgs: [3, 32],
+        circlePosition: [-6, 1.025, 0],
+        circleRotation: [90, 0, 0],
+        circleAttach: "material",
+        circleColor: "skyblue",
+        circleEmissive: "black",
+        circleEmissiveIntensity: 5,
+        circleSide: THREE.DoubleSide,
+        circleTransparent: true,
+        circleOpacity: 1
+    }
+
     /* NPC */
 
     const Jayden = useNPC(JaydenData);
     const Kevin = useNPC(KevinData);
+    const Daen = useNPC(DaenData);
 
     function useNPC({id, name, path, position, rotation, scale, cameraPosition, cameraRotation, 
                     circleArgs, circlePosition, circleRotation, 
@@ -225,6 +247,7 @@ export const EventHallComp: React.FC = () => {
     const npcInfoList: NpcInfo[] = [
         { id: Jayden.npcId, name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
         { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
+        { id: Daen.npcId, name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
     ]; 
     
     /* useState */
@@ -377,13 +400,17 @@ export const EventHallComp: React.FC = () => {
             {/* NPC */}
             <primitive scale={Jayden.npcScale} position={Jayden.npcPosition} rotation={Jayden.npcRotation} object={Jayden.npcModel.scene}/>
             <primitive scale={Kevin.npcScale} position={Kevin.npcPosition} rotation={Kevin.npcRotation} object={Kevin.npcModel.scene}/>
-        
+            <primitive scale={Daen.npcScale} position={Daen.npcPosition} rotation={Daen.npcRotation} object={Daen.npcModel.scene}/>
+
             {/* 대화 범위 원 */}
             <Circle ref={Jayden.npcCircleRef} args={Jayden.npcCircleArgs} position={Jayden.npcCirclePosition} rotation={Jayden.npcCircleRotation} >
                 <meshStandardMaterial attach={Jayden.npcCircleAttach} color={Jayden.npcCircleColor} emissive={Jayden.npcCircleEmissive} emissiveIntensity={Jayden.npcCircleEmissiveIntensity} side={Jayden.npcCircleSide} transparent={Jayden.npcCircleTransparent} opacity={Jayden.npcCircleOpacity} />
             </Circle>
             <Circle ref={Kevin.npcCircleRef} args={Kevin.npcCircleArgs} position={Kevin.npcCirclePosition} rotation={Kevin.npcCircleRotation} >
                 <meshStandardMaterial attach={Kevin.npcCircleAttach} color={Kevin.npcCircleColor} emissive={Kevin.npcCircleEmissive} emissiveIntensity={Kevin.npcCircleEmissiveIntensity} side={Kevin.npcCircleSide} transparent={Kevin.npcCircleTransparent} opacity={Kevin.npcCircleOpacity} />
+            </Circle>
+            <Circle ref={Daen.npcCircleRef} args={Daen.npcCircleArgs} position={Daen.npcCirclePosition} rotation={Daen.npcCircleRotation} >
+                <meshStandardMaterial attach={Daen.npcCircleAttach} color={Daen.npcCircleColor} emissive={Daen.npcCircleEmissive} emissiveIntensity={Daen.npcCircleEmissiveIntensity} side={Daen.npcCircleSide} transparent={Daen.npcCircleTransparent} opacity={Daen.npcCircleOpacity} />
             </Circle>
 
             {/* 말풍선 */}
