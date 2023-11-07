@@ -80,10 +80,14 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
     if (media && stream) {
       media.ondataavailable = function (e) {
         const sound = new File([e.data], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+
         const data = new FormData();
+
         data.append("talkFile", sound);
         data.append("talkId", String(talkState.talkId));
         data.append("prompt", transcript);
+        data.append("language", String(localStorage.getItem("Language")));
+
         doTalking(data);
       };
 
