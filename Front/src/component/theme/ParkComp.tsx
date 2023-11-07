@@ -141,7 +141,8 @@ export const ParkComp: React.FC = () => {
   }
 
   const reRunSanha = () => {
-    if(sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
+    console.log(sanhaTalk);
+    if(sanhaTalk && isMove.current == true || !sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
       setSanhaTalk(false);
       if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
         sanhaRef.current.rotation.y = 1.5;
@@ -191,6 +192,7 @@ export const ParkComp: React.FC = () => {
         const npc = currentNpc.current?.name;
         if (npc != null) {
           if(npc == "sanha"){ //산하랑 말하면 산하 행동 멈추기
+            if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
             setSanhaTalk(true);
           }
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
@@ -199,11 +201,10 @@ export const ParkComp: React.FC = () => {
             setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);
             return
-          }else{
-            setSanhaTalk(false);
           }
         }
         isMove.current = true;
+        reRunSanha();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -221,13 +222,11 @@ export const ParkComp: React.FC = () => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
 
-  useEffect(()=>{
-    if(sanhaTalk){
-      if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
-    }else{
-      reRunSanha();
-    }
-  },[sanhaTalk])
+  // useEffect(()=>{
+  //   if(!sanhaTalk){
+  //     reRunSanha();
+  //   }
+  // },[sanhaTalk])
 
   //sanha run movement
   useFrame(() => {
