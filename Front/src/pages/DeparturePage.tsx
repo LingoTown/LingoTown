@@ -36,7 +36,7 @@ const DeparturePage = () => {
     const customAlert = useCustomAlert();
     return (
         <>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>    
+        <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>    
         
         <div className="w-full px-5 flex justify-between text-5xl font-bold text-white font-['passero-one']">
           <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg" 
