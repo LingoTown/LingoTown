@@ -38,19 +38,19 @@ function ScriptDetail() {
         <div>
           <div className="flex flex-row justify-between">
             <div className="m-5 my-0 text-white font-['passero-one'] font-[30] text-[1.8rem] ">
-              My Talk Script &nbsp;&nbsp;&nbsp;
+              My Talk Script &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span 
                 onClick={()=>{setCorrMode(!corrMode)}}
                 className='hover:text-[1.15rem] text-[1.2rem] text-red-300'
                 style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
-              >View correction</span>
+              >View correction <span className='text-[1.2rem] material-icons'>visibility</span></span>
             </div>
             <div onClick={()=>{setDetailVerAtom(false)}} 
             className="hover:text-[1.2rem] align-center font-['passero-one'] font-[30] text-white text-[1.3rem] mr-5" 
             style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
             > {"<--  "}go back</div>
           </div>
-            <div className="w-full border-t border-gray-400 border-t-[2px] rounded-sm p-5">
+            <div className="w-full border-t border-gray-400 border-t-[1.5px] rounded-sm p-5">
                 {
                   detailList?.map((arr, i) => {
                     return(
