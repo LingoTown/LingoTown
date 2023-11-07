@@ -36,8 +36,8 @@ export const MapUtilComp = () => {
       setQuizList([...result]);
       setTranslateList(new Array(result.length).fill(0));
     },() => {
-      // navigate("/departure");
-      // customAlert("Notice", "올바르지 않은 접근입니다.");
+      navigate("/departure");
+      customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -96,7 +96,7 @@ export const MapUtilComp = () => {
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
             onClick={() => {setIsOpenQuizModal(!isOpenQuizModal)}}
-          >Quiz</button>
+          >Quest</button>
         </div>
       </div>
     </>
