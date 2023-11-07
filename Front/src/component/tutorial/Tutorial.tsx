@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from "react";
 import { tutorialAtom } from '../../atom/TutorialAtom';
 import { useSetRecoilState } from 'recoil';
 import Lottie from 'lottie-react';
-import earth from '../../../public/tutorial/earth.json';
 
 const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
 const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
@@ -11,15 +10,31 @@ const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_h
 const Tutorial = () => {
   const [step, setStep] = useState<number>(0);
   const [isPressed, setIsPressed] = React.useState(false);
-  const img:string[] = ["", "/tutorial/DirectionalKey.png", "/tutorial/SpaceBarkey.png", "/tutorial/A_key.png", "/tutorial/S_key.png", "/tutorial/D_key.png"];
+  const img:string[] = ["", "Tutorial/DirectionalKey.png", "Tutorial/SpaceBarkey.png", "Tutorial/A_key.png", "Tutorial/S_key.png", "Tutorial/D_key.png"];
   const title:string[] = ["LingoTown", "방향키", "스페이스바", "Action키", "Start키", "Done키"];
   const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]; 
   const setVisit = useSetRecoilState(tutorialAtom);
+  const [animationData, setAnimationData] = useState(null);
 
   // 마우스가 버튼 위로 올라왔을 때와 떠났을 때의 이벤트 핸들러
   const handleMouseDown = () => setIsPressed(true);
   const handleMouseUp = () => setIsPressed(false);
   const handleMouseLeave = () => setIsPressed(false);
+
+  // lotties 파일 가져오기
+  useEffect(() => {
+    const fetchAnimationData = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_S3_URL}`+`Tutorial/earth.json`);
+        const data = await response.json();
+        setAnimationData(data);
+      } catch (error) {
+        console.error('Error fetching animation data:', error);
+      }
+    };
+
+    fetchAnimationData();
+  }, []);
 
   const nextStep = () => {
     if(step == title.length-1) {
@@ -63,9 +78,9 @@ const Tutorial = () => {
       <div className='w-[100%] h-[100%] max-h-[500px] flex justify-center items-center'>
         {
           step===0?
-          <Lottie className="mx-auto max-w-[270px]" animationData={earth} />
+          <Lottie className="mx-auto max-w-[270px]" animationData={animationData} />
           :
-          <img className="mx-auto max-w-[300px]" src={img[step]} />
+          <img className="mx-auto max-w-[300px]" src={import.meta.env.VITE_S3_URL+img[step]} />
         }
       </div>
 
