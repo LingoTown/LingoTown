@@ -49,7 +49,8 @@ public class QuizMemberService {
                     .builder()
                     .quizId(quiz.getId())
                     .quiz(quiz.getQuestion())
-                    .isSolved(isSolved)
+                    .koQuiz(quiz.getKoreanQuestion())
+                    .solved(isSolved)
                     .build();
             memberQuizResList.add(memberQuizResDto);
         }

@@ -24,6 +24,9 @@ public class Quiz {
     private String question;
 
     @Column(nullable = false)
+    private String koreanQuestion;
+
+    @Column(nullable = false)
     private String answer;
 
     @JoinColumn(name = "world_id")
