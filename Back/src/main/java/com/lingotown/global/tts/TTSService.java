@@ -39,6 +39,7 @@ public class TTSService {
     public MultipartFile UseTTS(String prompt, TalkReqDto talkReqDto) throws Exception{
 
         log.info(prompt);
+        log.info(talkReqDto.getLanguage());
 
         Talk talk = talkRepository.findById(talkReqDto.getTalkId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
