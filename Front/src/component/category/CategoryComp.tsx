@@ -36,7 +36,7 @@ export const CategoryComp: React.FC<{
 }> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
-  const text = useState(["Preview", "Avant-première"])[0];
+  const text = useState([["Preview", "Avant-première"],["Locked", "Verrouillé"]])[0];
 
   const [isLoading, setLoading] = useState(true);
 
@@ -76,8 +76,10 @@ export const CategoryComp: React.FC<{
         scale={[1, 1, 1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            setActive(name);
-            setEnabled(true);
+            if ((language === 0 && name !== "gallery") || (language === 1 && name === "galerie")) {
+              setActive(name);
+              setEnabled(true);
+            }
           }
         }}
         onPointerEnter={() => {
@@ -108,8 +110,9 @@ export const CategoryComp: React.FC<{
           </Suspense>
         </MeshPortalMaterial>
 
-        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[language]} /> : <></>}
-        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[language]} /> : <></>}
+        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0][language]} /> : <></>}
+        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0][language]} /> : <></>}
+        {texture === 0 ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[1][language]} /> : <></>}
       </RoundedBox>
     </group>
   )
