@@ -38,7 +38,7 @@ function ScriptDetail() {
         <div>
           <div className="flex flex-row justify-between">
             <div className="m-5 my-0 text-white font-['passero-one'] font-[30] text-[1.8rem] ">
-              My Talk Script &nbsp;&nbsp;&nbsp;
+              My Talk Script &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span 
                 onClick={()=>{setCorrMode(!corrMode)}}
                 className='hover:text-[1.15rem] text-[1.2rem] text-red-300'
@@ -50,7 +50,7 @@ function ScriptDetail() {
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             > {"<--  "}go back</div>
           </div>
-            <div className="w-full border-t border-gray-400 border-t-[2px] rounded-sm p-5">
+            <div className="w-full border-t border-gray-400 border-t-[1.5px] rounded-sm p-5">
                 {
                   detailList?.map((arr, i) => {
                     return(

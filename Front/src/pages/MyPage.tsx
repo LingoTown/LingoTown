@@ -173,9 +173,9 @@ const MyPage = () => {
           }}
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           >Close</div>
-        </div>
+        </div> 
         <div className=''>
-            <div className='mt-10 w-[80rem] h-[40rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
+            <div className='w-[80rem] h-[43rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
             {/* 왼쪽 부분 */}
             {
               !detailVer &&
@@ -281,7 +281,15 @@ const MyPage = () => {
                   {
                     !scriptVer && //npc list 나타나는 부분 
                     <>
+                    <div className="flex flex-row justify-between">
                       <div className="m-5 text-white font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
+                      <div onClick={() => {
+                        navigate("/departurePage");
+                        }} 
+                        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                        className="hover:text-[1.8rem] m-5 text-white font-['passero-one'] font-[30] text-[2rem] ">X
+                      </div>
+                    </div>
                       <Country 
                         myList={myList} 
                         onBoxClick={()=>{
@@ -293,10 +301,9 @@ const MyPage = () => {
                           setNpcName(npcName);
                         }}
                         />
+                      
                     </>
-
                   }
-                
               </div>
             </div>
           </div>
