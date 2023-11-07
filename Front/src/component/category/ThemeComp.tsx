@@ -14,7 +14,7 @@ import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { useRecoilState } from "recoil";
 
 export const ThemeComp: React.FC = () => {
-  const text: string[][] = useState([["park", "event hall", "restaurant", "gallery"], ["Parc", "Salle des événements", "restaurant", "galerie"]])[0];
+  const text: string[][] = useState([["Park", "Event Hall", "Restaurant", "Gallery"], ["Parc", "Salle des événements", "Restaurant", "Galerie"]])[0];
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -100,7 +100,7 @@ export const ThemeComp: React.FC = () => {
       <TextUtil x={2} y={-0.27} z={0.051} color="black" size={0.2} name={text[language][3]} />
 
       <MapEnterComp x={-1} y={2.13} z={0.051} path={`park?language=${language}&world=1`} name={text[language][0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
-      <MapEnterComp x={3} y={2.13} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[language][1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />
+      <MapEnterComp x={language === 0 ? 3 : 3.3} y={2.13} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[language][1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />
       <MapEnterComp x={-1} y={-0.27} z={0.051} path={`restaurant?language=${language}&world=3`} name={text[language][2]} active={active} enabled={enabled} setHovered={setRestaurantEnterHovered} language={language} />
       <MapEnterComp x={3} y={-0.27} z={0.051} path={`gallery?language=${language}&world=4`} name={text[language][3]} active={active} enabled={enabled} setHovered={setGalleryEnterHovered} language={language} />
 

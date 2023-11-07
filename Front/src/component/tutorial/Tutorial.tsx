@@ -78,7 +78,7 @@ const Tutorial = () => {
         cursor: `url(${cursorLink}), auto`,
         userSelect: 'none'
       }}
-      className="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white max-w-[700px] w-full md:w-[700px] h-auto rounded-[20px] p-8"
+      className="absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#fff]/80 max-w-[700px] w-full md:w-[700px] h-auto rounded-[20px] p-8"
     >
       <div 
         onClick={skipStep}

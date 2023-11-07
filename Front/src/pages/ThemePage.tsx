@@ -12,8 +12,7 @@ export const ThemePage = () => {
     <div
       className="z-0"
       style={{
-        backgroundImage: `url(${import.meta.env.VITE_S3_URL}BackGround/cloud_background.png)`,
-        cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`
+        backgroundImage: `url(${import.meta.env.VITE_S3_URL}BackGround/cloud_background.png)`
       }}
     >
       {
