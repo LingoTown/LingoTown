@@ -14,7 +14,7 @@ import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { useRecoilState } from "recoil";
 
 export const ThemeComp: React.FC = () => {
-  const text: string[][] = useState([["park", "event hall", "restaurant", "gallery"], ["Parc", "Salle des événements", "restaurant", "galerie"]])[0];
+  const text: string[][] = useState([["Park", "Event Hall", "Restaurant", "Gallery"], ["Parc", "Salle des événements", "Restaurant", "Galerie"]])[0];
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
