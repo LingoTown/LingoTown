@@ -70,11 +70,16 @@ public class MemberService {
         for(Quiz quiz : quizList){
 
             Optional<MemberQuiz> memberQuiz = memberQuizRepository.findByMemberIdAndQuizId(memberId, quiz.getId());
-            if(memberQuiz.isPresent()) continue;
+
+            boolean isSolved = true;
+            if(memberQuiz.isEmpty()) isSolved=false;
 
             ReadMemberQuizResDto memberQuizResDto = ReadMemberQuizResDto
                     .builder()
-                    .quizId(memberQuiz.get().getId())
+                    .quizId(quiz.getId())
+                    .quiz(quiz.getQuestion())
+                    .koQuiz(quiz.getKoreanQuestion())
+                    .solved(isSolved)
                     .build();
             memberQuizResList.add(memberQuizResDto);
         }
