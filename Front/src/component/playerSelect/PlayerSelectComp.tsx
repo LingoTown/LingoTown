@@ -15,12 +15,17 @@ export const PlayerSelect: React.FC = () => {
     
     /* 대표 캐릭터 수정 */
     const handleCharacterSelect = async (clickedCharacterId: number) => {
+        console.log('Character clicked:', clickedCharacterId);
 
-        if (user.characterId === clickedCharacterId) 
+        if (user.characterId === clickedCharacterId)  {
+            console.log('Clicked character is already selected.');
             return;
+        }
 
-        if(user.lockList[clickedCharacterId].islocked === true)
+        if (user.lockList[clickedCharacterId - 1].islocked === true) {
+            console.log('Clicked character is locked.');
             return;
+        }
         
         const payload: UpdateSelectedCharacter = {
             previousId: user.characterId,
@@ -44,7 +49,6 @@ export const PlayerSelect: React.FC = () => {
 
     /* 소품 */
 
-    // const book = useGLTF(import.meta.env.VITE_S3_URL + "PlayerSelect/Medieval_Fantasy/scene.gltf");
     const aurora = useGLTF(import.meta.env.VITE_S3_URL + "Effect/Starliner/scene.gltf")
     const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf")
 
@@ -84,10 +88,10 @@ export const PlayerSelect: React.FC = () => {
     // 글자 색 
     const getColorForName = (id: number) => user.characterId === id ? "red" : "black";
     
-
-                          
+    
     return (
         <>
+
         <Environment preset="sunset" />
 
         <primitive
@@ -116,20 +120,33 @@ export const PlayerSelect: React.FC = () => {
         <primitive scale={1} position={characterPositions[2]} object={WomanA.scene} onClick={() => handleCharacterSelect(2)} />
         <primitive scale={1} position={characterPositions[3]} object={WomanB.scene} onClick={() => handleCharacterSelect(3)} />
 
-        {/* 캐릭터 이름 텍스트 */}
+        {/* 캐릭터 이름 텍스트 및 선택 버튼 */}
         {Object.entries(characterPositions).map(([key, position]) => {
             const id = Number(key); 
+
             return (
-                <Text
-                    key={key} // key as string is okay for React key prop
-                    position={[position[0], position[1] + textOffsetY, position[2]]}
-                    fontSize={0.5}
-                    color={getColorForName(id)} // Pass id as number
-                >
-                    {characterNames[id]} 
-                </Text>
+                <React.Fragment key={id}>
+                    <Text
+                        position={[position[0], position[1] + textOffsetY, position[2]]}
+                        fontSize={0.5}
+                        color={getColorForName(id)}
+                    >
+                        {characterNames[id]} 
+                    </Text>
+
+                    <Text
+                        key={`button-${key}`}
+                        position={[position[0], position[1] + textOffsetY - 0.5, position[2]]}
+                        fontSize={0.3}
+                        color={getColorForName(id)}
+                        onClick={() => handleCharacterSelect(id)}
+                    >
+                        Select
+                    </Text>
+                </React.Fragment>
             );
         })}
+
         </>
     );
 };
