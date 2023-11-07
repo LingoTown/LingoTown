@@ -136,6 +136,15 @@ export const ParkComp: React.FC = () => {
     camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
   }
 
+  const reRunSanha = () => {
+    if(sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
+      setSanhaTalk(false);
+      if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
+        sanhaRef.current.rotation.y = 1.5;
+      }
+    }
+  }
+
   useFrame((_state, deltaTime) => {
     PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
@@ -187,6 +196,9 @@ export const ParkComp: React.FC = () => {
             setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);
             return
+          }else{
+            setSanhaTalk(false);
+            reRunSanha();
           }
         }
         isMove.current = true;
@@ -200,13 +212,7 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     isMove.current = !talkBalloon.isShow;
-
-    if(sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
-      setSanhaTalk(false);
-      if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
-        sanhaRef.current.rotation.y = 1.5;
-      }
-    }
+    reRunSanha();
   }, [talkBalloon.isShow])
 
   useEffect(() => {
