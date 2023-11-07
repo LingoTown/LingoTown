@@ -114,7 +114,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(40)
+                .max_tokens(50)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
@@ -251,9 +251,9 @@ public class OpenAIService {
                 "The user's " + language +" level is Beginner, and " +
                 "All you have to do is respond appropriately to what the user says. " +
                 "The level of difficulty in responding should be relaxed so that users can understand it. " +
-                "Lower the level of difficulty in responding " +
+                "You need to level your response to about eight years old, so that users can understand it. " +
                 "Please ask the appropriate questions so that the conversation can continue. " +
-                "And also, Please respond in complete sentences without exceeding max_token. " +
+                "The most important thing is that it should be a complete sentence without exceeding 50 token which is max_token. " +
 
                 "Now, " + "you are " +npcName +", and " + npcGender +
                 " and " + npcJob + ", and " + "your age is " + npcAge
