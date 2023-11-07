@@ -46,7 +46,7 @@ export const CategoryComp: React.FC<{
 
   const Loading: React.FC = () => {
     const textureLoader = new THREE.TextureLoader();
-    const backgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
+    const backgroundTexture = textureLoader.load(`${import.meta.env.VITE_S3_URL}Introduce/bgggg.png`);
 
     return (
       <group>

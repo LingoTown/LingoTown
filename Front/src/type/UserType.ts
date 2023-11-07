@@ -9,5 +9,13 @@ export type userType = {
   refreshToken: string | null,
   characterId: number,
   characterGender: string,
-  characterLink: string
+  characterLink: string,
+  lockList: { characterId: number; islocked: boolean }[];
+}
+
+
+/* 유저 대표 캐릭터 수정 요청 타입 */
+export type UpdateSelectedCharacter = {
+  previousId: number,
+  nowId: number
 }

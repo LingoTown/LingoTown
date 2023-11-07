@@ -29,3 +29,23 @@
 .button-flicker {
   animation: flicker 0.5s infinite alternate; /* 1.5초마다 무한히 번갈아가며 실행 */
 }
+
+/* The entire scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #f1f1f17e; /* color of the tracking area */
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #6CBDD0; /* color of the scroll thumb */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3FACC7; /* color of the scroll thumb on hover */
+}

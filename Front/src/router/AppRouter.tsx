@@ -40,8 +40,8 @@ export const AppRouter = () => {
             <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
             <Route path="/eventhall" element={ <CanvasPage theme={ <EventHallComp/> }/> }/>
             <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>
-            <Route path="/departurePage" element={ <DeparturePage/> }/>
-            <Route path="/themePage" element={ <ThemePage />} />
+            <Route path="/departure" element={ <DeparturePage/> }/>
+            <Route path="/theme" element={ <ThemePage />} />
             <Route path="/playerSelect" element={ <PlayerSelectPage theme = { <PlayerSelect /> } /> } />
           </Route>
 

@@ -1,5 +1,5 @@
-import { HttpJson, HttpForm } from "./Http";
-import ReturnType from "../type/ReturnType";
+import { HttpJson, HttpForm } from "./common/Http";
+import { ReturnType } from "../type/ReturnType";
 import { talkingTopicType } from "../type/TalkType";
 
 const startTalk = async (npcId: number, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {

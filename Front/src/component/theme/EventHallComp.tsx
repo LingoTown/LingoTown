@@ -20,6 +20,8 @@ import { DaenName } from '../../../public/name/eventhall/Daen.tsx'
 import { JadenName } from '../../../public/name/eventhall/Jaden.tsx'
 import { KevinName } from '../../../public/name/eventhall/Kevin.tsx'
 import { loadingAtom } from "../../atom/LoadingAtom.ts";
+import { userAtom } from "../../atom/UserAtom";
+import { useRecoilValue} from 'recoil';
 
 /* 
     EventHall의 특징 : 
@@ -176,11 +178,14 @@ export const EventHallComp: React.FC = () => {
     ];
     
     /* Value */
+
+    const user = useRecoilValue(userAtom);
+
     const playerPosition = [0.25, 0, 28];
     const playerRotation = [0, 3.15, 0];
 
     // 캐릭터 불러오기
-    const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Player/m_1.glb");
+    const playerFile = useGLTF(user.characterLink);
     // 캐릭터 크기
     const playerScale = 1;
     
