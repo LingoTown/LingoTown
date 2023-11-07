@@ -110,7 +110,7 @@ export const TalkBalloonComp = () => {
                 talkBalloon.topicList.map((value, index) => {
                  return(
                   <div key={index} className="mb-2 p-2 bg-white rounded-lg shadow-inner font-bolder font-['passero-one'] text-xl hover:bg-gray-200" 
-                  style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+                  style={{ cursor: `url(${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png), auto` }}
                     onClick={() => { selectTopic(value) }}
                   >{value.keyword}</div>
                  ) 

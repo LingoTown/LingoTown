@@ -19,7 +19,7 @@ type STTAndRecordProps = {
   lang: string;
 };
 
-export const STTAndRecord: any = (lang: any) => {
+export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
 
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
@@ -63,7 +63,7 @@ export const STTAndRecord: any = (lang: any) => {
   useEffect(() => {
     if (isMounted.current.reset) {
       stopMicrophoneAccess();
-      // onRecAudio();
+      onRecAudio();
     } else {
       isMounted.current.reset = true;
     }
@@ -73,6 +73,7 @@ export const STTAndRecord: any = (lang: any) => {
   useEffect(() => {
     if (isMounted.current.finish) {
       stopMicrophoneAccess();
+      console.log("here")
     } else {
       isMounted.current.finish = true;
     }
@@ -87,9 +88,8 @@ export const STTAndRecord: any = (lang: any) => {
     }
   }, [talkState.selectTopic])
 
-  if (!browserSupportsSpeechRecognition) {
-    return <span></span>;
-  }
+  if (!browserSupportsSpeechRecognition)
+    return <></>;
 
   const onRecAudio = async () => {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -129,22 +129,16 @@ export const STTAndRecord: any = (lang: any) => {
     if (media && stream) {
       media.ondataavailable = function (e) {
         const sound = new File([e.data], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+
         const data = new FormData();
         data.append("talkFile", sound);
         data.append("talkId", String(talkState.talkId));
-        // data.append("prompt", transcript);
+        data.append("prompt", transcript);
+        data.append("language", String(localStorage.getItem("Language")));
+
         doTalking(data);
       };
-
-      stream.getAudioTracks().forEach(function (track) { track.stop() });
-      media.stop();
-      if (analyser && source) {
-        analyser.disconnect();
-        source.disconnect();
-      }
-
       resetTranscript();
-      SpeechRecognition.stopListening();
       stopMicrophoneAccess();
     }
   };
@@ -173,7 +167,6 @@ export const STTAndRecord: any = (lang: any) => {
         isUser: false,
       }));
     })
-    stopMicrophoneAccess();
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
 
@@ -199,12 +192,7 @@ export const STTAndRecord: any = (lang: any) => {
     }
 
     resetTranscript();
-    SpeechRecognition.stopListening();
-    SpeechRecognition.stopListening();
-    SpeechRecognition.stopListening();
-    SpeechRecognition.stopListening();
-    SpeechRecognition.stopListening();
-    SpeechRecognition.stopListening();
+    SpeechRecognition.startListening({ language: lang });
     SpeechRecognition.stopListening();
   };
 };
