@@ -23,7 +23,7 @@ export const ThemePage = () => {
         <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >Departure</div>
-        <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => { navigate("/main"); }}
+        <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >MyPage</div>
       </div>
