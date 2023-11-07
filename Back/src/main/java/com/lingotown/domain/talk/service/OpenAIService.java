@@ -196,7 +196,7 @@ public class OpenAIService {
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
-        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
 
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
                 .talkId(talkReqDto.getTalkId())
