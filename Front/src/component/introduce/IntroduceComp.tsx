@@ -11,19 +11,19 @@ import * as THREE from "three";
 import { NPCStage } from "./NPCStage";
 
 export const IntroduceComp: React.FC = () => {
-  const jerry = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb');
-  const sanha = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb');
-  const marco = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb');
-  const bonnie = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb');
-  const jaden = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb');
-  const kevin = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb');
-  const daen = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_16.glb');
-  const olivia = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb');
-  const luke = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_25.glb');
-  const isabel = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_13.glb');
-  const jina = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_10.glb');
-  const jimmy = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_16.glb');
-  const barry = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_19.glb');
+  const jerry = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_14.glb`);
+  const sanha = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_18.glb`);
+  const marco = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_32.glb`);
+  const bonnie = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_8.glb`);
+  const jaden = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_3.glb`);
+  const kevin = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_8.glb`);
+  const daen = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_16.glb`);
+  const olivia = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_17.glb`);
+  const luke = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_25.glb`);
+  const isabel = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_13.glb`);
+  const jina = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_10.glb`);
+  const jimmy = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_16.glb`);
+  const barry = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_19.glb`);
 
   const jerryRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const sanhaRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
@@ -88,13 +88,13 @@ export const IntroduceComp: React.FC = () => {
       barryHovered == "Barry";
 
     if (anyHovered) {
-      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto`;
+      document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`;
     } else {
-      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`;
+      document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`;
     }
 
     return () => {
-      document.body.style.cursor = `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`;
+      document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`;
     };
   }, [
     jerryHovered,
@@ -244,7 +244,7 @@ export const IntroduceComp: React.FC = () => {
       <CameraControls ref={controlsRef} enabled={cameraEnabled} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
 
       <Text
-        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
         fontSize={0.2}
         color="black"
         position={[-4.5, 1.8, 0.051]}
@@ -254,7 +254,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <Text
-        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
         fontSize={0.2}
         color="black"
         position={[1.5, 1.8, 0.051]}
@@ -264,7 +264,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <Text
-        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
         fontSize={0.2}
         color="black"
         position={[-4.5, -0.2, 0.051]}
@@ -274,7 +274,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <Text
-        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
         fontSize={0.2}
         color="black"
         position={[1.5, -0.2, 0.051]}
@@ -284,7 +284,7 @@ export const IntroduceComp: React.FC = () => {
       </Text>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/park.jpg`}
         name="Jerry"
         age="8"
         color={new THREE.Color("black")}
@@ -300,7 +300,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/park.jpg`}
         name="Sanha"
         age="26"
         color={new THREE.Color("black")}
@@ -316,7 +316,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/park.jpg`}
         name="Marco"
         age="26"
         color={new THREE.Color("black")}
@@ -332,7 +332,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/park.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/park.jpg`}
         name="Bonnie"
         age="18"
         color={new THREE.Color("black")}
@@ -347,7 +347,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/city.jpg`}
         name="Jaden"
         age="33"
         color={new THREE.Color("black")}
@@ -363,7 +363,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/city.jpg`}
         name="Kevin"
         age="33"
         color={new THREE.Color("black")}
@@ -379,7 +379,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/city.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/city.jpg`}
         name="Daen"
         age="27"
         color={new THREE.Color("black")}
@@ -395,7 +395,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Olivia"
         age="31"
         color={new THREE.Color("black")}
@@ -411,7 +411,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Luke"
         age="24"
         color={new THREE.Color("black")}
@@ -427,7 +427,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Isabel"
         age="23"
         color={new THREE.Color("black")}
@@ -443,7 +443,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Jina"
         age="18"
         color={new THREE.Color("black")}
@@ -459,7 +459,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Jimmy"
         age="29"
         color={new THREE.Color("black")}
@@ -475,7 +475,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/cafeteria.jpg"
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Barry"
         age="27"
         color={new THREE.Color("black")}

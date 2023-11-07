@@ -42,9 +42,9 @@ export const NPCStage: React.FC<{
   ];
 
   const map = useTexture(texture);
-  const map2D = useTexture("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/intro.jpg");
+  const map2D = useTexture(`${import.meta.env.VITE_S3_URL}Introduce/intro.jpg`);
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
+  const backgroundTexture = textureLoader.load(`${import.meta.env.VITE_S3_URL}Introduce/bgggg.png`);
 
   const portalMaterial = useRef<PortalMaterialType | null>(null);
 
@@ -59,7 +59,7 @@ export const NPCStage: React.FC<{
     <group {...props}>
       <primitive object={backgroundTexture} attach="background" />
       <Text
-        font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
         fontSize={0.2}
         color="white"
         position={[0, -0.7, 0.051]}
@@ -128,7 +128,7 @@ export const NPCStage: React.FC<{
           </mesh>
 
           <Text
-            font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+            font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
             fontSize={0.3}
             color="black"
             position={[5, 1, 0.051]}
@@ -137,7 +137,7 @@ export const NPCStage: React.FC<{
           </Text>
 
           <Text
-            font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+            font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
             fontSize={0.3}
             color="black"
             position={[5, 0.5, 0.051]}
@@ -146,7 +146,7 @@ export const NPCStage: React.FC<{
           </Text>
 
           <Text
-            font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+            font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
             fontSize={0.3}
             color="black"
             position={[5, -0.5, 0.051]}

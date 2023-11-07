@@ -12,7 +12,7 @@ export const TextUtil: React.FC<{
 }) => {
   return (
     <Text
-      font="https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"
+      font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
       fontSize={size}
       color={color}
       position={[x, y, z]}
