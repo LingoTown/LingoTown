@@ -7,7 +7,7 @@ import { loadingAtom } from "../atom/LoadingAtom";
 
 export const ThemePage = () => {
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
+  const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + 'Introduce/bgggg.png');
   const loading = useRecoilValue(loadingAtom);
   return(
     <>

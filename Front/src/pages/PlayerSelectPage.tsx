@@ -8,8 +8,7 @@ interface playerSelectPage {
 
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
   const textureLoader = new THREE.TextureLoader();
-  const worldbackgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
-//   const medievalBackgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/PlayerSelect/Medieval_Fantasy/scene.gltf');
+  const worldbackgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + 'Introduce/bgggg.png');
 
   return(
     <>
