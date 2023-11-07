@@ -14,6 +14,7 @@ import { npcStateName } from "../atom/ScriptAtom";
 import { talkIdAtom } from "../atom/ScriptAtom";
 import { detailVerAtom } from "../atom/ScriptAtom";
 import ScriptDetail from "../component/script/ScriptDetail";
+import toast, { Toaster } from 'react-hot-toast';
 
 const MyPage = () => {
   const customAlert = useCustomAlert();
@@ -103,7 +104,7 @@ const MyPage = () => {
           nickname: nick 
       }));
         setNickMode(false);
-
+        showToaster("닉네임이 변경 되었습니다.", "✏️");
       })
       .catch(console.log)
   }
@@ -123,6 +124,7 @@ const MyPage = () => {
               ...prevUser, 
               profileImg: newImg
           }))
+          showToaster("프로필 사진이 변경 되었습니다.", "📷");
           })
       })
       .catch(console.log);
@@ -148,10 +150,20 @@ const MyPage = () => {
     }
   }
 
+  const showToaster = (sentence:string, emoji:string) => {
+    toast(sentence, {
+      duration: 2000,
+      icon: emoji,
+      style: { fontSize: "15px" },
+      iconTheme: { primary: '#000', secondary: '#fff' },
+      ariaProps: { role: 'status', 'aria-live': 'polite' },
+    });
+  }
+
   return(
     <>
-      <div 
-      
+      <Toaster position="top-center" />
+      <div      
       className="min-h-screen flex flex-col items-center justify-center bg-cover" 
       style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)',
                cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>    
