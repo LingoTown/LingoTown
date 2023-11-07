@@ -7,11 +7,9 @@ import com.lingotown.domain.member.dto.response.EditProfileResDto;
 import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberCharacterService;
 import com.lingotown.domain.member.service.MemberService;
-import com.lingotown.domain.member.service.QuizMemberService;
 import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +24,6 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
-    private final QuizMemberService quizMemberService;
     private final MemberCharacterService memberCharacterService;
 
     @GetMapping
@@ -36,7 +33,7 @@ public class MemberController {
 
     @GetMapping("/quiz/{worldId}")
     public DataResponse<List<ReadMemberQuizResDto>> readSolvedQuiz(Principal principal, @PathVariable("worldId") Long worldId){
-        return quizMemberService.readSolvedQuiz(principal, worldId);
+        return memberService.readSolvedQuiz(principal, worldId);
     }
 
     @DeleteMapping("/leave")
