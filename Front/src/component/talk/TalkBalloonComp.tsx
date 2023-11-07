@@ -38,20 +38,18 @@ export const TalkBalloonComp = () => {
     setIsRec(false);
   };
 
-  const handleReset = () => {
-    setTalkState(prevState => ({ ...prevState, reset: !prevState.reset }));
-  };
+  // Reset 버튼
+  const handleReset = () => { setTalkState(prevState => ({ ...prevState, reset: !prevState.reset })) };
 
+  // End 버튼 눌렀을때
   const handleEnd = async() => {
     setIsRec(false);
+    setTalkState(prevState => ({ ...prevState, finish: !prevState.finish }));
     setTalkBalloon(initialTalkBalloon);
   };
 
-  const handlePlay = () => {
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
-  };
+  // 대화음악 재생
+  const handlePlay = () => { if (audioRef.current) audioRef.current.play() };
 
   const selectTopic = async(topic:topic) => {
     const flag = await customConfirm("Topic", topic.keyword);
