@@ -69,7 +69,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       <Toaster position="top-center" />
       {
         isOpenQuizModal?
-        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10">
+        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-20">
           <div className="fixed inset-0 z-10 flex items-center justify-center">
             <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-4xl">
               <div className="border-[0.5px] border-white w-full rounded-lg p-1 px-3 flex flex-col items-center">
