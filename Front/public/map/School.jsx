@@ -11,7 +11,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function School(props) {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/School/scene.gltf')
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Map/School/scene.gltf')
   return (
     <group {...props} dispose={null}>
       <group position={[25.353, 24.694, 12.411]} scale={[5.916, 11.751, 4.881]}>

@@ -22,6 +22,8 @@ import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
 import { Jerry } from '../../../public/name/park/Jerry.tsx';
 import { Marco } from '../../../public/name/park/Marco.tsx';
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../../atom/UserAtom.ts';
  
 export const ParkComp: React.FC = () => {
 
@@ -41,7 +43,8 @@ export const ParkComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
+  const user = useRecoilValue(userAtom);
+  const playerFile = useGLTF(user.characterLink);
   //Player cannon
   const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);    
   const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
