@@ -31,13 +31,14 @@ export const ParkComp: React.FC = () => {
     { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
     { size: [3, 27, 40], position: [22, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
     { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
-    { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
+    { size: [3, 27, 50], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
 
     // 축구장 벽
-    { size: [37, 10, 0.1], position: [2, 1, -12], wallKey: 'BW2', name: 'wall', mass:0}, // back wall 
+    { size: [40, 10, 0.1], position: [2, 1, -12.5], wallKey: 'BW2', name: 'wall', mass:0}, // back wall 
+    { size: [40, 10, 0.1], position: [2, 1, -12.7], wallKey: 'FW3', name: 'wall', mass:0}, // back wall 
     { size: [45, 10, 0.5], position: [1, 1, 12.5], wallKey: 'FW2', name: 'wall', mass:0}, // front wall
-    { size: [0.5, 10, 22], position: [-22, 1, 1.5], wallKey: 'RW2',  name: 'wall', mass:0}, //right wall
-    { size: [0.5, 10, 22], position: [-21, 1, 1.5], wallKey: 'LW2',  name: 'wall', mass:0}, //left wall
+    { size: [0.5, 10, 25], position: [-22, 1, 0.5], wallKey: 'RW2',  name: 'wall', mass:0}, //right wall
+    { size: [0.5, 10, 25], position: [-21.5, 1, 0.5], wallKey: 'LW2',  name: 'wall', mass:0}, //left wall
   ];
 
   // player
