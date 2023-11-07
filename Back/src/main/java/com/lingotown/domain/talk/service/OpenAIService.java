@@ -177,6 +177,7 @@ public class OpenAIService {
         /* GPT 응답 TTS 변환 및 DB 저장 */
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
 
+
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
                 .talkId(talkReqDto.getTalkId())
                 .isMember(false)
@@ -246,16 +247,6 @@ public class OpenAIService {
             messages.addAll(previousChatDataList);
         }
 
-        // user 인풋
-        if(talkReqDto.getTalkFile() != null) {
-            OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-                    .builder()
-                    .role("user")
-                    .content(talkReqDto.getPrompt())
-                    .build();
-            messages.add(messageDtoUser);
-        }
-
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
@@ -316,28 +307,26 @@ public class OpenAIService {
                                 log.error("Error occurred: ", err);
                             }
                     );
-
-
-
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
-       MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
 
-       CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
-               .talkId(talkReqDto.getTalkId())
-               .isMember(false)
-               .content(responseDto.getContent())
-               .talkFile(GPTResponseFile)
-               .build();
 
-       DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
                 .responseMessage(responseDto.getContent())
-               .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                .responseS3URL(systemResDataResponse.getData().getTalkFile())
                 .build();
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
