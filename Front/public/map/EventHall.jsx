@@ -75,7 +75,7 @@ export function EventHall(props) {
 
   const handleKeyDown = event => {
     switch (event.code) {
-      case "KeyK":
+      case "KeyS":
         // 빔프로젝트와 카메라 사이의 거리 계산 로직...
         const beamProjectorPosition = new THREE.Vector3().setFromMatrixPosition(
           beamProjector.scene.matrixWorld
@@ -84,7 +84,7 @@ export function EventHall(props) {
         console.log(distance);
 
         if (distance <= 10) {
-          loadVideo(); // 'K'를 누를 때 비디오 로드
+          loadVideo(); // 'S'를 누를 때 비디오 로드
 
           if (video.current.paused) {
             video.current.play();
@@ -93,8 +93,8 @@ export function EventHall(props) {
           }
         }
         break;
-      case "KeyL":
-        disposeVideoResources(); // 'L'을 누를 때 비디오 자원 해제
+      case "KeyD":
+        disposeVideoResources(); // 'D'을 누를 때 비디오 자원 해제
         break;
       default:
         // 다른 키 처리
