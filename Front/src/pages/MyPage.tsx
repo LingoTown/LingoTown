@@ -169,7 +169,7 @@ const MyPage = () => {
                cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
           <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
-            navigate("/departure");
+            navigate(-1);
           }}
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           >Close</div>
