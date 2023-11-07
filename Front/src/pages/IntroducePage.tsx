@@ -8,7 +8,7 @@ interface IntroducePage {
 
 export const IntroducePage: React.FC<IntroducePage> = (props: IntroducePage): JSX.Element => {
   const textureLoader = new THREE.TextureLoader();
-  const backgroundTexture = textureLoader.load(`${import.meta.env.VITE_S3_URL}Introduce/background.png`);
+  const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "Introduce/background.png");
 
   return(
     <>
