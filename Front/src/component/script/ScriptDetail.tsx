@@ -43,7 +43,9 @@ function ScriptDetail() {
                 onClick={()=>{setCorrMode(!corrMode)}}
                 className='hover:text-[1.15rem] text-[1.2rem] text-red-300'
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-              >View correction</span>
+              >View correction
+              <span className='material-icons text-[1.1rem]'>&nbsp;visibility</span>
+              </span>
             </div>
             <div onClick={()=>{setDetailVerAtom(false)}} 
             className="hover:text-[1.2rem] align-center font-['passero-one'] font-[30] text-white text-[1.3rem] mr-5" 

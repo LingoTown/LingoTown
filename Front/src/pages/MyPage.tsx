@@ -1,3 +1,4 @@
+import react from 'react';
 import {useState, useEffect} from "react"
 import { useNavigate } from 'react-router-dom';
 import { userAtom } from '../atom/UserAtom';
@@ -167,13 +168,6 @@ const MyPage = () => {
       className="min-h-screen flex flex-col items-center justify-center bg-cover" 
       style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`,
                cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>    
-        <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
-          <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
-            navigate(-1);
-          }}
-          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-          >Close</div>
-        </div> 
         <div className=''>
             <div className='w-[80rem] h-[43rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
             {/* 왼쪽 부분 */}
@@ -284,7 +278,7 @@ const MyPage = () => {
                     <div className="flex flex-row justify-between">
                       <div className="m-5 text-white font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
                       <div onClick={() => {
-                        navigate("/departurePage");
+                        navigate("/departure");
                         }} 
                         style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
                         className="hover:text-[1.8rem] m-5 text-white font-['passero-one'] font-[30] text-[2rem] ">X
