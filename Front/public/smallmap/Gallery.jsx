@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Map/Gallery/scene.gltf"
   );
 
   useEffect(
@@ -493,12 +493,6 @@ export function Gallery(props) {
           geometry={nodes["Walls_WALLS&ROOF_0"].geometry}
           material={materials.WALLSROOF}
           position={[415.194, -12.771, 125.628]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        />
-        <mesh
-          geometry={nodes["Roof_WALLS&ROOF_0"].geometry}
-          material={materials.WALLSROOF}
-          position={[415.259, 390.034, 120.63]}
           rotation={[-Math.PI / 2, 0, 0]}
         />
       </group>

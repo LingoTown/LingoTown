@@ -1,18 +1,18 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useCustomConfirm, useCustomPrompt, useCustomAlert } from "../util/ModalUtil"
+import { useCustomConfirm, useCustomAlert } from "../util/ModalUtil"
 import { talkBalloonAtom } from '../../atom/TalkBalloonAtom';
 import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { getQuizList } from '../../api/Quiz';
 import { QuizType } from '../../type/QuizType';
 import { QuizComp } from './QuizComp';
+import { tutorialAtom } from '../../atom/TutorialAtom';
 
 export const MapUtilComp = () => {
 
-  // hook
+  // hook 
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
-  const customPrompt = useCustomPrompt();
   const navigate = useNavigate();
 
   // param check
@@ -23,6 +23,7 @@ export const MapUtilComp = () => {
 
   // state
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  const setTutorialOpen = useSetRecoilState(tutorialAtom);
   const [isOpenQuizModal, setIsOpenQuizModal] = useState<boolean>(false);
   const [quizList, setQuizList] = useState<QuizType[]>([]);
   const [quizLender, setQuizLender] = useState<boolean>(true);
@@ -34,8 +35,9 @@ export const MapUtilComp = () => {
       const result = data.data as QuizType[];
       setQuizList([...result]);
       setTranslateList(new Array(result.length).fill(0));
-    },(error) => {
-      console.log(error);
+    },() => {
+      navigate("/departure");
+      customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -84,14 +86,14 @@ export const MapUtilComp = () => {
         />
         <div className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-2">
           <button
-            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
-            onClick={() => customPrompt("Info", "해당 테마의 정보를 확인 할 수 있습니다.")}
-          >Info</button>
+            onClick={() => {setTutorialOpen({visit: false})}}
+          >Guide</button>
         </div>
         <div className="absolute top-14 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-1">
           <button 
-            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
             onClick={() => {setIsOpenQuizModal(!isOpenQuizModal)}}
           >Quiz</button>

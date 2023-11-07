@@ -11,7 +11,7 @@ import React, { useEffect } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Park(props) {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Park/scene.gltf')
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Map/Park/scene.gltf')
 
   useEffect(() => {
     if (props.onLoaded) {
@@ -42,7 +42,7 @@ export function Park(props) {
             <mesh geometry={nodes.tree_Madera001_0.geometry} material={materials['Madera.001']} />
             <mesh geometry={nodes.leaves_Hojas_0.geometry} material={materials.Hojas} />
           </group>
-          <group position={[-288.348, 16.075, -94.966]} rotation={[-Math.PI / 2, 0, 0]} scale={17.304}>
+          {/* <group position={[-288.348, 16.075, -94.966]} rotation={[-Math.PI / 2, 0, 0]} scale={17.304}>
             <mesh geometry={nodes.BezierCurve002_Tobogan1005_0.geometry} material={materials['Tobogan1.005']} />
             <mesh geometry={nodes.BezierCurve002_Tobogan_0.geometry} material={materials.Tobogan} />
             <mesh geometry={nodes.BezierCurve002_Base_0.geometry} material={materials.Base} />
@@ -52,7 +52,7 @@ export function Park(props) {
             <mesh geometry={nodes.BezierCurve002_Tobogan1004_0.geometry} material={materials['Tobogan1.004']} />
             <mesh geometry={nodes.BezierCurve002_Tobogan1_0.geometry} material={materials.Tobogan1} />
             <mesh geometry={nodes.BezierCurve002_Tobogan1003_0.geometry} material={materials['Tobogan1.003']} />
-          </group>
+          </group> */}
           <group position={[-293.015, 14.482, 60.822]} rotation={[-Math.PI / 2, 0, 0]} scale={100}>
             <mesh geometry={nodes.Cube003_Resbaladilla002_0.geometry} material={materials['Resbaladilla.002']} />
             <mesh geometry={nodes.Cube003_Base_0.geometry} material={materials.Base} />
@@ -61,7 +61,7 @@ export function Park(props) {
             <mesh geometry={nodes.Cube004_Resbaladilla_0.geometry} material={materials.Resbaladilla} />
             <mesh geometry={nodes.Cube004_Base_0.geometry} material={materials.Base} />
           </group>
-          <group position={[-422.033, 10.304, -146.544]} rotation={[-Math.PI / 2, 0, 0]} scale={12.783}>
+          <group position={[-350.033, 10.304, -90.544]} rotation={[-Math.PI / 2, 0, 0]} scale={12.783}>
             <mesh geometry={nodes.Cube005_Madera_0.geometry} material={materials.Madera} />
             <mesh geometry={nodes.Cube005_Base_0.geometry} material={materials.Base} />
             <mesh geometry={nodes.Cube005_Pasillo_0.geometry} material={materials.Pasillo} />

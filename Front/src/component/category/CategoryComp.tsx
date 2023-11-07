@@ -3,12 +3,14 @@ import {
   MeshPortalMaterial,
   PortalMaterialType,
   RoundedBox,
+  useGLTF,
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
+import { BorderedRoundedBox } from "./BorderRoundBox";
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -68,8 +70,19 @@ export const CategoryComp: React.FC<{
     }
   })
 
+  const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf")
+
+  const lockRef = useRef<THREE.Mesh>(null);
+
+  useFrame(() => {
+    const time = Date.now() * 0.005;
+
+    if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
+  });
+
   return (
     <group {...props}>
+      <BorderedRoundedBox />
       <RoundedBox
         name={name}
         args={[3, 1.75, 1]}
@@ -112,7 +125,19 @@ export const CategoryComp: React.FC<{
 
         {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0][language]} /> : <></>}
         {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0][language]} /> : <></>}
-        {texture === 0 ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[1][language]} /> : <></>}
+        {texture === 0 ? (
+          <>
+            <TextUtil x={language === 0 ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1][language]} />
+            <primitive
+              ref={lockRef}
+              scale={0.05}
+              position-x={language === 0 ? 0.35 : 0.4}
+              position-y={-0.1}
+              object={lock.scene.clone()}
+            />
+          </>
+          ) : <></>
+        }
       </RoundedBox>
     </group>
   )

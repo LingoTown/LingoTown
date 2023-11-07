@@ -20,6 +20,8 @@ import { Barry } from '../../../public/name/gallery/Barry.tsx'
 import { Jimmy } from '../../../public/name/gallery/Jimmy.tsx'
 import { Jina } from '../../../public/name/gallery/Jina.tsx'
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
+import { userAtom } from '../../atom/UserAtom.ts';
+import { useRecoilValue } from 'recoil';
 
 export const GalleryComp: React.FC = () => {
   //wall
@@ -44,7 +46,8 @@ export const GalleryComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_1.glb");
+  const user = useRecoilValue(userAtom);
+  const playerFile = useGLTF(user.characterLink);
   const [playerPosition, setPlayerPosition] = useState([-20, 0, 0]);
   const [playerRotation, setPlayerRotation]= useState([0,1.56,0]);
   const [playerRef, playerApi] = useCylinder(() => ({
@@ -102,7 +105,7 @@ export const GalleryComp: React.FC = () => {
 
   // value
   const CIRCLE_RADIUS = 3;
-  const LANGUAGE = "en-US";
+  const LANGUAGE = "fr-FR";
   const SENTENCE = "Would you like to start a conversation with ";
 
   // function

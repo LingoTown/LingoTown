@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "../pages/LoginPage";
 import KakaoCallback from "../component/login/KakaoCallbackComp";
 import GoogleCallback from "../component/login/GoogleCallbackComp";
-import MainPage from '../pages/MainPage';
+import MyPage from '../pages/MyPage';
 import NotFound from '../pages/NotFoundPage';
 import { CanvasPage } from "../pages/CanvasPage";
 import { IntroducePage } from "../pages/IntroducePage";
@@ -28,7 +28,7 @@ export const AppRouter = () => {
         <Routes>
           {/* 비로그인 사용 가능 */}
           <Route path="/" element={ <LoginPage/> }/>
-          <Route path="/main" element={ <MainPage/> }></Route>
+          <Route path="/mypage" element={ <MyPage/> }></Route>
           <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
           <Route path="/google/callback" element={ <GoogleCallback/> }/>
           <Route path="/explore" element={ <ExplorePage theme={ <ExploreComp/> }/> }/>

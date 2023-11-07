@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { MapUtilComp } from "../component/talk/MapUtilComp";
+import { SYMapUtilComp } from "../component/playerSelect/SYMapUtilComp";
 import * as THREE from "three";
 
 interface playerSelectPage {
@@ -8,12 +8,11 @@ interface playerSelectPage {
 
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
   const textureLoader = new THREE.TextureLoader();
-  const worldbackgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Introduce/bgggg.png');
-//   const medievalBackgroundTexture = textureLoader.load('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/PlayerSelect/Medieval_Fantasy/scene.gltf');
+  const worldbackgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + 'Introduce/bgggg.png');
 
   return(
     <>
-      {/* <MapUtilComp /> */}
+      <SYMapUtilComp />
 
       <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
       {/* <Canvas> */}

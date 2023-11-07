@@ -3,7 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
 export function DaenName() {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/Name/Alphabat.gltf') as any
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Font/Name/Alphabat.gltf') as any
 
   // 각 mesh에 대한 참조를 생성합니다.
   const D = useRef<THREE.Mesh>(null);
@@ -25,7 +25,7 @@ export function DaenName() {
 
   return (
     <group dispose={null}>
-      <group scale={0.01} rotation={[0, 300, 0]} position={[7, 1, -0.6]}>
+      <group scale={0.01} rotation={[0, 0, 0]} position={[-6, 1, 0]}>
         <mesh ref={D} geometry={nodes.AD_text_0.geometry} material={materials.text} position={[-5, 85, 1]} />
         <mesh ref={A} geometry={nodes.AA_text_0.geometry} material={materials.text} position={[70, 1, 1]} />
         <mesh ref={E} geometry={nodes.AE_text_0.geometry} material={materials.text} position={[53, 4, 1]} />

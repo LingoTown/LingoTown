@@ -18,7 +18,7 @@ const Rows = () => {
             <div key={i} 
             onClick={()=>{sortTheme(el.language)}} 
             className="hover:bg-[#ddd]/40 text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1"
-            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             >
                 <div className="flex w-1/6 text-yellow-300">{el.time}</div>
                 <div className="flex w-2/6 font-bold text-[1.3rem]">{el.destination}</div>
@@ -34,11 +34,11 @@ const DeparturePage = () => {
     const customAlert = useCustomAlert();
     return (
         <>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)', cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>    
+        <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>    
         
         <div className="w-full px-5 flex justify-between text-5xl font-bold text-white font-['passero-one']">
           <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg" 
-            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             onClick={async() => {
             localStorage.removeItem("userAtom");
             await customAlert("Notice", "로그아웃 되었습니다.")
@@ -46,9 +46,9 @@ const DeparturePage = () => {
           }}
           >Logout</div>
           <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => {
-            navigate("/main");
+            navigate("/mypage");
           }}
-          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           >MyPage</div>
         </div>
         {/* Departure board */}
