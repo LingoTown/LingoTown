@@ -44,7 +44,6 @@ import java.util.List;
 public class WebClientUtil {
 
     private final WebClientConfig webClientConfig;
-    //private static final Logger logger = LoggerFactory.getLogger(WebClientUtil.class);
 
     public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
 
