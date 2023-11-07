@@ -3,7 +3,7 @@ import { useGLTF } from "@react-three/drei";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Map/Gallery/scene.gltf"
   );
 
   useEffect(

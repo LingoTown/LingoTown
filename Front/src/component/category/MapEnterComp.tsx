@@ -14,7 +14,7 @@ export const MapEnterComp: React.FC<{
   active: string | null;
   setHovered: (name: string | null) => void;
   enabled: boolean | false;
-  language: number;
+  language: number | 0;
 }> = ({
   x, y, z, path, name, active, setHovered, enabled, language
 }) => {

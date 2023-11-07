@@ -14,8 +14,9 @@ import { npcStateName } from "../atom/ScriptAtom";
 import { talkIdAtom } from "../atom/ScriptAtom";
 import { detailVerAtom } from "../atom/ScriptAtom";
 import ScriptDetail from "../component/script/ScriptDetail";
+import toast, { Toaster } from 'react-hot-toast';
 
-const MainPage = () => {
+const MyPage = () => {
   const customAlert = useCustomAlert();
   const [nickEditMode, setNickMode] = useState(false);
   const [nick, setNick] = useState('');
@@ -103,7 +104,7 @@ const MainPage = () => {
           nickname: nick 
       }));
         setNickMode(false);
-
+        showToaster("닉네임이 변경 되었습니다.", "✏️");
       })
       .catch(console.log)
   }
@@ -123,6 +124,7 @@ const MainPage = () => {
               ...prevUser, 
               profileImg: newImg
           }))
+          showToaster("프로필 사진이 변경 되었습니다.", "📷");
           })
       })
       .catch(console.log);
@@ -148,18 +150,28 @@ const MainPage = () => {
     }
   }
 
+  const showToaster = (sentence:string, emoji:string) => {
+    toast(sentence, {
+      duration: 2000,
+      icon: emoji,
+      style: { fontSize: "15px" },
+      iconTheme: { primary: '#000', secondary: '#fff' },
+      ariaProps: { role: 'status', 'aria-live': 'polite' },
+    });
+  }
+
   return(
     <>
-      <div 
-      
+      <Toaster position="top-center" />
+      <div      
       className="min-h-screen flex flex-col items-center justify-center bg-cover" 
       style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)',
-               cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`}}>    
+               cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
           <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
             navigate("/departure");
           }}
-          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           >Close</div>
         </div>
         <div className=''>
@@ -175,7 +187,7 @@ const MainPage = () => {
 
                   </span>
                   <span onClick={editPic} 
-                    style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                     className="bg-[#ababab] rounded-full p-1 absolute -bottom-2 -right-0 material-icons"
                     >edit</span>
                 </div>
@@ -188,14 +200,14 @@ const MainPage = () => {
                       <span 
                         onClick={saveNickname} 
                         className="material-icons"
-                        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                       >check</span>
                     </div>
                     :
                     <div>Name : {user.nickname} &nbsp; 
                       <span onClick={editNickname} 
                         className="material-icons align-middle"
-                        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                       >
                         edit
                       </span>
@@ -211,11 +223,11 @@ const MainPage = () => {
                   
                 </div>
                 <div 
-                style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                 className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
                   <div className="hover:text-[2rem]  h-[45px]" onClick={logout}>Logout</div>
                   <div className="hover:text-[2rem]  h-[45px]" 
-                  style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                  style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                    onClick={deleteAccount}>Delete Account</div>
                 </div>
         
@@ -233,7 +245,7 @@ const MainPage = () => {
                   <div 
                     onClick={()=>{setScriptVer(false)}} 
                     className="hover:text-[1.2rem] cursor-pointer m-5 align-center font-['passero-one'] font-[30] text-white text-[1.3rem]"
-                    style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }} 
+                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
                     > {"<--  "}go back</div>
                   </div>
                   {
@@ -241,7 +253,7 @@ const MainPage = () => {
                       <div 
                         onClick={()=>{setDetailVer(true); setTalkId(arr.talkId)}} key={i} 
                         className="group font-['passero-one'] text-[1.2rem] font-[30] flex mx-5 mb-2 cursor-pointer hover:bg-[#fff]/60 rounded-lg"
-                        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                       >
                       <div className="w-full px-5 py-2 bg-[#fff]/70 rounded-lg flex flex-row items-center justify-between">
                         
@@ -294,4 +306,4 @@ const MainPage = () => {
 }
 
 
-export default MainPage;
+export default MyPage;

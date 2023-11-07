@@ -6,122 +6,123 @@ import * as THREE from "three";
 
 export function Gallery(props) {
   const { nodes, materials } = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Gallery/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Map/Gallery/scene.gltf"
   );
 
   /* 소품 */
   const glassTubeC = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/GlassTube3/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Objects/GlassTube3/scene.gltf"
   );
   const eiffelTower = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/Eiffel Tower/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Objects/Eiffel Tower/scene.gltf"
   );
 
   /* 우리 사진 */
 
   const image1010A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1010(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1010(1).jpg"
   );
 
   const image1011A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1011(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1011(1).jpg"
   );
 
   const image1011B = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1011(2).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1011(2).jpg"
   );
 
   const image1012A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1012(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1012(1).jpg"
   );
   const image1012B = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1012(2).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1012(2).jpg"
   );
   const image1013A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1013(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1013(1).jpg"
   );
   const image1016A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1016(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1016(1).jpg"
   );
   const image1017A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1017(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1017(1).jpg"
   );
   const image1018A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1018(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1018(1).jpg"
   );
   const image1018B = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1018(2).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1018(2).jpg"
   );
   const image1018C = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1018(3).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1018(3).jpg"
   );
   const image1019A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1019(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1019(1).jpg"
   );
   const image1019B = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1019(2).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1019(2).jpg"
   );
   const image1020A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1020(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1020(1).jpg"
   );
   const image1023A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1023(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1023(1).jpg"
   );
   const image1024A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1024(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1024(1).jpg"
   );
   const image1025A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1025(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1025(1).jpg"
   );
   const image1026A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1026(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1026(1).jpg"
   );
   const image1026B = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1026(2).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1026(2).jpg"
   );
   const image1027A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1027(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1027(1).jpg"
   );
   const image1030A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1030(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1030(1).jpg"
   );
   const image1031A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1031(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1031(1).jpg"
   );
   const image1101A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1101(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1101(1).jpg"
   );
   const image1102A = useLoader(
     TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1102(1).jpg"
+    import.meta.env.VITE_S3_URL + "Picture/1102(1).jpg"
   );
   const image1103A = useLoader(
-    TextureLoader,
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Picture/1103(1).jpg"
+    TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1103(1).jpg"
   );
+  const image1106A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1106(1).jpg");
+  const image1106B = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1106(2).jpg")
 
   useEffect(
     () => {
@@ -716,7 +717,7 @@ export function Gallery(props) {
           />
         </group>
 
-        {/* 1031A */}
+        {/* 1103A */}
 
         <group
           position={[617.029, 184.435, 1077.03]}
@@ -794,7 +795,7 @@ export function Gallery(props) {
           />
         </group>
 
-        {/* 1103A */}
+        {/* 1031A */}
 
         <group
           position={[60.784, 184.435, 472.55]}
@@ -819,6 +820,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1106A */}
+
         <group
           position={[-145.081, 184.435, 725.566]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -826,9 +830,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_029_Art_029_0.geometry}
-            material={materials.Art_029}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1106A} />
+          </mesh>
         </group>
         <group
           position={[-145.081, 184.435, 725.566]}
@@ -841,6 +846,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1106B */}
+
         <group
           position={[-145.081, 184.435, 1102.51]}
           rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
@@ -848,9 +856,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_030_Art_030_0.geometry}
-            material={materials.Art_030}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1106B} />
+          </mesh>
         </group>
         <group
           position={[-145.081, 184.435, 1102.51]}
