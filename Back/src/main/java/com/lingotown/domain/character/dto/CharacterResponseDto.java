@@ -1,5 +1,6 @@
 package com.lingotown.domain.character.dto;
 
+import com.lingotown.domain.character.entity.Character;
 import com.lingotown.global.data.GenderType;
 import lombok.AccessLevel;
 import lombok.Builder;
