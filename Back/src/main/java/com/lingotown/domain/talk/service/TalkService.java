@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -166,17 +167,21 @@ public class TalkService {
         String answer = quiz.getAnswer();
 
         if(answer.equals(quizReqDto.getResult())) {
+            result = true;
+
             Long memberId = Long.valueOf(principal.getName());
             Member member = getMemberEntity(memberId);
 
-            MemberQuiz memberQuiz = MemberQuiz
-                    .builder()
-                    .member(member)
-                    .quiz(quiz)
-                    .build();
+            Optional<MemberQuiz> isSolvedQuiz = memberQuizRepository.findByMemberIdAndQuizId(memberId, quizId);
+            if(isSolvedQuiz.isEmpty()) {
+                MemberQuiz memberQuiz = MemberQuiz
+                        .builder()
+                        .member(member)
+                        .quiz(quiz)
+                        .build();
 
-            memberQuizRepository.save(memberQuiz);
-            result = true;
+                memberQuizRepository.save(memberQuiz);
+            }
         }
 
         QuizResDto quizResDto = QuizResDto
