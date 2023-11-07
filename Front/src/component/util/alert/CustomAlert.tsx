@@ -17,16 +17,16 @@ const CustomAlert = ({ title, message, onClose }: AlertType) => {
   return (
     <div className="z-50">
       <div
-        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}  
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
         className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClickCapture={(e) => e.stopPropagation()}></div>
       <div
-        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}  
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
         className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 p-6 bg-white rounded-lg shadow-xl border border-gray-200">
         <h2 className="text-xl font-semibold mb-4 border-b pb-2 font-['passero-one']">{title}</h2>
         <div className="mb-5 text-gray-600 font-bold text-lg font-['passero-one']">{message}</div>
         <div className="mt-6 flex justify-end space-x-2">
           <button
-            style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}  
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}  
             onClick={onClose} className="py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring focus:ring-blue-300 focus:ring-opacity-50 transition-colors" autoFocus>
             OK
           </button>

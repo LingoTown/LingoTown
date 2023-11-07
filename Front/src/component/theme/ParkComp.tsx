@@ -22,6 +22,8 @@ import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
 import { Jerry } from '../../../public/name/park/Jerry.tsx';
 import { Marco } from '../../../public/name/park/Marco.tsx';
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../../atom/UserAtom.ts';
  
 export const ParkComp: React.FC = () => {
 
@@ -41,7 +43,8 @@ export const ParkComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Player/m_1.glb");
+  const user = useRecoilValue(userAtom);
+  const playerFile = useGLTF(user.characterLink);
   //Player cannon
   const [playerPosition, setPlayerPosition] = useState([-45, 0, -5]);    
   const [playerRotation, setPlayerRotation]= useState([0, 1, 0]);
@@ -64,14 +67,14 @@ export const ParkComp: React.FC = () => {
   const lerpFactor = 0.04;
 
   // NPC
-  const jerryFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_14.glb");
+  const jerryFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_14.glb");
   const jerryPosition = new THREE.Vector3(-31, 2.5, 6);
   const jerryRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-180), 0);
   const jerryCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const jerryAction = useRef<AnimationAction>();
   const jerryActions = useAnimations(jerryFile.animations, jerryFile.scene).actions;
 
-  const sanhaFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_18.glb");
+  const sanhaFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_18.glb");
   const sanhaRef = useRef<THREE.Object3D | undefined>();
   const sanhaPosition = new THREE.Vector3(sanhaRef.current?.position.x===undefined?-50:sanhaRef.current?.position.x-2, 1, sanhaRef.current?.position.z);
   const sanhaRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-90), 0);
@@ -80,21 +83,21 @@ export const ParkComp: React.FC = () => {
   const sanhaActions = useAnimations(sanhaFile.animations, sanhaFile.scene).actions;
   const [sanhaTalk, setSanhaTalk] = useState(false); //산하가 말하냐 마냐에 따라 움직임 여부를 결정
 
-  const marcoFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_32.glb");
+  const marcoFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_32.glb");
   const marcoPosition = new THREE.Vector3(-10, 1, 6);
   const marcoRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(-180), 0);
   const marcoCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const marcoAction = useRef<AnimationAction>();
   const marcoActions = useAnimations(marcoFile.animations, marcoFile.scene).actions;
 
-  const bonnieFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_8.glb");
+  const bonnieFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_8.glb");
   const bonniePosition = new THREE.Vector3(-43, 1, 2);
   const bonnieRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
   const bonnieCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const bonnieAction = useRef<AnimationAction>();
   const bonnieActions = useAnimations(bonnieFile.animations, bonnieFile.scene).actions;
 
-  const soccerBallFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/SoccerBall/scene.gltf");
+  const soccerBallFile = useGLTF(import.meta.env.VITE_S3_URL + "Objects/SoccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
     position: [-10, 1, 5],
