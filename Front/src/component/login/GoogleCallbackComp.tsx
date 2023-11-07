@@ -25,9 +25,8 @@ const GoogleCallbackComp = () => {
 
     await googleLogin(json, ({data}) => {
       const result = data.data as userType;
-      const tempUser = {...result};
-      setUser(tempUser); //유저 정보를 유저아톰에 저장
-      navigate("/departurePage");
+      setUser({...result});
+      navigate("/departure");
     }, (error) => {
       console.log(error)
       navigate("/");

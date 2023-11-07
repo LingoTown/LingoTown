@@ -1,4 +1,4 @@
-import { HttpJson, HttpForm } from "./Http";
+import { HttpJson, HttpForm } from "./common/Http";
 import { ReturnType } from "../type/ReturnType";
 import { talkingTopicType } from "../type/TalkType";
 
