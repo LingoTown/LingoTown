@@ -53,7 +53,7 @@ export const ExploreBtn = () => {
             className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
             onClick={() => { setOpenQ(!openQ) }}
             style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
-          >My Quest</button>
+          >Quiz</button>
         </div>
       </div>
     </>

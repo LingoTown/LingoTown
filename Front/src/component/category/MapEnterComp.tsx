@@ -20,7 +20,7 @@ export const MapEnterComp: React.FC<{
 }) => {
   const navigate = useNavigate();
 
-  const text = useState(["Enter", "Entrez"])[0];
+  const text = useState([["Enter", "Entrez"], ["Locked", "Verrouillé"]])[0];
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
@@ -30,8 +30,10 @@ export const MapEnterComp: React.FC<{
       position={[x, y, z]}
       onClick={() => {
         if (!enabled && active !== name) {
-          if(!loading.loading) setLoading(() => ({loading:true}));
-          navigate(`/${path}`)
+          if ((language === 0 && name !== "gallery") || (language === 1 && name === "galerie")) {
+            if(!loading.loading) setLoading(() => ({loading:true}));
+            navigate(`/${path}`)
+          }
         }
       }}
       onPointerEnter={() => {
@@ -49,9 +51,11 @@ export const MapEnterComp: React.FC<{
         args={[0.8, 0.25, 0.1]}
       >
         <meshStandardMaterial attach="material" color={"#deb887"} />
-        <TextUtil
-          x={0} y={0} z={0.051} color="black" size={0.15} name={text[language]}
-        />
+        {
+          (language === 0 && name !== "gallery") || (language === 1 && name === "galerie") ?
+            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[0][language]} /> :
+            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[1][language]} />
+        }
       </RoundedBox>
     </mesh>
   );
