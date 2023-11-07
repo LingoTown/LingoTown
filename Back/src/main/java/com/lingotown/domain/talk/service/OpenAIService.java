@@ -178,11 +178,23 @@ public class OpenAIService {
 
         }
 
+        /* GPT 응답 TTS 변환 및 DB 저장 */
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
                 .responseMessage(responseDto.getContent())
-                .responseS3URL(null)
+                .responseS3URL(systemResDataResponse.getData().getTalkFile())
                 .build();
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
@@ -238,16 +250,6 @@ public class OpenAIService {
             messages.addAll(previousChatDataList);
         }
 
-        // user 인풋
-        if(talkReqDto.getTalkFile() != null) {
-            OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-                    .builder()
-                    .role("user")
-                    .content(talkReqDto.getPrompt())
-                    .build();
-            messages.add(messageDtoUser);
-        }
-
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
@@ -272,10 +274,6 @@ public class OpenAIService {
         chatList.addAll(messages);
         chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
-
-        for(OpenAIMessageDto messageDto : chatList){
-            System.out.println(messageDto.getRole() +" : "+ messageDto.getContent());
-        }
 
 
         /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
@@ -312,28 +310,25 @@ public class OpenAIService {
                                 log.error("Error occurred: ", err);
                             }
                     );
-
-
-
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
-//        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
-//
-//        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
-//                .talkId(talkReqDto.getTalkId())
-//                .isMember(false)
-//                .content(responseDto.getContent())
-//                .talkFile(GPTResponseFile)
-//                .build();
-//
-//        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
         //응답 반환
         CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                 .builder()
                 .responseMessage(responseDto.getContent())
-//                .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                .responseS3URL(systemResDataResponse.getData().getTalkFile())
                 .build();
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
