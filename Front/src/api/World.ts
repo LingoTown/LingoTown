@@ -1,4 +1,4 @@
-import { HttpJson } from "./Http";
+import { HttpJson } from "./common/Http";
 import { ReturnType } from "../type/ReturnType";
 
 

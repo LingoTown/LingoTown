@@ -25,9 +25,8 @@ const KakaoCallbackComp = () => {
 
     await kakaoLogin(json, async ({data}) => {
       const result = data.data as userType;
-      const tempUser = {...result};
-      setUser(tempUser);
-      navigate("/departurePage");
+      setUser({...result});
+      navigate("/departure");
     }, (error) => {
       console.log(error)
       navigate("/");

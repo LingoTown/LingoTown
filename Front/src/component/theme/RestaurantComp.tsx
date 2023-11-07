@@ -13,7 +13,7 @@ import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
+import { PlayerMove, SetAction } from './util/MSPlayerUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
 import { Isabel } from '../../../public/name/resrtaurant/Isabel.tsx'
@@ -80,7 +80,7 @@ export const RestaurantComp: React.FC = () => {
 
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 6, name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
+    { id: 4, name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
     { id: 33, name: "Olivia", targetPosition: oliviaCameraPosition, targetRotation:oliviaCameraRotation, ref: oliviaCircleRef },
     { id: 26, name: "Isabel", targetPosition: isabelCameraPosition, targetRotation:isabelCameraRotation, ref: isabelCircleRef}
   ];
@@ -90,6 +90,7 @@ export const RestaurantComp: React.FC = () => {
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const setTalkState = useSetRecoilState(talkStateAtom);
   const isMove = useRef(true);
+  const isModal = useRef(false);
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
@@ -110,7 +111,7 @@ export const RestaurantComp: React.FC = () => {
   }
 
   useFrame((_state, deltaTime) => {
-    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions, isModal);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
@@ -172,6 +173,10 @@ export const RestaurantComp: React.FC = () => {
   useEffect(() => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
+
+  useEffect(() => {
+    isModal.current = talkBalloon.isModal;
+  }, [talkBalloon.isModal])
 
   return(
     <>

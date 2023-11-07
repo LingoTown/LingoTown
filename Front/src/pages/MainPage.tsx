@@ -2,8 +2,8 @@ import {useState, useEffect} from "react"
 import { useNavigate } from 'react-router-dom';
 import { userAtom } from '../atom/UserAtom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { HttpJson } from '../api/Http';
-import { HttpForm } from "../api/Http";
+import { HttpJson } from '../api/common/Http';
+import { HttpForm } from "../api/common/Http";
 import { useSetRecoilState } from "recoil";
 import { myPageNPCListType } from "../component/Country";
 import Country from "../component/Country";
@@ -157,7 +157,7 @@ const MainPage = () => {
                cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto`}}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
           <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
-            navigate("/departurePage");
+            navigate("/departure");
           }}
           style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           >Close</div>
