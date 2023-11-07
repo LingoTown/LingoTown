@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { MapUtilComp } from "../component/talk/MapUtilComp";
+import { SYMapUtilComp } from "../component/talk/SYMapUtilComp";
 import * as THREE from "three";
 
 interface playerSelectPage {
@@ -13,7 +13,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
 
   return(
     <>
-      {/* <MapUtilComp /> */}
+      <SYMapUtilComp />
 
       <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
       {/* <Canvas> */}

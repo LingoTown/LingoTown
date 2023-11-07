@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import { updateCharacter } from "../../api/User"
 import { UpdateSelectedCharacter } from "../../type/UserType";
 import { CharacterResponseType } from "../../type/CharacterType"
+import { SelectButtonComp } from "./SelectButtonComp";
 
 export const PlayerSelect: React.FC = () => {
 
@@ -15,17 +16,12 @@ export const PlayerSelect: React.FC = () => {
     
     /* 대표 캐릭터 수정 */
     const handleCharacterSelect = async (clickedCharacterId: number) => {
-        console.log('Character clicked:', clickedCharacterId);
-
-        if (user.characterId === clickedCharacterId)  {
-            console.log('Clicked character is already selected.');
+        if (user.characterId === clickedCharacterId)  
             return;
-        }
+        
 
-        if (user.lockList[clickedCharacterId - 1].islocked === true) {
-            console.log('Clicked character is locked.');
+        if (user.lockList[clickedCharacterId - 1].islocked === true) 
             return;
-        }
         
         const payload: UpdateSelectedCharacter = {
             previousId: user.characterId,
@@ -55,20 +51,26 @@ export const PlayerSelect: React.FC = () => {
 
     /* Characters */
     
-    const ManA = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
-    const WomanA = useGLTF(import.meta.env.VITE_S3_URL + "Player/f_1.glb");
-    const WomanB = useGLTF(import.meta.env.VITE_S3_URL + "Player/f_2.glb");
+    const Ch1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
+    const Ch2 = useGLTF(import.meta.env.VITE_S3_URL + "Player/f_1.glb");
+    const Ch3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_20.glb");
+    const Ch4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_27.glb");
+    const Ch5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
 
     const characterPositions: { [key: number]: [number, number, number] } = {
         1: [-4, -0.5, 0],
         2: [-2, -0.5, 0],
         3: [0, -0.5, 0],
+        4: [2, -0.5, 0], 
+        5: [4, -0.5, 0]
     };
 
     const characterNames: { [key: number]: String } = {
         1: "A",
         2: "B",
-        3: "C"
+        3: "C", 
+        4: "D",
+        5: "E"
     }
 
     const textOffsetY = -0.8;
@@ -76,13 +78,25 @@ export const PlayerSelect: React.FC = () => {
     const auroraPositions: { [key: number]: [number, number, number] } = {
         1: [-4, -0.5, 0],
         2: [-2, -0.5, 0],
-        3: [0, -0.5, 0]
+        3: [0, -0.5, 0],
+        4: [2, -0.5, 0],
+        5: [4, -0.5, 0]
     }
 
     const lockPositions: { [key: number]: [number, number, number] } = {
         1: [-4, 1.5, 0],
         2: [-2, 1.5, 0],
-        3: [0, 1.5, 0]
+        3: [0, 1.5, 0],
+        4: [2, 1.5, 0],
+        5: [4, 1.5, 0]
+    }
+
+    const buttonPositions: { [key: number]: [number, number, number] } = {
+        1: [-2.8, -1.2, 3],
+        2: [-1.4, -1.2, 3],
+        3: [0, -1.2, 3], 
+        4: [1.4, -1.2, 3],
+        5: [2.8, -1.2, 3]
     }
 
     // 글자 색 
@@ -91,7 +105,6 @@ export const PlayerSelect: React.FC = () => {
     
     return (
         <>
-
         <Environment preset="sunset" />
 
         <primitive
@@ -102,32 +115,39 @@ export const PlayerSelect: React.FC = () => {
         />
 
         {/* 조건부 자물쇠 렌더링 */}
-            {user.lockList.map((lockInfo, index) => {
-                const positionIndex = index + 1; // 가정: positionIndex는 lockPositions와 맞춤
+        {user.lockList.map((lockInfo, index) => {
+            const characterId = index + 1; // 캐릭터 ID는 인덱스에 1을 더한 값입니다.
 
-                // 만약 user.lockList[index].isLocked 가 true 라면 자물쇠를 렌더링합니다.
-                return lockInfo.islocked && (
+            // user.lockList에서 islocked가 true인 경우에 해당 캐릭터 위치에 자물쇠를 표시합니다.
+            if (lockInfo.islocked) {
+
+                return (
                     <primitive
-                        key={index} // 고유한 key를 사용해야 합니다.
+                        key={`lock-${characterId}`} // 각 자물쇠에 고유한 key를 부여합니다.
                         scale={0.1}
-                        position={lockPositions[positionIndex]} 
-                        object={lock.scene}
+                        position={lockPositions[characterId]} // lockPositions에서 characterId에 해당하는 위치를 가져옵니다.
+                        object={lock.scene.clone()} // .clone()을 호출하여 각 자물쇠에 대해 별도의 인스턴스를 만듭니다.
                     />
                 );
-            })}
+            }
+            return null; // islocked가 false이면 null을 반환하여 렌더링하지 않습니다.
+        })}
 
-        <primitive scale={1} position={characterPositions[1]} object={ManA.scene} onClick={() => handleCharacterSelect(1)} />
-        <primitive scale={1} position={characterPositions[2]} object={WomanA.scene} onClick={() => handleCharacterSelect(2)} />
-        <primitive scale={1} position={characterPositions[3]} object={WomanB.scene} onClick={() => handleCharacterSelect(3)} />
+        <primitive scale={1} position={characterPositions[1]} object={Ch1.scene} onClick={() => handleCharacterSelect(1)} />
+        <primitive scale={1} position={characterPositions[2]} object={Ch2.scene} onClick={() => handleCharacterSelect(2)} />
+        <primitive scale={1} position={characterPositions[3]} object={Ch3.scene} onClick={() => handleCharacterSelect(3)} />
+        <primitive scale={1} position={characterPositions[4]} object={Ch4.scene} onClick={() => handleCharacterSelect(4)} />
+        <primitive scale={1} position={characterPositions[5]} object={Ch5.scene} onClick={() => handleCharacterSelect(5)} />
 
         {/* 캐릭터 이름 텍스트 및 선택 버튼 */}
         {Object.entries(characterPositions).map(([key, position]) => {
             const id = Number(key); 
+            const buttonPosition = buttonPositions[id];
 
             return (
                 <React.Fragment key={id}>
                     <Text
-                        position={[position[0], position[1] + textOffsetY, position[2]]}
+                        position={[position[0], position[1] + textOffsetY + 0.2, position[2]]}
                         fontSize={0.5}
                         color={getColorForName(id)}
                     >
@@ -143,6 +163,14 @@ export const PlayerSelect: React.FC = () => {
                     >
                         Select
                     </Text>
+
+                    <SelectButtonComp
+                        key={`select-button-${id}`} // 고유한 key 값을 추가합니다.
+                        x={buttonPosition[0]}
+                        y={buttonPosition[1]}
+                        z={buttonPosition[2]}
+                    />
+
                 </React.Fragment>
             );
         })}
