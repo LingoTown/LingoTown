@@ -129,6 +129,7 @@ export const ThemeComp: React.FC = () => {
           enabled={enabled}
           setEnabled={setEnabled}
           language={language}
+          isDisplayed={language === 0 ? true : false}
         />
       </CategoryComp>
 
@@ -156,6 +157,7 @@ export const ThemeComp: React.FC = () => {
           enabled={enabled}
           setEnabled={setEnabled}
           language={language}
+          isDisplayed={language === 0 ? true : false}
         />
       </CategoryComp>
 
@@ -183,6 +185,7 @@ export const ThemeComp: React.FC = () => {
           enabled={enabled}
           setEnabled={setEnabled}
           language={language}
+          isDisplayed={language === 0 ? true : false}
         />
       </CategoryComp>
 
@@ -210,6 +213,7 @@ export const ThemeComp: React.FC = () => {
           enabled={enabled}
           setEnabled={setEnabled}
           language={language}
+          isDisplayed={language === 0 ? false : true}
         />
       </CategoryComp>
     </>
