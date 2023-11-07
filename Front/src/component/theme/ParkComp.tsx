@@ -97,12 +97,12 @@ export const ParkComp: React.FC = () => {
 
   const soccerBallFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/SoccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
-    mass: 9, // Adjust the mass as needed
+    mass: 9,
     position: [-10, 1, 5],
     rotation: [0, 0, 0],
-    args: [0.5], // Adjust the size of the cylinder as needed
-    friction: 0.5, // Adjust the friction as needed
-    restitution: 0.7, // Adjust the restitution (bounciness) as needed
+    args: [0.5],
+    friction: 0.5,
+    restitution: 0.7,
   }));
 
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
@@ -189,7 +189,6 @@ export const ParkComp: React.FC = () => {
         if (npc != null) {
           if(npc == "sanha"){ //산하랑 말하면 산하 행동 멈추기
             setSanhaTalk(true);
-            if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
           }
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
@@ -199,7 +198,6 @@ export const ParkComp: React.FC = () => {
             return
           }else{
             setSanhaTalk(false);
-            reRunSanha();
           }
         }
         isMove.current = true;
@@ -219,6 +217,14 @@ export const ParkComp: React.FC = () => {
   useEffect(() => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
+
+  useEffect(()=>{
+    if(sanhaTalk){
+      if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
+    }else{
+      reRunSanha();
+    }
+  },[sanhaTalk])
 
   //sanha run movement
   useFrame(() => {
