@@ -2,7 +2,14 @@ package com.lingotown.global.tts;
 
 import com.google.cloud.texttospeech.v1.*;
 import com.google.protobuf.ByteString;
+import com.lingotown.domain.talk.dto.request.TalkReqDto;
+import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.repository.MemberNPCRepository;
+import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
+import com.lingotown.global.data.GenderType;
+import com.lingotown.global.exception.CustomException;
+import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +29,64 @@ import java.io.OutputStream;
 @Service
 public class TTSService {
 
+    private final TalkRepository talkRepository;
+    private final MemberNPCRepository memberNPCRepository;
+
     private final S3Service s3Service;
 
     @TrackExecutionTime
-    public MultipartFile UseTTS(String prompt) throws Exception{
+    public MultipartFile UseTTS(String prompt, TalkReqDto talkReqDto) throws Exception{
 
         log.info(prompt);
+
+        Talk talk = talkRepository.findById(talkReqDto.getTalkId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
+
+        GenderType npcGender = talk.getMemberNPC().getNpc().getGenderType();
+
+        String STTLanguage;
+        String STTModelName;
+        SsmlVoiceGender STTGender;
+
+        // 프랑스
+        if(talkReqDto.getLanguage().equals("FR")) {
+            STTLanguage = "fr-FR";
+
+            if(npcGender == GenderType.WOMAN) {
+                STTGender = SsmlVoiceGender.FEMALE;
+                STTModelName = "fr-FR-Standard-C";
+            }
+            else {
+                STTGender = SsmlVoiceGender.MALE;
+                STTModelName = "fr-FR-Standard-D";
+            }
+        }
+        // 영국
+        else if(talkReqDto.getLanguage().equals("UK")) {
+            STTLanguage = "en-GB";
+
+            if(npcGender == GenderType.WOMAN) {
+                STTGender = SsmlVoiceGender.FEMALE;
+                STTModelName = "en-GB-Standard-F";
+            }
+            else {
+                STTGender = SsmlVoiceGender.MALE;
+                STTModelName = "en-GB-Wavenet-B";
+            }
+        }
+        // 미국
+        else {
+            STTLanguage = "en-US";
+
+            if(npcGender == GenderType.WOMAN) {
+                STTGender = SsmlVoiceGender.FEMALE;
+                STTModelName = "en-US-Standard-F";
+            }
+            else {
+                STTGender = SsmlVoiceGender.MALE;
+                STTModelName = "en-US-Polyglot-1";
+            }
+        }
 
         // textToSpeechClient 초기화
         try (TextToSpeechClient textToSpeechClient = TextToSpeechClient.create()) {
@@ -38,9 +97,9 @@ public class TTSService {
             // 모델 : neutral
             VoiceSelectionParams voice =
                     VoiceSelectionParams.newBuilder()
-                            .setLanguageCode("en-US")
-                            .setName("en-US-Wavenet-F")
-                            .setSsmlGender(SsmlVoiceGender.FEMALE)
+                            .setLanguageCode(STTLanguage)
+                            .setName(STTModelName)
+                            .setSsmlGender(STTGender)
                             .build();
 
             // 리턴 받을 오디오 타입
