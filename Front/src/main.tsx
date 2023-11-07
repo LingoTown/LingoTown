@@ -1,3 +1,4 @@
+import react from 'react';
 import ReactDOM from 'react-dom/client'
 import { RecoilRoot } from 'recoil';
 import AlertDialog from './component/util/alert/AlertDialog.tsx';
