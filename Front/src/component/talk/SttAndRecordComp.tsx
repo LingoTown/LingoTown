@@ -19,7 +19,7 @@ type STTAndRecordProps = {
   lang: string;
 };
 
-export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
+export const STTAndRecord: any = (lang: any) => {
 
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
@@ -132,7 +132,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
         const data = new FormData();
         data.append("talkFile", sound);
         data.append("talkId", String(talkState.talkId));
-        data.append("prompt", transcript);
+        // data.append("prompt", transcript);
         doTalking(data);
       };
 
@@ -180,26 +180,31 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
   const stopMicrophoneAccess = () => {
     if (stream) {
       stream.getAudioTracks().forEach(track => track.stop());
-      stream.getAudioTracks().forEach(function (track) { track.stop(); });
       setStream(null);
     }
-    console.log("좀 꺼져라")
+
     if (media) {
       media.stop();
       setMedia(null);
     }
-    
+
     if (analyser) {
       analyser.disconnect();
       setAnalyser(null);
     }
-    
+
     if (source) {
       source.disconnect();
       setSource(null);
     }
 
     resetTranscript();
+    SpeechRecognition.stopListening();
+    SpeechRecognition.stopListening();
+    SpeechRecognition.stopListening();
+    SpeechRecognition.stopListening();
+    SpeechRecognition.stopListening();
+    SpeechRecognition.stopListening();
     SpeechRecognition.stopListening();
   };
 };
