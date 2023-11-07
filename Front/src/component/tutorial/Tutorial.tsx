@@ -3,6 +3,7 @@ import { useState } from "react";
 import { tutorialAtom } from '../../atom/TutorialAtom';
 import { useSetRecoilState } from 'recoil';
 import Lottie from 'lottie-react';
+import { useLocation } from 'react-router-dom';
 
 const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
 const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
@@ -15,6 +16,11 @@ const Tutorial = () => {
   const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]; 
   const setVisit = useSetRecoilState(tutorialAtom);
   const [animationData, setAnimationData] = useState(null);
+
+  // param check
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const world = queryParams.get('world'); //1~4 
 
   // 마우스가 버튼 위로 올라왔을 때와 떠났을 때의 이벤트 핸들러
   const handleMouseDown = () => setIsPressed(true);
@@ -37,11 +43,18 @@ const Tutorial = () => {
   }, []);
 
   const nextStep = () => {
-    if(step == title.length-1) {
-      setVisit({visit:true}); //1번 읽었다.
-      return;
+    if(world!="2"){//발표회 상영 요소 o
+      if(step == 3) {
+        setVisit({visit:true}); //1번 읽었다.
+        return;
+      }
+    }else{
+      if(step == title.length-1) {
+        setVisit({visit:true}); //1번 읽었다.
+        return;
+      }
     }
-    else setStep(step+1);
+    setStep(step+1);
   }
 
   const moveStep = (index: number) => {
@@ -121,6 +134,14 @@ const Tutorial = () => {
       {/* next page */}
       <div className="flex justify-center items-center mt-8 space-x-2">
         {
+          world!="2"?
+          title.map((_, index)=>{
+            if(index>=4) return;
+            return(
+              <div onClick={()=>moveStep(index)} key={index} className="w-[8px] h-[8px] rounded-xl" style={index==step?{ backgroundColor: "#09B1F8" }:{ backgroundColor: "black", cursor: `url(${cursorHoverLink}), auto` }} />
+            )
+          })
+          :
           title.map((_, index)=>{
             return(
               <div onClick={()=>moveStep(index)} key={index} className="w-[8px] h-[8px] rounded-xl" style={index==step?{ backgroundColor: "#09B1F8" }:{ backgroundColor: "black", cursor: `url(${cursorHoverLink}), auto` }} />

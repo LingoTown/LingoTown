@@ -31,7 +31,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   return(
     <>
       {
-        (!loading.loading && (visited == null && !tutorialRead.visit)) || !tutorialRead.visit?<Tutorial/>:null
+        (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?<Tutorial/>:null
       }
       {
         loading.loading? <LoadingPage/> : null
