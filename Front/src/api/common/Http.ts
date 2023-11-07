@@ -4,7 +4,7 @@ import { onErrorRequest, onRequest } from "./Interceptor";
 
 const HttpJson = axios.create({
     baseURL : import.meta.env.VITE_SERVER as string,
-    timeout : 10000000,
+    timeout : 10,
     headers : {'Content-Type' : 'application/json'}
 });
 

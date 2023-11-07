@@ -32,14 +32,63 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
   const isMounted = useRef({ offRec: false, onRec: false, reset: false, finish: false, selectTopic: false });
   const flag = useRef<boolean>(true);
 
+  // 스크립트 변경
   useEffect(() => {
     if (flag.current) {
       setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
     }
   }, [transcript]);
 
+  // 녹음 시작
+  useEffect(() => {
+    if (isMounted.current.onRec) {
+      resetTranscript();
+      onRecAudio();
+      flag.current = true;
+    } else {
+      isMounted.current.onRec = true;
+    }
+  }, [talkState.onRec]);
+
+  // 서버로 음성 전송
+  useEffect(() => {
+    if (isMounted.current.offRec) {
+      offRecAudio();
+    } else {
+      isMounted.current.offRec = true;
+    }
+  }, [talkState.offRec]);
+
+  // 리셋
+  useEffect(() => {
+    if (isMounted.current.reset) {
+      stopMicrophoneAccess();
+      // onRecAudio();
+    } else {
+      isMounted.current.reset = true;
+    }
+  }, [talkState.reset]);
+
+  // 연결 종료
+  useEffect(() => {
+    if (isMounted.current.finish) {
+      stopMicrophoneAccess();
+    } else {
+      isMounted.current.finish = true;
+    }
+  }, [talkState.finish]);
+
+  // 토픽 고르기
+  useEffect(() => {
+    if (isMounted.current.selectTopic) {
+      flag.current = false;
+    } else {
+      isMounted.current.selectTopic = true;
+    }
+  }, [talkState.selectTopic])
+
   if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
+    return <span></span>;
   }
 
   const onRecAudio = async () => {
@@ -115,14 +164,16 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
       }));
     }, (error) => {
       console.log(error);
-      // setTalkBalloon(prev => ({
-      //   ...prev,
-      //   sentence: "",
-      //   prevSectence: "result.responseMessage",
-      //   audio: "",
-      //   isLoading: false,
-      // }));
+      setTalkBalloon(prev => ({
+        ...prev,
+        sentence: "Sorry I'm busy... Maybe talk to you next time?",
+        prevSectence: "Sorry I'm busy... Maybe talk to you next time?",
+        audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
+        isLoading: false,
+        isUser: false,
+      }));
     })
+    stopMicrophoneAccess();
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
 
@@ -132,7 +183,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
       stream.getAudioTracks().forEach(function (track) { track.stop(); });
       setStream(null);
     }
-  
+    console.log("좀 꺼져라")
     if (media) {
       media.stop();
       setMedia(null);
@@ -151,54 +202,4 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
     resetTranscript();
     SpeechRecognition.stopListening();
   };
-    
-  useEffect(() => {
-    if (isMounted.current.onRec) {
-      resetTranscript();
-      onRecAudio();
-      flag.current = true;
-    } else {
-      isMounted.current.onRec = true;
-    }
-  }, [talkState.onRec]);
-
-  useEffect(() => {
-    if (isMounted.current.offRec) {
-      offRecAudio();
-    } else {
-      isMounted.current.offRec = true;
-    }
-  }, [talkState.offRec]);
-
-  useEffect(() => {
-    if (isMounted.current.reset) {
-      stopMicrophoneAccess();
-      onRecAudio();
-    } else {
-      isMounted.current.reset = true;
-    }
-  }, [talkState.reset]);
-
-  useEffect(() => {
-    if (isMounted.current.finish) {
-      stopMicrophoneAccess();
-    } else {
-      isMounted.current.finish = true;
-    }
-  }, [talkState.finish]);
-
-  useEffect(() => {
-    if (isMounted.current.selectTopic) {
-      flag.current = false;
-    } else {
-      isMounted.current.selectTopic = true;
-    }
-  }, [talkState.selectTopic])
-
-  useEffect(() => {
-    return () => {
-      stopMicrophoneAccess();
-    };
-  }, []);
-
 };

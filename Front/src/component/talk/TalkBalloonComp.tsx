@@ -30,10 +30,10 @@ export const TalkBalloonComp = () => {
   };
 
   const handleOffRec = () => {
-    if (talkBalloon.sentence.length < 10) {
-      customAlert("Alert", "Please say at least 10 characters");
-      return
-    }
+    // if (talkBalloon.sentence.length < 10) {
+    //   customAlert("Alert", "Please say at least 10 characters");
+    //   return
+    // }
     setTalkState(prevState => ({ ...prevState, offRec: !prevState.offRec }));
     setIsRec(false);
   };
