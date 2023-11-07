@@ -12,3 +12,10 @@ export type userType = {
   characterLink: string,
   lockList: { characterId: number; islocked: boolean }[];
 }
+
+
+/* 유저 대표 캐릭터 수정 요청 타입 */
+export type UpdateSelectedCharacter = {
+  previousId: number,
+  nowId: number
+}
