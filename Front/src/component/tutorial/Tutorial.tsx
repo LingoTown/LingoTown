@@ -12,7 +12,7 @@ const Tutorial = () => {
   const [step, setStep] = useState<number>(0);
   const [isPressed, setIsPressed] = React.useState(false);
   const img:string[] = ["", "Tutorial/DirectionalKey.png", "Tutorial/SpaceBarkey.png", "Tutorial/A_key.png", "Tutorial/S_key.png", "Tutorial/D_key.png"];
-  const title:string[] = ["LingoTown", "방향키", "스페이스바", "Action키", "Start키", "Done키"];
+  const title:string[] = ["LingoTown", "방향키", "스페이스바", "Ask키", "Start키", "Done키"];
   const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]; 
   const setVisit = useSetRecoilState(tutorialAtom);
   const [animationData, setAnimationData] = useState(null);

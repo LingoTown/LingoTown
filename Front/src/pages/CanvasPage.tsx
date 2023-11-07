@@ -9,7 +9,7 @@ import { Physics } from '@react-three/cannon';
 import LoadingPage from "./LoadingPage";
 import Tutorial from "../component/tutorial/Tutorial";
 import { tutorialAtom } from "../atom/TutorialAtom";
-// import { Debug } from '@react-three/cannon';
+import { Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
 interface CanvasPage {

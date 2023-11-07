@@ -50,7 +50,7 @@ export const ParkComp: React.FC = () => {
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0,0.1],
+    args:[0.5,0,3.1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
     allowSleep:true,
@@ -99,8 +99,8 @@ export const ParkComp: React.FC = () => {
   const [soccerBallRef] = useSphere(() => ({
     mass: 9, // Adjust the mass as needed
     position: [-10, 1, 5],
-    rotation: [0, Math.PI/2, 0],
-    args: [0.2], // Adjust the size of the cylinder as needed
+    rotation: [0, 0, 0],
+    args: [0.5], // Adjust the size of the cylinder as needed
     friction: 0.5, // Adjust the friction as needed
     restitution: 0.7, // Adjust the restitution (bounciness) as needed
   }));
@@ -294,7 +294,7 @@ export const ParkComp: React.FC = () => {
       <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={bonnieFile.scene}/>
       
       {/* soccerBall */}
-      <primitive ref={soccerBallRef} scale={0.3} position={[-10, 0, 5]} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
+      <primitive ref={soccerBallRef} scale={0.3} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
     </>
   )
 } 
