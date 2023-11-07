@@ -14,14 +14,16 @@ export const BackToCategoryComp: React.FC<{
   enabled: boolean | false;
   setEnabled: (name: boolean | false) => void;
   language: number;
+  isDisplayed: boolean | false;
 }> = ({
-  x, y, z, name, color, active, setActive, setHovered, enabled, setEnabled, language
+  x, y, z, name, color, active, setActive, setHovered, enabled, setEnabled, language, isDisplayed
 }) => {
   const text = useState(["Click to go back", "Cliquez pour retourner"])[0];
 
   return (
     <group position={[x, y, z]}>
       <mesh
+        visible={isDisplayed ? true : false}
         onClick={() => {
           if (enabled && active === name) {
             setActive(null);
