@@ -136,10 +136,6 @@ public class OpenAIService {
         chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
-        for(OpenAIMessageDto messageDto : chatList){
-            System.out.println(messageDto.getRole() +" : "+ messageDto.getContent());
-        }
-
 
         /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
         if(talkReqDto.getTalkFile() != null) {
@@ -179,7 +175,8 @@ public class OpenAIService {
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
-        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
+
 
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
                 .talkId(talkReqDto.getTalkId())
@@ -313,7 +310,8 @@ public class OpenAIService {
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
-        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent());
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
+
 
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
                 .talkId(talkReqDto.getTalkId())
