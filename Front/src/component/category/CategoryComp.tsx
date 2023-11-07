@@ -9,6 +9,7 @@ import { easing } from "maath";
 import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
+import { BorderedRoundedBox } from "./BorderRoundBox";
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -70,6 +71,7 @@ export const CategoryComp: React.FC<{
 
   return (
     <group {...props}>
+      <BorderedRoundedBox />
       <RoundedBox
         name={name}
         args={[3, 1.75, 1]}
