@@ -13,7 +13,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
 
   return(
     <>
-      <MapUtilComp />
+      {/* <MapUtilComp /> */}
 
       <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
       {/* <Canvas> */}
