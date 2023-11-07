@@ -30,28 +30,26 @@ export const TalkBalloonComp = () => {
   };
 
   const handleOffRec = () => {
-    // if (talkBalloon.sentence.length < 10) {
-    //   customAlert("Alert", "Please say at least 10 characters");
-    //   return
-    // }
+    if (talkBalloon.sentence.length < 10) {
+      customAlert("Alert", "Please say at least 10 characters");
+      return
+    }
     setTalkState(prevState => ({ ...prevState, offRec: !prevState.offRec }));
     setIsRec(false);
   };
 
-  const handleReset = () => {
-    setTalkState(prevState => ({ ...prevState, reset: !prevState.reset }));
-  };
+  // Reset 버튼
+  const handleReset = () => { setTalkState(prevState => ({ ...prevState, reset: !prevState.reset })) };
 
+  // End 버튼 눌렀을때
   const handleEnd = async() => {
     setIsRec(false);
+    setTalkState(prevState => ({ ...prevState, finish: !prevState.finish }));
     setTalkBalloon(initialTalkBalloon);
   };
 
-  const handlePlay = () => {
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
-  };
+  // 대화음악 재생
+  const handlePlay = () => { if (audioRef.current) audioRef.current.play() };
 
   const selectTopic = async(topic:topic) => {
     const flag = await customConfirm("Topic", topic.keyword);

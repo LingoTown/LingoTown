@@ -73,7 +73,6 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
   useEffect(() => {
     if (isMounted.current.finish) {
       stopMicrophoneAccess();
-      console.log("here")
     } else {
       isMounted.current.finish = true;
     }
