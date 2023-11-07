@@ -14,7 +14,7 @@ import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { useRecoilState } from "recoil";
 
 export const ThemeComp: React.FC = () => {
-  const text: string[][] = useState([["park", "company", "restaurant", "gallery"], ["Parc", "entreprise", "restaurant", "galerie"]])[0];
+  const text: string[][] = useState([["park", "event hall", "restaurant", "gallery"], ["Parc", "Salle des événements", "restaurant", "galerie"]])[0];
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -24,13 +24,13 @@ export const ThemeComp: React.FC = () => {
   const [active, setActive] = useState<string | null>(null);
   const [enabled, setEnabled] = useState<boolean | false>(false);
 
-  const [companyPreviewHovered, setCompanyPreviewHovered] = useState<string | null>(null);
+  const [eventhallPreviewHovered, setEventhallPreviewHovered] = useState<string | null>(null);
   const [parkPreviewHovered, setParkPreviewHovered] = useState<string | null>(null);
   const [restaurantPreviewHovered, setRestaurantPreviewHovered] = useState<string | null>(null);
   const [galleryPreviewHovered, setGalleryPreviewHovered] = useState<string | null>(null);
 
   const [parkEnterHovered, setParkEnterHovered] = useState<string | null>(null);
-  const [companyEnterHovered, setCompanyEnterHovered] = useState<string | null>(null);
+  const [eventhallEnterHovered, setEventhallEnterHovered] = useState<string | null>(null);
   const [restaurantEnterHovered, setRestaurantEnterHovered] = useState<string | null>(null);
   const [galleryEnterHovered, setGalleryEnterHovered] = useState<string | null>(null);
 
@@ -39,11 +39,11 @@ export const ThemeComp: React.FC = () => {
   useEffect(() => {
     const anyHovered =
       parkPreviewHovered === text[language][0] ||
-      companyPreviewHovered === text[language][1] ||
+      eventhallPreviewHovered === text[language][1] ||
       restaurantPreviewHovered === text[language][2] ||
       galleryPreviewHovered === text[language][3] ||
       parkEnterHovered === text[language][0] ||
-      companyEnterHovered === text[language][1] ||
+      eventhallEnterHovered === text[language][1] ||
       restaurantEnterHovered === text[language][2] ||
       galleryEnterHovered === text[language][3];
 
@@ -58,11 +58,11 @@ export const ThemeComp: React.FC = () => {
     };
   }, [
     parkPreviewHovered,
-    companyPreviewHovered,
+    eventhallPreviewHovered,
     restaurantPreviewHovered,
     galleryPreviewHovered,
     parkEnterHovered,
-    companyEnterHovered,
+    eventhallEnterHovered,
     restaurantEnterHovered,
     galleryEnterHovered,
     text,
@@ -100,12 +100,13 @@ export const ThemeComp: React.FC = () => {
       <TextUtil x={2} y={-0.27} z={0.051} color="black" size={0.2} name={text[language][3]} />
 
       <MapEnterComp x={-1} y={2.13} z={0.051} path={`park?language=${language}&world=1`} name={text[language][0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
-      <MapEnterComp x={3} y={2.13} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[language][1]} active={active} enabled={enabled} setHovered={setCompanyEnterHovered} language={language} />
+      <MapEnterComp x={3} y={2.13} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[language][1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />
       <MapEnterComp x={-1} y={-0.27} z={0.051} path={`restaurant?language=${language}&world=3`} name={text[language][2]} active={active} enabled={enabled} setHovered={setRestaurantEnterHovered} language={language} />
       <MapEnterComp x={3} y={-0.27} z={0.051} path={`gallery?language=${language}&world=4`} name={text[language][3]} active={active} enabled={enabled} setHovered={setGalleryEnterHovered} language={language} />
 
+      
       <CategoryComp
-        texture={1}
+        texture={language === 0 ? 1 : 0}
         name={text[language][0]}
         active={active}
         setActive={setActive}
@@ -132,11 +133,11 @@ export const ThemeComp: React.FC = () => {
       </CategoryComp>
 
       <CategoryComp
-        texture={2}
+        texture={language === 0 ? 2 : 0}
         name={text[language][1]}
         active={active}
         setActive={setActive}
-        setHovered={setCompanyPreviewHovered}
+        setHovered={setEventhallPreviewHovered}
         enabled={enabled}
         setEnabled={setEnabled}
         language={language}
@@ -151,7 +152,7 @@ export const ThemeComp: React.FC = () => {
           color="white"
           active={active}
           setActive={setActive}
-          setHovered={setCompanyEnterHovered}
+          setHovered={setEventhallEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
           language={language}
@@ -159,7 +160,7 @@ export const ThemeComp: React.FC = () => {
       </CategoryComp>
 
       <CategoryComp
-        texture={3}
+        texture={language === 0 ? 3 : 0}
         name={text[language][2]}
         active={active}
         setActive={setActive}
@@ -186,7 +187,7 @@ export const ThemeComp: React.FC = () => {
       </CategoryComp>
 
       <CategoryComp
-        texture={4}
+        texture={language === 0 ? 0 : 4}
         name={text[language][3]}
         active={active}
         setActive={setActive}
