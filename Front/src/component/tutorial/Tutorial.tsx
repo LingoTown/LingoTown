@@ -11,9 +11,9 @@ const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_h
 const Tutorial = () => {
   const [step, setStep] = useState<number>(0);
   const [isPressed, setIsPressed] = React.useState(false);
-  const img:string[] = ["", "Tutorial/DirectionalKey.png", "Tutorial/SpaceBarkey.png", "Tutorial/A_key.png", "Tutorial/S_key.png", "Tutorial/D_key.png"];
-  const title:string[] = ["LingoTown", "방향키", "스페이스바", "Ask키", "Start키", "Done키"];
-  const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "링고타운 주민들에게 가까이 다가가 A키로 말을 걸어보세요!", "빔프로젝트 앞에서 S키를 눌러 영상을 감상해보세요!", "어디서든 D키를 눌러 영상을 종료하실 수 있습니다!"]; 
+  const img:string[] = ["", "Tutorial/DirectionalKey.png", "Tutorial/SpaceBarkey.png", "Tutorial/A_key.png", "Tutorial/S_key.png", "Tutorial/SS_key.png", "Tutorial/D_key.png"];
+  const title:string[] = ["LingoTown", "방향키", "스페이스바", "Ask키", "Start키", "Start Stop키", "Done키"];
+  const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "링고타운 주민들에게 가까이 다가가 A키로 말을 걸어보세요!", "빔프로젝트 앞에서 S키를 눌러 영상을 감상해보세요!", "S키를 2번 누르면 일시정지가 됩니다!", "어디서든 D키를 눌러 영상을 종료하실 수 있습니다!"]; 
   const setVisit = useSetRecoilState(tutorialAtom);
   const [animationData, setAnimationData] = useState(null);
 
