@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useGLTF, Environment, Text } from "@react-three/drei";
 import * as THREE from 'three';
 import { userAtom } from "../../atom/UserAtom";
 import { useRecoilState } from 'recoil';
 import { updateCharacter } from "../../api/User"
 import { UpdateSelectedCharacter } from "../../type/UserType";
-import { ReturnType } from "../../type/ReturnType"
-import { error } from "console";
+import { CharacterResponseType } from "../../type/CharacterType"
 
 export const PlayerSelect: React.FC = () => {
 
@@ -14,23 +13,34 @@ export const PlayerSelect: React.FC = () => {
 
     const [user, setUser] = useRecoilState(userAtom);
     
-        /* 대표 캐릭터 수정 */
-        const handleCharacterSelect = async (clickedCharacterId: number) => {
-            
-            setUser()
+    /* 대표 캐릭터 수정 */
+    const handleCharacterSelect = async (clickedCharacterId: number) => {
 
-            const payload: UpdateSelectedCharacter = {
-                previousId: user.characterId,
-                nowId: clickedCharacterId
-            };
+        if (user.characterId === clickedCharacterId) 
+            return;
 
-            await updateCharacter(payload => {
-
-            }, 
-            (error) => {
-                console.log(error);
-            });
+        if(user.lockList[clickedCharacterId].islocked === true)
+            return;
+        
+        const payload: UpdateSelectedCharacter = {
+            previousId: user.characterId,
+            nowId: clickedCharacterId
         };
+
+        await updateCharacter(payload, ({data}) => {
+            const result = data.data as CharacterResponseType;
+
+            setUser(prev => ({
+                ...prev, 
+                characterId: result.characterId,
+                characterGender: result.characterGender,
+                characterLink: result.characterLink
+            }))
+        }, 
+        (error) => {
+            console.log(error);
+        });
+    };
 
     /* 소품 */
 

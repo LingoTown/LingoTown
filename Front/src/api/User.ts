@@ -1,5 +1,5 @@
 import { HttpJson } from "./Http";
-import ReturnType from "../type/ReturnType";
+import { ReturnType } from "../type/ReturnType";
 import { UpdateSelectedCharacter } from "../type/UserType";
 
 
