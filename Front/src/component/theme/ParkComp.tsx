@@ -33,13 +33,14 @@ export const ParkComp: React.FC = () => {
     { size: [75, 27, 3], position: [-15, 10, -19], wallKey: 'BW1', name: 'wall', mass:0}, // back wall 
     { size: [3, 27, 40], position: [22, 10, 0], wallKey: 'RW1',  name: 'wall', mass:0}, // right wall
     { size: [75, 27, 3], position: [-15, 10, 19], wallKey: 'FW1', name: 'wall', mass:0}, // front wall,
-    { size: [3, 27, 40], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
+    { size: [3, 27, 50], position: [-52, 10, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
 
     // 축구장 벽
-    { size: [37, 10, 0.1], position: [2, 1, -12], wallKey: 'BW2', name: 'wall', mass:0}, // back wall 
+    { size: [40, 10, 0.1], position: [2, 1, -12.5], wallKey: 'BW2', name: 'wall', mass:0}, // back wall 
+    { size: [40, 10, 0.1], position: [2, 1, -12.7], wallKey: 'FW3', name: 'wall', mass:0}, // back wall 
     { size: [45, 10, 0.5], position: [1, 1, 12.5], wallKey: 'FW2', name: 'wall', mass:0}, // front wall
-    { size: [0.5, 10, 22], position: [-22, 1, 1.5], wallKey: 'RW2',  name: 'wall', mass:0}, //right wall
-    { size: [0.5, 10, 22], position: [-21, 1, 1.5], wallKey: 'LW2',  name: 'wall', mass:0}, //left wall
+    { size: [0.5, 10, 25], position: [-22, 1, 0.5], wallKey: 'RW2',  name: 'wall', mass:0}, //right wall
+    { size: [0.5, 10, 25], position: [-21.5, 1, 0.5], wallKey: 'LW2',  name: 'wall', mass:0}, //left wall
   ];
 
   // player
@@ -52,7 +53,7 @@ export const ParkComp: React.FC = () => {
     mass: 0, 
     position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
     rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
-    args:[0.5,0,0.1],
+    args:[0.5,0,3.1],
     friction: 1,     // Adjust the value as needed
     restitution: 0,   // Set to 0 to avoid bouncing
     allowSleep:true,
@@ -99,12 +100,12 @@ export const ParkComp: React.FC = () => {
 
   const soccerBallFile = useGLTF(import.meta.env.VITE_S3_URL + "Objects/SoccerBall/scene.gltf");
   const [soccerBallRef] = useSphere(() => ({
-    mass: 9, // Adjust the mass as needed
+    mass: 9,
     position: [-10, 1, 5],
-    rotation: [0, Math.PI/2, 0],
-    args: [0.2], // Adjust the size of the cylinder as needed
-    friction: 0.5, // Adjust the friction as needed
-    restitution: 0.7, // Adjust the restitution (bounciness) as needed
+    rotation: [0, 0, 0],
+    args: [0.5],
+    friction: 0.5,
+    restitution: 0.7,
   }));
 
   const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
@@ -137,6 +138,16 @@ export const ParkComp: React.FC = () => {
     camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
     camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
     camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
+  }
+
+  const reRunSanha = () => {
+    console.log(sanhaTalk);
+    if(sanhaTalk && isMove.current == true || !sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
+      setSanhaTalk(false);
+      if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
+        sanhaRef.current.rotation.y = 1.5;
+      }
+    }
   }
 
   useFrame((_state, deltaTime) => {
@@ -181,8 +192,8 @@ export const ParkComp: React.FC = () => {
         const npc = currentNpc.current?.name;
         if (npc != null) {
           if(npc == "sanha"){ //산하랑 말하면 산하 행동 멈추기
-            setSanhaTalk(true);
             if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
+            setSanhaTalk(true);
           }
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
@@ -193,6 +204,7 @@ export const ParkComp: React.FC = () => {
           }
         }
         isMove.current = true;
+        reRunSanha();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -203,18 +215,18 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     isMove.current = !talkBalloon.isShow;
-
-    if(sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
-      setSanhaTalk(false);
-      if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
-        sanhaRef.current.rotation.y = 1.5;
-      }
-    }
+    reRunSanha();
   }, [talkBalloon.isShow])
 
   useEffect(() => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
+
+  // useEffect(()=>{
+  //   if(!sanhaTalk){
+  //     reRunSanha();
+  //   }
+  // },[sanhaTalk])
 
   //sanha run movement
   useFrame(() => {
@@ -290,7 +302,7 @@ export const ParkComp: React.FC = () => {
       <primitive scale={1} position={[-45, 0, 2]} rotation={[0, 1.5, 0]} object={bonnieFile.scene}/>
       
       {/* soccerBall */}
-      <primitive ref={soccerBallRef} scale={0.3} position={[-10, 0, 5]} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
+      <primitive ref={soccerBallRef} scale={0.3} rotation={[0, 0, 0]} object={soccerBallFile.scene} />
     </>
   )
 } 

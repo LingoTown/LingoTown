@@ -12,8 +12,7 @@ export const ThemePage = () => {
     <div
       className="z-0"
       style={{
-        backgroundImage: `url(${import.meta.env.VITE_S3_URL}BackGround/cloud_background.png)`,
-        cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`
+        backgroundImage: `url(${import.meta.env.VITE_S3_URL}BackGround/cloud_background.png)`
       }}
     >
       {
@@ -28,7 +27,7 @@ export const ThemePage = () => {
         >MyPage</div>
       </div>
       <div className="z-1 relative">
-        <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+        <Canvas shadows style={{ height:loading.loading?"0.01vh":"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
           <ThemeComp />
         </Canvas>
       </div>

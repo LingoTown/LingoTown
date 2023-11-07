@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { TalkBalloonComp } from "../component/talk/TalkBalloonComp";
 import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
@@ -6,6 +7,8 @@ import { useRecoilValue } from "recoil"
 import { MapUtilComp } from "../component/talk/MapUtilComp";
 import { Physics } from '@react-three/cannon';
 import LoadingPage from "./LoadingPage";
+import Tutorial from "../component/tutorial/Tutorial";
+import { tutorialAtom } from "../atom/TutorialAtom";
 // import { Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
@@ -17,9 +20,19 @@ interface CanvasPage {
 export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element => {
   const loading = useRecoilValue(loadingAtom);
   const talkBalloon = useRecoilValue(talkBalloonAtom);
+  const tutorialRead = useRecoilValue(tutorialAtom);
+  let visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
+
+  useEffect(()=>{
+    visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
+    console.log(tutorialRead.visit);
+  },[tutorialRead.visit])
 
   return(
     <>
+      {
+        (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?<Tutorial/>:null
+      }
       {
         loading.loading? <LoadingPage/> : null
       }
