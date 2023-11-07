@@ -45,7 +45,6 @@ public class MemberCharacterService {
             if(i < memberCharacterList.size())
                 continue;
 
-
             lockFlag = characterResponseDtoList.get(i).getCharacterId() > 2;
 
             selectFlag = characterResponseDtoList.get(i).getCharacterId() == 1;
