@@ -165,7 +165,7 @@ const MyPage = () => {
       <Toaster position="top-center" />
       <div      
       className="min-h-screen flex flex-col items-center justify-center bg-cover" 
-      style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)',
+      style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`,
                cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>    
         <div className="w-full flex justify-end text-5xl font-bold text-white font-['passero-one']">
           <div className="mr-8 hover:text-[2.9rem] h-[30px]" onClick={() => {
