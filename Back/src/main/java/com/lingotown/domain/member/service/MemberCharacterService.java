@@ -35,17 +35,22 @@ public class MemberCharacterService {
     @Transactional
     public CommonResponse createMemberCharacter(Member member) {
         List<CharacterResponseDto> characterResponseDtoList = characterService.getCharacterList().getData();
+        List<MemberCharacter> memberCharacterList = memberCharacterRepository.findByMemberId(member.getId());
 
         boolean lockFlag = false;
         boolean selectFlag = false;
 
-        for (CharacterResponseDto characterResponseDto : characterResponseDtoList) {
+        for (int i=0; i<characterResponseDtoList.size(); i++) {
 
-            lockFlag = characterResponseDto.getCharacterId() > 2;
+            if(i < memberCharacterList.size())
+                continue;
 
-            selectFlag = characterResponseDto.getCharacterId() == 1;
 
-            Character character = characterRepository.findById(characterResponseDto.getCharacterId())
+            lockFlag = characterResponseDtoList.get(i).getCharacterId() > 2;
+
+            selectFlag = characterResponseDtoList.get(i).getCharacterId() == 1;
+
+            Character character = characterRepository.findById(characterResponseDtoList.get(i).getCharacterId())
                     .orElseThrow(() -> new CustomException(ExceptionStatus.CHARACTER_NOT_FOUND));
 
             MemberCharacter memberCharacter = MemberCharacter.builder()

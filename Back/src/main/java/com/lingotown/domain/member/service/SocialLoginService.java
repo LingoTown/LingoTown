@@ -1,6 +1,8 @@
 package com.lingotown.domain.member.service;
 
 
+import com.lingotown.domain.character.entity.Character;
+import com.lingotown.domain.character.repository.CharacterRepository;
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
 import com.lingotown.domain.member.dto.response.CharacterLockResponseDto;
 import com.lingotown.domain.member.dto.response.LoginResponseDto;
@@ -49,6 +51,7 @@ public class SocialLoginService {
 
     private final MemberRepository memberRepository;
     private final MemberCharacterRepository memberCharacterRepository;
+    private final CharacterRepository characterRepository;
 
     private final MemberService memberService;
     private final MemberCharacterService memberCharacterService;
@@ -232,8 +235,9 @@ public class SocialLoginService {
         }
 
         List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+        List<Character> characterList = characterRepository.findAll();
 
-        if(memberCharacterListByMemberId.isEmpty()) {
+        if(memberCharacterListByMemberId.isEmpty() || memberCharacterListByMemberId.size() != characterList.size()) {
             memberCharacterService.createMemberCharacter(member);
             memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
         }
