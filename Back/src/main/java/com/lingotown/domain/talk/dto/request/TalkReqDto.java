@@ -16,6 +16,5 @@ public class TalkReqDto {
     private Long talkId;
     private String prompt;
     private MultipartFile talkFile;
-
     private String language;
 }
