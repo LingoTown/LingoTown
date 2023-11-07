@@ -1,5 +1,6 @@
 package com.lingotown.domain.member.controller;
 
+import com.lingotown.domain.character.dto.CharacterResponseDto;
 import com.lingotown.domain.member.dto.request.EditNicknameReqDto;
 import com.lingotown.domain.member.dto.request.UpdateSelectedCharacterRequestDto;
 import com.lingotown.domain.member.dto.response.EditProfileResDto;
@@ -54,7 +55,7 @@ public class MemberController {
     }
 
     @PutMapping("/select/character")
-    public DataResponse changeSelectedCharacter(Principal principal, @RequestBody UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
+    public DataResponse<CharacterResponseDto> changeSelectedCharacter(Principal principal, @RequestBody UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
 
         return memberCharacterService.updateSelectedCharacter(principal, updateSelectedCharacterRequestDto);
     }
