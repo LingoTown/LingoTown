@@ -165,7 +165,7 @@ const MyPage = () => {
       <Toaster position="top-center" />
       <div      
       className="min-h-screen flex flex-col items-center justify-center bg-cover" 
-      style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/.png')`,
+      style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`,
                cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>    
         <div className=''>
             <div className='w-[80rem] h-[43rem] bg-slate-950/[.88] border-[#fff] border-[2px] rounded-xl flex flex-row p-5'>
