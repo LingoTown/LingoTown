@@ -65,7 +65,7 @@ public class MemberCharacterService {
     }
 
     @Transactional
-    public DataResponse<Character> updateSelectedCharacter(Principal principal, UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
+    public DataResponse<CharacterResponseDto> updateSelectedCharacter(Principal principal, UpdateSelectedCharacterRequestDto updateSelectedCharacterRequestDto) {
         Long memberId = Long.parseLong(principal.getName());
 
         MemberCharacter previousCharacter = memberCharacterRepository.findByMemberIdAndCharacterId(memberId, updateSelectedCharacterRequestDto.getPreviousId())
@@ -80,6 +80,12 @@ public class MemberCharacterService {
         Character character = characterRepository.findById(nowCharacter.getCharacter().getId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.CHARACTER_NOT_FOUND));
 
-        return new DataResponse<>(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), character);
+        CharacterResponseDto characterResponseDto = CharacterResponseDto.builder()
+                .characterId(character.getId())
+                .characterGender(character.getGender())
+                .characterLink(character.getLink())
+                .build();
+
+        return new DataResponse<>(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), characterResponseDto);
     }
 }
