@@ -9,12 +9,12 @@ export const MapEnterComp: React.FC<{
   x: number;
   y: number;
   z: number;
-  path: string | null;
-  name: string | null;
+  path: string;
+  name: string;
   active: string | null;
-  setHovered: (name: string | null) => void | null;
+  setHovered: (name: string | null) => void;
   enabled: boolean | false;
-  language: number | null;
+  language: number | 0;
 }> = ({
   x, y, z, path, name, active, setHovered, enabled, language
 }) => {

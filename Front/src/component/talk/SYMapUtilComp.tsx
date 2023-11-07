@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useCustomConfirm, useCustomPrompt } from "../util/ModalUtil"
+import { useCustomConfirm } from "../util/ModalUtil"
 import { talkBalloonAtom } from '../../atom/TalkBalloonAtom';
 import { useSetRecoilState } from 'recoil';
 
@@ -7,7 +7,6 @@ export const SYMapUtilComp = () => {
 
   // hook
   const customConfirm = useCustomConfirm();
-  const customPrompt = useCustomPrompt();
   const navigate = useNavigate();
 
   // state

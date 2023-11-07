@@ -7,7 +7,6 @@ import { updateCharacter } from "../../api/User"
 import { UpdateSelectedCharacter } from "../../type/UserType";
 import { CharacterResponseType } from "../../type/CharacterType"
 import { SelectButtonComp } from "./SelectButtonComp";
-import { SYMapUtilComp } from "../talk/SYMapUtilComp";
 
 export const PlayerSelect: React.FC = () => {
 
@@ -175,7 +174,7 @@ export const PlayerSelect: React.FC = () => {
                 </React.Fragment>
             );
         })}
-        
+
         </>
     );
 };
