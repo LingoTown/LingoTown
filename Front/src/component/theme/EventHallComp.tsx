@@ -37,7 +37,7 @@ export const EventHallComp: React.FC = () => {
     const JaydenData: NPCData = {
         id: 1,
         name: "Jayden",
-        path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_3.glb",
+        path: import.meta.env.VITE_S3_URL + "NPC/m_3.glb",
         position: [-10.0, 0.0, 21.5],
         rotation: [0, 180, 0],
         scale: 1,
@@ -58,7 +58,7 @@ export const EventHallComp: React.FC = () => {
     const KevinData: NPCData = {
         id: 3,
         name: "Kevin",
-        path: "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_8.glb",
+        path: import.meta.env.VITE_S3_URL + "NPC/m_8.glb",
         position: [17.00, 1, -2.5],
         rotation: [0, 0, 0],
         scale: 1,

@@ -30,7 +30,7 @@ export const ExploreComp: React.FC = () => {
   ];
 
   // player
-  const playerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_1.glb");
+  const playerFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_1.glb");
   const [playerPosition, setPlayerPosition] = useState([-5.5, 0, 12]);
   const [playerRotation, setPlayerRotation]= useState([0,3,0]);
   const [playerRef, playerApi] = useCylinder(() => ({ 
@@ -53,14 +53,14 @@ export const ExploreComp: React.FC = () => {
   const lerpFactor = 0.04;
 
   // NPC
-  const chefFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/f_17.glb");
+  const chefFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_17.glb");
   const chefPosition = new THREE.Vector3(-5, 1, 2.0);
   const chefRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
   const chefCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
   const chefAction = useRef<AnimationAction>();
   const chefActions = useAnimations(chefFile.animations, chefFile.scene).actions;
 
-  const customerFile = useGLTF("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/NPC/m_2.glb");
+  const customerFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_2.glb");
   const customerPosition = new THREE.Vector3(-3, 2, -5);
   const customerRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
   const customerCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
