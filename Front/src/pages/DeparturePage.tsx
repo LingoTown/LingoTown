@@ -46,7 +46,7 @@ const DeparturePage = () => {
           }}
           >Logout</div>
           <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => {
-            navigate("/main");
+            navigate("/mypage");
           }}
           style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
           >MyPage</div>

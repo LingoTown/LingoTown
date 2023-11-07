@@ -15,7 +15,7 @@ import { talkIdAtom } from "../atom/ScriptAtom";
 import { detailVerAtom } from "../atom/ScriptAtom";
 import ScriptDetail from "../component/script/ScriptDetail";
 
-const MainPage = () => {
+const MyPage = () => {
   const customAlert = useCustomAlert();
   const [nickEditMode, setNickMode] = useState(false);
   const [nick, setNick] = useState('');
@@ -294,4 +294,4 @@ const MainPage = () => {
 }
 
 
-export default MainPage;
+export default MyPage;

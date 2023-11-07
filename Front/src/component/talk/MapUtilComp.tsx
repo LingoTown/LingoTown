@@ -9,7 +9,7 @@ import { QuizComp } from './QuizComp';
 
 export const MapUtilComp = () => {
 
-  // hook
+  // hook 
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
   const customPrompt = useCustomPrompt();
@@ -34,8 +34,9 @@ export const MapUtilComp = () => {
       const result = data.data as QuizType[];
       setQuizList([...result]);
       setTranslateList(new Array(result.length).fill(0));
-    },(error) => {
-      console.log(error);
+    },() => {
+      navigate("/departure");
+      customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
