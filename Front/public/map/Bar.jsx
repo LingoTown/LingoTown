@@ -30,7 +30,7 @@ function Cube(props) {
 
 export function Bar(props) {
   const { nodes, materials } = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/Bar/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Map/Bar/scene.gltf"
   );
   // const textures = useTexture({
   //   map:"./map/bar/textures/Material_30_baseColor.jpeg"

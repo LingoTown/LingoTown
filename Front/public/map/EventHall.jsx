@@ -17,15 +17,15 @@ import { MeshStandardMaterial, TextureLoader, VideoTexture } from "three";
 export function EventHall(props) {
   /* Map */
   const { nodes, materials } = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Map/EventHall/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Map/EventHall/scene.gltf"
   );
 
   // const highTable = useNPC(highTableData);
   const beamProjector = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/BeamProjector/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Objects/BeamProjector/scene.gltf"
   );
   const highTable = useGLTF(
-    "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/HighTable/scene.gltf"
+    import.meta.env.VITE_S3_URL + "Objects/HighTable/scene.gltf"
   );
 
   const { camera } = useThree();
@@ -48,7 +48,7 @@ export function EventHall(props) {
   const loadVideo = () => {
     if (!videoLoaded) {
       video.current.src =
-        "https://b305finalproject.s3.ap-northeast-2.amazonaws.com/UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
+      import.meta.env.VITE_S3_URL + "UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
       video.current.crossOrigin = "anonymous";
       video.current.loop = true;
       video.current.muted = false;

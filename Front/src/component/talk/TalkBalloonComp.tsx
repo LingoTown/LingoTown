@@ -95,7 +95,7 @@ export const TalkBalloonComp = () => {
       {
         !talkBalloon.prevSectence?
         <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
-        style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={() => { setShowList(!showList) }}
         >Topics</button>
         :
@@ -110,7 +110,7 @@ export const TalkBalloonComp = () => {
                 talkBalloon.topicList.map((value, index) => {
                  return(
                   <div key={index} className="mb-2 p-2 bg-white rounded-lg shadow-inner font-bolder font-['passero-one'] text-xl hover:bg-gray-200" 
-                  style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                  style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                     onClick={() => { selectTopic(value) }}
                   >{value.keyword}</div>
                  ) 
@@ -190,7 +190,7 @@ export const TalkBalloonComp = () => {
           :
           <div className="flex">
             <button className="px-2 py-0 bg-purple-500 text-xl text-white rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
-              style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+              style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               onClick={ handlePlay }
               onMouseEnter={() => setShowSentenceModal(true)} 
               onMouseLeave={() => setShowSentenceModal(false)}
@@ -202,18 +202,18 @@ export const TalkBalloonComp = () => {
           isRec ?
           <>
             <button className="px-2 py-0 text-xl bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 font-['passero-one']"
-              style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+              style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               onClick={ handleOffRec }
             >Send</button>
             <button className="px-2 py-0 text-xl bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-50 font-['passero-one']"
-              style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+              style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               onClick={ handleReset }
             >Retry</button>
           </>
           :
           <button 
           className={`px-2 py-0 text-xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 font-['passero-one'] ${talkBalloon.isLoading ? 'cursor-not-allowed opacity-50' : 'button-flicker'}`}
-          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             onClick={ handleOnRec }
             disabled={ talkBalloon.isLoading }
           >
@@ -221,7 +221,7 @@ export const TalkBalloonComp = () => {
           </button>
         }
         <button className="px-2 py-0 text-xl bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
-          style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={ handleEnd }
         >End</button>
         </div>

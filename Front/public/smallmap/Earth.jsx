@@ -11,7 +11,7 @@ import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Earth(props) {
-  const { nodes, materials } = useGLTF('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Objects/Globe2/scene.gltf')
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Objects/Globe2/scene.gltf')
   return (
     <group {...props} dispose={null}>
       <group position={[0, 0, -0.001]} rotation={[-Math.PI, 0, 0]}>
