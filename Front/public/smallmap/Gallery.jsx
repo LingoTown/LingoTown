@@ -495,12 +495,6 @@ export function Gallery(props) {
           position={[415.194, -12.771, 125.628]}
           rotation={[-Math.PI / 2, 0, 0]}
         />
-        <mesh
-          geometry={nodes["Roof_WALLS&ROOF_0"].geometry}
-          material={materials.WALLSROOF}
-          position={[415.259, 390.034, 120.63]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        />
       </group>
     </group>
   );
