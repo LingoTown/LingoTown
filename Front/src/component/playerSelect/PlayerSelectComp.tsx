@@ -1,12 +1,14 @@
-import React from "react";
-import { useGLTF, Environment, Text } from "@react-three/drei";
+import React, { useEffect, useRef, useState } from "react";
+import { useGLTF, Environment, Text, useAnimations } from "@react-three/drei";
 import * as THREE from 'three';
 import { userAtom } from "../../atom/UserAtom";
 import { useRecoilState } from 'recoil';
 import { updateCharacter } from "../../api/User"
 import { UpdateSelectedCharacter } from "../../type/UserType";
-import { CharacterResponseType } from "../../type/CharacterType"
+import { CharacterResponseType } from "../../type/CharacterType";
 import { SelectButtonComp } from "./SelectButtonComp";
+import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "../theme/ThemeType"
+import { SetAction } from '../theme/util/PlayerMoveUtil';
 
 export const PlayerSelect: React.FC = () => {
 
@@ -56,6 +58,7 @@ export const PlayerSelect: React.FC = () => {
     const Ch3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_13.glb");
     const Ch4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_27.glb");
     const Ch5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
+    const userFileList = [Ch1, Ch2, Ch3, Ch4, Ch5];
 
     const characterPositions: { [key: number]: [number, number, number] } = {
         1: [-4, -0.5, 0],
@@ -99,6 +102,15 @@ export const PlayerSelect: React.FC = () => {
         5: [2.8, -1.2, 3]
     }
 
+    // character motion
+    const player = userFileList[user.characterId-1];
+    const playerAction = useRef<AnimationAction>();
+    const playerActions = useAnimations(player.animations, player.scene).actions;
+
+    useEffect(()=>{
+        SetAction('Idle', playerAction, playerActions, null);
+    },[])
+
     // 글자 색 
     const getColorForName = (id: number) => user.characterId === id ? "red" : "black";
     
@@ -107,15 +119,15 @@ export const PlayerSelect: React.FC = () => {
         <>
         <Environment preset="sunset" />
 
-        <primitive
+        {/* <primitive
             scale={0.5}
             position={auroraPositions[user.characterId]} 
             rotation={[THREE.MathUtils.degToRad(30), 0, THREE.MathUtils.degToRad(-1)]}
             object={aurora.scene}
-        />
+        /> */}
 
         {/* 조건부 자물쇠 렌더링 */}
-        {user.lockList.map((lockInfo, index) => {
+        {/* {user.lockList.map((lockInfo, index) => {
             const characterId = index + 1; // 캐릭터 ID는 인덱스에 1을 더한 값입니다.
 
             // user.lockList에서 islocked가 true인 경우에 해당 캐릭터 위치에 자물쇠를 표시합니다.
@@ -131,13 +143,14 @@ export const PlayerSelect: React.FC = () => {
                 );
             }
             return null; // islocked가 false이면 null을 반환하여 렌더링하지 않습니다.
-        })}
+        })} */}
 
-        <primitive scale={1} position={characterPositions[1]} object={Ch1.scene} onClick={() => handleCharacterSelect(1)} />
-        <primitive scale={1} position={characterPositions[2]} object={Ch2.scene} onClick={() => handleCharacterSelect(2)} />
-        <primitive scale={1} position={characterPositions[3]} object={Ch3.scene} onClick={() => handleCharacterSelect(3)} />
-        <primitive scale={1} position={characterPositions[4]} object={Ch4.scene} onClick={() => handleCharacterSelect(4)} />
-        <primitive scale={1} position={characterPositions[5]} object={Ch5.scene} onClick={() => handleCharacterSelect(5)} />
+        {/* 캐릭터 */}
+        {/* <primitive scale={1} position={characterPositions[1]} object={Ch1.scene} onClick={() => handleCharacterSelect(1)} /> */}
+        <primitive scale={1} position={[0, -1, 0]} object={Ch2.scene} onClick={() => handleCharacterSelect(2)} />
+        {/* <primitive scale={1} position={characterPositions[3]} object={Ch3.scene} onClick={() => handleCharacterSelect(3)} /> */}
+        {/* <primitive scale={1} position={characterPositions[4]} object={Ch4.scene} onClick={() => handleCharacterSelect(4)} /> */}
+        {/* <primitive scale={1} position={characterPositions[5]} object={Ch5.scene} onClick={() => handleCharacterSelect(5)} /> */}
 
         {/* 캐릭터 이름 텍스트 및 선택 버튼 */}
         {Object.entries(characterPositions).map(([key, position]) => {
@@ -146,15 +159,15 @@ export const PlayerSelect: React.FC = () => {
 
             return (
                 <React.Fragment key={id}>
-                    <Text
+                    {/* <Text
                         position={[position[0], position[1] + textOffsetY + 0.2, position[2]]}
                         fontSize={0.5}
                         color={getColorForName(id)}
                     >
                         {characterNames[id]} 
-                    </Text>
+                    </Text> */}
 
-                    <Text
+                    {/* <Text
                         key={`button-${key}`}
                         position={[position[0], position[1] + textOffsetY - 0.5, position[2]]}
                         fontSize={0.3}
@@ -162,14 +175,14 @@ export const PlayerSelect: React.FC = () => {
                         onClick={() => handleCharacterSelect(id)}
                     >
                         Select
-                    </Text>
+                    </Text> */}
 
-                    <SelectButtonComp
+                    {/* <SelectButtonComp
                         key={`select-button-${id}`} // 고유한 key 값을 추가합니다.
                         x={buttonPosition[0]}
                         y={buttonPosition[1]}
                         z={buttonPosition[2]}
-                    />
+                    /> */}
 
                 </React.Fragment>
             );
