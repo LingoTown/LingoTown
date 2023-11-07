@@ -7,9 +7,11 @@ const Rows = () => {
     const navigate = useNavigate();
     const dep : DepartureType[] = departures;
     const sortTheme = (language : string) => {
-        if(language === "English"){
+        localStorage.setItem("Language", language);
+
+        if(language === "US" || language == "UK"){
             navigate("/theme?language=0");
-        } else if(language === "French"){
+        } else if(language === "FR"){
             navigate("/theme?language=1");
         }
     }

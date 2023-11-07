@@ -4,21 +4,21 @@ export const departures = [{
     Flight : "KA4701",
     Gate : "A56",
     Status : "Boarding",
-    language : "English"
+    language : "US"
 },{
     time : "12:55pm",
-    destination : "California",
+    destination : "Shanghai",
     Flight : "LT201",
     Gate : "C33",
-    Status : "Boarding",
-    language : "English"
+    Status : "Cancelled",
+    language : "Chinese"
 },{
     time : "13:10pm",
-    destination : "Florida",
+    destination : "Manchester",
     Flight : "LT3307",
     Gate : "C55",
     Status : "Boarding",
-    language : "English"
+    language : "UK"
 },{
     time : "13:25pm",
     destination : "Tokyo",
@@ -32,7 +32,7 @@ export const departures = [{
     Flight : "LM4707",
     Gate : "F53",
     Status : "Boarding",
-    language : "French"
+    language : "FR"
 },{
     time : "14:15pm",
     destination : "Barcelona",
