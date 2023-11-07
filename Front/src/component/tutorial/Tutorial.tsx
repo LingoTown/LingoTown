@@ -13,7 +13,7 @@ const Tutorial = () => {
   const [isPressed, setIsPressed] = React.useState(false);
   const img:string[] = ["", "/tutorial/DirectionalKey.png", "/tutorial/SpaceBarkey.png", "/tutorial/A_key.png", "/tutorial/S_key.png", "/tutorial/D_key.png"];
   const title:string[] = ["LingoTown", "방향키", "스페이스바", "Action키", "Start키", "Done키"];
-  const statement:string[] = ["환영합니다! AI와 대화하는 메타버스 언어마을", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]; 
+  const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "A키로 링고타운 주민들에게 말을 걸어보세요!", "S키로 영상을 감상해보세요!", "D키로 영상을 종료해보세요!"]; 
   const setVisit = useSetRecoilState(tutorialAtom);
 
   // 마우스가 버튼 위로 올라왔을 때와 떠났을 때의 이벤트 핸들러

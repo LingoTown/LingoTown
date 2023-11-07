@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { TalkBalloonComp } from "../component/talk/TalkBalloonComp";
 import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
@@ -20,12 +21,17 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   const loading = useRecoilValue(loadingAtom);
   const talkBalloon = useRecoilValue(talkBalloonAtom);
   const tutorialRead = useRecoilValue(tutorialAtom);
-  const visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
+  let visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
+
+  useEffect(()=>{
+    visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
+    console.log(tutorialRead.visit);
+  },[tutorialRead.visit])
 
   return(
     <>
       {
-        !loading.loading && (visited == null && !tutorialRead.visit)?<Tutorial/>:null
+        (!loading.loading && (visited == null && !tutorialRead.visit)) || !tutorialRead.visit?<Tutorial/>:null
       }
       {
         loading.loading? <LoadingPage/> : null
