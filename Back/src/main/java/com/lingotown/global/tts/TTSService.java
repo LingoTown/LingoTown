@@ -8,6 +8,7 @@ import com.lingotown.domain.talk.repository.MemberNPCRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.data.GenderType;
+import com.lingotown.global.data.Language;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.service.S3Service;
