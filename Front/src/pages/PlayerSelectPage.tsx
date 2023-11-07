@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { SYMapUtilComp } from "../component/talk/SYMapUtilComp";
+import { SYMapUtilComp } from "../component/playerSelect/SYMapUtilComp";
 import * as THREE from "three";
 
 interface playerSelectPage {
