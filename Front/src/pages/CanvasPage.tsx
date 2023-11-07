@@ -25,7 +25,6 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
 
   useEffect(()=>{
     visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
-    console.log(tutorialRead.visit);
   },[tutorialRead.visit])
 
   return(

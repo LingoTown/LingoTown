@@ -293,8 +293,7 @@ const MyPage = () => {
                           setNpcNum(npcId);
                           setNpcName(npcName);
                         }}
-                        />
-                      
+                        />     
                     </>
                   }
               </div>

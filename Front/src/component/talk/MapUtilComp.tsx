@@ -36,8 +36,8 @@ export const MapUtilComp = () => {
       setQuizList([...result]);
       setTranslateList(new Array(result.length).fill(0));
     },() => {
-      navigate("/departure");
-      customAlert("Notice", "올바르지 않은 접근입니다.");
+      // navigate("/departure");
+      // customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 

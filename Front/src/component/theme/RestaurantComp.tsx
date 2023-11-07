@@ -189,7 +189,7 @@ export const RestaurantComp: React.FC = () => {
       </group>
 
       {/* STT */}
-      { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
+      <STTAndRecord lang={LANGUAGE} />
 
       {/* NPC 이름 */}
       <Isabel />
