@@ -8,10 +8,10 @@ interface IntroducePage {
 }
 
 export const IntroducePage: React.FC<IntroducePage> = (props: IntroducePage): JSX.Element => {
-  const textureLoader = new THREE.TextureLoader();
-  textureLoader.crossOrigin = 'anonymous';
+  // const textureLoader = new THREE.TextureLoader();
+  // textureLoader.crossOrigin = 'anonymous';
 
-  const backgroundTexture = textureLoader.load(background);
+  // const backgroundTexture = textureLoader.load(background);
   const navigate = useNavigate();
 
   return(
