@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { departures } from "../api/Departures";
 import { DepartureType } from "../type/DepartureType";
-import { useCustomAlert } from "../component/util/ModalUtil";
+
 const Rows = () => {
     const navigate = useNavigate();
     const dep : DepartureType[] = departures;
@@ -31,7 +31,6 @@ const Rows = () => {
 }
 const DeparturePage = () => {
     const navigate = useNavigate();
-    const customAlert = useCustomAlert();
     return (
         <>
         <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>    

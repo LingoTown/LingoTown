@@ -1,15 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { useGLTF, Environment, Text, useAnimations } from "@react-three/drei";
-import { userAtom } from "../../atom/UserAtom";
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { AnimationAction } from "../theme/ThemeType"
 import { SetAction } from '../theme/util/PlayerMoveUtil';
 
 export const PlayerSelect: React.FC = () => {
 
   /* User Info */
-  const [user, setUser] = useRecoilState(userAtom);
   const selectPlayer = useRecoilValue(PlayerSelectAtom);
 
   /* Characters */
