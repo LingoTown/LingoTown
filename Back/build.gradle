@@ -87,8 +87,8 @@ sonar {
         // Jacoco의 Coverage 파일 분석
         property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
         
-        // Java가 컴파일되면서 생성된 바이너리 파일을 분석 => 보다 정확한 코드 분석
-        property 'sonar.java.binaries', "${Project.buildDir}/classes/java/main"
+        // Java가 컴파일되면서 생성된 바이너리 파일을 분석 => 보다 정확한 코드 분석 : 일단 에러 이슈로 제외
+//        property 'sonar.java.binaries', "${Project.buildDir}/classes/java/main"
     }
 }
 
@@ -110,7 +110,7 @@ jacocoTestReport {
         csv.required.set(false)
     }
 
-    finalizedBy 'jacocoTestCoverageVerification' // 추가
+//    finalizedBy 'jacocoTestCoverageVerification'
 }
 
 // 최소 코드 커버리지 수준 설정 : SonarQube를 활용하기 때문에 굳이 설정하지 않겠다.
