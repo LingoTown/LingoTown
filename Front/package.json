@@ -24,8 +24,10 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.17.0",
     "react-speech-recognition": "^3.10.0",
+    "react-tooltip": "^5.22.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
+    "styled-components": "^6.1.1",
     "three": "^0.157.0"
   },
   "devDependencies": {

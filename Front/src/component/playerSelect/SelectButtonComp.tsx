@@ -90,7 +90,7 @@ const buttonStyle = {
 };
 
 // 눌렸을 때의 스타일 변화를 적용하는 함수
-const applyPressedStyle = (isPressed:any) => ({
+const applyPressedStyle = (isPressed:boolean) => ({
   ...buttonStyle,
   transform: isPressed ? 'translateY(4px)' : 'translateY(0)',
   boxShadow: isPressed ? '0 2px #7E587E' : '0 6px #7E587E', 

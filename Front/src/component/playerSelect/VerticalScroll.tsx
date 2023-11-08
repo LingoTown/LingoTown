@@ -6,6 +6,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment } from "@react-three/drei";
 import { showToaster } from "../../pages/PlayerSelectPage";
+import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
 
 const VerticalScroll = () => {
   
@@ -19,8 +21,6 @@ const VerticalScroll = () => {
     if(!user.lockList[index].islocked) setSelPlayer(index);
   }
 
-  
-
   return (
     <div className="absolute z-30 w-[16%] h-[100%] flex items-center justify-center ml-3">
       <div
@@ -33,23 +33,26 @@ const VerticalScroll = () => {
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
                 className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
                 onClick={() => {settingPlayer(index)}}
-              > {/**1부터 시작하는 id */}
-                <img className="rounded-xl w-[100%] h-[100%]" src={img} alt={`Player ${index}`}/>
-
+              > {/* 1부터 시작하는 id */}
+                <img className="rounded-xl w-[100%] h-[100%]" src={img} alt={`Player${index}`}/>
                 { 
                   user.lockList[index].islocked?
-                
-                  <div onClick={()=>showToaster("미션을 해결하고 캐릭터를 얻어보세요!", "❌")} className="relative z-40 top-[-160px] bg-black/90 rounded-xl max-w-[200px] h-full">
-                    <Canvas>
-                      <Suspense fallback={null}>
-                        <Environment preset="sunset" />
-                        <Lock
-                          isLocked={user.lockList[index].islocked}
-                          position={[3, -3, 0]}
-                        />
-                      </Suspense>
-                    </Canvas>
-                  </div>
+                  <>
+                    <Tooltip id="my-tooltip" />
+
+                    <div data-tooltip-id="my-tooltip" data-tooltip-content="Quest 10개를 완료하세요!" data-tooltip-place="right" onClick={()=>showToaster("미션을 해결하고 캐릭터를 얻어보세요!", "❌")} className="relative z-40 top-[-160px] bg-black/90 rounded-xl max-w-[200px] h-full">
+                      <Canvas>
+                        <Suspense fallback={null}>
+                          <Environment preset="sunset" />
+                          <Lock
+                            isLocked={user.lockList[index].islocked}
+                            position={[3, -3, 0]}
+                          />
+                        </Suspense>
+                      </Canvas>
+                    </div>
+                  </>
+
                   :
                   null
                 }
@@ -63,7 +66,13 @@ const VerticalScroll = () => {
 };
 
 /* 3D 자물쇠 */
-const Lock = ({ isLocked, position, onClick }: any) => {
+type LockProps = {
+  isLocked: boolean;
+  position: [number, number, number];
+  onClick?: () => void;
+};
+
+const Lock = ({ isLocked, position, onClick }: LockProps) => {
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf");
   const lockRef = useRef<THREE.Mesh>(null);
   useFrame(() => {
