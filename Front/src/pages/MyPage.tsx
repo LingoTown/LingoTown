@@ -27,9 +27,8 @@ const MyPage = () => {
   const [talkList, setTalkList] = useState<talkListType[]>()
   const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
   const [npcName,setNpcName] = useRecoilState(npcStateName);
-  const [talkId, setTalkId] = useRecoilState(talkIdAtom);
-  talkId;
-  scriptVer;
+  const [, setTalkId] = useRecoilState(talkIdAtom);
+  
   const customConfirm = useCustomConfirm();
   const navigate = useNavigate();
   const user = useRecoilValue(userAtom);
@@ -289,7 +288,7 @@ const MyPage = () => {
                     <div className="flex flex-row justify-between">
                       <div className="m-5 text-white font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
                       <div onClick={() => {
-                        navigate("/departure");
+                        navigate(-1);
                         }} 
                         style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
                         className="hover:text-[1.8rem] m-5 text-white font-['passero-one'] font-[30] text-[2rem] ">X
