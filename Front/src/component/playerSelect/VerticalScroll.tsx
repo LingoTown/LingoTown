@@ -9,11 +9,14 @@ const VerticalScroll = () => {
 
   return (
     // Add a max height and overflow-y-auto to allow vertical scrolling
-    <div className="absolute z-30 left-6 w-[13%] h-[100%] overflow-y-auto flex items-center select-none">
+    <div
+      style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
+      className="absolute z-30 left-6 w-[13%] h-[100%] overflow-y-auto flex items-center select-none">
       <div className="flex flex-col overflow-y-auto h-[90%]">
         {PlayerImgList.map((img, index)=>{
           return(
             <div key={index}
+              style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
               className={selPlayer === index ? "rounded-xl mb-5 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-5 shadow-md bg-white h-[160px]"}
               onClick={() => setSelPlayer(index)}> {/**1부터 시작하는 id */}
               <img className="rounded-xl w-[100%] h-[100%]" src={img} />

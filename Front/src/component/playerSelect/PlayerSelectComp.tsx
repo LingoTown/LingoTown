@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { updateCharacter } from "../../api/User"
 import { UpdateSelectedCharacter } from "../../type/UserType";
 import { CharacterResponseType } from "../../type/CharacterType";
-import { SelectButtonComp } from "./SelectButtonComp";
+// import { SelectButtonComp } from "./SelectButtonComp";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "../theme/ThemeType"
 import { SetAction } from '../theme/util/PlayerMoveUtil';
 
@@ -101,7 +101,7 @@ export const PlayerSelect: React.FC = () => {
 
   useEffect(()=>{ //캐릭터 첫 등장, 이후 동작
     SetAction('Victory', playerAction, playerActions, null);
-    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);},1400)
+    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);}, 700)
   },[selectPlayer])
 
   // 글자 색 
