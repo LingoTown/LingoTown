@@ -11,6 +11,7 @@ import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
+import background from "../../../public/background/background.png"
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -47,17 +48,17 @@ export const CategoryComp: React.FC<{
   };
 
   const Loading: React.FC = () => {
-    // const textureLoader = new THREE.TextureLoader();
-    // textureLoader.crossOrigin = 'anonymous';
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.crossOrigin = 'anonymous';
 
-    // const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "Introduce/blue.png");
+    const backgroundTexture = textureLoader.load(background);
 
 
     return (
       <group>
         <mesh position={[0, 0, 0]}>
           <planeGeometry args={[3.5, 2.5, 1]} />
-          <meshBasicMaterial  />
+          <meshBasicMaterial map={backgroundTexture} />
         </mesh>
         <TextUtil x={0} y={0} z={0} size={0.2} color="white" name="Loading" />
       </group>
@@ -92,7 +93,7 @@ export const CategoryComp: React.FC<{
         scale={[1, 1, 1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            if ((language === 0 && name !== "gallery") || (language === 1 && name === "galerie")) {
+            if ((language === 0 && name !== "Gallery") || (language === 1 && name === "Galerie")) {
               setActive(name);
               setEnabled(true);
             }
