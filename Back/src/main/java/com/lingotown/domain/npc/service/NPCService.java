@@ -27,6 +27,10 @@ public class NPCService {
         NPC npc = getNPCEntity(npcId);
         List<Topic> topicList = npc.getTopicList();
 
+        // 예외 처리
+        if(topicList == null)
+            topicList = new ArrayList<>();
+
         List<ReadTopicResDto> topicResList = new ArrayList<>();
         for(Topic topic : topicList){
             topicResList.add(ReadTopicResDto.of(topic));
