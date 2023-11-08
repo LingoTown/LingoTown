@@ -34,14 +34,17 @@
 /* Track of the scrollbar */
 ::-webkit-scrollbar-track {
   background: #f1f1f17e; /* color of the tracking area */
+  border-radius: 5px;
 }
 
 /* Handle of the scrollbar */
 ::-webkit-scrollbar-thumb {
   background: #6CBDD0; /* color of the scroll thumb */
+  border-radius: 5px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #3FACC7; /* color of the scroll thumb on hover */
+  border-radius: 5px;
 }
