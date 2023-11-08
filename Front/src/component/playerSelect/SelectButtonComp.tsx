@@ -27,9 +27,6 @@ export const SelectButtonComp = () => {
 
   /* 대표 캐릭터 수정 */
   const handleCharacterSelect = async (clickedCharacterIndex: number) => {
-      if (user.characterId-1 === clickedCharacterIndex)  
-          return;
-      
 
       if (user.lockList[clickedCharacterIndex].islocked === true) 
           return;
