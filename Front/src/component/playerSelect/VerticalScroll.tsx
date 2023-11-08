@@ -14,7 +14,11 @@ const VerticalScroll = () => {
   const PlayerImgList = ["/selectPlayer/m1Img.png", "/selectPlayer/f11Img.png", "/selectPlayer/m31Img.png", "/selectPlayer/f20Img.png", "/selectPlayer/m11Img.png", "/selectPlayer/f12Img.png", "/selectPlayer/m14Img.png", "/selectPlayer/f14Img.png", "/selectPlayer/m29Img.png", "/selectPlayer/f21Img.png", "/selectPlayer/m28Img.png", "/selectPlayer/f22Img.png"];
 
   /* 3D 자물쇠 */
-  const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf")
+  const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf");
+
+  const settingPlayer = (index:number) => {
+    if(!user.lockList[index].islocked) setSelPlayer(index);
+  }
 
   return (
     <div className="absolute z-30 w-[16%] h-[100%] flex items-center justify-center ml-3">
@@ -27,7 +31,8 @@ const VerticalScroll = () => {
               <div key={index}
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
                 className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
-                onClick={() => setSelPlayer(index)}> {/**1부터 시작하는 id */}
+                onClick={() => {settingPlayer(index)}}
+              > {/**1부터 시작하는 id */}
                 <img className="rounded-xl w-[100%] h-[100%]" src={img} alt={`Player ${index}`}/>
 
                 { 
@@ -37,7 +42,7 @@ const VerticalScroll = () => {
                     <Canvas>
                       <Suspense fallback={null}>
                         <Environment preset="sunset" />
-                        <primitive object={lock.scene.clone()} scale={0.3} position={[3, -3, 0]}/>
+                        <primitive object={lock.scene.clone()} scale={0.3} position={[3, -3, 0]} key={`lock-${index}`}/>
                       </Suspense>
                     </Canvas>
                   </div>
