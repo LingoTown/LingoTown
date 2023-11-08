@@ -15,14 +15,13 @@ public class TTSTest {
         // textToSpeechClient 초기화
         try (TextToSpeechClient textToSpeechClient = TextToSpeechClient.create()) {
             // Text 입력
-            SynthesisInput input = SynthesisInput.newBuilder().setText("Hello, World! I'm SeYun").build();
+            SynthesisInput input = SynthesisInput.newBuilder().setText("Sorry I'm busy... Maybe talk to you next time?").build();
 
-            // 언어 : en-US
-            // 모델 : neutral
             VoiceSelectionParams voice =
                     VoiceSelectionParams.newBuilder()
                             .setLanguageCode("en-US")
-                            .setSsmlGender(SsmlVoiceGender.FEMALE)
+                            .setName("en-US-Polyglot-1")
+                            .setSsmlGender(SsmlVoiceGender.MALE)
                             .build();
 
             // 리턴 받을 오디오 타입

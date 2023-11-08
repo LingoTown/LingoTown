@@ -48,4 +48,8 @@ public class MemberCharacter {
     public void selectOn() {
         this.isSelected = true;
     }
+
+    public void lockOff() {
+        this.isLocked = false;
+    }
 }
