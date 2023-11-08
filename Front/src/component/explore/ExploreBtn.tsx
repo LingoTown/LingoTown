@@ -85,7 +85,7 @@ export const ExploreBtn = () => {
           className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
           onClick={ exit }
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-        >Back To Main</button>
+        >Login</button>
       </div>
       <div className='justify-center flex'>
         <ExploreQuizComp 
