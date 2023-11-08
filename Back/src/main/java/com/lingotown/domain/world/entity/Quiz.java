@@ -23,7 +23,7 @@ public class Quiz {
     @Column(nullable = false)
     private String question;
 
-    @Column(nullable = false)
+    @Column(name="korean_question", nullable = false)
     private String koreanQuestion;
 
     @Column(nullable = false)

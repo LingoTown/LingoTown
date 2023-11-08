@@ -19,6 +19,9 @@ public class Topic {
     @Column(nullable = false)
     private String keyword;
 
+    @Column(name = "korean_keyword", nullable = false)
+    private String koreanKeyword;
+
     @JoinColumn(name="npc_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private NPC npc;
