@@ -13,7 +13,8 @@ import { useCylinder } from '@react-three/cannon'
 import { Luke } from '../../../public/name/restaurant/Luke.tsx'
 import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
 
 export const ExploreComp: React.FC = () => {
   //wall
@@ -78,6 +79,7 @@ export const ExploreComp: React.FC = () => {
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
   const isMove = useRef(true);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
@@ -108,6 +110,9 @@ export const ExploreComp: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    if(loading.loading) setLoading(() => ({loading:false}));
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);

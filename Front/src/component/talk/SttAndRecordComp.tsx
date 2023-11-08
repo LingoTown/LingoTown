@@ -21,7 +21,7 @@ type STTAndRecordProps = {
 
 export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition, listening } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
   const [media, setMedia] = useState<MediaRecorder | null>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode | null>();
@@ -191,7 +191,9 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
     }
 
     resetTranscript();
-    SpeechRecognition.startListening({ language: lang });
-    SpeechRecognition.stopListening();
+    if (listening) {
+      SpeechRecognition.startListening({ language: lang });
+      SpeechRecognition.stopListening();
+    }
   };
 };
