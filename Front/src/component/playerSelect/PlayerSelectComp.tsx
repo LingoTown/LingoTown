@@ -18,35 +18,6 @@ export const PlayerSelect: React.FC = () => {
   const [user, setUser] = useRecoilState(userAtom);
   const selectPlayer = useRecoilValue(PlayerSelectAtom);
 
-  /* 대표 캐릭터 수정 */
-  const handleCharacterSelect = async (clickedCharacterId: number) => {
-      if (user.characterId === clickedCharacterId)  
-          return;
-      
-
-      if (user.lockList[clickedCharacterId - 1].islocked === true) 
-          return;
-      
-      const payload: UpdateSelectedCharacter = {
-          previousId: user.characterId,
-          nowId: clickedCharacterId
-      };
-
-      await updateCharacter(payload, ({data}) => {
-          const result = data.data as CharacterResponseType;
-
-          setUser(prev => ({
-              ...prev, 
-              characterId: result.characterId,
-              characterGender: result.characterGender,
-              characterLink: result.characterLink
-          }))
-      }, 
-      (error) => {
-          console.log(error);
-      });
-  };
-
   /* 소품 */
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf")
 
@@ -133,10 +104,8 @@ export const PlayerSelect: React.FC = () => {
       })} */}
 
       {/* 선택된 캐릭터 */}
-      {
-        selectPlayer==-1? null :
-        <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} />
-      }
+      <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} />
+      
 
       {/* 캐릭터 이름 텍스트 및 선택 버튼 */}
       {Object.entries(characterPositions).map(([key, position]) => {

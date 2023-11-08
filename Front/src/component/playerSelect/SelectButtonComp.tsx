@@ -23,7 +23,7 @@ export const SelectButtonComp = () => {
 
   /* User Info */
   const [user, setUser] = useRecoilState(userAtom);
-  const selectPlayer = useRecoilValue(PlayerSelectAtom);
+  const [selectPlayer, setSelectPlayer] = useRecoilState(PlayerSelectAtom);
 
   /* 대표 캐릭터 수정 */
   const handleCharacterSelect = async (clickedCharacterIndex: number) => {
@@ -38,6 +38,8 @@ export const SelectButtonComp = () => {
           previousId: user.characterId,
           nowId: clickedCharacterIndex + 1
       };
+
+      setSelectPlayer(clickedCharacterIndex);
 
       await updateCharacter(payload, ({data}) => {
           const result = data.data as CharacterResponseType;
