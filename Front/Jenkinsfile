@@ -30,10 +30,10 @@ pipeline {
             steps {
                 dir("${PROJECT_DIR_FE}") {
                     sh 'npm install'
-                    sh 'npm test' // Jest 테스트 실행
+                    sh 'npm test -- --coverage' // Jest 테스트 실행
                 }
             }
-}
+        }
 
         // SonarQube 분석
         stage('SonarQube Analysis') {  
