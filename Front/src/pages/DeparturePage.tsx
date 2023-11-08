@@ -6,30 +6,33 @@ import { loadingAtom } from "../atom/LoadingAtom";
 import { useSetRecoilState } from 'recoil';
 
 const Rows = () => {
-    const navigate = useNavigate();
-    const dep : DepartureType[] = departures;
-    const sortTheme = (language : string) => {
-        if(language === "English"){
-            navigate("/theme?language=0");
-        } else if(language === "French"){
-            navigate("/theme?language=1");
-        }
+  /* loading */
+  const setLoading = useSetRecoilState(loadingAtom);
+
+  const navigate = useNavigate();
+  const dep : DepartureType[] = departures;
+  const sortTheme = (language : string) => {
+    if(language === "English"){
+      navigate("/theme?language=0");
+    } else if(language === "French"){
+      navigate("/theme?language=1");
     }
-    return (
-        dep.map((el, i)=>(
-            <div key={i} 
-            onClick={()=>{sortTheme(el.language)}} 
-            className="hover:bg-[#ddd]/40 text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1"
-            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-            >
-                <div className="flex w-1/6 text-yellow-300">{el.time}</div>
-                <div className="flex w-2/6 font-bold text-[1.3rem]">{el.destination}</div>
-                <div className="flex w-1/6">{el.Flight}</div>
-                <div className="flex w-1/6">{el.Gate}</div>
-                <div className={`flex w-1/6 ${el.Status === "Cancelled"? "text-red-400" : "text-blue-300"}`}>{el.Status}</div>
-            </div>
-        ))
-    )
+  }
+  return (
+    dep.map((el, i)=>(
+        <div key={i} 
+        onClick={()=>{setLoading({loading:true}); sortTheme(el.language);}} 
+        className="hover:bg-[#ddd]/40 text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1"
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+        >
+            <div className="flex w-1/6 text-yellow-300">{el.time}</div>
+            <div className="flex w-2/6 font-bold text-[1.3rem]">{el.destination}</div>
+            <div className="flex w-1/6">{el.Flight}</div>
+            <div className="flex w-1/6">{el.Gate}</div>
+            <div className={`flex w-1/6 ${el.Status === "Cancelled"? "text-red-400" : "text-blue-300"}`}>{el.Status}</div>
+        </div>
+    ))
+  )
 }
 const DeparturePage = () => {
   /* loading */
