@@ -1,6 +1,10 @@
 import { HttpJson } from "./common/Http";
-import { ReturnType, CommonResponseType } from "../type/ReturnType";
-import { UpdateSelectedCharacter, lockOff } from "../type/UserType";
+import { ReturnType, 
+  // CommonResponseType 
+} from "../type/ReturnType";
+import { UpdateSelectedCharacter, 
+  // lockOff 
+} from "../type/UserType";
 
 
 const googleLogin = async (param: object, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {

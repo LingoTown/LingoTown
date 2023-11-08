@@ -108,12 +108,12 @@ export const ParkComp: React.FC = () => {
     restitution: 0.7,
   }));
 
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
-    { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
-    { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
-    { id: 16, name: "bonnie", targetPosition: bonniePosition, targetRotation:bonnieRotation, ref: bonnieCircleRef },
+    { id: 14, gender:"Man", name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
+    { id: 35, gender:"Woman", name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
+    { id: 53, gender:"Man", name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
+    { id: 16, gender:"Woman", name: "bonnie", targetPosition: bonniePosition, targetRotation:bonnieRotation, ref: bonnieCircleRef },
   ];
 
   // state
@@ -178,7 +178,7 @@ export const ParkComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
       setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);
