@@ -14,7 +14,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
   return(
     <>
       {/* <SYMapUtilComp /> */}
-      {/* <VerticalSlider/> */}
+      <VerticalSlider/>
 
       <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
         {props.theme}
