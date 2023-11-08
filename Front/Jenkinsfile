@@ -25,6 +25,15 @@ pipeline {
             }
         }
 
+        // Jest
+        stage('Run Jest') {
+            steps {
+                dir("${PROJECT_DIR_FE}") {
+                    sh 'npm test' // Jest 테스트 실행
+                }
+            }
+}
+
         // SonarQube 분석
         stage('SonarQube Analysis') {  
             steps {
