@@ -7,7 +7,10 @@ interface playerSelectPage {
 }
 
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
-  const worldbackgroundTexture = useLoader(THREE.TextureLoader, import.meta.env.VITE_S3_URL + "Introduce/background.png");
+  const textLoader = new THREE.TextureLoader();
+  textLoader.crossOrigin = 'anonymous';
+
+  const worldbackgroundTexture = textLoader.load(`${import.meta.env.VITE_S3_URL}Introduce/background.png`);
 
   return(
     <>
