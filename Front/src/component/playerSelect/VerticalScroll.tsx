@@ -1,4 +1,4 @@
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { userAtom } from '../../atom/UserAtom';
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
@@ -8,8 +8,12 @@ import { useGLTF, Environment } from "@react-three/drei";
 import { showToaster } from "../../pages/PlayerSelectPage";
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
+import { loadingAtom } from '../../atom/LoadingAtom';
 
 const VerticalScroll = () => {
+  
+  /* loading */
+  const [loading, setLoading] = useRecoilState(loadingAtom);
   
   /* User Info */
   const user = useRecoilValue(userAtom);
@@ -22,7 +26,7 @@ const VerticalScroll = () => {
   }
 
   return (
-    <div className="absolute z-30 w-[16%] h-[100%] flex items-center justify-center ml-3">
+    <div className={loading.loading?"h-[0.1px]":"absolute z-30 w-[16%] h-[100%] flex items-center justify-center ml-3"}>
       <div
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
         className="w-[100%] h-[90%] rounded-xl overflow-y-auto flex justify-center select-none">
@@ -51,6 +55,10 @@ const VerticalScroll = () => {
                         </Suspense>
                       </Canvas>
                     </div>
+
+                    {/* // map이 다 돌면 로딩 페이지 없애기 */}
+                    {/* {PlayerImgList.length-1 == index && loading.loading? setLoading(() => ({loading:false})) : null} */}
+
                   </>
 
                   :
@@ -73,12 +81,18 @@ type LockProps = {
 };
 
 const Lock = ({ isLocked, position, onClick }: LockProps) => {
+  /* loading */
+  const [loading, setLoading] = useRecoilState(loadingAtom);
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf");
   const lockRef = useRef<THREE.Mesh>(null);
   useFrame(() => {
     const time = Date.now() * 0.005;
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
+
+  useEffect(()=>{
+    setLoading(() => ({loading:false}))
+  },[])
 
   return isLocked ? (
     <mesh onClick={onClick} position={position} ref={lockRef}>

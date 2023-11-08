@@ -4,6 +4,9 @@ import * as THREE from "three";
 import VerticalScroll from "../component/playerSelect/VerticalScroll";
 import { SelectButtonComp } from "../component/playerSelect/SelectButtonComp";
 import toast, { Toaster } from 'react-hot-toast';
+import LoadingPage from "./LoadingPage";
+import { loadingAtom } from "../atom/LoadingAtom";
+import { useRecoilValue } from "recoil"
 
 interface playerSelectPage {
   theme: JSX.Element;
@@ -11,7 +14,6 @@ interface playerSelectPage {
 
 /* 알림 */
 export const showToaster = (sentence:string, emoji:string) => {
-  console.log("11");
   toast(sentence, {
     duration: 2000,
     icon: emoji,
@@ -22,6 +24,9 @@ export const showToaster = (sentence:string, emoji:string) => {
 }
 
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
+
+  const loading = useRecoilValue(loadingAtom);
+
   const textureLoader = new THREE.TextureLoader();
   // const worldbackgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + 'Introduce/bgggg.png');
   const worldbackgroundTexture = textureLoader.load("/selectPlayer/stage.png");
@@ -33,17 +38,26 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
 
   return(
     <>
-      <Toaster position="top-center" />
+      {
+        loading.loading? <LoadingPage/> : null
+      }
+
+      {
+        !loading.loading?<Toaster position="top-center" /> : null
+      }
 
       <VerticalScroll/>
+      
 
-      <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+      <Canvas shadows style={{ height:loading.loading?"0.01vh":"100vh"}} camera={{ position: [0, 0, 10], fov: 30 }}>
         {props.theme}
         <primitive object={worldbackgroundTexture} attach="background" />
       </Canvas>
 
       {/* 선택 완료 버튼 */}
-      <SelectButtonComp/>
+      {
+        !loading.loading? <SelectButtonComp/> : null
+      }
     </>
   )
 }
