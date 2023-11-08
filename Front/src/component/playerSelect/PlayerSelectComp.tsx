@@ -95,13 +95,13 @@ export const PlayerSelect: React.FC = () => {
   }
 
   // character motion
-  const player = userFileList[user.characterId-1];
+  const player = userFileList[selectPlayer];
   const playerAction = useRef<AnimationAction>();
   const playerActions = useAnimations(player.animations, player.scene).actions;
 
   useEffect(()=>{ //캐릭터 첫 등장, 이후 동작
     SetAction('Victory', playerAction, playerActions, null);
-    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);},1000)
+    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);},1400)
   },[selectPlayer])
 
   // 글자 색 
