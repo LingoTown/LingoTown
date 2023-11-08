@@ -30,7 +30,7 @@ export const MapEnterComp: React.FC<{
       position={[x, y, z]}
       onClick={() => {
         if (!enabled && active !== name) {
-          if ((language === 0 && name !== "Gallery") || (language === 1 && name === "Galerie")) {
+          if (((language === 0 || language === 2) && name !== "Gallery") || (language === 1 && name === "Galerie")) {
             if(!loading.loading) setLoading(() => ({loading:true}));
             navigate(`/${path}`)
           }
@@ -52,9 +52,9 @@ export const MapEnterComp: React.FC<{
       >
         <meshStandardMaterial attach="material" color={"#5dc7f8"} />
         {
-          (language === 0 && name !== "Gallery") || (language === 1 && name === "Galerie") ?
-            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[0][language]} /> :
-            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[1][language]} />
+          ((language === 0 || language === 2) && name !== "Gallery") || (language === 1 && name === "Galerie") ?
+            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[0][language % 2]} /> :
+            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[1][language % 2]} />
         }
       </RoundedBox>
     </mesh>
