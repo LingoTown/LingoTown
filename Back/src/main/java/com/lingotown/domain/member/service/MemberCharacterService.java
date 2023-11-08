@@ -92,4 +92,15 @@ public class MemberCharacterService {
 
         return new DataResponse<>(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), characterResponseDto);
     }
+
+    public CommonResponse lockOffCharacter(Principal principal, Long characterId) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        MemberCharacter memberCharacter = memberCharacterRepository.findByMemberIdAndCharacterId(memberId, characterId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_CHARACTER_NOT_FOUND));
+
+        memberCharacter.lockOff();
+
+        return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
+    }
 }
