@@ -81,11 +81,11 @@ export const RestaurantComp: React.FC = () => {
   const isabelAction = useRef<AnimationAction>();
   const isabelActions = useAnimations(isabelFile.animations, isabelFile.scene).actions;
 
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 4, name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
-    { id: 33, name: "Olivia", targetPosition: oliviaCameraPosition, targetRotation:oliviaCameraRotation, ref: oliviaCircleRef },
-    { id: 26, name: "Isabel", targetPosition: isabelCameraPosition, targetRotation:isabelCameraRotation, ref: isabelCircleRef}
+    { id: 4, gender:"Man", name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
+    { id: 33, gender:"Woman", name: "Olivia", targetPosition: oliviaCameraPosition, targetRotation:oliviaCameraRotation, ref: oliviaCircleRef },
+    { id: 26, gender:"Woman", name: "Isabel", targetPosition: isabelCameraPosition, targetRotation:isabelCameraRotation, ref: isabelCircleRef}
   ];
 
   // state
@@ -139,7 +139,7 @@ export const RestaurantComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));      
       setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);

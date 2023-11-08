@@ -157,11 +157,22 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
       }));
     }, (error) => {
       console.log(error);
+
+      const gender = talkState.gender;
+      const nation = String(localStorage.getItem("Language"));
+      const file = nation + "_" + gender;
+      const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3"
+      let errSentence = "Sorry I'm busy... Maybe talk to you next time?";
+      if (nation == "FR"){
+        errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?"
+      }
+
       setTalkBalloon(prev => ({
         ...prev,
-        sentence: "Sorry I'm busy... Maybe talk to you next time?",
-        prevSectence: "Sorry I'm busy... Maybe talk to you next time?",
-        audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
+        sentence: errSentence,
+        prevSectence: errSentence,
+        // audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
+        audio: errAudioLink,
         isLoading: false,
         isUser: false,
       }));

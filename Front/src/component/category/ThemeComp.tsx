@@ -102,7 +102,7 @@ export const ThemeComp: React.FC = () => {
       <MapEnterComp x={-1} y={2.13} z={0.051} path={`park?language=${language}&world=1`} name={text[language][0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
       <MapEnterComp x={language === 0 ? 3 : 3.3} y={2.13} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[language][1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />
       <MapEnterComp x={-1} y={-0.27} z={0.051} path={`restaurant?language=${language}&world=3`} name={text[language][2]} active={active} enabled={enabled} setHovered={setRestaurantEnterHovered} language={language} />
-      <MapEnterComp x={3} y={-0.27} z={0.051} path={`gallery?language=${language}&world=4`} name={text[language][3]} active={active} enabled={enabled} setHovered={setGalleryEnterHovered} language={language} />
+      <MapEnterComp x={3} y={-0.27} z={0.051} path={`gallery?language=${language}&world=8`} name={text[language][3]} active={active} enabled={enabled} setHovered={setGalleryEnterHovered} language={language} />
 
       
       <CategoryComp
