@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Canvas } from "@react-three/fiber";
-import { SYMapUtilComp } from "../component/playerSelect/SYMapUtilComp";
 import * as THREE from "three";
 import VerticalScroll from "../component/playerSelect/VerticalScroll";
 import { SelectButtonComp } from "../component/playerSelect/SelectButtonComp";

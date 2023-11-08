@@ -135,7 +135,7 @@ export const PlayerSelect: React.FC = () => {
       {/* 선택된 캐릭터 */}
       {
         selectPlayer==-1? null :
-        <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} onClick={() => handleCharacterSelect(2)} />
+        <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} />
       }
 
       {/* 캐릭터 이름 텍스트 및 선택 버튼 */}

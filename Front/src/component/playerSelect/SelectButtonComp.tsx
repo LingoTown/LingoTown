@@ -1,15 +1,60 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
 const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userAtom } from '../../atom/UserAtom';
+import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
+import { UpdateSelectedCharacter } from "../../type/UserType";
+import { CharacterResponseType } from "../../type/CharacterType";
+import { updateCharacter } from "../../api/User"
 
 export const SelectButtonComp = () => {
 
   const [isPressed, setIsPressed] = React.useState(false);
 
+  // hook
+  const navigate = useNavigate();
+
   // 마우스가 버튼 위로 올라왔을 때와 떠났을 때의 이벤트 핸들러
   const handleMouseDown = () => setIsPressed(true);
   const handleMouseUp = () => setIsPressed(false);
   const handleMouseLeave = () => setIsPressed(false);
+
+  /* User Info */
+  const [user, setUser] = useRecoilState(userAtom);
+  const selectPlayer = useRecoilValue(PlayerSelectAtom);
+
+  /* 대표 캐릭터 수정 */
+  const handleCharacterSelect = async (clickedCharacterIndex: number) => {
+      if (user.characterId-1 === clickedCharacterIndex)  
+          return;
+      
+
+      if (user.lockList[clickedCharacterIndex].islocked === true) 
+          return;
+      
+      const payload: UpdateSelectedCharacter = {
+          previousId: user.characterId,
+          nowId: clickedCharacterIndex + 1
+      };
+
+      await updateCharacter(payload, ({data}) => {
+          const result = data.data as CharacterResponseType;
+
+          setUser(prev => ({
+              ...prev, 
+              characterId: result.characterId,
+              characterGender: result.characterGender,
+              characterLink: result.characterLink
+          }))
+      }, 
+      (error) => {
+          console.log(error);
+      });
+
+      navigate("/departure");
+  };
 
   return (
     <div 
@@ -20,6 +65,7 @@ export const SelectButtonComp = () => {
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
+        onClick={() => handleCharacterSelect(selectPlayer)}
       >
         Choice
       </button>
