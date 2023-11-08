@@ -1,13 +1,25 @@
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { userAtom } from '../atom/UserAtom';
+import { useRecoilValue } from 'recoil';
 
 const LoginPage = () => {
 
   const navigate = useNavigate();
   const kakaoLogin = () => { window.location.href = import.meta.env.VITE_KAKAO_LOGIN; }
   const googleLogin = () => { window.location.href = import.meta.env.VITE_GOOGLE_LOGIN; }
+  const user = useRecoilValue(userAtom);
+
+  useEffect(() => {
+    if (user.email !== "") {
+      navigate("/departure");
+    }
+  }, []);
+
 
   return(
   <>
+  
     <div
       style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }} 
       className="absolute inset-0 bg-black opacity-50 z-0">
