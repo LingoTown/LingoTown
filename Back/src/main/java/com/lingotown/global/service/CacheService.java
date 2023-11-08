@@ -59,5 +59,4 @@ public class CacheService {
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
     }
-
 }
