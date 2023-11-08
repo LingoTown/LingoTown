@@ -5,14 +5,9 @@ plugins {
 
     /* 2023.10.25 : Sonarqube */
     id 'org.sonarqube' version '4.2.1.3168'
-}
 
-/* 2023.10.25 : Sonarqube */
-sonar {
-    properties {
-        property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
-        property "sonar.projectName", "S09P31B305"
-    }
+    /* 2023.11.08 : Jacoco */
+    id 'jacoco'
 }
 
 group = 'LingoTown'
@@ -78,4 +73,78 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport' // 추가
+}
+
+/* 2023.10.25 : Sonarqube */
+sonar {
+    properties {
+        property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
+        property "sonar.projectName", "S09P31B305"
+    }
+}
+
+/* 2023.11.08 : Jacoco */
+jacoco {
+    // JaCoCo 버전
+    toolVersion = '0.8.6'
+
+//  테스트결과 리포트를 저장할 경로 변경
+//  default는 "${project.reporting.baseDir}/jacoco"
+//  reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    // 테스트 결과를 받을 파일 형식
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification' // 추가
+}
+
+// 최소 코드 커버리지 수준 설정
+jacocoTestCoverageVerification {
+
+    // 커버리지 기준을 설정하는 룰
+    violationRules {
+        rule {
+            enable = true
+
+            // 커버리지 체크 기준 : 클래스 (BUNDLE/CLASS/GROUP/METHOD/PACKAGE/SOURCEFILE)
+            element = 'CLASS'
+
+            // Rule 적용 대상 포함 (package 수준)
+            // includes = []
+
+            // 라인 커버리지 제한을 80%로 설정
+            limit {
+                // counter : 커버리지 측정 최소 단위 (BRANCH/CLASS/COMPLEXITY/INSTRUCTION/METHOD/LINE)
+                counter = 'LINE'
+
+                // 측정한 커버리지를 어떻게 보여줄 것인가 (COVEREDCOUNT/COVEREDRATIO/MISSEDCOUNT/MISSEDRATIO/TOTALCOUNT)
+                value = 'COVEREDRATIO'
+
+                // 최솟값 : jacocoTestCoverageVerification의 성공 여부 결정
+                minimum = 0.80
+            }
+
+            // 브랜치 커버리지 제한을 80%로 설정
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            // Rule 적용 제외 클래스 (package 수준)
+            // excludes = []
+        }
+
+        // 여러 rule을 생성할 수 있습니다.
+        rule {
+
+        }
+    }
 }
