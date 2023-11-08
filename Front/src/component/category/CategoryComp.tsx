@@ -93,7 +93,7 @@ export const CategoryComp: React.FC<{
         scale={[1, 1, 1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            if ((language === 0 && name !== "gallery") || (language === 1 && name === "galerie")) {
+            if ((language === 0 && name !== "Gallery") || (language === 1 && name === "Galerie")) {
               setActive(name);
               setEnabled(true);
             }

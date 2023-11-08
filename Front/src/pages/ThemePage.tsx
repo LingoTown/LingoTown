@@ -19,15 +19,18 @@ export const ThemePage = () => {
         loading.loading? <LoadingPage/> : null
       }
       <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['passero-one'] z-10 relative">
-        <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
+        <div className="hover:text-[2.8rem] mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >Departure</div>
-        <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
+        <div className="hover:text-[2.8rem] mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/introduce"); }}
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+        >NPC</div>
+        <div className="hover:text-[2.8rem] mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >MyPage</div>
       </div>
       <div className="z-1 relative">
-        <Canvas shadows style={{ height:loading.loading?"0.01vh":"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+        <Canvas shadows style={{ height:loading.loading?"0.01vh":"98.1vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
           <ThemeComp />
         </Canvas>
       </div>
