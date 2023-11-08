@@ -81,13 +81,14 @@ sonar {
     properties {
         property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
         property "sonar.projectName", "S09P31B305"
+        property 'sonar.test.inclusions', '**/*Test.java'
         property 'sonar.exclusions', '**/test/**, **/Q*.java, **/*Doc*.java, **/resources/**'
 
         // Jacoco의 Coverage 파일 분석
         property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
         
         // Java가 컴파일되면서 생성된 바이너리 파일을 분석 => 보다 정확한 코드 분석
-        property 'sonar.java.binaries', '${buildDir}/classes/java/main'
+        property 'sonar.java.binaries', '${buildDir}'
     }
 }
 
