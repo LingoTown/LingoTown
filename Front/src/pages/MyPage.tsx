@@ -1,18 +1,14 @@
 import {useState, useEffect} from "react"
 import { useNavigate } from 'react-router-dom';
-import { userAtom } from '../atom/UserAtom';
+import { userAtom, initialUser } from '../atom/UserAtom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { HttpJson } from '../api/common/Http';
-import { HttpForm } from "../api/common/Http";
+import { HttpJson, HttpForm } from '../api/common/Http';
 import { useSetRecoilState } from "recoil";
 import { myPageNPCListType } from "../component/Country";
 import Country from "../component/Country";
 import { useCustomAlert, useCustomConfirm } from "../component/util/ModalUtil";
 import { talkListType } from "../type/TalkListType";
-import { npcStateAtom } from "../atom/ScriptAtom";
-import { npcStateName } from "../atom/ScriptAtom";
-import { talkIdAtom } from "../atom/ScriptAtom";
-import { detailVerAtom } from "../atom/ScriptAtom";
+import { npcStateAtom, npcStateName, talkIdAtom, detailVerAtom } from "../atom/ScriptAtom";
 import ScriptDetail from "../component/script/ScriptDetail";
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -33,7 +29,7 @@ const MyPage = () => {
   const user = useRecoilValue(userAtom);
   const setUser = useSetRecoilState(userAtom);
   const logout = async() =>{
-    localStorage.removeItem("userAtom");
+    setUser(initialUser)
     await customAlert("", "로그아웃 되었습니다.")
     navigate("/")
   }
