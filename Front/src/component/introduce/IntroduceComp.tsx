@@ -260,7 +260,7 @@ export const IntroduceComp: React.FC = () => {
         position={[1.5, 1.8, 0.051]}
         anchorY={"bottom"}
       >
-        Company
+        Event Hall
       </Text>
 
       <Text
@@ -270,7 +270,7 @@ export const IntroduceComp: React.FC = () => {
         position={[-4.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Restaurant
+        Cafeteria
       </Text>
 
       <Text
@@ -280,7 +280,7 @@ export const IntroduceComp: React.FC = () => {
         position={[1.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Museum
+        Gallery
       </Text>
 
       <NPCStage
