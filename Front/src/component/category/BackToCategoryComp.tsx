@@ -44,7 +44,7 @@ export const BackToCategoryComp: React.FC<{
         <Earth />
       </mesh>
       <mesh position={[0, 2, 0]}>
-        <TextUtil x={0} y={0} z={0} color={color} size={0.5} name={text[language]} />
+        <TextUtil x={0} y={0} z={0} color={color} size={0.5} name={text[language % 2]} />
         <meshStandardMaterial
           transparent={active !== name}
           color={color}

@@ -9,10 +9,12 @@ const Rows = () => {
     const sortTheme = (language : string) => {
         localStorage.setItem("Language", language);
 
-        if(language === "US" || language == "UK"){
-            navigate("/theme?language=0");
+        if(language === "US"){
+          navigate("/theme?language=0");
         } else if(language === "FR"){
-            navigate("/theme?language=1");
+          navigate("/theme?language=1");
+        } else if (language === "UK") {
+          navigate("/theme?language=2");
         }
     }
     return (
