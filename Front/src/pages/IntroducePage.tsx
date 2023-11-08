@@ -1,4 +1,6 @@
 import { Canvas } from "@react-three/fiber";
+import * as THREE from "three";
+import background from "../../public/background/background.png"
 import { useNavigate } from "react-router-dom";
 
 interface IntroducePage {
@@ -6,6 +8,10 @@ interface IntroducePage {
 }
 
 export const IntroducePage: React.FC<IntroducePage> = (props: IntroducePage): JSX.Element => {
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.crossOrigin = 'anonymous';
+
+  const backgroundTexture = textureLoader.load(background);
   const navigate = useNavigate();
 
   return(
