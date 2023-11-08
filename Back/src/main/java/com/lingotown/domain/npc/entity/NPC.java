@@ -3,19 +3,15 @@ package com.lingotown.domain.npc.entity;
 import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.global.data.GenderType;
-import com.lingotown.global.data.NPCAge;
-import com.lingotown.global.data.NPCRole;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED) @AllArgsConstructor
 @Table(name = "npc")
 public class NPC {
 
@@ -49,10 +45,11 @@ public class NPC {
     @ManyToOne(fetch = FetchType.LAZY)
     private World world;
 
+    @Builder.Default
     @OneToMany(mappedBy = "npc", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Topic> topicList = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "npc", fetch = FetchType.LAZY)
     private List<MemberNPC> memberNpcList = new ArrayList<>();
-
 }
