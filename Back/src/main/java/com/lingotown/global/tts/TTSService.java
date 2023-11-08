@@ -31,9 +31,6 @@ import java.io.OutputStream;
 public class TTSService {
 
     private final TalkRepository talkRepository;
-    private final MemberNPCRepository memberNPCRepository;
-
-    private final S3Service s3Service;
 
     @TrackExecutionTime
     public MultipartFile UseTTS(String prompt, TalkReqDto talkReqDto) throws Exception{
@@ -116,7 +113,7 @@ public class TTSService {
             // Get the audio contents from the response
             ByteString audioContents = response.getAudioContent();
 
-// Convert ByteString to MultipartFile without saving to a file
+            // Convert ByteString to MultipartFile without saving to a file
             MultipartFile audioFile = new MockMultipartFile(
                     "file",
                     "output.mp3",
