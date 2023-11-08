@@ -148,12 +148,13 @@ export const RestaurantComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (event.code === 'Space' && isInsideCircle) {
+      if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
+            setTalkState(prevState => ({ ...prevState, finish: false }));
             animate();
             setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);

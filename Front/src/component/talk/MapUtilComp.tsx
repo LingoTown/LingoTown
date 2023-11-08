@@ -8,6 +8,7 @@ import { QuizType } from '../../type/QuizType';
 import { QuizComp } from './QuizComp';
 import { tutorialAtom } from '../../atom/TutorialAtom';
 
+
 export const MapUtilComp = () => {
 
   // hook 
@@ -63,9 +64,14 @@ export const MapUtilComp = () => {
     }
   }
 
-  const modalOn = () => { setTalkBalloon(prevState => ({...prevState, isModal: true})) }
-  const modalOff = () => { setTalkBalloon(prevState => ({...prevState, isModal: false})) }
+  const modalOn = () => {
+    setTalkBalloon(prevState => ({...prevState, isModal: true}))
+  }
   
+  const modalOff = () => {
+    setTalkBalloon(prevState => ({...prevState, isModal: false}))
+  }
+
   return(
     <>
       <div className='justify-center flex'>
