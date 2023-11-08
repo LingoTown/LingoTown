@@ -47,17 +47,17 @@ export const CategoryComp: React.FC<{
   };
 
   const Loading: React.FC = () => {
-    // const textureLoader = new THREE.TextureLoader();
-    // textureLoader.crossOrigin = 'anonymous';
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.crossOrigin = 'anonymous';
 
-    // const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "Introduce/blue.png");
+    const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "BackGround/WorldBackground.png");
 
 
     return (
       <group>
         <mesh position={[0, 0, 0]}>
           <planeGeometry args={[3.5, 2.5, 1]} />
-          <meshBasicMaterial  />
+          <meshBasicMaterial map={backgroundTexture} />
         </mesh>
         <TextUtil x={0} y={0} z={0} size={0.2} color="white" name="Loading" />
       </group>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Lottie from 'lottie-react';
-import * as THREE from "three";
 
 
 const LoadingPage = () => {
@@ -31,7 +30,7 @@ const LoadingPage = () => {
     ></div>
     <div 
       className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center z-30" 
-      style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/background.png')`, cursor: `url('${cursorLink}'), auto` }}
+      style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}BackGround/WorldBackground.png')`, cursor: `url('${cursorLink}'), auto` }}
 >
       <div className="text-center z-30">
         <div>
