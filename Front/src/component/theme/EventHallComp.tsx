@@ -241,13 +241,13 @@ export const EventHallComp: React.FC = () => {
     const lerpFactor = 0.04;
 
     // 현재 상호작용하는 NPC
-    const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+    const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
 
     // 이 맵의 NPC 리스트
     const npcInfoList: NpcInfo[] = [
-        { id: Jayden.npcId, name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
-        { id: Kevin.npcId, name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
-        { id: Daen.npcId, name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
+        { id: Jayden.npcId, gender:"Man", name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
+        { id: Kevin.npcId, gender:"Man", name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
+        { id: Daen.npcId, gender:"Woman", name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
     ]; 
     
     /* useState */
@@ -294,7 +294,7 @@ export const EventHallComp: React.FC = () => {
     const doStartTalk = async(npcId: number) => {
         await startTalk(npcId, ({data}) => {
             const result = data.data as startTalkType;
-            setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+            setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
             setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
         }, (error) => {
             console.log(error);
@@ -414,7 +414,7 @@ export const EventHallComp: React.FC = () => {
             </Circle>
 
             {/* 말풍선 */}
-            { talkBalloon.isShow? <STTAndRecord lang={ LANGUAGE } /> : null }
+            <STTAndRecord lang={ LANGUAGE } />
 
             {/* 이름 */}
             <DaenName />

@@ -1,6 +1,7 @@
 export type topic = {
   topicId: number,
   keyword: string
+  koKeyword: string,
 }
 
 export type startTalkType = {
