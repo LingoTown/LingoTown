@@ -119,7 +119,7 @@ public class OpenAIService {
                 .build();
         String jsonString = gson.toJson(requestDto);
 
-        String body = String.format(jsonString);
+        String body = jsonString;
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
@@ -368,7 +368,7 @@ public class OpenAIService {
 
                 "Now, " + "you are " +npcName +", and " + npcGender +
                 " and " + npcJob + ", and " + "your age is " + npcAge +
-                ". and This is your situation. " +npcSituation+ " " +
+                ". and This is your situation. " +npcSituation+ ". " +
                 "You don't have to put your name in front of the response. " +
                 "And It is very important thing. If you can't answer in a skit I've created, think you're a person and answer appropriately. ";
 
