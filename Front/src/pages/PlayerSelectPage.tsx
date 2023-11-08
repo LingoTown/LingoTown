@@ -1,4 +1,4 @@
-import { Canvas, useLoader } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { SYMapUtilComp } from "../component/playerSelect/SYMapUtilComp";
 import * as THREE from "three";
 
@@ -10,7 +10,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
   const textLoader = new THREE.TextureLoader();
   textLoader.crossOrigin = 'anonymous';
 
-  const worldbackgroundTexture = textLoader.load(`${import.meta.env.VITE_S3_URL}Introduce/background.png`);
+  const worldbackgroundTexture = textLoader.load(`${import.meta.env.VITE_S3_URL}BackGround/WorldBackground.png`);
 
   return(
     <>

@@ -45,8 +45,8 @@ export const NPCStage: React.FC<{
   const map2D = useTexture(`${import.meta.env.VITE_S3_URL}Introduce/intro.jpg`);
   const textureLoader = new THREE.TextureLoader();
   textureLoader.crossOrigin = 'anonymous';
-  
-  const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "Introduce/background.png");
+
+  const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "BackGround/WorldBackground.png");
 
   const portalMaterial = useRef<PortalMaterialType | null>(null);
 
