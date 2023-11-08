@@ -17,7 +17,7 @@ const VerticalScroll = () => {
             return(
               <div key={index}
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
-                className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px]"}
+                className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
                 onClick={() => setSelPlayer(index)}> {/**1부터 시작하는 id */}
                 <img className="rounded-xl w-[100%] h-[100%]" src={img} />
               </div>
