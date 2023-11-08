@@ -2,7 +2,7 @@ import { Suspense, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { userAtom } from '../../atom/UserAtom';
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment } from "@react-three/drei";
 import { showToaster } from "../../pages/PlayerSelectPage";
@@ -11,9 +11,9 @@ import 'react-tooltip/dist/react-tooltip.css'
 import { loadingAtom } from '../../atom/LoadingAtom';
 
 const VerticalScroll = () => {
-  
+
   /* loading */
-  const [loading, setLoading] = useRecoilState(loadingAtom);
+  const loading = useRecoilValue(loadingAtom);
   
   /* User Info */
   const user = useRecoilValue(userAtom);
@@ -55,12 +55,7 @@ const VerticalScroll = () => {
                         </Suspense>
                       </Canvas>
                     </div>
-
-                    {/* // map이 다 돌면 로딩 페이지 없애기 */}
-                    {/* {PlayerImgList.length-1 == index && loading.loading? setLoading(() => ({loading:false})) : null} */}
-
                   </>
-
                   :
                   null
                 }
@@ -82,7 +77,7 @@ type LockProps = {
 
 const Lock = ({ isLocked, position, onClick }: LockProps) => {
   /* loading */
-  const [loading, setLoading] = useRecoilState(loadingAtom);
+  const setLoading = useSetRecoilState(loadingAtom);
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf");
   const lockRef = useRef<THREE.Mesh>(null);
   useFrame(() => {
