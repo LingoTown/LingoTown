@@ -26,9 +26,8 @@ const MyPage = () => {
   const [talkList, setTalkList] = useState<talkListType[]>()
   const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
   const [npcName,setNpcName] = useRecoilState(npcStateName);
-  const [talkId, setTalkId] = useRecoilState(talkIdAtom);
-  talkId;
-  scriptVer;
+  const [, setTalkId] = useRecoilState(talkIdAtom);
+  
   const customConfirm = useCustomConfirm();
   const navigate = useNavigate();
   const user = useRecoilValue(userAtom);
@@ -50,8 +49,7 @@ const MyPage = () => {
     },[])
   }
 
-
-  useEffect(()=> {
+  const callMyList = () => {
     HttpJson.get("/api/talk/list")
       .then((res) => {
         const arr = res.data.data;
@@ -62,6 +60,10 @@ const MyPage = () => {
         console.log(err);
         console.log("NPC 정보를 불러올 수 없습니다.")
       })
+  }
+
+  useEffect(()=> {
+    callMyList();
   }, [])
 
   const deleteAccount = async() => {
@@ -145,6 +147,7 @@ const MyPage = () => {
       HttpJson.delete(`/api/talk/${talkId}`)
       .then(()=>{
         getTalkList(npcNum);
+        callMyList();
       })
       .catch(console.log)
     }
@@ -216,14 +219,21 @@ const MyPage = () => {
                   
                 </div>
                 <div 
-                style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                 className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
-                  <div className="hover:text-[2rem]  h-[45px]" onClick={logout}>Logout</div>
-                  <div className="hover:text-[2rem]  h-[45px]" 
-                  style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-                   onClick={deleteAccount}>Delete Account</div>
+                  <div className="h-[45px]">
+                    <span className='hover:text-[1.9rem]' onClick={logout}
+                      style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
+                      Logout
+                    </span>
+                  </div>
+                  <div className="h-[45px]" 
+                   onClick={deleteAccount}>
+                    <span className='hover:text-[1.9rem]'
+                      style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
+                      Delete Account
+                    </span>
+                  </div>
                 </div>
-        
             </div>
             }
             

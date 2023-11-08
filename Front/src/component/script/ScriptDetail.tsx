@@ -62,7 +62,7 @@ function ScriptDetail() {
                         <span 
                           onClick={() => {playAudio(i)}}
                           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-                          className="hover:text-[1.23rem] m-2 mt-3 material-icons text-red-400 text-[1.2rem] cursor-pointer"
+                          className="hover:text-red-200 m-2 mt-3 material-icons text-red-400 text-[1.2rem] cursor-pointer"
                         >
                           mic
                         </span>
