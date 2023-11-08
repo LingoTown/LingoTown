@@ -324,7 +324,7 @@ export const EventHallComp: React.FC = () => {
         const handleKeyDown = async(event: KeyboardEvent) => {
             
             // NPC의 원형 대화 범위 내에서 스페이스 바를 눌렀을 때
-            if (event.code === 'Space' && isInsideCircle) {
+            if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
                 
                 // Player 움직임 불가능
                 isMove.current = false;

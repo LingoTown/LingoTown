@@ -44,7 +44,7 @@ export const TalkBalloonComp = () => {
   // End 버튼 눌렀을때
   const handleEnd = async() => {
     setIsRec(false);
-    setTalkState(prevState => ({ ...prevState, finish: !prevState.finish }));
+    setTalkState(prevState => ({ ...prevState, finish: true }));
     setTalkBalloon(initialTalkBalloon);
   };
 
@@ -60,7 +60,7 @@ export const TalkBalloonComp = () => {
   }
 
   const doTalking = async(topic: topic) => {
-    const param = { talkId: talkState.talkId, topic: topic.keyword }
+    const param = { talkId: talkState.talkId, topic: topic.keyword, language:"US" }
     setShowList(false);
     setTalkBalloon(prev => ({ ...prev, isLoading:true }));
     setTalkState(prev => ({ ...prev, selectTopic: !prev.selectTopic }));

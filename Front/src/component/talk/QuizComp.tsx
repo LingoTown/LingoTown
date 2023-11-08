@@ -78,7 +78,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
           <div className="fixed inset-0 z-10 flex items-center justify-center">
             <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-4xl">
               <div className="border-[0.5px] border-white w-full rounded-lg p-1 px-3 flex flex-col items-center">
-                <div className="text-[#333] font-['passero-one'] text-[1.5rem] mt-2">Quiz List</div>
+                <div className="text-[#333] font-['passero-one'] text-[1.5rem] mt-2">Quest List</div>
                 <div className="text-[#333] font-bold text-[0.8rem] mb-1">* 각 질문을 클릭하여 정답을 입력해주세요</div>
                 {
                   quizList.map((data, index) => (
