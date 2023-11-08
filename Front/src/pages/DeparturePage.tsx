@@ -40,11 +40,9 @@ const DeparturePage = () => {
           <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg" 
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             onClick={async() => {
-            localStorage.removeItem("userAtom");
-            await customAlert("Notice", "로그아웃 되었습니다.")
-            navigate("/")
+            navigate("/playerSelect")
           }}
-          >Logout</div>
+          >Characters</div>
           <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => {
             navigate("/mypage");
           }}

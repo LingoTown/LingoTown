@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { SYMapUtilComp } from "../component/playerSelect/SYMapUtilComp";
 import * as THREE from "three";
-import VerticalSlider from "../component/playerSelect/VerticalSlider";
+import VerticalScroll from "../component/playerSelect/VerticalScroll";
 
 interface playerSelectPage {
   theme: JSX.Element;
@@ -14,7 +14,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
   return(
     <>
       {/* <SYMapUtilComp /> */}
-      <VerticalSlider/>
+      <VerticalScroll/>
 
       <Canvas shadows style={{ height:"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
         {props.theme}

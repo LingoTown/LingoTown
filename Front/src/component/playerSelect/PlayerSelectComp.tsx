@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, Environment, Text, useAnimations } from "@react-three/drei";
 import * as THREE from 'three';
 import { userAtom } from "../../atom/UserAtom";
-import { useRecoilState } from 'recoil';
+import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { updateCharacter } from "../../api/User"
 import { UpdateSelectedCharacter } from "../../type/UserType";
 import { CharacterResponseType } from "../../type/CharacterType";
@@ -15,7 +16,8 @@ export const PlayerSelect: React.FC = () => {
   /* User Info */
 
   const [user, setUser] = useRecoilState(userAtom);
-  
+  const selectPlayer = useRecoilValue(PlayerSelectAtom);
+
   /* 대표 캐릭터 수정 */
   const handleCharacterSelect = async (clickedCharacterId: number) => {
       if (user.characterId === clickedCharacterId)  
@@ -46,19 +48,24 @@ export const PlayerSelect: React.FC = () => {
   };
 
   /* 소품 */
-
-  const aurora = useGLTF(import.meta.env.VITE_S3_URL + "Effect/Starliner/scene.gltf")
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf")
 
 
   /* Characters */
   
-  const Ch1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
-  const Ch2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_20.glb");
-  const Ch3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_13.glb");
-  const Ch4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_27.glb");
-  const Ch5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
-  const userFileList = [Ch1, Ch2, Ch3, Ch4, Ch5];
+  const M1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
+  const F1 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_11.glb");
+  const M2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_31.glb");
+  const F2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_20.glb");
+  const M3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_11.glb");
+  const F3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_12.glb");
+  const M4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_14.glb");
+  const F4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_14.glb");
+  const M5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_29.glb");
+  const F5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
+  const M6 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_28.glb");
+  const F6 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_22.glb");
+  const userFileList = [M1, F1, M2, F2, M3, F3, M4, F4, M5, F5, M6, F6];
 
   const characterPositions: { [key: number]: [number, number, number] } = {
       1: [-4, -0.5, 0],
@@ -68,23 +75,8 @@ export const PlayerSelect: React.FC = () => {
       5: [4, -0.5, 0]
   };
 
-  const characterNames: { [key: number]: String } = {
-      1: "A",
-      2: "B",
-      3: "C", 
-      4: "D",
-      5: "E"
-  }
-
   const textOffsetY = -0.8;
   
-  const auroraPositions: { [key: number]: [number, number, number] } = {
-      1: [-4, -0.5, 0],
-      2: [-2, -0.5, 0],
-      3: [0, -0.5, 0],
-      4: [2, -0.5, 0],
-      5: [4, -0.5, 0]
-  }
 
   const lockPositions: { [key: number]: [number, number, number] } = {
       1: [-4, 1.5, 0],
@@ -107,9 +99,10 @@ export const PlayerSelect: React.FC = () => {
   const playerAction = useRef<AnimationAction>();
   const playerActions = useAnimations(player.animations, player.scene).actions;
 
-  useEffect(()=>{
-      SetAction('Idle', playerAction, playerActions, null);
-  },[])
+  useEffect(()=>{ //캐릭터 첫 등장, 이후 동작
+    SetAction('Victory', playerAction, playerActions, null);
+    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);},1000)
+  },[selectPlayer])
 
   // 글자 색 
   const getColorForName = (id: number) => user.characterId === id ? "red" : "black";
@@ -119,12 +112,6 @@ export const PlayerSelect: React.FC = () => {
       <>
       <Environment preset="sunset" />
 
-      {/* <primitive
-          scale={0.5}
-          position={auroraPositions[user.characterId]} 
-          rotation={[THREE.MathUtils.degToRad(30), 0, THREE.MathUtils.degToRad(-1)]}
-          object={aurora.scene}
-      /> */}
 
       {/* 조건부 자물쇠 렌더링 */}
       {/* {user.lockList.map((lockInfo, index) => {
@@ -145,12 +132,11 @@ export const PlayerSelect: React.FC = () => {
           return null; // islocked가 false이면 null을 반환하여 렌더링하지 않습니다.
       })} */}
 
-      {/* 캐릭터 */}
-      {/* <primitive scale={1} position={characterPositions[1]} object={Ch1.scene} onClick={() => handleCharacterSelect(1)} /> */}
-      <primitive scale={1} position={[0, -1, 0]} object={Ch2.scene} onClick={() => handleCharacterSelect(2)} />
-      {/* <primitive scale={1} position={characterPositions[3]} object={Ch3.scene} onClick={() => handleCharacterSelect(3)} /> */}
-      {/* <primitive scale={1} position={characterPositions[4]} object={Ch4.scene} onClick={() => handleCharacterSelect(4)} /> */}
-      {/* <primitive scale={1} position={characterPositions[5]} object={Ch5.scene} onClick={() => handleCharacterSelect(5)} /> */}
+      {/* 선택된 캐릭터 */}
+      {
+        selectPlayer==-1? null :
+        <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} onClick={() => handleCharacterSelect(2)} />
+      }
 
       {/* 캐릭터 이름 텍스트 및 선택 버튼 */}
       {Object.entries(characterPositions).map(([key, position]) => {
@@ -159,13 +145,6 @@ export const PlayerSelect: React.FC = () => {
 
           return (
               <React.Fragment key={id}>
-                  {/* <Text
-                      position={[position[0], position[1] + textOffsetY + 0.2, position[2]]}
-                      fontSize={0.5}
-                      color={getColorForName(id)}
-                  >
-                      {characterNames[id]} 
-                  </Text> */}
 
                   {/* <Text
                       key={`button-${key}`}
@@ -189,7 +168,7 @@ export const PlayerSelect: React.FC = () => {
       })}
 
           <Text
-              position={[0,0,-3]}
+              position={[0,0.5,-3]}
           >
             Choose your Player
           </Text>
