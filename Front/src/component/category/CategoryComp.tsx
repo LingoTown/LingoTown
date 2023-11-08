@@ -93,7 +93,7 @@ export const CategoryComp: React.FC<{
         scale={[1, 1, 1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            if ((language === 0 && name !== "Gallery") || (language === 1 && name === "Galerie")) {
+            if (((language === 0 || language === 2) && name !== "Gallery") || (language === 1 && name === "Galerie")) {
               setActive(name);
               setEnabled(true);
             }
@@ -127,15 +127,15 @@ export const CategoryComp: React.FC<{
           </Suspense>
         </MeshPortalMaterial>
 
-        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0][language]} /> : <></>}
-        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0][language]} /> : <></>}
-        {texture === 0 ? (
+        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0][language % 2]} /> : <></>}
+        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0][language % 2]} /> : <></>}
+        {(texture === 0) ? (
           <>
-            <TextUtil x={language === 0 ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1][language]} />
+            <TextUtil x={(language === 0 || language === 2) ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1][language % 2]} />
             <primitive
               ref={lockRef}
               scale={0.05}
-              position-x={language === 0 ? 0.35 : 0.4}
+              position-x={language === 1 ? 0.4 : 0.35}
               position-y={-0.1}
               object={lock.scene.clone()}
             />
