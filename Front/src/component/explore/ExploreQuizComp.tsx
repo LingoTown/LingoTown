@@ -1,5 +1,7 @@
 import { QuizType } from "../../type/QuizType";
 import React, { Dispatch, SetStateAction } from 'react';
+import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { useSetRecoilState } from "recoil";
 
 interface ExploreQuizCompProps {
   quizList: QuizType[];
@@ -10,7 +12,9 @@ interface ExploreQuizCompProps {
 }
 
 export const ExploreQuizComp: React.FC<ExploreQuizCompProps> = ({ quizList, isOpenQuizModal, setIsOpenQuizModal, translateList, setTranslateList }) => {
- 
+
+  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+
   const toEng = (event: React.MouseEvent<HTMLButtonElement>, index:number) => {
     event.stopPropagation();
     const newTranslateList = [...translateList];
@@ -40,7 +44,8 @@ export const ExploreQuizComp: React.FC<ExploreQuizCompProps> = ({ quizList, isOp
                     <div key={ index }
                       className="flex justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
                       onClick={() => {
-                        alert("로그인")
+                        setIsOpenQuizModal(false)
+                        setTalkBalloon(prev => ({ ...prev, isUser: !prev.isUser}));
                       }}
                     >
                       {data.solved == "true" ? (
