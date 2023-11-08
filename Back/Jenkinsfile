@@ -39,12 +39,13 @@ pipeline {
             steps {
                 script {
                     try {
+                    // --continue를 통해 Jacoco 등으로 인해 build가 에러나더라도 쭉 진행되게
                         sh """
                             cd ${PROJECT_DIR_BE}
                             chmod 777 ./gradlew
                             ls -al
                             pwd
-                            ./gradlew clean build
+                            ./gradlew clean build --continue
                         """
                     } catch (Exception e) {
                         // 빌드 중 오류가 발생하면, 파이프라인 실행을 중단합니다.

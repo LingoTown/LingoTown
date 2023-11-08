@@ -81,6 +81,13 @@ sonar {
     properties {
         property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
         property "sonar.projectName", "S09P31B305"
+        property 'sonar.exclusions', '**/test/**, **/Q*.java, **/*Doc*.java, **/resources/**'
+
+        // Jacoco의 Coverage 파일 분석
+        property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
+        
+        // Java가 컴파일되면서 생성된 바이너리 파일을 분석 => 보다 정확한 코드 분석
+        property 'sonar.java.binaries', '${buildDir}/classes'
     }
 }
 
@@ -97,9 +104,9 @@ jacoco {
 jacocoTestReport {
     // 테스트 결과를 받을 파일 형식
     reports {
-        html.enabled = true
-        xml.enabled = true
-        csv.enabled = false
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
     }
 
     finalizedBy 'jacocoTestCoverageVerification' // 추가
@@ -111,7 +118,7 @@ jacocoTestCoverageVerification {
     // 커버리지 기준을 설정하는 룰
     violationRules {
         rule {
-            enable = true
+            enabled = true
 
             // 커버리지 체크 기준 : 클래스 (BUNDLE/CLASS/GROUP/METHOD/PACKAGE/SOURCEFILE)
             element = 'CLASS'
