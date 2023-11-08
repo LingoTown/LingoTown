@@ -56,4 +56,10 @@ public class MemberController {
 
         return memberCharacterService.updateSelectedCharacter(principal, updateSelectedCharacterRequestDto);
     }
+
+    @PutMapping("/lock/off")
+    public CommonResponse lockOffCharacter(Principal principal, @RequestBody Long characterId) {
+
+        return memberCharacterService.lockOffCharacter(principal, characterId);
+    }
 }
