@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { MapUtilComp } from "../component/talk/MapUtilComp";
 import * as THREE from "three";
+import background from "../../public/background/background.png"
 
 interface IntroducePage {
   theme: JSX.Element;
@@ -10,7 +11,7 @@ export const IntroducePage: React.FC<IntroducePage> = (props: IntroducePage): JS
   const textureLoader = new THREE.TextureLoader();
   textureLoader.crossOrigin = 'anonymous';
 
-  const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "BackGround/WorldBackground.png");
+  const backgroundTexture = textureLoader.load(background);
 
   return(
     <>

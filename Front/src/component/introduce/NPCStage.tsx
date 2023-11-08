@@ -10,6 +10,7 @@ import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { useRef } from "react";
 import * as THREE from "three";
+import background from "../../../public/background/background.png"
 
 export const NPCStage: React.FC<{
   children: React.ReactNode;
@@ -46,7 +47,7 @@ export const NPCStage: React.FC<{
   const textureLoader = new THREE.TextureLoader();
   textureLoader.crossOrigin = 'anonymous';
 
-  const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "BackGround/WorldBackground.png");
+  const backgroundTexture = textureLoader.load(background);
 
   const portalMaterial = useRef<PortalMaterialType | null>(null);
 

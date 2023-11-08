@@ -11,6 +11,7 @@ import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
 import { TextUtil } from './util/TextUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
+import background from "../../../public/background/background.png"
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -50,7 +51,7 @@ export const CategoryComp: React.FC<{
     const textureLoader = new THREE.TextureLoader();
     textureLoader.crossOrigin = 'anonymous';
 
-    const backgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + "BackGround/WorldBackground.png");
+    const backgroundTexture = textureLoader.load(background);
 
 
     return (
