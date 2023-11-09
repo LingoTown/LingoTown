@@ -11,6 +11,7 @@ import { talkListType } from "../type/TalkListType";
 import { npcStateAtom, npcStateName, talkIdAtom, detailVerAtom } from "../atom/ScriptAtom";
 import ScriptDetail from "../component/script/ScriptDetail";
 import toast, { Toaster } from 'react-hot-toast';
+import { loadingAtom } from "../atom/LoadingAtom";
 
 const MyPage = () => {
   const customAlert = useCustomAlert();
@@ -23,6 +24,7 @@ const MyPage = () => {
   const [npcNum, setNpcNum] = useRecoilState(npcStateAtom);
   const [npcName,setNpcName] = useRecoilState(npcStateName);
   const [, setTalkId] = useRecoilState(talkIdAtom);
+  const setLoading = useSetRecoilState(loadingAtom);
   
   const customConfirm = useCustomConfirm();
   const navigate = useNavigate();
@@ -282,7 +284,9 @@ const MyPage = () => {
                     <>
                     <div className="flex flex-row justify-between">
                       <div className="m-5 text-white font-['passero-one'] font-[30] underline text-[2rem] ">Conversations</div>
+                      {/* X 닫기 버튼 */}
                       <div onClick={() => {
+                        setLoading({loading:true});
                         navigate(-1);
                         }} 
                         style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
