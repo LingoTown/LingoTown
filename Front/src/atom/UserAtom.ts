@@ -20,6 +20,7 @@ export const userAtom = atom<userType>({
     characterId : 1,
     characterGender: "MALE",
     characterLink: import.meta.env.VITE_S3_URL + "Player/m_1.glb",
+    characterImage: import.meta.env.VITE_S3_URL + "Player/2D/m1Img.png",
     lockList: []
   },
   effects_UNSTABLE: [persistAtom],
@@ -36,5 +37,6 @@ export const initialUser = {
   characterId : 1,
   characterGender: "MALE",
   characterLink: import.meta.env.VITE_S3_URL + "Player/m_1.glb",
+  characterImage: import.meta.env.VITE_S3_URL + "Player/2D/m1Img.png",
   lockList: []
 };

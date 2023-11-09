@@ -10,6 +10,7 @@ export type userType = {
   characterId: number,
   characterGender: string,
   characterLink: string,
+  characterImage: string,
   lockList: { characterId: number; islocked: boolean }[];
 }
 
