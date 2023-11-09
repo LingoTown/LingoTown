@@ -48,6 +48,8 @@ public class TalkService {
     private final CacheService cacheService;
     private final NPCService npcService;
     private final S3Service s3Service;
+    private final MemberNPCService memberNPCService;
+
     private final MemberRepository memberRepository;
     private final TalkRepository talkRepository;
     private final TalkDetailRepository talkDetailRepository;
@@ -58,7 +60,8 @@ public class TalkService {
     //해당 NPC와 대화 내역
     public DataResponse<List<ReadTalkListResDto>> readTalkList(Principal principal, Long npcId){
         Long logInMemberId = Long.valueOf(principal.getName());
-        MemberNPC memberNPC = memberNpcRepository.findByMemberIdNPCId(logInMemberId, npcId);
+        MemberNPC memberNPC = memberNpcRepository.findByMemberIdAndNpcId(logInMemberId, npcId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
 
         Long memberId = memberNPC.getMember().getId();
         if(!memberId.equals(logInMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
@@ -106,7 +109,9 @@ public class TalkService {
 
     //NPC와 대화 시작하기
     @Transactional
-    public DataResponse<CreateTalkResDto> createTalk(MemberNPC memberNPC){
+    public DataResponse<CreateTalkResDto> createTalk(Principal principal, Long npcId){
+        MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, npcId);
+
         Talk talk = Talk
                 .builder()
                 .memberNPC(memberNPC)
@@ -114,8 +119,16 @@ public class TalkService {
 
         Talk savedTalk =  talkRepository.save(talk);
 
-        Long npcId = talk.getMemberNPC().getNpc().getId();
+//        Long talkNpcId = talk.getMemberNPC().getNpc().getId();
+//        List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(talkNpcId).getData();
         List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(npcId).getData();
+
+//        CreateTalkResDto createTalk = CreateTalkResDto
+//                .builder()
+//                .talkId(savedTalk.getId())
+//                .npcId(talkNpcId)
+//                .topicList(topicResDtoList)
+//                .build();
 
         CreateTalkResDto createTalk = CreateTalkResDto
                 .builder()
