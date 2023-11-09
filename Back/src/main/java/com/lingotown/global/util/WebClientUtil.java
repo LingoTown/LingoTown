@@ -1,9 +1,11 @@
 package com.lingotown.global.util;
 
+import com.google.gson.Gson;
 import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.global.config.WebClientConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -204,9 +206,69 @@ public class WebClientUtil {
         return res;
     }
 
+//    public PronunciationResDto checkPronunciation(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
+//
+//        Gson gson = new Gson();
+//        PronunciationResDto pronunciationResDto = null;
+//
+//        String coreType = "sent.eval";
+//        String dict_dialect = "";
+//        if (talkReqDto.getLanguage().equals("FR")) {
+//            coreType = "para.eval.fr";
+//        } else if (talkReqDto.getLanguage().equals("UK")) {
+//            dict_dialect = "en_br";
+//        } else {
+//            dict_dialect = "en_us";
+//        }
+//
+//        String url = baseUrl + "/" + coreType;
+//        String userId = getRandomString(5);
+//        String res = null;
+//
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
+//        String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
+//
+//        try {
+//            HttpPost httppost = new HttpPost(url);
+//            httppost.addHeader("Request-Index", "0");
+//
+//            StringBody comment = new StringBody(params, ContentType.APPLICATION_JSON);
+//            ContentBody bin = new InputStreamBody(talkReqDto.getTalkFile().getInputStream(), talkReqDto.getTalkFile().getContentType(), talkReqDto.getTalkFile().getOriginalFilename());
+//
+//            HttpEntity reqEntity = MultipartEntityBuilder.create()
+//                    .addPart("text", comment)
+//                    .addPart("audio", bin)
+//                    .build();
+//
+//            httppost.setEntity(reqEntity);
+//
+//            CloseableHttpResponse response = httpclient.execute(httppost);
+//            try {
+//                HttpEntity resEntity = response.getEntity();
+//                if (resEntity != null) {
+//                    String jsonString = EntityUtils.toString(resEntity, "UTF-8");
+//                    pronunciationResDto = gson.fromJson(jsonString, PronunciationResDto.class); // JSON 문자열을 객체로 변환
+//                }
+//            } finally {
+//                response.close();
+//            }
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                httpclient.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return pronunciationResDto;
+//    }
 
 
-        private static String buildParam(String appkey, String secretKey, String userId, String audioType, String audioSampleRate, String refText, String coreType) {
+    private static String buildParam(String appkey, String secretKey, String userId, String audioType, String audioSampleRate, String refText, String coreType) {
 
         MessageDigest digest = DigestUtils.getSha1Digest();
 
@@ -273,8 +335,4 @@ public class WebClientUtil {
         }
         return sb.toString();
     }
-
-
-
 }
-
