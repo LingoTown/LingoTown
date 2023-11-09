@@ -9,6 +9,7 @@ import com.lingotown.domain.member.dto.response.MemberInfoResponseDto;
 import com.lingotown.domain.member.service.MemberCharacterService;
 import com.lingotown.domain.member.service.MemberService;
 import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
+import com.lingotown.domain.world.dto.response.ReadMemberQuizWorldResDto;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,12 @@ public class MemberController {
     @GetMapping("/quiz/{worldId}")
     public DataResponse<List<ReadMemberQuizResDto>> readSolvedQuiz(Principal principal, @PathVariable("worldId") Long worldId){
         return memberService.readSolvedQuiz(principal, worldId);
+    }
+
+    @GetMapping("/quiz")
+    public DataResponse<List<ReadMemberQuizWorldResDto>> readAllSolvedQuiz(Principal principal) {
+
+        return memberService.readAllSolvedQuiz(principal);
     }
 
     @DeleteMapping("/leave")
