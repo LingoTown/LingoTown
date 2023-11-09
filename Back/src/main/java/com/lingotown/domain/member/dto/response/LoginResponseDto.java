@@ -23,6 +23,7 @@ public class LoginResponseDto {
     private Long characterId;
     private GenderType characterGender;
     private String characterLink;
+    private String characterImage;
 
     private List<CharacterLockResponseDto> lockList;
 
