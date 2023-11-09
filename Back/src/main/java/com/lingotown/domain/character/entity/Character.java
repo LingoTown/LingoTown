@@ -25,10 +25,14 @@ public class Character {
     @Column(nullable = false)
     private String link;
 
+    @Column(nullable = false)
+    private String image;
+
     @Builder
-    public Character(Long id, GenderType gender, String link) {
+    public Character(Long id, GenderType gender, String link, String image) {
         this.id = id;
         this.gender = gender;
         this.link = link;
+        this.image = image;
     }
 }
