@@ -2,17 +2,13 @@ package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.request.TopicReqDto;
-import com.lingotown.domain.talk.dto.response.speechsuper.ErrorResponseDto;
-import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
-import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.domain.talk.service.OpenAIService;
 import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
-import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,15 +1,10 @@
 package com.lingotown.global.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
-import com.lingotown.domain.talk.dto.request.speechsuper.*;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
-import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
-import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.global.config.WebClientConfig;
-import io.micrometer.core.instrument.LongTaskTimer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
@@ -21,38 +16,21 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 
 @Slf4j
