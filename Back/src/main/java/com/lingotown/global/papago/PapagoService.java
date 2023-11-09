@@ -32,13 +32,11 @@ public class PapagoService {
 
     public DataResponse<String> translate(PapagoRequestDto requestDto) throws JsonProcessingException {
 
-        String text = URLEncoder.encode(requestDto.getSentence(), StandardCharsets.UTF_8);
-
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", CLIENT);
         requestHeaders.put("X-Naver-Client-Secret", SECRET);
 
-        String responseBody = post(requestHeaders, text, API_URL, requestDto.getLanguage());
+        String responseBody = post(requestHeaders, API_URL, requestDto);
         JsonObject jsonObj = JsonParser.parseString(responseBody).getAsJsonObject();
         JsonObject messageObj = jsonObj.getAsJsonObject("message");
         JsonObject resultObj = messageObj.getAsJsonObject("result");
@@ -47,10 +45,11 @@ public class PapagoService {
         return new DataResponse<>(200, "번역 성공", result);
     }
 
+    private static String post(Map<String, String> requestHeaders, String apiUrl, PapagoRequestDto requestDto){
 
-    private static String post(Map<String, String> requestHeaders, String text, String apiUrl, String language){
+        String text = URLEncoder.encode(requestDto.getSentence(), StandardCharsets.UTF_8);
         HttpURLConnection con = connect(apiUrl);
-        String postParams = "source=" + language + "&target=ko&text=" + text; //원본언어: 한국어 (ko) -> 목적언어: 영어 (en)
+        String postParams = "source=" + requestDto.getBefore() + "&target="+ requestDto.getAfter() + "&text=" + text;
         try {
             con.setRequestMethod("POST");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
