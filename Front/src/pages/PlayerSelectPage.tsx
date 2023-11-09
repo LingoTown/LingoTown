@@ -28,8 +28,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
   const loading = useRecoilValue(loadingAtom);
 
   const textureLoader = new THREE.TextureLoader();
-  // const worldbackgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + 'Introduce/bgggg.png');
-  const worldbackgroundTexture = textureLoader.load("/selectPlayer/stage.png");
+  const worldbackgroundTexture = textureLoader.load(import.meta.env.VITE_S3_URL + 'BackGround/stage.png');
 
   useEffect(()=>{
     document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`;

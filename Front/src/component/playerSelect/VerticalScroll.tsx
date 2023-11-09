@@ -18,7 +18,7 @@ const VerticalScroll = () => {
   /* User Info */
   const user = useRecoilValue(userAtom);
   const [selPlayer, setSelPlayer] = useRecoilState(PlayerSelectAtom); //이전 캐릭터 선택 기록이 있다면 캐릭터 index번호 : 아니면 -1
-  const PlayerImgList = ["/selectPlayer/m1Img.png", "/selectPlayer/f11Img.png", "/selectPlayer/m31Img.png", "/selectPlayer/f20Img.png", "/selectPlayer/m11Img.png", "/selectPlayer/f12Img.png", "/selectPlayer/m14Img.png", "/selectPlayer/f14Img.png", "/selectPlayer/m29Img.png", "/selectPlayer/f21Img.png", "/selectPlayer/m28Img.png", "/selectPlayer/f22Img.png"];
+  const PlayerImgList = ["Player/2D/m1Img.png", "Player/2D/f11Img.png", "Player/2D/m31Img.png", "Player/2D/f20Img.png", "Player/2D/m11Img.png", "Player/2D/f12Img.png", "Player/2D/m14Img.png", "Player/2D/f14Img.png", "Player/2D/m29Img.png", "Player/2D/f21Img.png", "Player/2D/m28Img.png", "Player/2D/f22Img.png"];
 
   /* 미획득 플레이어 체크 후 설정 */
   const settingPlayer = (index:number) => {
@@ -38,7 +38,7 @@ const VerticalScroll = () => {
                 className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
                 onClick={() => {settingPlayer(index)}}
               > {/* 1부터 시작하는 id */}
-                <img className="rounded-xl w-[100%] h-[100%]" src={img} alt={`Player${index}`}/>
+                <img className="rounded-xl w-[100%] h-[100%]" src={`${import.meta.env.VITE_S3_URL}`+img} alt={`Player${index}`}/>
                 { 
                   user.lockList[index].islocked?
                   <>
