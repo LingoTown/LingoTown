@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,6 +37,12 @@ public class TalkDetail  extends BaseTimeEntity {
     @JoinColumn(name = "talk_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Talk talk;
+
+    @OneToOne(mappedBy = "talkDetail", fetch = FetchType.LAZY)
+    private SentenceScore sentenceScore;
+
+    @OneToMany(mappedBy = "talkDetail", cascade = CascadeType.ALL)
+    private List<VocaScore> vocaScoreList = new ArrayList<>();
 
     @Builder
     public TalkDetail(boolean isMember, String content, String talkFile, Talk talk, String grammarAdvise){

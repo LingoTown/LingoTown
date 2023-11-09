@@ -2,6 +2,7 @@ package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.request.TopicReqDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;

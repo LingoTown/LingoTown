@@ -6,6 +6,7 @@ import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.dto.request.*;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
