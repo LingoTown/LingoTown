@@ -2,14 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
 const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
-import { useRecoilState } from 'recoil';
-import { userAtom } from '../../atom/UserAtom';
-import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { UpdateSelectedCharacter } from "../../type/UserType";
-import { CharacterResponseType } from "../../type/CharacterType";
-import { updateCharacter } from "../../api/User"
 
-export const SelectButtonComp = () => {
+export const CancelButtonComp = () => {
 
   const [isPressed, setIsPressed] = React.useState(false);
 
@@ -21,52 +15,19 @@ export const SelectButtonComp = () => {
   const handleMouseUp = () => setIsPressed(false);
   const handleMouseLeave = () => setIsPressed(false);
 
-  /* User Info */
-  const [user, setUser] = useRecoilState(userAtom);
-  const [selectPlayer, setSelectPlayer] = useRecoilState(PlayerSelectAtom);
-
-  /* 대표 캐릭터 수정 */
-  const handleCharacterSelect = async (clickedCharacterIndex: number) => {
-
-      if (user.lockList[clickedCharacterIndex].islocked === true) 
-          return;
-      
-      const payload: UpdateSelectedCharacter = {
-          previousId: user.characterId,
-          nowId: clickedCharacterIndex + 1
-      };
-
-      setSelectPlayer({index:clickedCharacterIndex, change:true});
-
-      await updateCharacter(payload, ({data}) => {
-          const result = data.data as CharacterResponseType;
-
-          setUser(prev => ({
-              ...prev, 
-              characterId: result.characterId,
-              characterGender: result.characterGender,
-              characterLink: result.characterLink
-          }))
-      }, 
-      (error) => {
-          console.log(error);
-      });
-      navigate("/departure");
-  };
-
   return (
     <div 
       style={{ cursor: `url(${cursorLink}), auto` }} 
-      className="fixed inset-0 z-20 flex justify-end items-end mr-10 mb-10 font-[NPSfontBold] select-none">
+      className="fixed inset-0 z-20 flex justify-end items-end mr-[220px] mb-10 font-[NPSfontBold] select-none">
       <button
         className="w-[150px]"
         style={applyPressedStyle(isPressed)}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
-        onClick={() => handleCharacterSelect(selectPlayer.index)}
+        onClick={() => navigate("/departure")}
       >
-        Choice
+        Back
       </button>
     </div>
   );

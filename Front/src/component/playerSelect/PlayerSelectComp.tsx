@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { useGLTF, Environment, Text, useAnimations } from "@react-three/drei";
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { AnimationAction } from "../theme/ThemeType"
 import { SetAction } from '../theme/util/PlayerMoveUtil';
+import { loadingAtom } from "../../atom/LoadingAtom";
 
 export const PlayerSelect: React.FC = () => {
 
   /* User Info */
   const selectPlayer = useRecoilValue(PlayerSelectAtom);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   /* Characters */
   const M1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
@@ -28,13 +30,16 @@ export const PlayerSelect: React.FC = () => {
   const userFileList = [M1, F1, M2, F2, M3, F3, M4, F4, M5, F5, M6, F6, M7];
 
   // character motion
-  const player = userFileList[selectPlayer];
+  const player = userFileList[selectPlayer.index];
   const playerAction = useRef<AnimationAction>();
   const playerActions = useAnimations(player.animations, player.scene).actions;
 
   useEffect(()=>{ //캐릭터 첫 등장, 이후 동작
     SetAction('Victory', playerAction, playerActions, null);
-    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);}, 700)
+    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);}, 700);
+
+    if(loading.loading) setLoading({loading:false});
+
   },[selectPlayer])
 
   
@@ -46,7 +51,7 @@ export const PlayerSelect: React.FC = () => {
 
 
       {/* 선택된 캐릭터 */}
-      <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} />
+      <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer.index].scene} />
     
 
       <Text

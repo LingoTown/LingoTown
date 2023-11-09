@@ -2,7 +2,7 @@ import { Suspense, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { userAtom } from '../../atom/UserAtom';
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment } from "@react-three/drei";
 import { showToaster } from "../../pages/PlayerSelectPage";
@@ -22,12 +22,15 @@ const VerticalScroll = () => {
 
   /* 미획득 플레이어 체크 후 설정 */
   const settingPlayer = (index:number) => {
-    if(!user.lockList[index].islocked) setSelPlayer(index);
+    if(!user.lockList[index].islocked) setSelPlayer({index:index, change:false});
   }
 
   useEffect(()=>{
     // 이전 캐릭터 불러오기
-    setSelPlayer(user.characterId-1);
+    setSelPlayer({
+      index:user.characterId-1,
+      change:false
+    });
   },[])
 
   return (
@@ -40,7 +43,7 @@ const VerticalScroll = () => {
             return(
               <div key={index}
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
-                className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
+                className={selPlayer.index === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
                 onClick={() => {settingPlayer(index)}}
               > {/* 1부터 시작하는 id */}
                 <img className="rounded-xl w-[100%] h-[100%]" src={`${import.meta.env.VITE_S3_URL}`+img} alt={`Player${index}`}/>
@@ -82,17 +85,12 @@ type LockProps = {
 
 const Lock = ({ isLocked, position, onClick }: LockProps) => {
   /* loading */
-  const setLoading = useSetRecoilState(loadingAtom);
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf");
   const lockRef = useRef<THREE.Mesh>(null);
   useFrame(() => {
     const time = Date.now() * 0.005;
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
-
-  useEffect(()=>{
-    setLoading(() => ({loading:false}))
-  },[])
 
   return isLocked ? (
     <mesh onClick={onClick} position={position} ref={lockRef}>
