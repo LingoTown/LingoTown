@@ -163,7 +163,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
       const file = nation + "_" + gender;
       const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3"
       let errSentence = "Sorry I'm busy... Maybe talk to you next time?";
-      if (nation == "FR"){
+      if (nation == "FR") {
         errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?"
       }
 

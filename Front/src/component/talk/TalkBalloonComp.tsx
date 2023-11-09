@@ -23,6 +23,9 @@ export const TalkBalloonComp = () => {
   const [showList, setShowList] = useState<boolean>(false);
   const [showSentenceModal, setShowSentenceModal] = useState<boolean>(false);
   const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
+  const [showDictionary, setShowDictionary] = useState<boolean>(false);
+  const [dictionary, setDictionary] = useState<string>("");
+  const [word, setWord] = useState<string>("");
   
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -31,10 +34,12 @@ export const TalkBalloonComp = () => {
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
+
     setTalkBalloon(prev => ({
       ...prev,
       isUser: true,
       sentence: "",
+      translate: ""
     }));
     setIsRec(true);
   };
@@ -64,10 +69,37 @@ export const TalkBalloonComp = () => {
   const selectTopic = async(topic:topic) => {
     const flag = await customConfirm("Topic", topic.keyword);
     if (flag) {
+      setTalkState(prevState => ({ ...prevState, finish: true }));
       setIsRec(false);
       doTalking(topic);
     }
   }
+
+  const handleWord = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setWord(event.target.value);
+  };
+
+  // 번역 요청하기
+  const doDictionary = async(event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      let language = "en";
+      if (lang == "1")
+        language = "fr";
+
+      const json = { 
+        sentence: word,
+        before: "ko",
+        after: language
+      }
+
+      await translateSentence(json, ({data}) => {
+        const result = data.data as string;
+        setDictionary(result);
+      }, (error) => {
+        console.log(error);
+      })
+    }
+  };
 
   const doTalking = async(topic: topic) => {
     const param = {
@@ -109,7 +141,7 @@ export const TalkBalloonComp = () => {
         isUser: false,
       }));
     })
-    setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
+    setTalkBalloon(prev => ({ ...prev, audioPlay: !talkBalloon.audioPlay }))
   }
 
   const doTranslateSentence = async() => {
@@ -119,7 +151,8 @@ export const TalkBalloonComp = () => {
 
     const json = { 
       sentence: talkBalloon.sentence,
-      language: language
+      before: language,
+      after: ""
     }
 
     await translateSentence(json, ({data}) => {
@@ -141,13 +174,20 @@ export const TalkBalloonComp = () => {
   return(
     <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
       {
+        // 토픽 보는 버튼
         !talkBalloon.prevSectence?
         <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={() => { setShowList(!showList) }}
         >Topics</button>:null
       }
+      {/* 사전 보는 버튼 */}
+      <button className="absolute top-0 left-0 z-10 flex flex-col space-y-2 ml-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+        onClick={() => { setShowDictionary(!showDictionary) }}
+      >Dictionary</button>
       {
+        // 토픽 리스트 보여주기
         showList?
         <>
           <div className="absolute top-16 right-2 w-[330px]">        
@@ -171,6 +211,7 @@ export const TalkBalloonComp = () => {
         </>:null
       }
       {
+        // 이전 대화 말풍선
         showSentenceModal?
         <div className="absolute top-[35vh] right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Previous conversation</div>
@@ -179,17 +220,33 @@ export const TalkBalloonComp = () => {
         </div>:null
       }
       {
-        // showTranslateModal && talkBalloon.sentence.length > 0?
+        // 번역 말풍선
+        showTranslateModal && talkBalloon.translate.length > 0?
         <div className="absolute top-[35vh] left-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Translate</div>
           <hr className="border-black"/>
           <div className="font-['passero-one'] mt-2">{ talkBalloon.translate }</div>
-        </div>
-        // :nulla
+        </div>:null
       }
+      {
+        showDictionary ? 
+        <div className="absolute top-[7vh] left-2 w-[300px] bg-gray-100 rounded-lg px-4 py-2">
+          <div className="justify-center text-2xl font-bold font-['passero-one']">Dictionary</div>
+          <hr className="border-black"/>
+          <input
+            className="mt-2 w-full p-2 border-2 border-gray-300 rounded-md leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline"
+            type="text" placeholder="🔍︎ Search a word" onKeyDown={ doDictionary } onChange={ handleWord } 
+          />
+          <div className="mt-2 mb-1" style={{ fontWeight: 'bold' }}> - {dictionary}</div>
+        </div>
+        :
+        null
+      }
+
       <div className="absolute bottom-4 left-2 right-2 min-h-[190px] bg-white bg-opacity-75 p-4 border border-gray-500 shadow-lg rounded-lg">
         <p className="absolute top-[23px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-green-700 font-['passero-one']">
           {
+            // 말풍선 상단
             talkBalloon.isLoading?
             <>Please wait a moment until I reply.</>:
             <>{ isRec?<>When you're done, press "Send".</>:<>Press "Start Talk!!" to start the conversation.</> }</>
@@ -199,6 +256,7 @@ export const TalkBalloonComp = () => {
         <div className="flex items-center justify-center">
           <p className="w-4/5 mt-1 ml-4 text-xl font-extrabold text-gray-600 p-2 break-words">
             {
+              // 말풍선 본문
               talkBalloon.isLoading?
               <>답변 준비중 입니다.</>:
               <>
@@ -211,7 +269,7 @@ export const TalkBalloonComp = () => {
             }
           </p>
         </div>
-
+        {/* 번역 하기 버튼 */}
         <button className="absolute top-2 px-2 py-0 text-xl bg-violet-500 text-white rounded hover:bg-violet-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 font-['passero-one']"
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={ doTranslateSentence }
@@ -219,9 +277,9 @@ export const TalkBalloonComp = () => {
           onMouseLeave={() => setShowTranslateModal(false)}
           disabled={ talkBalloon.sentence.length == 0 }
         >Translate</button>
-
         <div className="absolute top-0 right-0 z-10 flex space-x-2 mr-2 mt-2">
         {
+          // 음성 다시 듣기
           talkBalloon.audio == "" ?
           null:
           <div className="flex">
@@ -235,6 +293,7 @@ export const TalkBalloonComp = () => {
           </div>
         }
         {
+          // 녹음중 할 수 있는버튼
           isRec?
           <>
             <button className="px-2 py-0 text-xl bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 font-['passero-one']"
@@ -246,6 +305,7 @@ export const TalkBalloonComp = () => {
               onClick={ handleReset }
             >Retry</button>
           </>:
+          // 대화 시작하기
           <button 
           className={`px-2 py-0 text-xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 font-['passero-one'] ${talkBalloon.isLoading ? 'cursor-not-allowed opacity-50' : 'button-flicker'}`}
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
@@ -254,6 +314,7 @@ export const TalkBalloonComp = () => {
           >Start Talk !!
           </button>
         }
+        {/* 대화 끝내기 */}
         <button className="px-2 py-0 text-xl bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={ handleEnd }

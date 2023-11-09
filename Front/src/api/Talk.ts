@@ -18,4 +18,6 @@ const translateSentence = async (param: object, success: (data : {data : ReturnT
   await HttpJson.post(`/api/papago`, JSON.stringify(param)).then(success).catch(fail);
 }
 
+
+
 export { startTalk, talking, talkingTopic, translateSentence };
