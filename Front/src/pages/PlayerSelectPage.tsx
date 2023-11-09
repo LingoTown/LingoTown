@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import VerticalScroll from "../component/playerSelect/VerticalScroll";
 import { SelectButtonComp } from "../component/playerSelect/SelectButtonComp";
+import { CancelButtonComp } from '../component/playerSelect/CancelButtonComp';
 import toast, { Toaster } from 'react-hot-toast';
 import LoadingPage from "./LoadingPage";
 import { loadingAtom } from "../atom/LoadingAtom";
@@ -56,6 +57,9 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
       {/* 선택 완료 버튼 */}
       {
         !loading.loading? <SelectButtonComp/> : null
+      }
+      {
+        !loading.loading? <CancelButtonComp/> : null
       }
     </>
   )
