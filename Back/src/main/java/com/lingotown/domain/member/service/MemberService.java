@@ -11,8 +11,10 @@ import com.lingotown.domain.member.repository.MemberCharacterRepository;
 import com.lingotown.domain.member.repository.MemberQuizRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
+import com.lingotown.domain.world.dto.response.ReadMemberQuizWorldResDto;
 import com.lingotown.domain.world.entity.Quiz;
 import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.world.repository.QuizRepository;
 import com.lingotown.domain.world.repository.WorldRepository;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.LoginType;
@@ -50,6 +52,7 @@ public class MemberService {
     private final WorldRepository worldRepository;
     private final MemberQuizRepository memberQuizRepository;
     private final MemberCharacterRepository memberCharacterRepository;
+    private final QuizRepository quizRepository;
 
     private final S3Service s3Service;
     private final MemberCharacterService memberCharacterService;
@@ -63,8 +66,37 @@ public class MemberService {
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), memberInfoDto);
     }
 
-    //테마가 가진 quiz 중 멤버가 푼 quiz 조회
-    public DataResponse<List<ReadMemberQuizResDto>> readSolvedQuiz(Principal principal, Long worldId){
+    // 전체 퀴즈 리스트
+    public DataResponse<List<ReadMemberQuizWorldResDto>> readAllSolvedQuiz(Principal principal) {
+        Long memberId = Long.parseLong(principal.getName());
+
+        List<ReadMemberQuizWorldResDto> readMemberQuizWorldResDtoList = new ArrayList<>();
+
+        List<Quiz> quizList = quizRepository.findAll();
+
+        for (Quiz quiz : quizList) {
+            Optional<MemberQuiz> optionalMemberQuiz = memberQuizRepository.findByMemberIdAndQuizId(memberId, quiz.getId());
+
+            boolean solveFlag = false;
+
+            solveFlag = optionalMemberQuiz.isPresent();
+
+            ReadMemberQuizWorldResDto readMemberQuizWorldResDto = ReadMemberQuizWorldResDto.builder()
+                    .quizId(quiz.getId())
+                    .quiz(quiz.getQuestion())
+                    .koQuiz(quiz.getKoreanQuestion())
+                    .solved(solveFlag)
+                    .theme(quiz.getWorld().getTheme())
+                    .build();
+
+            readMemberQuizWorldResDtoList.add(readMemberQuizWorldResDto);
+        }
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), readMemberQuizWorldResDtoList);
+    }
+
+    //테마가 가진 quiz 중 멤버가 푼 quiz 조회 (월드별)
+    public DataResponse<List<ReadMemberQuizResDto>> readSolvedQuiz(Principal principal, Long worldId) {
         Long memberId = Long.valueOf(principal.getName());
 
         World world = getWorldEntity(worldId);
