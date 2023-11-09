@@ -221,17 +221,20 @@ public class SocialLoginService {
         Long characterId = null;
         GenderType characterGender = null;
         String characterLink = null;
+        String characterImage = null;
 
 
         if(optionalMemberCharacter.isEmpty()) {
             characterId = 1L;
             characterGender = GenderType.MAN;
             characterLink = S3URL + "Player/m_1.glb";
+            characterImage = S3URL + "Player/2D/m1Img.png";
         }
         else {
             characterId = optionalMemberCharacter.get().getCharacter().getId();
             characterGender = optionalMemberCharacter.get().getCharacter().getGender();
             characterLink = optionalMemberCharacter.get().getCharacter().getLink();
+            characterImage = optionalMemberCharacter.get().getCharacter().getImage();
         }
 
         List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
@@ -264,6 +267,7 @@ public class SocialLoginService {
                     .characterId(characterId)
                     .characterGender(characterGender)
                     .characterLink(characterLink)
+                    .characterImage(characterImage)
                     .lockList(lockDtoList)
                     .build();
     }
