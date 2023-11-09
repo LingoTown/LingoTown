@@ -11,7 +11,6 @@ export const PlayerSelect: React.FC = () => {
   const selectPlayer = useRecoilValue(PlayerSelectAtom);
 
   /* Characters */
-  
   const M1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
   const F1 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_11.glb");
   const M2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_31.glb");
