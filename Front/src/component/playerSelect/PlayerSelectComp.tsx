@@ -23,7 +23,9 @@ export const PlayerSelect: React.FC = () => {
   const F5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
   const M6 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_28.glb");
   const F6 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_22.glb");
-  const userFileList = [M1, F1, M2, F2, M3, F3, M4, F4, M5, F5, M6, F6];
+
+  const M7 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_27.glb");
+  const userFileList = [M1, F1, M2, F2, M3, F3, M4, F4, M5, F5, M6, F6, M7];
 
   // character motion
   const player = userFileList[selectPlayer];
