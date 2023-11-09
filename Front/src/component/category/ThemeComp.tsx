@@ -28,6 +28,8 @@ const [eventhallPreviewHovered, setEventhallPreviewHovered] = useState<string | 
 const [parkPreviewHovered, setParkPreviewHovered] = useState<string | null>(null);
 const [restaurantPreviewHovered, setRestaurantPreviewHovered] = useState<string | null>(null);
 const [galleryPreviewHovered, setGalleryPreviewHovered] = useState<string | null>(null);
+setEventhallPreviewHovered;
+setParkPreviewHovered;
 
 const [parkEnterHovered, setParkEnterHovered] = useState<string | null>(null);
 const [eventhallEnterHovered, setEventhallEnterHovered] = useState<string | null>(null);
