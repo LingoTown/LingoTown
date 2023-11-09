@@ -93,9 +93,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                           <span className="material-icons text-white text-[1.1rem]">check</span>
                         </span>
                       ) : (
-                        <span className="bg-[#aaaaaa] ml-2 w-5 h-5 rounded-full flex items-center justify-center">
-                          {/* <span className="material-icons text-white text-[0.9rem]">close</span> */}
-                        </span>
+                        <span className="bg-[#aaaaaa] ml-2 w-5 h-5 rounded-full flex items-center justify-center"></span>
                       )}
                       <div className="flex-grow">
                         {translateList[index] ?
