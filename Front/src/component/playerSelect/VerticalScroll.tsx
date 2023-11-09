@@ -85,7 +85,6 @@ type LockProps = {
 
 const Lock = ({ isLocked, position, onClick }: LockProps) => {
   /* loading */
-  const setLoading = useSetRecoilState(loadingAtom);
   const lock = useGLTF(import.meta.env.VITE_S3_URL + "Objects/Lock1/scene.gltf");
   const lockRef = useRef<THREE.Mesh>(null);
   useFrame(() => {
