@@ -22,12 +22,15 @@ const VerticalScroll = () => {
 
   /* 미획득 플레이어 체크 후 설정 */
   const settingPlayer = (index:number) => {
-    if(!user.lockList[index].islocked) setSelPlayer(index);
+    if(!user.lockList[index].islocked) setSelPlayer({index:index, change:true});
   }
 
   useEffect(()=>{
     // 이전 캐릭터 불러오기
-    setSelPlayer(user.characterId-1);
+    setSelPlayer({
+      index:user.characterId-1,
+      change:false
+    });
   },[])
 
   return (
@@ -40,7 +43,7 @@ const VerticalScroll = () => {
             return(
               <div key={index}
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
-                className={selPlayer === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
+                className={selPlayer.index === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
                 onClick={() => {settingPlayer(index)}}
               > {/* 1부터 시작하는 id */}
                 <img className="rounded-xl w-[100%] h-[100%]" src={`${import.meta.env.VITE_S3_URL}`+img} alt={`Player${index}`}/>

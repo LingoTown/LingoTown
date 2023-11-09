@@ -36,7 +36,7 @@ export const SelectButtonComp = () => {
           nowId: clickedCharacterIndex + 1
       };
 
-      setSelectPlayer(clickedCharacterIndex);
+      setSelectPlayer({index:clickedCharacterIndex, change:true});
 
       await updateCharacter(payload, ({data}) => {
           const result = data.data as CharacterResponseType;
@@ -51,7 +51,6 @@ export const SelectButtonComp = () => {
       (error) => {
           console.log(error);
       });
-
       navigate("/departure");
   };
 
@@ -65,7 +64,7 @@ export const SelectButtonComp = () => {
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
-        onClick={() => handleCharacterSelect(selectPlayer)}
+        onClick={() => handleCharacterSelect(selectPlayer.index)}
       >
         Choice
       </button>

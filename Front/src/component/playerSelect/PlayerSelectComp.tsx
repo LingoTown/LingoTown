@@ -28,7 +28,7 @@ export const PlayerSelect: React.FC = () => {
   const userFileList = [M1, F1, M2, F2, M3, F3, M4, F4, M5, F5, M6, F6, M7];
 
   // character motion
-  const player = userFileList[selectPlayer];
+  const player = userFileList[selectPlayer.index];
   const playerAction = useRef<AnimationAction>();
   const playerActions = useAnimations(player.animations, player.scene).actions;
 
@@ -46,7 +46,7 @@ export const PlayerSelect: React.FC = () => {
 
 
       {/* 선택된 캐릭터 */}
-      <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer].scene} />
+      <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer.index].scene} />
     
 
       <Text
