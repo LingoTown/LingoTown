@@ -29,8 +29,8 @@ public class TalkController {
 
     @PostMapping("/start/{npcId}")
     public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @PathVariable("npcId") Long npcId){
-        MemberNPC memberNPC = memberNPCService.createMemberNPCConnect(principal, npcId);
-        return talkService.createTalk(memberNPC);
+
+        return talkService.createTalk(principal, npcId);
     }
 
     @PostMapping(value = "", consumes = {"multipart/form-data"})
@@ -56,6 +56,18 @@ public class TalkController {
     @GetMapping("/list")
     public DataResponse<List<ReadMemberNPCResDto>> readMemberNPCList(Principal principal){
         return memberNPCService.readMemberNPCList(principal);
+    }
+
+    @GetMapping("/intimacy/list")
+    public DataResponse<List<IntimacyResDto>> readMemberNPCIntimacyList(Principal principal) {
+
+        return memberNPCService.getMemberNPCList(principal);
+    }
+
+    @GetMapping("/intimacy/{npcId}")
+    public DataResponse<IntimacyResDto> readMemberNPCIntimacy(Principal principal, @PathVariable Long npcId) {
+
+        return memberNPCService.getMemberNPC(principal, npcId);
     }
 
     @GetMapping("/{talkId}")
