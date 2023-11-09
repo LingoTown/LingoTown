@@ -6,6 +6,9 @@ import { useCustomAlert, useCustomConfirm } from "../util/ModalUtil";
 import { topic } from "../../type/TalkType";
 import { talkingTopic } from "../../api/Talk";
 import { talkingType } from "../../type/TalkType";
+import { translateSentence } from "../../api/Talk";
+import { useLocation } from "react-router-dom";
+
 
 export const TalkBalloonComp = () => {
 
@@ -16,8 +19,15 @@ export const TalkBalloonComp = () => {
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
   const isMounted = useRef({ audioPlay: false });
+
   const [showList, setShowList] = useState<boolean>(false);
   const [showSentenceModal, setShowSentenceModal] = useState<boolean>(false);
+  const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
+  
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const lang = queryParams.get('language');
+
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
@@ -84,17 +94,16 @@ export const TalkBalloonComp = () => {
       const gender = talkState.gender;
       const nation = String(localStorage.getItem("Language"));
       const file = nation + "_" + gender;
-      const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3"
+      const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3";
       let errSentence = "Sorry I'm busy... Maybe talk to you next time?";
-      if (nation == "FR"){
-        errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?"
+      if (nation == "FR") {
+        errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?";
       }
-
+  
       setTalkBalloon(prev => ({
         ...prev,
         sentence: errSentence,
         prevSectence: errSentence,
-        // audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
         audio: errAudioLink,
         isLoading: false,
         isUser: false,
@@ -103,6 +112,24 @@ export const TalkBalloonComp = () => {
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
 
+  const doTranslateSentence = async() => {
+    let language = "en";
+    if (lang == "1")
+      language = "fr";
+
+    const json = { 
+      sentence: talkBalloon.sentence,
+      language: language
+    }
+
+    await translateSentence(json, ({data}) => {
+      const result = data.data as string;
+      setTalkBalloon(prev => ({ ...prev, translate: result}));
+    }, (error) => {
+      console.log(error);
+    })
+  }
+  
   useEffect(() => {
     if (isMounted.current.audioPlay) {
       handlePlay();
@@ -112,20 +139,18 @@ export const TalkBalloonComp = () => {
   }, [talkBalloon.audioPlay])
 
   return(
-    <>
+    <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
       {
         !talkBalloon.prevSectence?
         <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={() => { setShowList(!showList) }}
-        >Topics</button>
-        :
-        null
+        >Topics</button>:null
       }
       {
         showList?
         <>
-          <div className="absolute top-16 right-2 w-[330px]">
+          <div className="absolute top-16 right-2 w-[330px]">        
             <div className="p-4 bg-gray-100 rounded-lg shadow-md">
               {
                 talkBalloon.topicList.map((value, index) => {
@@ -143,76 +168,62 @@ export const TalkBalloonComp = () => {
               }
             </div>
           </div>
-        </>
-        :
-        null
+        </>:null
       }
       {
         showSentenceModal?
-        <div className="absolute top-52 right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
-          <div className="justify-center text-2xl font-bold font-['passero-one']">
-            Previous conversation
-          </div>
+        <div className="absolute top-[35vh] right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
+          <div className="justify-center text-2xl font-bold font-['passero-one']">Previous conversation</div>
           <hr className="border-black"/>
-          <div className="font-['passero-one'] mt-2">
-            { talkBalloon.prevSectence }
-          </div>
+          <div className="font-['passero-one'] mt-2">{ talkBalloon.prevSectence }</div>
+        </div>:null
+      }
+      {
+        // showTranslateModal && talkBalloon.sentence.length > 0?
+        <div className="absolute top-[35vh] left-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
+          <div className="justify-center text-2xl font-bold font-['passero-one']">Translate</div>
+          <hr className="border-black"/>
+          <div className="font-['passero-one'] mt-2">{ talkBalloon.translate }</div>
         </div>
-        :
-        null
+        // :nulla
       }
       <div className="absolute bottom-4 left-2 right-2 min-h-[190px] bg-white bg-opacity-75 p-4 border border-gray-500 shadow-lg rounded-lg">
         <p className="absolute top-[23px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-green-700 font-['passero-one']">
           {
             talkBalloon.isLoading?
-            <>
-            Please wait a moment until I reply.       
-            </>
-            :
-            <>    
-              {
-                isRec?
-                <>
-                  When you're done, press "Send".
-                </>
-                :
-                <>    
-                  Press "Start Talk!!" to start the conversation.
-                </>
-              }
-            </>
+            <>Please wait a moment until I reply.</>:
+            <>{ isRec?<>When you're done, press "Send".</>:<>Press "Start Talk!!" to start the conversation.</> }</>
           }
-        
         </p>
         <hr className="mt-7 bg-gray-500 h-px border-none"></hr>
         <div className="flex items-center justify-center">
           <p className="w-4/5 mt-1 ml-4 text-xl font-extrabold text-gray-600 p-2 break-words">
             {
               talkBalloon.isLoading?
-              <>
-                답변 준비중 입니다.
-              </>
-              :
+              <>답변 준비중 입니다.</>:
               <>
                 {
                   talkBalloon.isUser?
-                  <span className="text-blue-800">
-                    {talkBalloon.sentence}
-                  </span>
-                  :
-                  <span className="text-pink-800">
-                    {talkBalloon.sentence}
-                  </span>
+                  <span className="text-blue-800">{talkBalloon.sentence}</span>:
+                  <span className="text-pink-800">{talkBalloon.sentence}</span>
                 }
               </>
             }
           </p>
         </div>
+
+        <button className="absolute top-2 px-2 py-0 text-xl bg-violet-500 text-white rounded hover:bg-violet-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 font-['passero-one']"
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+          onClick={ doTranslateSentence }
+          onMouseEnter={() => setShowTranslateModal(true)}
+          onMouseLeave={() => setShowTranslateModal(false)}
+          disabled={ talkBalloon.sentence.length == 0 }
+        >Translate</button>
+
         <div className="absolute top-0 right-0 z-10 flex space-x-2 mr-2 mt-2">
         {
           talkBalloon.audio == "" ?
-          null
-          :
+          null:
           <div className="flex">
             <button className="px-2 py-0 bg-purple-500 text-xl text-white rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
               style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
@@ -224,7 +235,7 @@ export const TalkBalloonComp = () => {
           </div>
         }
         {
-          isRec ?
+          isRec?
           <>
             <button className="px-2 py-0 text-xl bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 font-['passero-one']"
               style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
@@ -234,15 +245,13 @@ export const TalkBalloonComp = () => {
               style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               onClick={ handleReset }
             >Retry</button>
-          </>
-          :
+          </>:
           <button 
           className={`px-2 py-0 text-xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 font-['passero-one'] ${talkBalloon.isLoading ? 'cursor-not-allowed opacity-50' : 'button-flicker'}`}
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             onClick={ handleOnRec }
             disabled={ talkBalloon.isLoading }
-          >
-            Start Talk !!
+          >Start Talk !!
           </button>
         }
         <button className="px-2 py-0 text-xl bg-pink-500 text-white rounded hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
@@ -251,6 +260,6 @@ export const TalkBalloonComp = () => {
         >End</button>
         </div>
       </div>
-    </>
+    </div>
   )
 }
