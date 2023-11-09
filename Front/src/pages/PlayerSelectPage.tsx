@@ -15,28 +15,6 @@ interface playerSelectPage {
   theme: JSX.Element;
 }
 
-const [, setUser] = useRecoilState(userAtom);
-
-/* 캐릭터 잠금정보 불러오기 */
-const getCharacterLock = async () => {
-
-  await getCharacterLockInfo(({data}: any) => {
-      const result = data.data as CharacterLockInfo[];
-      console.log(result)
-      setUser(prev => ({
-          ...prev, 
-          lockList: result,
-      }))
-  }, 
-  (error) => {
-    console.log(error);
-  });
-};
-
-useEffect(() => {
-  getCharacterLock();
-}, [])
-
 /* 알림 */
 export const showToaster = (sentence:string, emoji:string) => {
   toast(sentence, {
@@ -49,6 +27,28 @@ export const showToaster = (sentence:string, emoji:string) => {
 }
 
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
+
+  const [, setUser] = useRecoilState(userAtom);
+
+  /* 캐릭터 잠금정보 불러오기 */
+  const getCharacterLock = async () => {
+
+    await getCharacterLockInfo(({data}: any) => {
+        const result = data.data as CharacterLockInfo[];
+        console.log(result)
+        setUser(prev => ({
+            ...prev, 
+            lockList: result,
+        }))
+    }, 
+    (error) => {
+      console.log(error);
+    });
+  };
+
+useEffect(() => {
+  getCharacterLock();
+}, [])
 
   const loading = useRecoilValue(loadingAtom);
 
