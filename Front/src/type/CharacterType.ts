@@ -3,4 +3,4 @@ export type CharacterResponseType = {
     characterId: number,
     characterGender: string,
     characterLink: string
-  }
+}
