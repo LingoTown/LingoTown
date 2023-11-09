@@ -4,3 +4,9 @@ export type CharacterResponseType = {
     characterGender: string,
     characterLink: string
 }
+
+/* 캐릭터 잠금 정보 */
+export type CharacterLockInfo = {
+    characterId: number,
+    islocked: boolean
+}

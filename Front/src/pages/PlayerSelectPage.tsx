@@ -6,11 +6,36 @@ import { SelectButtonComp } from "../component/playerSelect/SelectButtonComp";
 import toast, { Toaster } from 'react-hot-toast';
 import LoadingPage from "./LoadingPage";
 import { loadingAtom } from "../atom/LoadingAtom";
-import { useRecoilValue } from "recoil"
+import { useRecoilState, useRecoilValue } from "recoil"
+import { userAtom } from '../atom/UserAtom';
+import { CharacterLockInfo } from '../type/CharacterType';
+import { getCharacterLockInfo } from '../api/User'
 
 interface playerSelectPage {
   theme: JSX.Element;
 }
+
+const [, setUser] = useRecoilState(userAtom);
+
+/* 캐릭터 잠금정보 불러오기 */
+const getCharacterLock = async () => {
+
+  await getCharacterLockInfo(({data}: any) => {
+      const result = data.data as CharacterLockInfo[];
+      console.log(result)
+      setUser(prev => ({
+          ...prev, 
+          lockList: result,
+      }))
+  }, 
+  (error) => {
+    console.log(error);
+  });
+};
+
+useEffect(() => {
+  getCharacterLock();
+}, [])
 
 /* 알림 */
 export const showToaster = (sentence:string, emoji:string) => {

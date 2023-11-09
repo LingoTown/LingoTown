@@ -19,6 +19,11 @@ const getUserInfo = async (success: (data : {data : ReturnType}) => void, fail: 
   await HttpJson.get(`/api/member`).then(success).catch(fail);
 }
 
+// 캐릭터 잠금 정보 받아오기 : 캐릭터 선택 페이지에서 useEffect로 최초 호출 후 userAtom에 적용할 것
+const getCharacterLockInfo = async (success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.get(`/api/member/character`).then(success).catch(fail);
+}
+
 // 대표 캐릭터 수정
 const updateCharacter = async (payload: UpdateSelectedCharacter, success: ( data : { data : ReturnType }) => void, fail: (error: unknown) => void) => {
   await HttpJson.put(`/api/member/select/character`, payload).then(success).catch(fail)
@@ -35,4 +40,4 @@ const updateCharacter = async (payload: UpdateSelectedCharacter, success: ( data
 
 // 프로필 이미지 수정
 
-export { googleLogin, kakaoLogin, getUserInfo, updateCharacter };
+export { googleLogin, kakaoLogin, getUserInfo, getCharacterLockInfo, updateCharacter };
