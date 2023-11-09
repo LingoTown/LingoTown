@@ -32,6 +32,7 @@ public class CharacterService {
                     .characterId(c.getId())
                     .characterGender(c.getGender())
                     .characterLink(c.getLink())
+                    .characterImage(c.getImage())
                     .build();
 
             characterResponseDtoList.add(characterResponseDto);
