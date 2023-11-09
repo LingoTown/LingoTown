@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "passero-one";
+  src: url("https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Font/PasseroOne-Regular.ttf"); 
+}
+
+
+@keyframes flicker {
+  0%, 100% { background-color: #60a5fa; } /* 밝은 파란색 */
+  /* 25% { background-color: #3b82f6; } 중간 파란색 */
+  /* 50% { background-color: #2563eb; } 짙은 파란색 */
+  75% { background-color: #3b82f6; } /* 중간 파란색 */
+}
+
+@font-face {
+  font-family: 'NPSfontBold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2310@1.0/NPSfontBold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+.button-flicker {
+  animation: flicker 0.5s infinite alternate; /* 1.5초마다 무한히 번갈아가며 실행 */
+}
+
+/* The entire scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* width of the entire scrollbar */
+}
+
+/* Track of the scrollbar */
+::-webkit-scrollbar-track {
+  background: #f1f1f17e; /* color of the tracking area */
+  border-radius: 5px;
+}
+
+/* Handle of the scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #6CBDD0; /* color of the scroll thumb */
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #3FACC7; /* color of the scroll thumb on hover */
+  border-radius: 5px;
+}
