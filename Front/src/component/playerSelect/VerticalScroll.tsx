@@ -2,7 +2,7 @@ import { Suspense, useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { userAtom } from '../../atom/UserAtom';
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, Environment } from "@react-three/drei";
 import { showToaster } from "../../pages/PlayerSelectPage";
