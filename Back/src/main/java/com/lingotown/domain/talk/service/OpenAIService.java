@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +53,21 @@ public class OpenAIService {
     @Value("${OPEN_AI.KEY}")
     private String API_KEY;
 
+    @Value("${SPEECH_SUPER.URL}")
+    private String SPEECH_URL;
+
+    @Value("${SPEECH_SUPER.APP_KEY}")
+    private String SPEECH_APP_KEY;
+
+    @Value("${SPEECH_SUPER.SECRET_KEY}")
+    private String SPEECH_SECRET_KEY;
+
+
+    //발음평가 테스트
+    public String checkPronunciation(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
+        return webClientUtil.checkPronunciation(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
+    }
+
 
     @TrackExecutionTime
     @Transactional
@@ -71,10 +88,10 @@ public class OpenAIService {
 
 
         //이전 대화가 없을 경우
-        if(!cacheService.hasCache(talkReqDto.getTalkId())) {
+        if (!cacheService.hasCache(talkReqDto.getTalkId())) {
             String concept = "";
 
-            if(talkReqDto.getTalkFile()!=null) concept = createConcept(principal, talkReqDto.getTalkId(), null);
+            if (talkReqDto.getTalkFile() != null) concept = createConcept(principal, talkReqDto.getTalkId(), null);
             else concept = createConcept(principal, talkReqDto.getTalkId(), talkReqDto.getPrompt());
 
             // AI 역할부여
@@ -87,7 +104,7 @@ public class OpenAIService {
             //메세지 리스트에 담기
             messages.add(messageDtoAI);
 
-        //이전 대화가 있을 경우 내용을 가져와서 추가
+            //이전 대화가 있을 경우 내용을 가져와서 추가
         } else {
             List<OpenAIMessageDto> previousChatDataList
                     = cacheService.getAllPreviousChatData(talkReqDto.getTalkId());
@@ -95,7 +112,7 @@ public class OpenAIService {
         }
 
         // user 인풋
-        if(talkReqDto.getTalkFile() != null) {
+        if (talkReqDto.getTalkFile() != null) {
             OpenAIMessageDto messageDtoUser = OpenAIMessageDto
                     .builder()
                     .role("user")
@@ -131,7 +148,7 @@ public class OpenAIService {
 
 
         /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
-        if(talkReqDto.getTalkFile() != null) {
+        if (talkReqDto.getTalkFile() != null) {
 
             //사용자 질문 DB 저장
             CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
@@ -165,6 +182,18 @@ public class OpenAIService {
                             }
                     );
 
+
+            //비동기 발음처리
+//            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+//                    .subscribe(
+//                            res -> {
+//                                System.out.println("res : " +res.toString());
+//                            },
+//                            err -> {
+//                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+//                                log.error("Error occurred: ", err);
+//                            }
+//                    );
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
@@ -180,16 +209,22 @@ public class OpenAIService {
 
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
-        //응답 반환
-        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
-                .builder()
-                .responseMessage(responseDto.getContent())
+            //응답 반환
+            CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
+                    .builder()
+                    .responseMessage(responseDto.getContent())
                 .responseS3URL(systemResDataResponse.getData().getTalkFile())
-                .build();
+                    .build();
 
-        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
-                ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
+            return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
+                    ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
+
+
+
+
+
+
 
     @Transactional
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
@@ -203,8 +238,6 @@ public class OpenAIService {
 
         return askGPT(principal, talkReqDto);
     }
-
-
 
     //상황 설정 하기
     private String createConcept(Principal principal, Long talkId, String topic){
