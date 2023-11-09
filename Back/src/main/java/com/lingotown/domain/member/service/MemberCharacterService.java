@@ -29,8 +29,8 @@ public class MemberCharacterService {
     private final MemberCharacterRepository memberCharacterRepository;
     private final MemberRepository memberRepository;
     private final CharacterRepository characterRepository;
-
     private final CharacterService characterService;
+
 
     @Transactional
     public CommonResponse createMemberCharacter(Member member) {

@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class UpdateSelectedCharacterRequestDto {
 
     private Long previousId;
-
     private Long nowId;
 
     public UpdateSelectedCharacterRequestDto(Long previousId, Long nowId) {

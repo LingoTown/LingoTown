@@ -7,6 +7,7 @@ import com.lingotown.domain.member.repository.MemberQuizRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.QuizReqDto;
+import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.CreateTalkResDto;
 import com.lingotown.domain.talk.dto.response.QuizResDto;
 import com.lingotown.domain.talk.dto.response.ReadTalkListResDto;
@@ -240,7 +241,6 @@ public class TalkService {
         cacheService.deleteTalkData(talkId);
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
-
 
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
