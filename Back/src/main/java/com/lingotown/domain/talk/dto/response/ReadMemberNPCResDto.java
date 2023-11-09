@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ReadMemberNPCResDto {
+
     private Long memberNPCId;
     private int talkCount;
     private int intimacy;
