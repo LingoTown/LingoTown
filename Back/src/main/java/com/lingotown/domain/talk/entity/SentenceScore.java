@@ -1,6 +1,7 @@
 package com.lingotown.domain.talk.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

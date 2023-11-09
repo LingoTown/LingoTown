@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class CreateTalkDetailReqDto {
      private Long talkId;
