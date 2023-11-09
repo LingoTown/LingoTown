@@ -22,7 +22,7 @@ const VerticalScroll = () => {
 
   /* 미획득 플레이어 체크 후 설정 */
   const settingPlayer = (index:number) => {
-    if(!user.lockList[index].islocked) setSelPlayer({index:index, change:true});
+    if(!user.lockList[index].islocked) setSelPlayer({index:index, change:false});
   }
 
   useEffect(()=>{
