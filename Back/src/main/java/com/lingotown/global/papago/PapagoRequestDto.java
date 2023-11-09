@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class PapagoRequestDto {
 
     private String sentence;
-    private String language;
+    private String before;
+    private String after;
 
 }
