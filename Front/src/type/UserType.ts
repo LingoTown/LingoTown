@@ -19,3 +19,7 @@ export type UpdateSelectedCharacter = {
   previousId: number,
   nowId: number
 }
+
+export type lockOff = {
+  characterId: number
+}

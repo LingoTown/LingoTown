@@ -9,6 +9,8 @@ import { Physics } from '@react-three/cannon';
 import LoadingPage from "./LoadingPage";
 import Tutorial from "../component/tutorial/Tutorial";
 import { tutorialAtom } from "../atom/TutorialAtom";
+import toast, { Toaster } from 'react-hot-toast';
+import { talkStateAtom } from '../atom/TalkStateAtom';
 // import { Debug } from '@react-three/cannon';
 // import { OrbitControls } from "@react-three/drei";
 
@@ -22,14 +24,30 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   const talkBalloon = useRecoilValue(talkBalloonAtom);
   const tutorialRead = useRecoilValue(tutorialAtom);
   let visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
+  const talkState = useRecoilValue(talkStateAtom);
 
   useEffect(()=>{
     visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
-    console.log(tutorialRead.visit);
   },[tutorialRead.visit])
+
+  useEffect(() => {
+    if (talkState.finish)
+      showToaster("마이페이지에서 대화를 확인할 수 있습니다.", "✏️")
+  }, [talkState.finish])
+
+  const showToaster = (sentence:string, emoji:string) => {
+    toast(sentence, {
+      duration: 2000,
+      icon: emoji,
+      style: { fontSize: "14px" },
+      iconTheme: { primary: '#000', secondary: '#fff' },
+      ariaProps: { role: 'status', 'aria-live': 'polite' },
+    });
+  }
 
   return(
     <>
+      <Toaster position="top-center" />
       {
         (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?<Tutorial/>:null
       }

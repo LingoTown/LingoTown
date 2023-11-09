@@ -6,18 +6,22 @@ import { loadingAtom } from "../atom/LoadingAtom";
 import { useSetRecoilState } from 'recoil';
 
 const Rows = () => {
-  /* loading */
-  const setLoading = useSetRecoilState(loadingAtom);
+    /* loading */
+    const setLoading = useSetRecoilState(loadingAtom);
+    const navigate = useNavigate();
+    const dep : DepartureType[] = departures;
+    const sortTheme = (language : string) => {
+        localStorage.setItem("Language", language);
 
-  const navigate = useNavigate();
-  const dep : DepartureType[] = departures;
-  const sortTheme = (language : string) => {
-    if(language === "English"){
-      navigate("/theme?language=0");
-    } else if(language === "French"){
-      navigate("/theme?language=1");
+        if(language === "US"){
+          navigate("/theme?language=0");
+        } else if(language === "FR"){
+          navigate("/theme?language=1");
+        } else if (language === "UK") {
+          navigate("/theme?language=2");
+        }
     }
-  }
+
   return (
     dep.map((el, i)=>(
         <div key={i} 

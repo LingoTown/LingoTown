@@ -1,6 +1,10 @@
 import { HttpJson } from "./common/Http";
-import { ReturnType } from "../type/ReturnType";
-import { UpdateSelectedCharacter } from "../type/UserType";
+import { ReturnType, 
+  // CommonResponseType 
+} from "../type/ReturnType";
+import { UpdateSelectedCharacter, 
+  // lockOff 
+} from "../type/UserType";
 
 
 const googleLogin = async (param: object, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
@@ -20,7 +24,10 @@ const updateCharacter = async (payload: UpdateSelectedCharacter, success: ( data
   await HttpJson.put(`/api/member/select/character`, payload).then(success).catch(fail)
 }
 
-// 캐릭터 잠금 해제 (미션 클리어)
+// 캐릭터 잠금 해제
+// const lockOffCharacter = async (payload: lockOff, success: ( data : { data : CommonResponseType }) => void, fail: (error: unknown) => void) => {
+//   await HttpJson.put(`/api/member/lock/off`, payload).then(success).catch(fail)
+// }
 
 // 탈퇴
 

@@ -1,10 +1,9 @@
 import axios from "axios";
 import { onErrorRequest, onRequest } from "./Interceptor";
 
-
 const HttpJson = axios.create({
     baseURL : import.meta.env.VITE_SERVER as string,
-    timeout : 10000000,
+    timeout : 100000,
     headers : {'Content-Type' : 'application/json'}
 });
 
@@ -17,6 +16,5 @@ const HttpForm = axios.create({
 });
 
 HttpForm.interceptors.request.use(onRequest, onErrorRequest);
-
 
 export { HttpJson, HttpForm };

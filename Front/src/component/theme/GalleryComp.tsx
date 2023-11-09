@@ -89,11 +89,11 @@ export const GalleryComp: React.FC = () => {
   const barryAction = useRef<AnimationAction>();
   const barryActions = useAnimations(barryFile.animations, barryFile.scene).actions;
 
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 20, name: "Jina", targetPosition: jinaCameraPosition, targetRotation:jinaCameraRotation, ref: jinaCircleRef },
-    { id: 32, name: "Jimmy", targetPosition: jimmyCameraPosition, targetRotation:jimmyCameraRotation, ref: jimmyCircleRef },
-    { id: 38, name: "barry", targetPosition: barryCameraPosition, targetRotation:barryCameraRotation, ref: barryCircleRef },
+    { id: 20,  gender:"Woman", name: "Jina", targetPosition: jinaCameraPosition, targetRotation:jinaCameraRotation, ref: jinaCircleRef },
+    { id: 32,  gender:"Man", name: "Jimmy", targetPosition: jimmyCameraPosition, targetRotation:jimmyCameraRotation, ref: jimmyCircleRef },
+    { id: 38,  gender:"Man", name: "barry", targetPosition: barryCameraPosition, targetRotation:barryCameraRotation, ref: barryCircleRef },
   ];
 
   // state
@@ -146,7 +146,7 @@ export const GalleryComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));     
       setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);
@@ -155,7 +155,7 @@ export const GalleryComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (event.code === 'Space' && isInsideCircle) {
+      if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
@@ -192,7 +192,7 @@ export const GalleryComp: React.FC = () => {
       </group>
 
       {/* STT */}
-      { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} /> : null }
+      <STTAndRecord lang={LANGUAGE} />
       
       {/* NPC 이름 */}
       <Jina />

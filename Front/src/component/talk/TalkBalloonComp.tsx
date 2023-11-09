@@ -38,20 +38,18 @@ export const TalkBalloonComp = () => {
     setIsRec(false);
   };
 
-  const handleReset = () => {
-    setTalkState(prevState => ({ ...prevState, reset: !prevState.reset }));
-  };
+  // Reset 버튼
+  const handleReset = () => { setTalkState(prevState => ({ ...prevState, reset: !prevState.reset })) };
 
+  // End 버튼 눌렀을때
   const handleEnd = async() => {
     setIsRec(false);
+    setTalkState(prevState => ({ ...prevState, finish: true }));
     setTalkBalloon(initialTalkBalloon);
   };
 
-  const handlePlay = () => {
-    if (audioRef.current) {
-      audioRef.current.play();
-    }
-  };
+  // 대화음악 재생
+  const handlePlay = () => { if (audioRef.current) audioRef.current.play() };
 
   const selectTopic = async(topic:topic) => {
     const flag = await customConfirm("Topic", topic.keyword);
@@ -62,7 +60,11 @@ export const TalkBalloonComp = () => {
   }
 
   const doTalking = async(topic: topic) => {
-    const param = { talkId: talkState.talkId, topic: topic.keyword }
+    const param = {
+      talkId: talkState.talkId,
+      topic: topic.keyword,
+      language: String(localStorage.getItem("Language")) 
+    }
     setShowList(false);
     setTalkBalloon(prev => ({ ...prev, isLoading:true }));
     setTalkState(prev => ({ ...prev, selectTopic: !prev.selectTopic }));
@@ -78,6 +80,25 @@ export const TalkBalloonComp = () => {
       }));
     }, (error) => {
       console.log(error);
+
+      const gender = talkState.gender;
+      const nation = String(localStorage.getItem("Language"));
+      const file = nation + "_" + gender;
+      const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3"
+      let errSentence = "Sorry I'm busy... Maybe talk to you next time?";
+      if (nation == "FR"){
+        errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?"
+      }
+
+      setTalkBalloon(prev => ({
+        ...prev,
+        sentence: errSentence,
+        prevSectence: errSentence,
+        // audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
+        audio: errAudioLink,
+        isLoading: false,
+        isUser: false,
+      }));
     })
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
@@ -109,10 +130,14 @@ export const TalkBalloonComp = () => {
               {
                 talkBalloon.topicList.map((value, index) => {
                  return(
-                  <div key={index} className="mb-2 p-2 bg-white rounded-lg shadow-inner font-bolder font-['passero-one'] text-xl hover:bg-gray-200" 
-                  style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-                    onClick={() => { selectTopic(value) }}
-                  >{value.keyword}</div>
+                  <div key={index}>
+                    <div className="mb-2 p-2 bg-white rounded-lg shadow-inner font-bolder font-['passero-one'] text-xl hover:bg-gray-200" 
+                    style={{ cursor: `url(${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png), auto` }}
+                      onClick={() => { selectTopic(value) }}
+                    >{value.keyword}
+                    <div className="text-xs text-gray-500 mt-1 font-['NPSfontBold']">- {value.koKeyword}</div>
+                    </div>
+                  </div>
                  ) 
                 })
               }

@@ -11,7 +11,7 @@ import * as THREE from "three";
 import { NPCStage } from "./NPCStage";
 
 export const IntroduceComp: React.FC = () => {
-  const jerry = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_14.glb`);
+  const jerry = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_7.glb`);
   const sanha = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_18.glb`);
   const marco = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_32.glb`);
   const bonnie = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_8.glb`);
@@ -19,7 +19,7 @@ export const IntroduceComp: React.FC = () => {
   const kevin = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_8.glb`);
   const daen = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_16.glb`);
   const olivia = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_17.glb`);
-  const luke = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_25.glb`);
+  const luke = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_2.glb`);
   const isabel = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_13.glb`);
   const jina = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_10.glb`);
   const jimmy = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_16.glb`);
@@ -133,7 +133,7 @@ export const IntroduceComp: React.FC = () => {
   }, [active, sceneInstance]);
 
   useEffect(() => {
-    const anim = jerryHovered ? 'Victory' : 'Idle';
+    const anim = jerryHovered ? 'Defeat' : 'Idle';
     jerryActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       jerryActions[anim]?.fadeOut(0.5);
@@ -141,7 +141,7 @@ export const IntroduceComp: React.FC = () => {
   }, [jerryHovered, jerryActions]);
 
   useEffect(() => {
-    const anim = sanhaHovered ? 'Victory' : 'Idle';
+    const anim = sanhaHovered ? 'Run' : 'Idle';
     sanhaActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       sanhaActions[anim]?.fadeOut(0.5);
@@ -157,7 +157,7 @@ export const IntroduceComp: React.FC = () => {
   }, [marcoHovered, marcoActions]);
 
   useEffect(() => {
-    const anim = bonnieHovered ? 'Victory' : 'Idle';
+    const anim = bonnieHovered ? 'Walk' : 'Idle';
     bonnieActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       bonnieActions[anim]?.fadeOut(0.5);
@@ -173,7 +173,7 @@ export const IntroduceComp: React.FC = () => {
   }, [jadenHovered, jadenActions]);
 
   useEffect(() => {
-    const anim = kevinHovered ? 'Victory' : 'Idle';
+    const anim = kevinHovered ? 'Run' : 'Idle';
     kevinActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       kevinActions[anim]?.fadeOut(0.5);
@@ -181,7 +181,7 @@ export const IntroduceComp: React.FC = () => {
   }, [kevinHovered, kevinActions]);
   
   useEffect(() => {
-    const anim = daenHovered ? 'Victory' : 'Idle';
+    const anim = daenHovered ? 'A-pise' : 'Idle';
     daenActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       daenActions[anim]?.fadeOut(0.5);
@@ -197,15 +197,14 @@ export const IntroduceComp: React.FC = () => {
   }, [oliviaHovered, oliviaActions]);
 
   useEffect(() => {
-    const anim = lukeHovered ? 'Victory' : 'Idle';
+    const anim = lukeHovered ? 'Walk' : 'Idle';
     lukeActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       lukeActions[anim]?.fadeOut(0.5);
     }
   }, [lukeHovered, lukeActions]);
-
   useEffect(() => {
-    const anim = isabelHovered ? 'Victory' : 'Idle';
+    const anim = isabelHovered ? 'Defeat' : 'Idle';
     isabelActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       isabelActions[anim]?.fadeOut(0.5);
@@ -213,7 +212,7 @@ export const IntroduceComp: React.FC = () => {
   }, [isabelHovered, isabelActions]);
 
   useEffect(() => {
-    const anim = jinaHovered ? 'Victory' : 'Idle';
+    const anim = jinaHovered ? 'Defeat' : 'Idle';
     jinaActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       jinaActions[anim]?.fadeOut(0.5);
@@ -221,7 +220,7 @@ export const IntroduceComp: React.FC = () => {
   }, [jinaHovered, jinaActions]);
 
   useEffect(() => {
-    const anim = jimmyHovered ? 'Victory' : 'Idle';
+    const anim = jimmyHovered ? 'Run' : 'Idle';
     jimmyActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       jimmyActions[anim]?.fadeOut(0.5);
@@ -229,7 +228,7 @@ export const IntroduceComp: React.FC = () => {
   }, [jimmyHovered, jimmyActions]);
 
   useEffect(() => {
-    const anim = barryHovered ? 'Victory' : 'Idle';
+    const anim = barryHovered ? 'Walk' : 'Idle';
     barryActions[anim]?.reset()?.fadeIn(0.5)?.play();
     return () => {
       barryActions[anim]?.fadeOut(0.5);
@@ -260,7 +259,7 @@ export const IntroduceComp: React.FC = () => {
         position={[1.5, 1.8, 0.051]}
         anchorY={"bottom"}
       >
-        Company
+        Event Hall
       </Text>
 
       <Text
@@ -270,7 +269,7 @@ export const IntroduceComp: React.FC = () => {
         position={[-4.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Restaurant
+        Cafeteria
       </Text>
 
       <Text
@@ -280,7 +279,7 @@ export const IntroduceComp: React.FC = () => {
         position={[1.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Museum
+        Gallery
       </Text>
 
       <NPCStage
@@ -347,7 +346,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture={`${import.meta.env.VITE_S3_URL}Introduce/city.jpg`}
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/eventhall.jpg`}
         name="Jaden"
         age="33"
         color={new THREE.Color("black")}
@@ -363,7 +362,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture={`${import.meta.env.VITE_S3_URL}Introduce/city.jpg`}
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/eventhall.jpg`}
         name="Kevin"
         age="33"
         color={new THREE.Color("black")}
@@ -379,7 +378,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture={`${import.meta.env.VITE_S3_URL}Introduce/city.jpg`}
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/eventhall.jpg`}
         name="Daen"
         age="27"
         color={new THREE.Color("black")}
@@ -429,7 +428,7 @@ export const IntroduceComp: React.FC = () => {
       <NPCStage
         texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
         name="Isabel"
-        age="23"
+        age="33"
         color={new THREE.Color("black")}
         active={active}
         setActive={setActive}
@@ -443,7 +442,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/gallery.jpg`}
         name="Jina"
         age="18"
         color={new THREE.Color("black")}
@@ -459,7 +458,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/gallery.jpg`}
         name="Jimmy"
         age="29"
         color={new THREE.Color("black")}
@@ -475,7 +474,7 @@ export const IntroduceComp: React.FC = () => {
       </NPCStage>
 
       <NPCStage
-        texture={`${import.meta.env.VITE_S3_URL}Introduce/cafeteria.jpg`}
+        texture={`${import.meta.env.VITE_S3_URL}Introduce/gallery.jpg`}
         name="Barry"
         age="27"
         color={new THREE.Color("black")}

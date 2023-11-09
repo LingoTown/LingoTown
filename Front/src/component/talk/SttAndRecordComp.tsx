@@ -21,7 +21,7 @@ type STTAndRecordProps = {
 
 export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition, listening } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
   const [media, setMedia] = useState<MediaRecorder | null>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode | null>();
@@ -32,15 +32,63 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
   const isMounted = useRef({ offRec: false, onRec: false, reset: false, finish: false, selectTopic: false });
   const flag = useRef<boolean>(true);
 
+  // 스크립트 변경
   useEffect(() => {
     if (flag.current) {
       setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
     }
   }, [transcript]);
 
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
+  // 녹음 시작
+  useEffect(() => {
+    if (isMounted.current.onRec) {
+      resetTranscript();
+      onRecAudio();
+      flag.current = true;
+    } else {
+      isMounted.current.onRec = true;
+    }
+  }, [talkState.onRec]);
+
+  // 서버로 음성 전송
+  useEffect(() => {
+    if (isMounted.current.offRec) {
+      offRecAudio();
+    } else {
+      isMounted.current.offRec = true;
+    }
+  }, [talkState.offRec]);
+
+  // 리셋
+  useEffect(() => {
+    if (isMounted.current.reset) {
+      stopMicrophoneAccess();
+      onRecAudio();
+    } else {
+      isMounted.current.reset = true;
+    }
+  }, [talkState.reset]);
+
+  // 연결 종료
+  useEffect(() => {
+    if (isMounted.current.finish) {
+      stopMicrophoneAccess();
+    } else {
+      isMounted.current.finish = true;
+    }
+  }, [talkState.finish]);
+
+  // 토픽 고르기
+  useEffect(() => {
+    if (isMounted.current.selectTopic) {
+      flag.current = false;
+    } else {
+      isMounted.current.selectTopic = true;
+    }
+  }, [talkState.selectTopic])
+
+  if (!browserSupportsSpeechRecognition)
+    return <></>;
 
   const onRecAudio = async () => {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -80,22 +128,16 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
     if (media && stream) {
       media.ondataavailable = function (e) {
         const sound = new File([e.data], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+
         const data = new FormData();
         data.append("talkFile", sound);
         data.append("talkId", String(talkState.talkId));
         data.append("prompt", transcript);
+        data.append("language", String(localStorage.getItem("Language")));
+
         doTalking(data);
       };
-
-      stream.getAudioTracks().forEach(function (track) { track.stop() });
-      media.stop();
-      if (analyser && source) {
-        analyser.disconnect();
-        source.disconnect();
-      }
-
       resetTranscript();
-      SpeechRecognition.stopListening();
       stopMicrophoneAccess();
     }
   };
@@ -115,13 +157,25 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
       }));
     }, (error) => {
       console.log(error);
-      // setTalkBalloon(prev => ({
-      //   ...prev,
-      //   sentence: "",
-      //   prevSectence: "result.responseMessage",
-      //   audio: "",
-      //   isLoading: false,
-      // }));
+
+      const gender = talkState.gender;
+      const nation = String(localStorage.getItem("Language"));
+      const file = nation + "_" + gender;
+      const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3"
+      let errSentence = "Sorry I'm busy... Maybe talk to you next time?";
+      if (nation == "FR"){
+        errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?"
+      }
+
+      setTalkBalloon(prev => ({
+        ...prev,
+        sentence: errSentence,
+        prevSectence: errSentence,
+        // audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
+        audio: errAudioLink,
+        isLoading: false,
+        isUser: false,
+      }));
     })
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
   }
@@ -129,76 +183,28 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
   const stopMicrophoneAccess = () => {
     if (stream) {
       stream.getAudioTracks().forEach(track => track.stop());
-      stream.getAudioTracks().forEach(function (track) { track.stop(); });
       setStream(null);
     }
-  
+
     if (media) {
       media.stop();
       setMedia(null);
     }
-    
+
     if (analyser) {
       analyser.disconnect();
       setAnalyser(null);
     }
-    
+
     if (source) {
       source.disconnect();
       setSource(null);
     }
 
     resetTranscript();
-    SpeechRecognition.stopListening();
+    if (listening) {
+      SpeechRecognition.startListening({ language: lang });
+      SpeechRecognition.stopListening();
+    }
   };
-    
-  useEffect(() => {
-    if (isMounted.current.onRec) {
-      resetTranscript();
-      onRecAudio();
-      flag.current = true;
-    } else {
-      isMounted.current.onRec = true;
-    }
-  }, [talkState.onRec]);
-
-  useEffect(() => {
-    if (isMounted.current.offRec) {
-      offRecAudio();
-    } else {
-      isMounted.current.offRec = true;
-    }
-  }, [talkState.offRec]);
-
-  useEffect(() => {
-    if (isMounted.current.reset) {
-      stopMicrophoneAccess();
-      onRecAudio();
-    } else {
-      isMounted.current.reset = true;
-    }
-  }, [talkState.reset]);
-
-  useEffect(() => {
-    if (isMounted.current.finish) {
-      stopMicrophoneAccess();
-    } else {
-      isMounted.current.finish = true;
-    }
-  }, [talkState.finish]);
-
-  useEffect(() => {
-    if (isMounted.current.selectTopic) {
-      flag.current = false;
-    } else {
-      isMounted.current.selectTopic = true;
-    }
-  }, [talkState.selectTopic])
-
-  useEffect(() => {
-    return () => {
-      stopMicrophoneAccess();
-    };
-  }, []);
-
 };

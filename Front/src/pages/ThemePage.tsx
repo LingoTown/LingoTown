@@ -32,7 +32,7 @@ export const ThemePage = () => {
       }
 
       <div className="z-1 relative">
-        <Canvas shadows style={{ height:loading.loading?"0.01vh":"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+        <Canvas shadows style={{ height:loading.loading?"0.01vh":"98.1vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
           <ThemeComp />
         </Canvas>
       </div>

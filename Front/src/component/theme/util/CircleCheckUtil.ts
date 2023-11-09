@@ -19,6 +19,7 @@ export const CircleCheck = (playerRef: RefType, npcInfoList: NpcInfo[], currentN
         if (currentNpc.current) {
           currentNpc.current.name = npcRef.name;
           currentNpc.current.id = npcRef.id;
+          currentNpc.current.gender = npcRef.gender;
           currentNpc.current.targetPosition = npcRef.targetPosition;
           currentNpc.current.targetRotation = npcRef.targetRotation;
         }
