@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { departures } from "../api/Departures";
 import { DepartureType } from "../type/DepartureType";
@@ -52,7 +51,6 @@ const DeparturePage = () => {
   // 캐릭터 변경 토스트 메세지
   
   useEffect(()=>{
-    console.log(playerChange);
     if(playerChange.change){
       showToaster("캐릭터가 변경되었습니다", "✔️");
       setPlayerChange((prev)=>({index:prev.index, change:false}));
