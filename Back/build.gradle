@@ -68,6 +68,11 @@ dependencies {
     /* 2023.10.30 : Multipart 변환기 */
     implementation 'org.springframework:spring-test:5.3.30'
 
+    /* 2023.11.09 : Apache HttpClient 라이브러리 추가 */
+    implementation 'org.apache.httpcomponents:httpmime:4.5.13'
+
+    /* 2023.11.09 : Apache Commons Codec 라이브러리 추가 */
+    implementation 'commons-codec:commons-codec:1.15'
 
 }
 
