@@ -93,10 +93,6 @@ const Lock = ({ isLocked, position, onClick }: LockProps) => {
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
 
-  useEffect(()=>{
-    setLoading(() => ({loading:false}))
-  },[])
-
   return isLocked ? (
     <mesh onClick={onClick} position={position} ref={lockRef}>
       <primitive object={lock.scene.clone()} scale={0.3} />

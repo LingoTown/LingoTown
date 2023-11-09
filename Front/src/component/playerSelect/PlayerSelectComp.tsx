@@ -1,14 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { useGLTF, Environment, Text, useAnimations } from "@react-three/drei";
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { AnimationAction } from "../theme/ThemeType"
 import { SetAction } from '../theme/util/PlayerMoveUtil';
+import { loadingAtom } from "../../atom/LoadingAtom";
 
 export const PlayerSelect: React.FC = () => {
 
   /* User Info */
   const selectPlayer = useRecoilValue(PlayerSelectAtom);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   /* Characters */
   const M1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
@@ -34,7 +36,10 @@ export const PlayerSelect: React.FC = () => {
 
   useEffect(()=>{ //캐릭터 첫 등장, 이후 동작
     SetAction('Victory', playerAction, playerActions, null);
-    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);}, 700)
+    setTimeout(()=>{SetAction('Idle', playerAction, playerActions, null);}, 700);
+
+    if(loading.loading) setLoading({loading:false});
+
   },[selectPlayer])
 
   
