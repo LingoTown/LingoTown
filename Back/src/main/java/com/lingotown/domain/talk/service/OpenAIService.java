@@ -83,6 +83,7 @@ public class OpenAIService {
     }
 
     @TrackExecutionTime
+    @Transactional
     public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, TalkReqDto talkReqDto) throws Exception {
         Gson gson = new Gson();
 
