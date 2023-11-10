@@ -253,6 +253,42 @@ public class TalkService {
                 ResponseStatus.RESPONSE_SUCCESS.getMessage(), pronunciationScoreDto);
     }
 
+
+    //전체 대화 기록에서 발음 평가 조회하기
+    public DataResponse<List<ReadPronunciationScoreResDto>> readPronunciationEstimation(Long talkId){
+        List<TalkDetail> talkDetailList = talkDetailRepository.findTalkDetailList(talkId);
+
+        List<ReadPronunciationScoreResDto> pronunciationScoreList = new ArrayList<>();
+        for(TalkDetail talkDetail : talkDetailList){
+            List<ReadWordScoreResDto> vocaScoreResList = new ArrayList<>();
+
+            List<VocaScore> vocaScoreList = talkDetail.getVocaScoreList();
+            for(VocaScore vocaScore : vocaScoreList){
+                ReadWordScoreResDto readWordScoreResDto = ReadWordScoreResDto.builder()
+                        .word(vocaScore.getWord())
+                        .score(vocaScore.getScore())
+                        .build();
+
+                vocaScoreResList.add(readWordScoreResDto);
+            }
+
+            SentenceScore sentenceScore = talkDetail.getSentenceScore();
+            ReadPronunciationScoreResDto pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
+                    .overallScore(sentenceScore.getOverallScore())
+                    .pronunciationScore(sentenceScore.getPronunciationScore())
+                    .fluencyScore(sentenceScore.getFluencyScore())
+                    .integrityScore(sentenceScore.getIntegrityScore())
+                    .wordScoreList(vocaScoreResList)
+                    .build();
+
+            pronunciationScoreList.add(pronunciationScoreDto);
+        }
+
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), pronunciationScoreList);
+    }
+
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
