@@ -18,6 +18,9 @@ const translateSentence = async (param: object, success: (data : {data : ReturnT
   await HttpJson.post(`/api/papago`, JSON.stringify(param)).then(success).catch(fail);
 }
 
+const endTalk = async (talkId: number, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.put(`/api/talk/end/` + talkId).then(success).catch(fail);
+}
 
 
-export { startTalk, talking, talkingTopic, translateSentence };
+export { startTalk, talking, talkingTopic, translateSentence, endTalk };
