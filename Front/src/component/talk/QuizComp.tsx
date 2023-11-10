@@ -4,10 +4,12 @@ import { submitQuiz } from "../../api/Quiz";
 import { useCustomPrompt } from "../util/ModalUtil";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import quizSuccess from "../../hook/QuizSuccess";
 import { userAtom } from "../../atom/UserAtom";
 import { quizAtom } from "../../atom/QuizAtom";
+import { lockOffCharacter } from "../../api/Character";
+import { LockOff } from "../../type/CharacterType";
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -26,9 +28,20 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
  
   const customPrompt = useCustomPrompt();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
-  const [user, setUser] = useRecoilState(userAtom);
-  const [quiz, setQuiz] = useRecoilState(quizAtom);
+  let [user, setUser] = useRecoilState(userAtom);
+  let [quiz, setQuiz] = useRecoilState(quizAtom);
   const success = quizSuccess();
+
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
 
   const doSubmitQuiz = async(quizId:string, quizNum: number) => {
     setIsOpenQuizModal(false);
@@ -45,19 +58,12 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       const result = data.data as resutltType;
       
       if (result.result) {
-
         // QuizAtom 업데이트
+
         success(Number(quizId));
 
-
-        /* 캐릭터 잠금 조건 확인 */
-        const solvedCnt = quiz.quizList.filter(quiz => quiz.solved).length;
-
-        if(solvedCnt >= 5 && solvedCnt <10) {
-          
-        }
-
-
+        // DB 수정
+        characterLockOff(Number(quizId));
 
         showToaster("정답입니다😄", "✔️");
       } else {
@@ -68,6 +74,48 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       console.log(error);
     })
   }
+
+  // user 상태가 변경될 때마다 실행되는 useEffect
+  useEffect(() => {
+    // 캐릭터 잠금 조건 확인 및 처리
+    const solvedCnt = quiz.quizList.filter(quiz => quiz.solved).length;
+
+    if(user.lockList[3].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 3 ? {...item, islocked: false} : item
+        )
+      });
+
+      characterLockOff(4);
+      alert("characterId 4번, m14 캐릭터 잠금 해제");
+    }
+
+    if(solvedCnt >= 5 && user.lockList[5].islocked && !user.lockList[3].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 5 ? {...item, islocked: false} : item
+        )
+      });
+
+      characterLockOff(6);
+      alert("characterId 6번, m28 캐릭터 잠금 해제");
+    }
+
+    if(solvedCnt >= 10 && user.lockList[6].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 6 ? {...item, islocked: false} : item
+        )
+      });
+
+      characterLockOff(7);
+      alert("characterId 7번, f22 캐릭터 잠금 해제");
+    }
+  }, [user, quiz]); // user 및 quiz 상태에 대한 의존성 추가
 
   const showToaster = (sentence:string, emoji:string) => {
     toast(sentence, {

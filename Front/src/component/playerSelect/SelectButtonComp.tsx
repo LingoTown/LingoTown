@@ -1,16 +1,17 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-const cursorLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_small.png'; // 기본 
-const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_hover_small.png'; //hover
-import { useRecoilState } from 'recoil';
-import { userAtom } from '../../atom/UserAtom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+const cursorLink =
+  import.meta.env.VITE_S3_URL + "MousePointer/navigation_small.png"; // 기본
+const cursorHoverLink =
+  import.meta.env.VITE_S3_URL + "MousePointer/navigation_hover_small.png"; //hover
+import { useRecoilState } from "recoil";
+import { userAtom } from "../../atom/UserAtom";
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
 import { UpdateSelectedCharacter } from "../../type/UserType";
-import { CharacterResponseType } from '../../type/CharacterType';
-import { updateCharacter } from "../../api/Character"
+import { CharacterResponseType } from "../../type/CharacterType";
+import { updateCharacter } from "../../api/Character";
 
 export const SelectButtonComp = () => {
-
   const [isPressed, setIsPressed] = React.useState(false);
 
   // hook
@@ -27,38 +28,40 @@ export const SelectButtonComp = () => {
 
   /* 대표 캐릭터 수정 */
   const handleCharacterSelect = async (clickedCharacterIndex: number) => {
+    if (user.lockList[clickedCharacterIndex].islocked === true) return;
 
-      if (user.lockList[clickedCharacterIndex].islocked === true) 
-          return;
-      
-      const payload: UpdateSelectedCharacter = {
-          previousId: user.characterId,
-          nowId: clickedCharacterIndex + 1
-      };
+    const payload: UpdateSelectedCharacter = {
+      previousId: user.characterId,
+      nowId: clickedCharacterIndex + 1
+    };
 
-      setSelectPlayer({index:clickedCharacterIndex, change:true});
+    setSelectPlayer({ index: clickedCharacterIndex, change: true });
 
-      await updateCharacter(payload, ({data}) => {
-          const result = data.data as CharacterResponseType;
+    await updateCharacter(
+      payload,
+      ({ data }) => {
+        const result = data.data as CharacterResponseType;
 
-          setUser(prev => ({
-              ...prev, 
-              characterId: result.characterId,
-              characterGender: result.characterGender,
-              characterLink: result.characterLink,
-              characterImage: result.characterImg,
-          }))
-      }, 
-      (error) => {
-          console.log(error);
-      });
-      navigate("/departure");
+        setUser(prev => ({
+          ...prev,
+          characterId: result.characterId,
+          characterGender: result.characterGender,
+          characterLink: result.characterLink,
+          characterImage: result.characterImg
+        }));
+      },
+      error => {
+        console.log(error);
+      }
+    );
+    navigate("/departure");
   };
 
   return (
-    <div 
-      style={{ cursor: `url(${cursorLink}), auto` }} 
-      className="fixed inset-0 z-20 flex justify-end items-end mr-10 mb-10 font-[NPSfontBold] select-none">
+    <div
+      style={{ cursor: `url(${cursorLink}), auto` }}
+      className="fixed inset-0 z-20 flex justify-end items-end mr-10 mb-10 font-[NPSfontBold] select-none"
+    >
       <button
         className="w-[150px]"
         style={applyPressedStyle(isPressed)}
@@ -71,26 +74,26 @@ export const SelectButtonComp = () => {
       </button>
     </div>
   );
-}
+};
 
 // Inline 스타일 객체
 const buttonStyle = {
-  padding: '10px 50px',
-  border: 'none',
-  backgroundColor: '#BDA4D5', // Tailwind's teal-400
-  color: 'white',
-  fontSize: '1em',
-  outline: 'none',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  boxShadow: '0 6px #7E587E', // Tailwind's teal-700
-  transition: 'transform 0.2s, box-shadow 0.2s'
+  padding: "10px 50px",
+  border: "none",
+  backgroundColor: "#BDA4D5", // Tailwind's teal-400
+  color: "white",
+  fontSize: "1em",
+  outline: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  boxShadow: "0 6px #7E587E", // Tailwind's teal-700
+  transition: "transform 0.2s, box-shadow 0.2s"
 };
 
 // 눌렸을 때의 스타일 변화를 적용하는 함수
-const applyPressedStyle = (isPressed:boolean) => ({
+const applyPressedStyle = (isPressed: boolean) => ({
   ...buttonStyle,
-  transform: isPressed ? 'translateY(4px)' : 'translateY(0)',
-  boxShadow: isPressed ? '0 2px #7E587E' : '0 6px #7E587E', 
+  transform: isPressed ? "translateY(4px)" : "translateY(0)",
+  boxShadow: isPressed ? "0 2px #7E587E" : "0 6px #7E587E",
   cursor: `url(${cursorHoverLink}), auto`
 });

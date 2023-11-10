@@ -29,7 +29,7 @@ export const showToaster = (sentence:string, emoji:string) => {
 
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
 
-  const [, setUser] = useRecoilState(userAtom);
+  const [user, setUser] = useRecoilState(userAtom);
 
   /* 캐릭터 잠금정보 불러오기 */
   const getCharacterLock = async () => {
