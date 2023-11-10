@@ -127,7 +127,7 @@ const Tutorial = () => {
           onMouseLeave={handleMouseLeave}
           onClick={nextStep}
         >
-          {title.length-1==step?"End":"Next"}
+          {title.length-1==step?"End":(world!="2" && step==3?"End":"Next")}
         </button>
       </div>
 
@@ -164,7 +164,8 @@ const buttonStyle = {
   borderRadius: '5px',
   cursor: 'pointer',
   boxShadow: '0 6px #A66615', // Tailwind's teal-700
-  transition: 'transform 0.2s, box-shadow 0.2s'
+  transition: 'transform 0.2s, box-shadow 0.2s',
+  width: '150px'
 };
 
 // 눌렸을 때의 스타일 변화를 적용하는 함수
