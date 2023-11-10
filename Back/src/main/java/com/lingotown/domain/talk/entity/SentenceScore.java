@@ -23,7 +23,7 @@ public class SentenceScore {
     @Column(name = "fluency_score", nullable = false)
     private int fluencyScore;
 
-    @Column(name = "integrityScore", nullable = false)
+    @Column(name = "integrity_score", nullable = false)
     private int integrityScore;
 
     @Column(name = "rhythm_score", nullable = false)
@@ -35,10 +35,11 @@ public class SentenceScore {
 
 
     @Builder
-    public SentenceScore(int overallScore, int pronunciationScore, int fluencyScore, int rhythmScore, TalkDetail talkDetail){
+    public SentenceScore(int overallScore, int pronunciationScore, int fluencyScore, int integrityScore, int rhythmScore, TalkDetail talkDetail){
         this.overallScore = overallScore;
         this.pronunciationScore = pronunciationScore;
         this.fluencyScore = fluencyScore;
+        this.integrityScore = integrityScore;
         this.rhythmScore = rhythmScore;
         this.talkDetail = talkDetail;
     }

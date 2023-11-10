@@ -28,7 +28,6 @@ public class TalkController {
 
     @PostMapping("/start/{npcId}")
     public DataResponse<CreateTalkResDto> createNPCTalkList(Principal principal, @PathVariable("npcId") Long npcId){
-
         return talkService.createTalk(principal, npcId);
     }
 
@@ -82,6 +81,11 @@ public class TalkController {
     @PutMapping("/end/{talkId}")
     public CommonResponse increaseIntimacy(@PathVariable("talkId") Long talkId){
         return talkService.increaseIntimacy(talkId);
+    }
+
+    @GetMapping("/score/{talkDetailId}")
+    public DataResponse<ReadPronunciationScoreResDto> readPronunciationScore(@PathVariable("talkDetailId") Long talkDetailId){
+        return talkService.readPronunciationScore(talkDetailId);
     }
 
     @PostMapping("/test")
