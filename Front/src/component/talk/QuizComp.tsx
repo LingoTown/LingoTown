@@ -4,8 +4,10 @@ import { submitQuiz } from "../../api/Quiz";
 import { useCustomPrompt } from "../util/ModalUtil";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useSetRecoilState } from "recoil";
-
+import { useRecoilState, useSetRecoilState } from "recoil";
+import quizSuccess from "../../hook/QuizSuccess";
+import { userAtom } from "../../atom/UserAtom";
+import { quizAtom } from "../../atom/QuizAtom";
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -24,6 +26,9 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
  
   const customPrompt = useCustomPrompt();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  const [quiz, setQuiz] = useRecoilState(quizAtom);
+  const success = quizSuccess();
 
   const doSubmitQuiz = async(quizId:string, quizNum: number) => {
     setIsOpenQuizModal(false);
@@ -38,7 +43,22 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
 
     await submitQuiz(json, ({data}) => {
       const result = data.data as resutltType;
+      
       if (result.result) {
+
+        // QuizAtom 업데이트
+        success(Number(quizId));
+
+
+        /* 캐릭터 잠금 조건 확인 */
+        const solvedCnt = quiz.quizList.filter(quiz => quiz.solved).length;
+
+        if(solvedCnt >= 5 && solvedCnt <10) {
+          
+        }
+
+
+
         showToaster("정답입니다😄", "✔️");
       } else {
         showToaster("오답입니다😢", "❌");

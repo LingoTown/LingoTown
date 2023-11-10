@@ -10,7 +10,7 @@ import { loadingAtom } from "../atom/LoadingAtom";
 import { useRecoilState, useRecoilValue } from "recoil"
 import { userAtom } from '../atom/UserAtom';
 import { CharacterLockInfo } from '../type/CharacterType';
-import { getCharacterLockInfo } from '../api/User'
+import { getCharacterLockInfo } from '../api/Character'
 
 interface playerSelectPage {
   theme: JSX.Element;

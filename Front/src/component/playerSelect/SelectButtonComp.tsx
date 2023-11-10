@@ -6,8 +6,8 @@ import { useRecoilState } from 'recoil';
 import { userAtom } from '../../atom/UserAtom';
 import { PlayerSelectAtom } from "../../atom/PlayerSelectAtom";
 import { UpdateSelectedCharacter } from "../../type/UserType";
-import { CharacterResponseType } from "../../type/CharacterType";
-import { updateCharacter } from "../../api/User"
+import { CharacterResponseType } from '../../type/CharacterType';
+import { updateCharacter } from "../../api/Character"
 
 export const SelectButtonComp = () => {
 
@@ -45,7 +45,8 @@ export const SelectButtonComp = () => {
               ...prev, 
               characterId: result.characterId,
               characterGender: result.characterGender,
-              characterLink: result.characterLink
+              characterLink: result.characterLink,
+              characterImage: result.characterImg,
           }))
       }, 
       (error) => {

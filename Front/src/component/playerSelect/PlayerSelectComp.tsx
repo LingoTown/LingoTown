@@ -5,6 +5,8 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { AnimationAction } from "../theme/ThemeType"
 import { SetAction } from '../theme/util/PlayerMoveUtil';
 import { loadingAtom } from "../../atom/LoadingAtom";
+import { characterAtom } from "../../atom/CharacterAtom";
+import { CharacterList } from "../../type/CharacterType";
 
 export const PlayerSelect: React.FC = () => {
 
@@ -12,25 +14,12 @@ export const PlayerSelect: React.FC = () => {
   const selectPlayer = useRecoilValue(PlayerSelectAtom);
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
-  /* Characters */
-  const M1 = useGLTF(import.meta.env.VITE_S3_URL + "Player/m_1.glb");
-  const F1 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_11.glb");
-  const M2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_31.glb");
-  const F2 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_20.glb");
-  const M3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_11.glb");
-  const F3 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_12.glb");
-  const M4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_14.glb");
-  const F4 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_14.glb");
-  const M5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_29.glb");
-  const F5 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_21.glb");
-  const M6 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_28.glb");
-  const F6 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_22.glb");
-
-  const M7 = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_27.glb");
-  const userFileList = [M1, F1, M2, F2, M3, F3, M4, F4, M5, F5, M6, F6, M7];
+  const characterList:CharacterList = useRecoilValue(characterAtom);
 
   // character motion
-  const player = userFileList[selectPlayer.index];
+  const character = characterList.characterList[selectPlayer.index];
+  const playerModelURL = character?.characterLink;
+  const player = useGLTF(playerModelURL);
   const playerAction = useRef<AnimationAction>();
   const playerActions = useAnimations(player.animations, player.scene).actions;
 
@@ -51,7 +40,7 @@ export const PlayerSelect: React.FC = () => {
 
 
       {/* 선택된 캐릭터 */}
-      <primitive scale={1} position={[0, -1, 0]} object={userFileList[selectPlayer.index].scene} />
+      <primitive scale={1} position={[0, -1, 0]} object={player.scene} />
     
 
       <Text
