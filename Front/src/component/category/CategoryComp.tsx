@@ -39,7 +39,7 @@ export const CategoryComp: React.FC<{
 }> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
-  const text = useState([["Preview", "Avant-première"],["Locked", "Verrouillé"]])[0];
+  const text = useState(["미리보기", "잠금"])[0];
 
   const [isLoading, setLoading] = useState(true);
 
@@ -93,7 +93,7 @@ export const CategoryComp: React.FC<{
         scale={[1, 1, 1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            if (((language === 0 || language === 2) && name !== "Gallery") || (language === 1 && name === "Galerie")) {
+            if (((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리")) {
               setActive(name);
               setEnabled(true);
             }
@@ -127,15 +127,15 @@ export const CategoryComp: React.FC<{
           </Suspense>
         </MeshPortalMaterial>
 
-        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0][language % 2]} /> : <></>}
-        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0][language % 2]} /> : <></>}
+        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0]} /> : <></>}
+        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0]} /> : <></>}
         {(texture === 0) ? (
           <>
-            <TextUtil x={(language === 0 || language === 2) ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1][language % 2]} />
+            <TextUtil x={(language === 0 || language === 2) ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1]} />
             <primitive
               ref={lockRef}
               scale={0.05}
-              position-x={language === 1 ? 0.4 : 0.35}
+              position-x={0.2}
               position-y={-0.1}
               object={lock.scene.clone()}
             />

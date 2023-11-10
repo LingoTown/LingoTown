@@ -32,7 +32,7 @@ const Rows = () => {
       style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
       >
         <div className="flex w-1/6 text-yellow-300">{el.time}</div>
-        <div className="flex w-2/6 font-bold text-[1.3rem]">{el.destination}</div>
+        <div className="flex w-2/6 font-bold text-[1.3rem]">&nbsp;{el.destination}</div>
         <div className="flex w-1/6">{el.Flight}</div>
         <div className="flex w-1/6">{el.Gate}</div>
         <div className={`flex w-1/6 ${el.Status === "Cancelled"? "text-red-400" : "text-blue-300"}`}>{el.Status}</div>
@@ -62,23 +62,23 @@ const DeparturePage = () => {
       <Toaster position="top-center" />
       <div className="min-h-screen flex flex-col items-center justify-center bg-cover" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_small.png'), auto` }}>    
       
-        <div className="w-full px-5 flex justify-between text-5xl font-bold text-white font-['passero-one']">
+        <div className="w-full px-5 flex justify-between text-5xl font-bold text-white" style={{ fontFamily: "GabiaSolmee" }}>
           <div className="hover:text-[2.8rem] ml-8 drop-shadow-lg" 
-            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
             onClick={async() => {
               setLoading({loading:true});
               navigate("/playerSelect")
             }}
-          >Characters</div>
+          >캐릭터 선택</div>
           <div className="hover:text-[2.8rem] mr-8 drop-shadow-lg" onClick={() => {
             navigate("/mypage");
           }}
-          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-          >MyPage</div>
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
+          >마이 페이지</div>
         </div>
         {/* Departure board */}
         <div className="flex flex-col  w-4/5 mt-10 rounded-lg">
-          <div className="p-2 px-10 text-[3rem] font-bold w-full font-['passero-one'] bg-[#F5E4A0]/90 rounded-t-lg ">Departures &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span className="material-icons text-[3rem] align-middle">flight_takeoff</span></div>
+          <div className="p-2 px-10 text-[3rem] font-bold w-full bg-[#F5E4A0]/90 rounded-t-lg" style={{ fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;출발 항공편&nbsp;&nbsp;&nbsp;<span className="material-icons text-[3rem] align-middle">flight_takeoff</span></div>
           <div className="p-4 py-10 bg-[#333]/90 rounded-b-lg flex justify-center">
             {/* table starts */}
             <div className=" w-5/6 text-[#fff]">
@@ -87,7 +87,7 @@ const DeparturePage = () => {
                   <div className="w-2/6">Destination</div>
                   <div className="w-1/6">Flight</div>
                   <div className="w-1/6">Gate</div>
-                  <div className="w-1/6">Status</div>
+                  <div className="w-1/6">&nbsp;Status</div>
               </div>
               <Rows></Rows>
             </div>

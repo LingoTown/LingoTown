@@ -13,12 +13,11 @@ export const BackToCategoryComp: React.FC<{
   setHovered: (name: string | null) => void;
   enabled: boolean | false;
   setEnabled: (name: boolean | false) => void;
-  language: number;
   isDisplayed: boolean | false;
 }> = ({
-  x, y, z, name, color, active, setActive, setHovered, enabled, setEnabled, language, isDisplayed
+  x, y, z, name, color, active, setActive, setHovered, enabled, setEnabled, isDisplayed
 }) => {
-  const text = useState(["Click to go back", "Cliquez pour retourner"])[0];
+  const text = useState(["뒤로 가기"])[0];
 
   return (
     <group position={[x, y, z]}>
@@ -44,7 +43,7 @@ export const BackToCategoryComp: React.FC<{
         <Earth />
       </mesh>
       <mesh position={[0, 2, 0]}>
-        <TextUtil x={0} y={0} z={0} color={color} size={0.5} name={text[language % 2]} />
+        <TextUtil x={0} y={0} z={0} color={color} size={0.5} name={text[0]} />
         <meshStandardMaterial
           transparent={active !== name}
           color={color}

@@ -14,7 +14,7 @@ import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { useRecoilState } from "recoil";
 
 export const ThemeComp: React.FC = () => {
-const text: string[][] = useState([["Park", "Event Hall", "Restaurant", "Gallery"], ["Parc", "Salle des événements", "Restaurant", "Galerie"]])[0];
+const text: string[] = useState(["공원", "컨퍼런스 홀", "식당", "아트 갤러리"])[0];
 
 const location = useLocation();
 const queryParams = new URLSearchParams(location.search);
@@ -40,14 +40,14 @@ const [loading, setLoading] = useRecoilState(loadingAtom);
 
   useEffect(() => {
     const anyHovered =
-      parkPreviewHovered === text[language % 2][0] ||
-      eventhallPreviewHovered === text[language % 2][1] ||
-      restaurantPreviewHovered === text[language % 2][2] ||
-      galleryPreviewHovered === text[language % 2][3] ||
-      parkEnterHovered === text[language % 2][0] ||
-      eventhallEnterHovered === text[language % 2][1] ||
-      restaurantEnterHovered === text[language % 2][2] ||
-      galleryEnterHovered === text[language % 2][3];
+      parkPreviewHovered === text[0] ||
+      eventhallPreviewHovered === text[1] ||
+      restaurantPreviewHovered === text[2] ||
+      galleryPreviewHovered === text[3] ||
+      parkEnterHovered === text[0] ||
+      eventhallEnterHovered === text[1] ||
+      restaurantEnterHovered === text[2] ||
+      galleryEnterHovered === text[3];
 
   if (anyHovered) {
     document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`;
@@ -108,7 +108,7 @@ return (
 
       <CategoryComp
         texture={language === 1 ? 0 : 1}
-        name={text[language % 2][0]}
+        name={text[0]}
         active={active}
         setActive={setActive}
         setHovered={setParkEnterHovered}
@@ -123,21 +123,20 @@ return (
           x={0}
           y={2}
           z={0}
-          name={text[language % 2][0]}
+          name={text[0]}
           color="black"
           active={active}
           setActive={setActive}
           setHovered={setParkEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          language={language}
           isDisplayed={language === 1 ? false : true}
         />
       </CategoryComp>
 
       <CategoryComp
         texture={language === 1 ? 0 : 2}
-        name={text[language % 2][1]}
+        name={text[1]}
         active={active}
         setActive={setActive}
         setHovered={setEventhallEnterHovered}
@@ -152,21 +151,20 @@ return (
           x={0}
           y={2}
           z={2}
-          name={text[language % 2][1]}
+          name={text[1]}
           color="white"
           active={active}
           setActive={setActive}
           setHovered={setEventhallEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          language={language}
           isDisplayed={language === 1 ? false : true}
         />
       </CategoryComp>
 
       <CategoryComp
         texture={language === 1 ? 0 : 3}
-        name={text[language % 2][2]}
+        name={text[2]}
         active={active}
         setActive={setActive}
         setHovered={setRestaurantPreviewHovered}
@@ -181,21 +179,20 @@ return (
           x={-2.5}
           y={0}
           z={1}
-          name={text[language % 2][2]}
+          name={text[2]}
           color="white"
           active={active}
           setActive={setActive}
           setHovered={setRestaurantPreviewHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          language={language}
           isDisplayed={language === 1 ? false : true}
         />
       </CategoryComp>
 
       <CategoryComp
         texture={language === 1 ? 4 : 0}
-        name={text[language % 2][3]}
+        name={text[3]}
         active={active}
         setActive={setActive}
         setHovered={setGalleryPreviewHovered}
@@ -210,14 +207,13 @@ return (
           x={-5}
           y={3.5}
           z={3}
-          name={text[language % 2][3]}
+          name={text[3]}
           color="black"
           active={active}
           setActive={setActive}
           setHovered={setGalleryPreviewHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          language={language}
           isDisplayed={language === 1 ? true : false}
         />
       </CategoryComp>
