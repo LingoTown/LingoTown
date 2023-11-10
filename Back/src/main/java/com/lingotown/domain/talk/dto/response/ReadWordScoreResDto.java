@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReadWordScoreResDto {
-    private String word;
+    private int index;
     private int score;
 }
