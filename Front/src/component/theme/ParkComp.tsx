@@ -119,6 +119,7 @@ export const ParkComp: React.FC = () => {
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const isMove = useRef(true);
+  const isModal = useRef(false);
   const setTalkState = useSetRecoilState(talkStateAtom);
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
@@ -129,10 +130,12 @@ export const ParkComp: React.FC = () => {
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef, isModal);
   const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
-    requestAnimationFrame(animate);
+    if (!isModal.current) {
+      requestAnimationFrame(animate);
+    }
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
     camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
     camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
@@ -186,6 +189,8 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
+      if (talkBalloon.isModal)
+        return
       if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
@@ -197,6 +202,7 @@ export const ParkComp: React.FC = () => {
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
             animate();
+            setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));
             setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);
             return
@@ -221,6 +227,9 @@ export const ParkComp: React.FC = () => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
 
+  useEffect(() => {
+    isModal.current = talkBalloon.isModal;
+  }, [talkBalloon.isModal])
 
   //sanha run movement
   useFrame(() => {

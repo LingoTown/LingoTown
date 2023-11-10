@@ -59,7 +59,7 @@ export const TalkBalloonComp = () => {
   // End 버튼 눌렀을때
   const handleEnd = async() => {
     setIsRec(false);
-    setTalkState(prevState => ({ ...prevState, finish: true }));
+    setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
   };
 
@@ -152,7 +152,7 @@ export const TalkBalloonComp = () => {
     const json = { 
       sentence: talkBalloon.sentence,
       before: language,
-      after: ""
+      after: "ko"
     }
 
     await translateSentence(json, ({data}) => {

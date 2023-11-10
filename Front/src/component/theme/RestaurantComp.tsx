@@ -9,11 +9,9 @@ import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Restaurant } from "../../../public/map/Restaurant";
-import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { PlayerMove, SetAction } from './util/MSPlayerUtil';
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
 import { Isabel } from '../../../public/name/restaurant/Isabel.tsx'
@@ -22,6 +20,8 @@ import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { userAtom } from '../../atom/UserAtom.ts';
 import { useRecoilValue } from 'recoil';
+import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
+import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 
 export const RestaurantComp: React.FC = () => {
   
@@ -103,10 +103,12 @@ export const RestaurantComp: React.FC = () => {
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef, isModal);
   const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
-    requestAnimationFrame(animate);
+    if (!isModal.current) {
+      requestAnimationFrame(animate);
+    }
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
     camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
     camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
@@ -114,7 +116,7 @@ export const RestaurantComp: React.FC = () => {
   }
 
   useFrame((_state, deltaTime) => {
-    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions, isModal);
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
@@ -148,13 +150,15 @@ export const RestaurantComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
+      if (talkBalloon.isModal)
+        return
       if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
           if (flag) {
-            setTalkState(prevState => ({ ...prevState, finish: false }));
+            setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));
             animate();
             setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);

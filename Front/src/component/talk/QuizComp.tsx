@@ -1,8 +1,11 @@
 import { QuizType } from "../../type/QuizType";
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { submitQuiz } from "../../api/Quiz";
 import { useCustomPrompt } from "../util/ModalUtil";
 import toast, { Toaster } from 'react-hot-toast';
+import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { useSetRecoilState } from "recoil";
+
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -20,6 +23,7 @@ type resutltType = {
 export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, setQuizLender, setIsOpenQuizModal, translateList, setTranslateList}) => {
  
   const customPrompt = useCustomPrompt();
+  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
 
   const doSubmitQuiz = async(quizId:string, quizNum: number) => {
     setIsOpenQuizModal(false);
@@ -55,6 +59,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
     });
   }
 
+  // 영어로 보기
   const toEng = (event: React.MouseEvent<HTMLButtonElement>, index:number) => {
     event.stopPropagation();
     const newTranslateList = [...translateList];
@@ -62,12 +67,37 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
     setTranslateList(newTranslateList);
   }
 
+  // 한국말로 보기
   const toKor = (event: React.MouseEvent<HTMLButtonElement>, index:number) => {
     event.stopPropagation();
     const newTranslateList = [...translateList];
     newTranslateList[index] = true;
     setTranslateList(newTranslateList);
   }
+
+  // 닫기 버튼 클릭
+  const clickClose = () => {
+    setIsOpenQuizModal(false)
+    setTalkBalloon(prevState => ({...prevState, isModal: false}))
+    setTalkBalloon(prevState => ({...prevState, isMove: true}))
+  }
+
+  //
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        clickClose();
+      }
+    };
+
+    // 키 다운 이벤트 리스너 추가
+    window.addEventListener('keydown', handleEsc);
+
+    // 컴포넌트 언마운트 시 리스너 제거
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
 
   return(
     <>
@@ -120,7 +150,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                 <div className="mt-2 mb-2 w-full flex justify-center"  style={{ fontFamily: "GabiaSolmee" }}>
                   <button 
                     className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => setIsOpenQuizModal(false) }
+                    onClick={ clickClose }
                   >닫기
                   </button>
                 </div>

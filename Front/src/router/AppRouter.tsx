@@ -8,7 +8,7 @@ import { CanvasPage } from "../pages/CanvasPage";
 import { IntroducePage } from "../pages/IntroducePage";
 import { ThemePage } from "../pages/ThemePage";
 import { RestaurantComp } from "../component/theme/RestaurantComp";
-import { PolygoniaComp } from "../component/theme/PolygoniaComp";
+import { PolygoniaComp } from "../component/theme/unused/PolygoniaComp";
 import { IntroduceComp } from "../component/introduce/IntroduceComp";
 import { ParkComp } from "../component/theme/ParkComp";
 import { EventHallComp } from "../component/theme/EventHallComp";
