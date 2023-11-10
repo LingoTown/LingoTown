@@ -240,7 +240,7 @@ public class OpenAIService {
                 .content(responseDto.getContent())
                 .talkFile(GPTResponseFile)
                 .build();
-
+//
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
         //응답 반환
