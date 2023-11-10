@@ -93,7 +93,7 @@ public class WebClientUtil {
         String coreType = "sent.eval";
         String dict_dialect = "";
         if (talkReqDto.getLanguage().equals("FR")) {
-            coreType = "para.eval.fr";
+            coreType = "sent.eval.fr";
         } else if (talkReqDto.getLanguage().equals("UK")) {
             dict_dialect = "en_br";
         } else {
