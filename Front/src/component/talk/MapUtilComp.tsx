@@ -39,7 +39,7 @@ export const MapUtilComp = () => {
         setTranslateList(new Array(result.length).fill(0));
     },() => {
       navigate("/departure");
-      customAlert("Notice", "올바르지 않은 접근입니다.");
+      customAlert("공지", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -47,7 +47,7 @@ export const MapUtilComp = () => {
   useEffect(() => {
     if (lang == null || world == null) {  
       navigate("/departure");
-      customAlert("Notice", "올바르지 않은 접근입니다.");
+      customAlert("공지", "올바르지 않은 접근입니다.");
     }
   }, [])
 
@@ -59,11 +59,11 @@ export const MapUtilComp = () => {
   const exitPage = async() => {
     setTalkBalloon(prevState => ({ ...prevState, isMove: false }));
     setTalkBalloon(prevState => ({...prevState, isModal: true}))
-    const flag = await customConfirm("Notice", "Would you like to leave the theme?");
+    const flag = await customConfirm("공지", "정말로 테마를 나가시겠어요?");
     setTalkBalloon(prevState => ({ ...prevState, isMove: true }));
     setTalkBalloon(prevState => ({...prevState, isModal: false}))
     if (flag) {
-      navigate("/departure");
+      navigate(`/theme?language=${lang}`);
     }
   }
 
@@ -78,10 +78,10 @@ export const MapUtilComp = () => {
       <div className='justify-center flex'>
         <div className="absolute top-0 left-0 z-10 mt-2 ml-2">
           <button
-            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-            className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
+            className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50"
             onClick={ exitPage }
-          >Back To Main</button>
+          >뒤로 가기</button>
         </div>
         <QuizComp
           quizList={quizList}
@@ -93,17 +93,17 @@ export const MapUtilComp = () => {
         />
         <div className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-2">
           <button
-            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-            className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
+            className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50"
             onClick={() => {setTutorialOpen({visit: false})}}
-          >Guide</button>
+          >가이드</button>
         </div>
         <div className="absolute top-14 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-1">
           <button 
-            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-            className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
+            className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF]"
             onClick={ openQuestModal }
-          >Quest</button>
+          >퀘스트</button>
         </div>
       </div>
     </>

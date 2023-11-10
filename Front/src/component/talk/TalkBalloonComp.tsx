@@ -152,7 +152,7 @@ export const TalkBalloonComp = () => {
     const json = { 
       sentence: talkBalloon.sentence,
       before: language,
-      after: ""
+      after: "ko"
     }
 
     await translateSentence(json, ({data}) => {
