@@ -35,8 +35,12 @@ public class SentenceScore {
 
 
     @Builder
+<<<<<<< HEAD
     public SentenceScore(Long id, int overallScore, int pronunciationScore, int fluencyScore, int integrityScore, int rhythmScore, TalkDetail talkDetail) {
         this.id = id;
+=======
+    public SentenceScore(int overallScore, int pronunciationScore, int fluencyScore, int integrityScore, int rhythmScore, TalkDetail talkDetail){
+>>>>>>> 859f39517ea6ff442d2f507877ed31164cebe054
         this.overallScore = overallScore;
         this.pronunciationScore = pronunciationScore;
         this.fluencyScore = fluencyScore;

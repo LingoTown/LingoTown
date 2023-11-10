@@ -21,7 +21,7 @@ public class VocaScore {
     @Column(nullable = false)
     private String word;
 
-    @Column(nullable = false)
+    @Column(name = "score", nullable = false)
     private int score;
 
     @JoinColumn(name = "talk_detail_id")

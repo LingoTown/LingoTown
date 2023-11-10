@@ -8,18 +8,11 @@ import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.talk.dto.request.CreateTalkDetailReqDto;
 import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
-import com.lingotown.domain.talk.dto.response.CreateTalkResDto;
-import com.lingotown.domain.talk.dto.response.QuizResDto;
-import com.lingotown.domain.talk.dto.response.ReadTalkListResDto;
-import com.lingotown.domain.talk.entity.MemberNPC;
-import com.lingotown.domain.talk.repository.MemberNPCRepository;
+import com.lingotown.domain.talk.dto.response.*;
+import com.lingotown.domain.talk.entity.*;
+import com.lingotown.domain.talk.repository.*;
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import com.lingotown.domain.npc.service.NPCService;
-import com.lingotown.domain.talk.dto.response.ReadTalkDetailResDto;
-import com.lingotown.domain.talk.entity.Talk;
-import com.lingotown.domain.talk.entity.TalkDetail;
-import com.lingotown.domain.talk.repository.TalkDetailRepository;
-import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.world.entity.Quiz;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.domain.world.repository.QuizRepository;
@@ -123,13 +116,6 @@ public class TalkService {
 //        Long talkNpcId = talk.getMemberNPC().getNpc().getId();
 //        List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(talkNpcId).getData();
         List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(npcId).getData();
-
-//        CreateTalkResDto createTalk = CreateTalkResDto
-//                .builder()
-//                .talkId(savedTalk.getId())
-//                .npcId(talkNpcId)
-//                .topicList(topicResDtoList)
-//                .build();
 
         CreateTalkResDto createTalk = CreateTalkResDto
                 .builder()
@@ -242,6 +228,34 @@ public class TalkService {
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
 
+    //대화 기록에서 발음평가 조회하기
+    public DataResponse<ReadPronunciationScoreResDto> readPronunciationScore(Long talkDetailId){
+        TalkDetail talkDetail = getTalkDetailEntity(talkDetailId);
+        List<VocaScore> vocaScoreList = talkDetail.getVocaScoreList();
+
+        List<ReadWordScoreResDto> vocaScoreResList = new ArrayList<>();
+        for(VocaScore vocaScore : vocaScoreList){
+            ReadWordScoreResDto readWordScoreResDto = ReadWordScoreResDto.builder()
+                    .word(vocaScore.getWord())
+                    .score(vocaScore.getScore())
+                    .build();
+
+            vocaScoreResList.add(readWordScoreResDto);
+        }
+
+        SentenceScore sentenceScore = talkDetail.getSentenceScore();
+        ReadPronunciationScoreResDto pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
+                .overallScore(sentenceScore.getOverallScore())
+                .pronunciationScore(sentenceScore.getPronunciationScore())
+                .fluencyScore(sentenceScore.getFluencyScore())
+                .integrityScore(sentenceScore.getIntegrityScore())
+                .wordScoreList(vocaScoreResList)
+                .build();
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), pronunciationScoreDto);
+    }
+
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
@@ -250,6 +264,11 @@ public class TalkService {
     private Member getMemberEntity(Long memberId){
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
+    }
+
+    private TalkDetail getTalkDetailEntity(Long talkDetailId){
+        return talkDetailRepository.findById(talkDetailId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
     }
 
 }
