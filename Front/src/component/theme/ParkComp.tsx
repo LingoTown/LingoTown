@@ -221,11 +221,6 @@ export const ParkComp: React.FC = () => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
 
-  // useEffect(()=>{
-  //   if(!sanhaTalk){
-  //     reRunSanha();
-  //   }
-  // },[sanhaTalk])
 
   //sanha run movement
   useFrame(() => {

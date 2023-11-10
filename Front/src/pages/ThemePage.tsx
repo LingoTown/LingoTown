@@ -21,32 +21,34 @@ export const ThemePage = () => {
       {
         !loading.loading?
         <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['passero-one'] z-10 relative">
-        <div className=" mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
+        <div className=" ml-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >
-          <div className="w-[12rem] hover:text-[2.8rem]">
+          <div className="w-[12rem] hover:text-[2.8rem] mt-3">
             Departure
           </div>
         </div>
         <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/introduce"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >
-          <div className="w-[5rem] hover:text-[2.8rem]">
+          <div className="w-[5rem] hover:text-[2.8rem] mt-3">
             NPC
           </div>
         </div>
         <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >
-          <div className="w-[9rem] hover:text-[2.8rem]">
+          <div className="w-[9rem] hover:text-[2.8rem] mt-3">
             MyPage
           </div>
         </div>
-        : null
+      </div>
+      :
+      null
       }
 
       <div className="z-1 relative">
-        <Canvas shadows style={{ height:loading.loading?"0.01vh":"98.1vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+        <Canvas shadows style={{ height:loading.loading?"0.01vh":"95.5vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
           <ThemeComp />
         </Canvas>
       </div>
