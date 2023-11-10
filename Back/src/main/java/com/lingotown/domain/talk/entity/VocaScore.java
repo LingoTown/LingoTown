@@ -25,14 +25,14 @@ public class VocaScore {
     private int score;
 
     @JoinColumn(name = "talk_detail_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY )
     private TalkDetail talkDetail;
 
     @Builder
-    public VocaScore(String word, int score, TalkDetail talkDetail){
+    public VocaScore(Long id, String word, int score, TalkDetail talkDetail) {
+        this.id = id;
         this.word = word;
         this.score = score;
         this.talkDetail = talkDetail;
     }
-
 }
