@@ -95,6 +95,7 @@ public class MemberCharacterService {
         return new DataResponse<>(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage(), characterResponseDto);
     }
 
+    @Transactional
     public CommonResponse lockOffCharacter(Principal principal, Long characterId) {
         Long memberId = Long.parseLong(principal.getName());
 
