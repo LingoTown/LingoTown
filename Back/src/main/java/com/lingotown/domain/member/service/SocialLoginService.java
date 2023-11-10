@@ -80,7 +80,7 @@ public class SocialLoginService {
     @Value("${social-login.google.user-info-uri}")
     private String GOOGLE_USER_INFO_URI;
 
-    @Value("s3url")
+    @Value("${s3url}")
     private String S3URL;
 
 
