@@ -1,40 +1,40 @@
 export const departures = [{
-    time : "12:40pm",
+    time : "12:40",
     destination : "Las Vegas",
     Flight : "KA4701",
     Gate : "A56",
     Status : "Boarding",
     language : "US"
 },{
-    time : "12:55pm",
+    time : "12:55",
     destination : "Shanghai",
     Flight : "LT201",
     Gate : "C33",
     Status : "Cancelled",
     language : "Chinese"
 },{
-    time : "13:10pm",
+    time : "13:10",
     destination : "Manchester",
     Flight : "LT3307",
     Gate : "C55",
     Status : "Boarding",
     language : "UK"
 },{
-    time : "13:25pm",
+    time : "13:25",
     destination : "Tokyo",
     Flight : "KA5513",
     Gate : "A12",
     Status : "Cancelled",
     language : "Japanese"
 },{
-    time : "13:40pm",
+    time : "13:40",
     destination : "Paris",
     Flight : "LM4707",
     Gate : "F53",
     Status : "Boarding",
     language : "FR"
 },{
-    time : "14:15pm",
+    time : "14:15",
     destination : "Barcelona",
     Flight : "KA801",
     Gate : "C73",
