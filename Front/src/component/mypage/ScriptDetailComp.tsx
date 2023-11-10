@@ -1,33 +1,35 @@
-import {useEffect, useState, useRef} from 'react'
-import { useRecoilState } from "recoil";
-import { talkIdAtom } from "../../atom/ScriptAtom";
+import { useEffect, useState, useRef } from 'react'
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { talkIdAtom, detailVerAtom, npcStateName } from "../../atom/ScriptAtom";
 import { HttpJson } from '../../api/common/Http';
 import { talkDetailType } from '../../type/TalkType';
-import { detailVerAtom } from '../../atom/ScriptAtom';
-import { npcStateName } from '../../atom/ScriptAtom';
 import { grammarCheckType } from '../../type/TalkListType';
-function ScriptDetail() {
-    const [talkId, ] = useRecoilState(talkIdAtom);
-    const [detailList, setDetailList] = useState<talkDetailType[]>([]);
-    const [showCorr, setShowCorr] = useState<boolean[]>([]);
-    const [, setDetailVerAtom] = useRecoilState(detailVerAtom);
-    const [savedata, setData] = useState<grammarCheckType[]>([])
-    const [npcName, ] = useRecoilState(npcStateName);
-    const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
 
-    useEffect(() => {
-      console.log(npcName);
-      HttpJson.get(`/api/talk/${talkId}`)
-          .then((res) => {
-            const reversedData = [...res.data.data];
-            const arr = new Array(reversedData.length).fill(false);
-            //dataList의 길이만큼 문법체크가 이루어지니까, 그 길이만큼 배열을 만든다.
-            setData(new Array(reversedData.length).fill({}));
-            setShowCorr(arr); 
-              setDetailList(reversedData);
-              audioRefs.current = reversedData.map(() => null);
-          })
-          .catch(console.log);
+export const ScriptDetailComp = () => {
+  
+  // state
+  const [detailList, setDetailList] = useState<talkDetailType[]>([]);
+  const [showCorr, setShowCorr] = useState<boolean[]>([]);
+  const [savedata, setData] = useState<grammarCheckType[]>([])
+  const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
+
+  // global state
+  const talkId = useRecoilValue(talkIdAtom);
+  const setDetailVerAtom = useSetRecoilState(detailVerAtom);
+  const npcName = useRecoilValue(npcStateName);
+
+  useEffect(() => {
+    HttpJson.get(`/api/talk/${talkId}`)
+      .then((res) => {
+        const reversedData = [...res.data.data];
+        const arr = new Array(reversedData.length).fill(false);
+        //dataList의 길이만큼 문법체크가 이루어지니까, 그 길이만큼 배열을 만든다.
+        setData(new Array(reversedData.length).fill({}));
+        setShowCorr(arr); 
+          setDetailList(reversedData);
+          audioRefs.current = reversedData.map(() => null);
+      })
+      .catch(console.log);
   }, []);
 
   //showCorr 배열 조정
@@ -46,7 +48,7 @@ function ScriptDetail() {
   }, [showCorr, detailList]);
 
   const handleGrammar = (talkDetailId:number, index:number) => {
-      HttpJson.get(`/api/talk/score/${talkDetailId}`)
+      HttpJson.get(`/api/talk/detail/score/${talkDetailId}`)
       .then((res)=>{
         // console.log(res.data.data);
         const temp = [...savedata];
@@ -89,13 +91,11 @@ function ScriptDetail() {
       )
   }
 
-    //mp3 재생 로직
-    const playAudio = (audioIndex: number) => {
-      const audioEl = audioRefs.current[audioIndex];
-      console.log(audioEl)
-      if (audioEl) {
-          audioEl.play();
-      }
+  const playAudio = (audioIndex: number) => {
+    const audioEl = audioRefs.current[audioIndex];
+    if (audioEl) {
+      audioEl.play();
+    }
   };
 
     return (
@@ -161,5 +161,3 @@ function ScriptDetail() {
         </div>
     );
 }
-
-export default ScriptDetail;
