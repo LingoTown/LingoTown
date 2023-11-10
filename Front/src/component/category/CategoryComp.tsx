@@ -122,7 +122,7 @@ export const CategoryComp: React.FC<{
           <Suspense fallback={<Loading />}>
             {texture === 1 && <Park position={[-2, -1, -3]} rotation={[Math.PI / 50, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
             {texture === 2 && <EventHall position={[1.4, -2, 9]} rotation={[Math.PI / 80, Math.PI/2.5, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 3 && <Restaurant position={[2, -2, 2]} rotation={[-15*Math.PI/360, 0, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 3 && <Restaurant position={[2, -2.1, 1]} rotation={[-15*Math.PI/360, 0, 0]} onLoaded={() => handleLoad()} />}
             {texture === 4 && <Gallery position={[-1, -4, 0]} rotation={[-10*Math.PI/360, Math.PI / 2, 0]} onLoaded={() => handleLoad()} />}
           </Suspense>
         </MeshPortalMaterial>
