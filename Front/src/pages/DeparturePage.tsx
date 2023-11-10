@@ -74,7 +74,7 @@ const DeparturePage = () => {
             navigate("/mypage");
           }}
           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
-          >마이 페이지</div>
+          >마이페이지</div>
         </div>
         {/* Departure board */}
         <div className="flex flex-col  w-4/5 mt-10 rounded-lg">
