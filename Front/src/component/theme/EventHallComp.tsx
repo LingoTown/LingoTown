@@ -218,7 +218,7 @@ export const EventHallComp: React.FC = () => {
     // 언어
     const LANGUAGE = "en-US"
     // 문장
-    const SENTENCE = "Would you like to start a conversation with "
+    const SENTENCE = "와(과) 이야기를 시작하시겠습니까"
 
     /* useRef */
     const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
@@ -247,10 +247,10 @@ export const EventHallComp: React.FC = () => {
 
     // 이 맵의 NPC 리스트
     const npcInfoList: NpcInfo[] = [
-      { id: Jayden.npcId, gender:"Man", name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
-      { id: Kevin.npcId, gender:"Man", name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
-      { id: Daen.npcId, gender:"Woman", name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
-    ]; 
+        { id: Jayden.npcId, gender:"Man", name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
+        { id: Kevin.npcId, gender:"Man", name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
+        { id: Daen.npcId, gender:"Woman", name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
+    ];
     
     /* useState */
     const setTalkState = useSetRecoilState(talkStateAtom);
@@ -272,7 +272,7 @@ export const EventHallComp: React.FC = () => {
     useEffect(() => {
         // animate 함수를 시작하는 부분
         const requestId = requestAnimationFrame(animate);
-      
+
         return () => {
           cancelAnimationFrame(requestId); // 컴포넌트 언마운트시 애니메이션 프레임을 취소
         };
@@ -281,8 +281,8 @@ export const EventHallComp: React.FC = () => {
     const animate = () => {
         if (!isModal.current) {
             requestAnimationFrame(animate);
-          }
-      
+        }
+
         if (currentNpc.current.targetPosition && currentNpc.current.targetRotation) {
             // Lerp(선형 보간)을 사용하여 부드럽게 위치를 변경
             camera.position.lerp(new THREE.Vector3(...currentNpc.current.targetPosition), lerpFactor);
@@ -326,7 +326,7 @@ export const EventHallComp: React.FC = () => {
     // NPC와 대화
     useEffect(() => {
         const handleKeyDown = async(event: KeyboardEvent) => {
-            if (talkBalloon.isModal)
+            if (talkBalloon.isModal || talkBalloon.isShow)
                 return
             // NPC의 원형 대화 범위 내에서 스페이스 바를 눌렀을 때
             if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
@@ -338,7 +338,7 @@ export const EventHallComp: React.FC = () => {
                 const npc = currentNpc.current?.name;
                 
                 if (npc != null) {
-                    const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+                    const flag = await customConfirm(npc + "", npc + SENTENCE + "?");
                 
                     if (flag) {
                         // 카메라 애니메이션

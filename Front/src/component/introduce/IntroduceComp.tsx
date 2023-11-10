@@ -243,43 +243,43 @@ export const IntroduceComp: React.FC = () => {
       <CameraControls ref={controlsRef} enabled={cameraEnabled} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
 
       <Text
-        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
+        font={`${import.meta.env.VITE_S3_URL}Font/gabia_solmee.ttf`}
         fontSize={0.2}
         color="black"
         position={[-4.5, 1.8, 0.051]}
         anchorY={"bottom"}
       >
-        Park
+        공원
       </Text>
 
       <Text
-        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
+        font={`${import.meta.env.VITE_S3_URL}Font/gabia_solmee.ttf`}
         fontSize={0.2}
         color="black"
         position={[1.5, 1.8, 0.051]}
         anchorY={"bottom"}
       >
-        Event Hall
+        컨퍼런스 홀
       </Text>
 
       <Text
-        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
+        font={`${import.meta.env.VITE_S3_URL}Font/gabia_solmee.ttf`}
         fontSize={0.2}
         color="black"
         position={[-4.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Cafeteria
+        식당
       </Text>
 
       <Text
-        font={`${import.meta.env.VITE_S3_URL}Font/PasseroOne-Regular.ttf`}
+        font={`${import.meta.env.VITE_S3_URL}Font/gabia_solmee.ttf`}
         fontSize={0.2}
         color="black"
         position={[1.5, -0.2, 0.051]}
         anchorY={"bottom"}
       >
-        Gallery
+        아트 갤러리
       </Text>
 
       <NPCStage
