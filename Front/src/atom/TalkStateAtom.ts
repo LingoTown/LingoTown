@@ -6,6 +6,7 @@ type TalkStateAtom = {
   reset: boolean;
   finish: boolean;
   selectTopic: boolean;
+  isToast: boolean;
   talkId: number;
   gender: string;
 };
@@ -18,6 +19,7 @@ export const talkStateAtom = atom<TalkStateAtom>({
     reset: false,
     finish: false,
     selectTopic: false,
+    isToast: false,
     talkId: 0,
     gender: ""
   },

@@ -1,5 +1,5 @@
 import { QuizType } from "../../type/QuizType";
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { useSetRecoilState } from "recoil";
 
@@ -28,6 +28,28 @@ export const ExploreQuizComp: React.FC<ExploreQuizCompProps> = ({ quizList, isOp
     newTranslateList[index] = true;
     setTranslateList(newTranslateList);
   }
+
+  const clickClose = () => {
+    setIsOpenQuizModal(false)
+    setTalkBalloon(prevState => ({...prevState, isModal: false}))
+    setTalkBalloon(prevState => ({...prevState, isMove: true}))
+  }
+
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        clickClose();
+      }
+    };
+
+    // 키 다운 이벤트 리스너 추가
+    window.addEventListener('keydown', handleEsc);
+
+    // 컴포넌트 언마운트 시 리스너 제거
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
   
   return(
     <>

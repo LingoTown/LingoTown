@@ -9,7 +9,8 @@ export const HandleKeyDown = (
   activeAction: any,
   actions: any,
   isMove: React.RefObject<boolean>,
-  playerRef: any
+  playerRef: any,
+  isModal: React.RefObject<boolean>
 ) => {
   return (event: KeyboardEvent): void => {
     if (isMove.current) {
@@ -25,6 +26,8 @@ export const HandleKeyDown = (
       }
 
       /* 사용자가 J 키를 눌렀을 때 */
+      if (isModal.current)
+        return
       if (event.key === " ") {
         // State Setting
         keysPressed.current["Victory"] = true;
