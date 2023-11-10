@@ -54,6 +54,8 @@ public class MemberNPCService {
                 if (!talk.getTalkDetailList().isEmpty()) count++;
             }
 
+            if(count==0) continue;
+
             ReadMemberNPCResDto memberNPCResDto = ReadMemberNPCResDto
                     .builder()
                     .memberNPCId(memberNPC.getId())
