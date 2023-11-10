@@ -111,13 +111,15 @@ public class WebClientUtil {
 
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         builder.asyncPart("audio", fileContentBuffer, DataBuffer.class);
-
         builder.part("text", params, MediaType.APPLICATION_JSON);
+
+        String fullUrl = baseUrl + "/" + coreType;
+        if (!talkReqDto.getLanguage().equals("FR")) fullUrl = fullUrl + "?dict_dialect=" +dict_dialect;
 
         MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
 
-        return webClientConfig.webClient().post()
-                .uri(baseUrl + "/" + coreType + "?dict_dialect=" + dict_dialect)
+        Mono<String> response =  webClientConfig.webClient().post()
+                .uri(fullUrl)
                 .header("Request-Index", "0")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(multipartBody))
@@ -139,6 +141,10 @@ public class WebClientUtil {
                         System.out.println("임시 파일 삭제 실패: " + tempFilePath +" > " +e);
                     }
                 });
+
+        System.out.println(response.toString());
+
+        return response;
     }
 
 

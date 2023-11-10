@@ -114,8 +114,6 @@ public class TalkService {
 
         Talk savedTalk =  talkRepository.save(talk);
 
-//        Long talkNpcId = talk.getMemberNPC().getNpc().getId();
-//        List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(talkNpcId).getData();
         List<ReadTopicResDto> topicResDtoList = npcService.readNPCTopicList(npcId).getData();
 
         CreateTalkResDto createTalk = CreateTalkResDto
@@ -149,8 +147,6 @@ public class TalkService {
                 .talk(talk)
                 .grammarAdvise(null)
                 .build();
-
-//        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
 
         return new DataResponse<>(ResponseStatus.DELETED_SUCCESS.getCode(),
                 ResponseStatus.DELETED_SUCCESS.getMessage(), talkDetail);
