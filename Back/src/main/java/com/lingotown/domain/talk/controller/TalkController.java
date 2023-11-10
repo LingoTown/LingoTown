@@ -83,9 +83,14 @@ public class TalkController {
         return talkService.increaseIntimacy(talkId);
     }
 
-    @GetMapping("/score/{talkDetailId}")
+    @GetMapping("detail/score/{talkDetailId}")
     public DataResponse<ReadPronunciationScoreResDto> readPronunciationScore(@PathVariable("talkDetailId") Long talkDetailId){
         return talkService.readPronunciationScore(talkDetailId);
+    }
+
+    @GetMapping("/score/{talkId}")
+    public DataResponse<List<ReadPronunciationScoreResDto>> readPronunciationEstimation(@PathVariable("talkId") Long talkId){
+        return talkService.readPronunciationEstimation(talkId);
     }
 
     @PostMapping("/test")
