@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -78,10 +79,9 @@ public class MemberNPCService {
 
         Long memberId = Long.valueOf(principal.getName());
 
-        MemberNPC connectedMemberNPC = memberNPCRepository.findByMemberIdAndNpcId(memberId, npcId)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
+        Optional<MemberNPC> connectedMemberNPC = memberNPCRepository.findByMemberIdAndNpcId(memberId, npcId);
 
-        if(connectedMemberNPC != null) return connectedMemberNPC;
+        if(connectedMemberNPC.isPresent()) return connectedMemberNPC.get();
 
         Member member = getMemberEntity(memberId);
         NPC npc = getNPCEntity(npcId);
