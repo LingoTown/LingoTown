@@ -1,13 +1,14 @@
 import { Canvas } from "@react-three/fiber";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { loadingAtom } from "../atom/LoadingAtom";
 import { ThemeComp } from "../component/category/ThemeComp";
 import LoadingPage from "./LoadingPage";
-import { useRecoilValue } from "recoil"
-import { loadingAtom } from "../atom/LoadingAtom";
-import { useNavigate } from "react-router-dom";
 
 export const ThemePage = () => {
   const loading = useRecoilValue(loadingAtom);
   const navigate = useNavigate();
+
   return(
     <div
       className="z-0"
@@ -20,7 +21,7 @@ export const ThemePage = () => {
       }
       {
         !loading.loading?
-        <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['GabiaSolmee'] z-10 relative">
+        <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['GabiaSolmee'] z-2 relative">
         <div className=" ml-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >

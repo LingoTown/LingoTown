@@ -9,9 +9,12 @@ import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
-import { TextUtil } from './util/TextUtil';
+import background from "../../../public/background/background.png";
+import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
-import background from "../../../public/background/background.png"
+import { TextUtil } from './util/TextUtil';
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../../atom/UserAtom";
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -84,6 +87,9 @@ export const CategoryComp: React.FC<{
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
 
+  const user = useRecoilValue(userAtom);
+  const customAlert = useCustomAlert();
+
   return (
     <group {...props}>
       <BorderedRoundedBox />
@@ -96,6 +102,8 @@ export const CategoryComp: React.FC<{
             if (((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리")) {
               setActive(name);
               setEnabled(true);
+            } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
+              customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
             }
           }
         }}
