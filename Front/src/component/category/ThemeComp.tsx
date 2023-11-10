@@ -96,15 +96,15 @@ return (
 
     <CameraControls ref={controlsRef} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 6} />
 
-      <TextUtil x={-2} y={2.13} z={0.051} color="black" size={0.2} name={text[0]} />
-      <TextUtil x={2} y={2.13} z={0.051} color="black" size={0.2} name={text[1]} />
-      <TextUtil x={-2} y={-0.27} z={0.051} color="black" size={0.2} name={text[2]} />
-      <TextUtil x={2} y={-0.27} z={0.051} color="black" size={0.2} name={text[3]} />
+      <TextUtil x={-2} y={1.85} z={0.051} color="black" size={0.2} name={text[0]} />
+      <TextUtil x={1.9} y={1.85} z={0.051} color="black" size={0.2} name={text[1]} />
+      <TextUtil x={-2} y={-0.4} z={0.051} color="black" size={0.2} name={text[2]} />
+      <TextUtil x={1.9} y={-0.4} z={0.051} color="black" size={0.2} name={text[3]} />
 
-      <MapEnterComp x={-1} y={2.13} z={0.051} path={`park?language=${language}&world=1`} name={text[0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
-      <MapEnterComp x={language === 1 ? 3.3 : 3} y={2.13} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />
-      <MapEnterComp x={-1} y={-0.27} z={0.051} path={`restaurant?language=${language}&world=3`} name={text[2]} active={active} enabled={enabled} setHovered={setRestaurantEnterHovered} language={language} />
-      <MapEnterComp x={3} y={-0.27} z={0.051} path={`gallery?language=${language}&world=8`} name={text[3]} active={active} enabled={enabled} setHovered={setGalleryEnterHovered} language={language} />
+      <MapEnterComp x={-1} y={1.85} z={0.051} path={`park?language=${language}&world=1`} name={text[0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
+      <MapEnterComp x={language === 1 ? 3.3 : 2.9} y={1.85} z={0.051} path={`eventhall?language=${language}&world=2`} name={text[1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />
+      <MapEnterComp x={-1} y={-0.4} z={0.051} path={`restaurant?language=${language}&world=3`} name={text[2]} active={active} enabled={enabled} setHovered={setRestaurantEnterHovered} language={language} />
+      <MapEnterComp x={2.9} y={-0.4} z={0.051} path={`gallery?language=${language}&world=8`} name={text[3]} active={active} enabled={enabled} setHovered={setGalleryEnterHovered} language={language} />
 
       <CategoryComp
         texture={language === 1 ? 0 : 1}
@@ -116,7 +116,8 @@ return (
         setEnabled={setEnabled}
         language={language}
         position-x={-2}
-        position-y={1}
+        position-y={0.8}
+        position-z={-0.5}
       >
         <BackToCategoryComp
           x={0}
@@ -143,7 +144,8 @@ return (
         setEnabled={setEnabled}
         language={language}
         position-x={2}
-        position-y={1}
+        position-y={0.8}
+        position-z={-0.5}
       >
         <BackToCategoryComp
           x={0}
@@ -170,7 +172,8 @@ return (
         setEnabled={setEnabled}
         language={language}
         position-x={-2}
-        position-y={-1.35}
+        position-y={-1.5}
+        position-z={-0.5}
       >
         <BackToCategoryComp
           x={-2.5}
@@ -197,7 +200,8 @@ return (
         setEnabled={setEnabled}
         language={language}
         position-x={2}
-        position-y={-1.35}
+        position-y={-1.5}
+        position-z={-0.5}
       >
         <BackToCategoryComp
           x={-5}

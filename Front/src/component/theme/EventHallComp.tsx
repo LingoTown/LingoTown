@@ -21,7 +21,7 @@ import { JadenName } from '../../../public/name/eventhall/Jaden.tsx'
 import { KevinName } from '../../../public/name/eventhall/Kevin.tsx'
 import { loadingAtom } from "../../atom/LoadingAtom.ts";
 import { userAtom } from "../../atom/UserAtom";
-import { useRecoilValue} from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 /* 
     EventHall의 특징 : 
@@ -33,106 +33,106 @@ import { useRecoilValue} from 'recoil';
 
 export const EventHallComp: React.FC = () => {
 
-    /* NPC Data */    
-    const JaydenData: NPCData = {
-        id: 6,
-        name: "Jayden",
-        path: import.meta.env.VITE_S3_URL + "NPC/m_3.glb",
-        position: [-10.0, 0.0, 21.5],
-        rotation: [0, 180, 0],
-        scale: 1,
-        cameraPosition: [-10.0, 1.0, 20.0],
-        cameraRotation: [0.00, THREE.MathUtils.degToRad(179.00), 0.00],
-        circleArgs: [3, 32],
-        circlePosition: [-10.0, 0.05, 21.5],
-        circleRotation: [90, 0, 0],
-        circleAttach: "material",
-        circleColor: "pink",
-        circleEmissive: "#ff69b4",
-        circleEmissiveIntensity: 5,
-        circleSide: THREE.DoubleSide,
-        circleTransparent: true,
-        circleOpacity: 0.2
-    };
+  /* NPC Data */    
+  const JaydenData: NPCData = {
+    id: 6,
+    name: "Jayden",
+    path: import.meta.env.VITE_S3_URL + "NPC/m_3.glb",
+    position: [-10.0, 0.0, 21.5],
+    rotation: [0, 180, 0],
+    scale: 1,
+    cameraPosition: [-10.0, 1.0, 20.0],
+    cameraRotation: [0.00, THREE.MathUtils.degToRad(179.00), 0.00],
+    circleArgs: [3, 32],
+    circlePosition: [-10.0, 0.05, 21.5],
+    circleRotation: [90, 0, 0],
+    circleAttach: "material",
+    circleColor: "pink",
+    circleEmissive: "#ff69b4",
+    circleEmissiveIntensity: 5,
+    circleSide: THREE.DoubleSide,
+    circleTransparent: true,
+    circleOpacity: 0.2
+  };
 
-    const KevinData: NPCData = {
-        id: 15,
-        name: "Kevin",
-        path: import.meta.env.VITE_S3_URL + "NPC/m_8.glb",
-        position: [17.00, 1, -2.5],
-        rotation: [0, 0, 0],
-        scale: 1,
-        cameraPosition: [17.00, 1.90, -1.40],
-        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
-        circleArgs: [3, 32],
-        circlePosition: [17.0, 1.05, -2.5],
-        circleRotation: [90, 0, 0],
-        circleAttach: "material",
-        circleColor: "red",
-        circleEmissive: "red",
-        circleEmissiveIntensity: 5,
-        circleSide: THREE.DoubleSide,
-        circleTransparent: true,
-        circleOpacity: 1
-    }
+  const KevinData: NPCData = {
+    id: 15,
+    name: "Kevin",
+    path: import.meta.env.VITE_S3_URL + "NPC/m_8.glb",
+    position: [17.00, 1, -2.5],
+    rotation: [0, 0, 0],
+    scale: 1,
+    cameraPosition: [17.00, 1.90, -1.40],
+    cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
+    circleArgs: [3, 32],
+    circlePosition: [17.0, 1.05, -2.5],
+    circleRotation: [90, 0, 0],
+    circleAttach: "material",
+    circleColor: "red",
+    circleEmissive: "red",
+    circleEmissiveIntensity: 5,
+    circleSide: THREE.DoubleSide,
+    circleTransparent: true,
+    circleOpacity: 1
+  }
 
-    const DaenData: NPCData = {
-        id: 31,
-        name: "Daen",
-        path: import.meta.env.VITE_S3_URL + "NPC/f_16.glb",
-        position: [-6, 1, 0],
-        rotation: [0, 0, 0],
-        scale: 1,
-        cameraPosition: [-6.00, 1.90, 1.1],
-        cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
-        circleArgs: [3, 32],
-        circlePosition: [-6, 1.025, 0],
-        circleRotation: [90, 0, 0],
-        circleAttach: "material",
-        circleColor: "skyblue",
-        circleEmissive: "black",
-        circleEmissiveIntensity: 5,
-        circleSide: THREE.DoubleSide,
-        circleTransparent: true,
-        circleOpacity: 1
-    }
+  const DaenData: NPCData = {
+    id: 31,
+    name: "Daen",
+    path: import.meta.env.VITE_S3_URL + "NPC/f_16.glb",
+    position: [-6, 1, 0],
+    rotation: [0, 0, 0],
+    scale: 1,
+    cameraPosition: [-6.00, 1.90, 1.1],
+    cameraRotation: [THREE.MathUtils.degToRad(0.2), 0, 0],
+    circleArgs: [3, 32],
+    circlePosition: [-6, 1.025, 0],
+    circleRotation: [90, 0, 0],
+    circleAttach: "material",
+    circleColor: "skyblue",
+    circleEmissive: "black",
+    circleEmissiveIntensity: 5,
+    circleSide: THREE.DoubleSide,
+    circleTransparent: true,
+    circleOpacity: 1
+  }
 
-    /* NPC */
+  /* NPC */
 
-    const Jayden = useNPC(JaydenData);
-    const Kevin = useNPC(KevinData);
-    const Daen = useNPC(DaenData);
+  const Jayden = useNPC(JaydenData);
+  const Kevin = useNPC(KevinData);
+  const Daen = useNPC(DaenData);
 
-    function useNPC({id, name, path, position, rotation, scale, cameraPosition, cameraRotation, 
-                    circleArgs, circlePosition, circleRotation, 
-                    circleAttach, circleColor, circleEmissive, circleEmissiveIntensity, 
-                    circleSide, circleTransparent, circleOpacity}: NPCData) {
+  function useNPC({id, name, path, position, rotation, scale, cameraPosition, cameraRotation, 
+                  circleArgs, circlePosition, circleRotation, 
+                  circleAttach, circleColor, circleEmissive, circleEmissiveIntensity, 
+                  circleSide, circleTransparent, circleOpacity}: NPCData) {
 
-        const npcId = id;
-        const npcName = name;
-        const npcModel = useGLTF(path);
-        // const npcPosition = new THREE.Vector3(...position);
-        const npcPosition = position;
-        const npcRotation = rotation.map(deg => THREE.MathUtils.degToRad(deg));
-        const npcScale = scale;
-        const npcCameraPosition = cameraPosition;
-        const npcCameraRotation = cameraRotation;
-        const npcCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-        const npcCircleArgs = circleArgs;
-        const npcCirclePosition = circlePosition;
-        const npcCircleRotation = new THREE.Euler(...circleRotation.map(deg => THREE.MathUtils.degToRad(deg)));
-        const npcCircleAttach = circleAttach;
-        const npcCircleColor = circleColor;
-        const npcCircleEmissive = circleEmissive;
-        const npcCircleEmissiveIntensity = circleEmissiveIntensity;
-        const npcCircleSide = circleSide;
-        const npcCircleTransparent = circleTransparent;
-        const npcCircleOpacity = circleOpacity;
-    
-        return { npcId, npcName, npcModel, npcPosition, npcRotation, npcScale, npcCameraPosition, npcCameraRotation,
-                npcCircleRef, npcCircleArgs, npcCirclePosition, npcCircleRotation,
-                npcCircleAttach, npcCircleColor, npcCircleEmissive, npcCircleEmissiveIntensity,
-                npcCircleSide, npcCircleTransparent, npcCircleOpacity };
+    const npcId = id;
+    const npcName = name;
+    const npcModel = useGLTF(path);
+    // const npcPosition = new THREE.Vector3(...position);
+    const npcPosition = position;
+    const npcRotation = rotation.map(deg => THREE.MathUtils.degToRad(deg));
+    const npcScale = scale;
+    const npcCameraPosition = cameraPosition;
+    const npcCameraRotation = cameraRotation;
+    const npcCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+    const npcCircleArgs = circleArgs;
+    const npcCirclePosition = circlePosition;
+    const npcCircleRotation = new THREE.Euler(...circleRotation.map(deg => THREE.MathUtils.degToRad(deg)));
+    const npcCircleAttach = circleAttach;
+    const npcCircleColor = circleColor;
+    const npcCircleEmissive = circleEmissive;
+    const npcCircleEmissiveIntensity = circleEmissiveIntensity;
+    const npcCircleSide = circleSide;
+    const npcCircleTransparent = circleTransparent;
+    const npcCircleOpacity = circleOpacity;
+
+    return { npcId, npcName, npcModel, npcPosition, npcRotation, npcScale, npcCameraPosition, npcCameraRotation,
+            npcCircleRef, npcCircleArgs, npcCirclePosition, npcCircleRotation,
+            npcCircleAttach, npcCircleColor, npcCircleEmissive, npcCircleEmissiveIntensity,
+            npcCircleSide, npcCircleTransparent, npcCircleOpacity };
     }
 
 
@@ -142,61 +142,61 @@ export const EventHallComp: React.FC = () => {
     // floor : 안튕김
     const container = [
 
-        /* Container Convention : 
-            첫번째 자리 : Bottom : B, Back : B, Right : R, Front : F, Left : L
-            두번째 자리 : Floor : F, Wall : W         (F : 안튕겨짐, W : 튕겨짐)
-            세번째 자리 : 숫자 (1 2 3 ...)position
-        */
+      /* Container Convention : 
+          첫번째 자리 : Bottom : B, Back : B, Right : R, Front : F, Left : L
+          두번째 자리 : Floor : F, Wall : W         (F : 안튕겨짐, W : 튕겨짐)
+          세번째 자리 : 숫자 (1 2 3 ...)position
+      */
 
-        /* 바닥 */
+      /* 바닥 */
 
-        // 전체 바닥
-        { size: [200, 2, 200], position: [0, -1, 30], wallKey: 'BF1', name: 'floor', mass:0},
-        // 무대 바닥 메인
-        { size: [42, 2, 6], position: [0, 0, -1.5], wallKey: 'BF2', name: 'floor', mass:0},
-        // 무대 바닥 뒷부분
-        { size: [24, 2, 6], position: [0, 0, -7.5], wallKey: 'BF3', name: 'floor', mass:0},
-        // 무대 바닥 좌측 대각
-        { size: [13, 2, 8], position: [-14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF4', name: 'floor', mass:0},
-        // 무대 바닥 우측 대각
-        { size: [13, 2, 8], position: [14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF5', name: 'floor', mass:0},
+      // 전체 바닥
+      { size: [200, 2, 200], position: [0, -1, 30], wallKey: 'BF1', name: 'floor', mass:0},
+      // 무대 바닥 메인
+      { size: [42, 2, 6], position: [0, 0, -1.5], wallKey: 'BF2', name: 'floor', mass:0},
+      // 무대 바닥 뒷부분
+      { size: [24, 2, 6], position: [0, 0, -7.5], wallKey: 'BF3', name: 'floor', mass:0},
+      // 무대 바닥 좌측 대각
+      { size: [13, 2, 8], position: [-14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF4', name: 'floor', mass:0},
+      // 무대 바닥 우측 대각
+      { size: [13, 2, 8], position: [14, 0, -5.5], rotation: [0, THREE.MathUtils.degToRad(20), 0], wallKey: 'BF5', name: 'floor', mass:0},
 
-        // 무대 계단 2층
-        { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF6', name: 'floor', mass:0},
-        // 무대 계단 1층
-        { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF7', name: 'floor', mass:0},
-        // 무대 바닥 왼쪽 계단 레이어
-        { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF8', name: 'floor', mass:0},
-        // 무대 바닥 오른쪽 계단 레이어
-        { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF9', name: 'floor', mass:0},
+      // 무대 계단 2층
+      { size: [22, 0.66, 1], position: [0, 0.33, 2], wallKey: 'BF6', name: 'floor', mass:0},
+      // 무대 계단 1층
+      { size: [22, 0.33, 1], position: [0, 0.165, 3], wallKey: 'BF7', name: 'floor', mass:0},
+      // 무대 바닥 왼쪽 계단 레이어
+      { size: [10, 2, 3], position: [-16, 0, 3], wallKey: 'BF8', name: 'floor', mass:0},
+      // 무대 바닥 오른쪽 계단 레이어
+      { size: [10, 2, 3], position: [16, 0, 3], wallKey: 'BF9', name: 'floor', mass:0},
 
-        /* 벽 */
+      /* 벽 */
 
-        // 무대 뒤 앞벽 메인
-        { size: [26, 10, 0.3], position: [0, 1, -10.65], wallKey: 'FW1', name: 'wall', mass:0}, 
-        // 무대 뒤 뒷벽 메인
-        { size: [26, 10, 0.3], position: [0, 1, -10.95], wallKey: 'BW1', name: 'wall', mass:0}, 
-        // 무대 뒤 앞벽 대각선 왼쪽
-        { size: [17.5, 10, 0.8], position: [-15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'FW2', name: 'wall', mass:0}, 
-        // 무대 뒤 뒷벽 대각선 왼쪽
-        { size: [17.5, 10, 0.8], position: [-15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
-        // 무대 뒤 옆벽 대각선 왼쪽
-        { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW1', name: 'wall', mass:0}, 
-        // 무대 뒤 앞벽 대각선 오른쪽
-        { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW3', name: 'wall', mass:0}, 
-        // 무대 뒤 뒷벽 대각선 오른쪽
-        { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW3', name: 'wall', mass:0}, 
-        // 무대 뒤 옆벽 대각선 오른쪽
-        { size: [1, 10, 1.6], position: [22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
-        
-        // 전체 맵 뒷벽
-        { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW4', name: 'wall', mass:0}, 
-        // 전체 맵 왼벽
-        { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW1', name: 'wall', mass:0}, 
-        // 전체 맵 오른벽
-        { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW3', name: 'wall', mass:0}, 
-        // 전체 맵 앞벽
-        { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW4', name: 'wall', mass:0},
+      // 무대 뒤 앞벽 메인
+      { size: [26, 10, 0.3], position: [0, 1, -10.65], wallKey: 'FW1', name: 'wall', mass:0}, 
+      // 무대 뒤 뒷벽 메인
+      { size: [26, 10, 0.3], position: [0, 1, -10.95], wallKey: 'BW1', name: 'wall', mass:0}, 
+      // 무대 뒤 앞벽 대각선 왼쪽
+      { size: [17.5, 10, 0.8], position: [-15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'FW2', name: 'wall', mass:0}, 
+      // 무대 뒤 뒷벽 대각선 왼쪽
+      { size: [17.5, 10, 0.8], position: [-15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'BW2', name: 'wall', mass:0}, 
+      // 무대 뒤 옆벽 대각선 왼쪽
+      { size: [1, 10, 1.6], position: [-22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(32), 0], wallKey: 'LW1', name: 'wall', mass:0}, 
+      // 무대 뒤 앞벽 대각선 오른쪽
+      { size: [17.5, 10, 0.8], position: [15, 1, -9.4], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'FW3', name: 'wall', mass:0}, 
+      // 무대 뒤 뒷벽 대각선 오른쪽
+      { size: [17.5, 10, 0.8], position: [15, 1, -9.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'BW3', name: 'wall', mass:0}, 
+      // 무대 뒤 옆벽 대각선 오른쪽
+      { size: [1, 10, 1.6], position: [22.25, 1, -4.9], rotation: [0, THREE.MathUtils.degToRad(-32), 0], wallKey: 'LW2', name: 'wall', mass:0}, 
+      
+      // 전체 맵 뒷벽
+      { size: [75, 20, 1], position: [0, 0, -20], wallKey: 'FW4', name: 'wall', mass:0}, 
+      // 전체 맵 왼벽
+      { size: [1, 20, 65], position: [-37.5, 0, 8.25], wallKey: 'RW1', name: 'wall', mass:0}, 
+      // 전체 맵 오른벽
+      { size: [1, 20, 65], position: [37.5, 0, 8.25], wallKey: 'LW3', name: 'wall', mass:0}, 
+      // 전체 맵 앞벽
+      { size: [75, 20, 1], position: [0, 0, 36.5], wallKey: 'BW4', name: 'wall', mass:0},
     ];
     
     /* Value */
@@ -207,7 +207,8 @@ export const EventHallComp: React.FC = () => {
     const playerRotation = [0, 3.15, 0];
 
     // 캐릭터 불러오기
-    const playerFile = useGLTF(user.characterLink);
+    let playerFile = useGLTF(user.characterLink);
+
     // 캐릭터 크기
     const playerScale = 1;
     
@@ -247,9 +248,9 @@ export const EventHallComp: React.FC = () => {
 
     // 이 맵의 NPC 리스트
     const npcInfoList: NpcInfo[] = [
-        { id: Jayden.npcId, gender:"Man", name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
-        { id: Kevin.npcId, gender:"Man", name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
-        { id: Daen.npcId, gender:"Woman", name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
+      { id: Jayden.npcId, gender:"Man", name: Jayden.npcName, targetPosition: Jayden.npcCameraPosition, targetRotation: Jayden.npcCameraRotation, ref: Jayden.npcCircleRef },
+      { id: Kevin.npcId, gender:"Man", name: Kevin.npcName, targetPosition: Kevin.npcCameraPosition, targetRotation: Kevin.npcCameraRotation, ref: Kevin.npcCircleRef },
+      { id: Daen.npcId, gender:"Woman", name: Daen.npcName, targetPosition: Daen.npcCameraPosition, targetRotation: Daen.npcCameraRotation, ref: Daen.npcCircleRef },
     ]; 
     
     /* useState */
@@ -296,13 +297,13 @@ export const EventHallComp: React.FC = () => {
 
     // 대화 시작
     const doStartTalk = async(npcId: number) => {
-        await startTalk(npcId, ({data}) => {
-            const result = data.data as startTalkType;
-            setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
-            setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
-        }, (error) => {
-            console.log(error);
-        }); 
+      await startTalk(npcId, ({data}) => {
+        const result = data.data as startTalkType;
+        setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
+        setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
+      }, (error) => {
+        console.log(error);
+      }); 
     }
 
     /* useEffect */
@@ -404,7 +405,7 @@ export const EventHallComp: React.FC = () => {
             {/* 조명 */}
             <Environment blur={1} background preset="sunset" />
 
-            {/* 캐리터 */}
+            {/* 캐릭터 */}
             <primitive visible={!talkBalloon.isShow} scale={playerScale} ref={playerRef} position={playerPosition} rotation={playerRotation} object={playerFile.scene}/>
             
             {/* NPC */}
@@ -433,13 +434,13 @@ export const EventHallComp: React.FC = () => {
 
             {/* 벽 / 바닥 */}
             <group>
-                { 
-                    container.map((props, index) => 
-                        <Wall 
-                            key={index} 
-                            {...props}                        
-                        /> ) 
-                }
+              { 
+                container.map((props, index) => 
+                  <Wall 
+                      key={index} 
+                      {...props}                        
+                  /> ) 
+              }
             </group>
             
             {/* <axesHelper scale={100} /> */}
