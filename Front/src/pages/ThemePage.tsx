@@ -20,32 +20,32 @@ export const ThemePage = () => {
         loading.loading? <LoadingPage/> : null
       }
       {
-        !loading.loading?
-        <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['GabiaSolmee'] z-2 relative">
-        <div className=" ml-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
-        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-        >
-          <div className="w-[12rem] hover:text-[2.8rem] mt-3">
-            뒤로가기
+        !loading.loading ?
+          <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['GabiaSolmee'] z-10 relative">
+            <div className=" ml-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+            >
+              <div className="w-[12rem] hover:text-[2.8rem] mt-3">
+                뒤로가기
+              </div>
+            </div>
+            <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/introduce"); }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+            >
+              <div className="w-[5rem] hover:text-[2.8rem] mt-3">
+                NPC
+              </div>
+            </div>
+            <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+            >
+              <div className="w-[13rem] hover:text-[2.8rem] mt-3">
+                마이페이지
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/introduce"); }}
-        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-        >
-          <div className="w-[5rem] hover:text-[2.8rem] mt-3">
-            NPC
-          </div>
-        </div>
-        <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
-        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
-        >
-          <div className="w-[13rem] hover:text-[2.8rem] mt-3">
-            마이페이지
-          </div>
-        </div>
-      </div>
-      :
-      null
+          :
+          null
       }
 
       <div className="z-1 relative">
