@@ -25,6 +25,7 @@ import com.lingotown.global.service.CacheService;
 import com.lingotown.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -149,10 +150,10 @@ public class TalkService {
                 .grammarAdvise(null)
                 .build();
 
-        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
+//        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
 
         return new DataResponse<>(ResponseStatus.DELETED_SUCCESS.getCode(),
-                ResponseStatus.DELETED_SUCCESS.getMessage(), savedTalkDetail);
+                ResponseStatus.DELETED_SUCCESS.getMessage(), talkDetail);
     }
 
     //퀴즈 풀이
