@@ -174,57 +174,57 @@ public class OpenAIService {
 
             Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
 
-            saveTalkDetailMono.flatMap(userReqDataResponse -> {
-                try {
-                    // 발음 체크를 실행
-                    return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
-                            .map(pronunciationResDtoAsString -> {
-                                // JSON 문자열을 PronunciationResDto 객체로 변환
-                                PronunciationResDto pronunciationResDto;
-                                try {
-                                    pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-
-                                // findById를 사용하여 저장된 TalkDetail을 찾고 추가 처리 수행
-//                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
-//                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-                                TalkDetail talkDetail = talkDetailRepository.save(userReqDataResponse.getData());
-
-                                ResultResDto resultResDto = pronunciationResDto.getResult();
-                                SentenceScore sentenceScore = SentenceScore.builder()
-                                        .overallScore(resultResDto.getOverall())
-                                        .pronunciationScore(resultResDto.getPronunciation())
-                                        .fluencyScore(resultResDto.getFluency())
-                                        .integrityScore(resultResDto.getIntegrity())
-                                        .rhythmScore(resultResDto.getRhythm())
-                                        .talkDetail(talkDetail)
-                                        .build();
-
-                                sentenceScoreRepository.save(sentenceScore);
-
-                                for (WordResDto word : pronunciationResDto.getResult().getWords()) {
-                                    VocaScore vocaScore = VocaScore.builder()
-                                            .word(word.getWord())
-                                            .score(word.getScores().getOverall())
-                                            .talkDetail(talkDetail)
-                                            .build();
-
-                                    vocaScoreRepository.save(vocaScore);
-                                }
-
-                                return Tuples.of(userReqDataResponse, pronunciationResDto);
-                            });
-                } catch (IOException e) {
-                    return Mono.error(new RuntimeException(e));
-                }
-            }).subscribe(tuple -> {
-                log.info(String.valueOf(tuple));
-            }, err -> {
-                // 오류 처리
-                log.error("Error occurred: ", err);
-            });
+//            saveTalkDetailMono.flatMap(userReqDataResponse -> {
+//                try {
+//                    // 발음 체크를 실행
+//                    return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+//                            .map(pronunciationResDtoAsString -> {
+//                                // JSON 문자열을 PronunciationResDto 객체로 변환
+//                                PronunciationResDto pronunciationResDto;
+//                                try {
+//                                    pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+//                                } catch (JsonProcessingException e) {
+//                                    throw new RuntimeException(e);
+//                                }
+//
+//                                // findById를 사용하여 저장된 TalkDetail을 찾고 추가 처리 수행
+////                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+////                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+//                                TalkDetail talkDetail = talkDetailRepository.save(userReqDataResponse.getData());
+//
+//                                ResultResDto resultResDto = pronunciationResDto.getResult();
+//                                SentenceScore sentenceScore = SentenceScore.builder()
+//                                        .overallScore(resultResDto.getOverall())
+//                                        .pronunciationScore(resultResDto.getPronunciation())
+//                                        .fluencyScore(resultResDto.getFluency())
+//                                        .integrityScore(resultResDto.getIntegrity())
+//                                        .rhythmScore(resultResDto.getRhythm())
+//                                        .talkDetail(talkDetail)
+//                                        .build();
+//
+//                                sentenceScoreRepository.save(sentenceScore);
+//
+//                                for (WordResDto word : pronunciationResDto.getResult().getWords()) {
+//                                    VocaScore vocaScore = VocaScore.builder()
+//                                            .word(word.getWord())
+//                                            .score(word.getScores().getOverall())
+//                                            .talkDetail(talkDetail)
+//                                            .build();
+//
+//                                    vocaScoreRepository.save(vocaScore);
+//                                }
+//
+//                                return Tuples.of(userReqDataResponse, pronunciationResDto);
+//                            });
+//                } catch (IOException e) {
+//                    return Mono.error(new RuntimeException(e));
+//                }
+//            }).subscribe(tuple -> {
+//                log.info(String.valueOf(tuple));
+//            }, err -> {
+//                // 오류 처리
+//                log.error("Error occurred: ", err);
+//            });
 
 
 
