@@ -20,12 +20,12 @@ export const ThemePage = () => {
       }
       {
         !loading.loading?
-        <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['passero-one'] z-10 relative">
+        <div className="px-5 -mb-12 flex justify-between items-center text-5xl font-bold text-[#5dc7f8] font-['GabiaSolmee'] z-10 relative">
         <div className=" ml-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/departure"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >
           <div className="w-[12rem] hover:text-[2.8rem] mt-3">
-            Departure
+            뒤로가기
           </div>
         </div>
         <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/introduce"); }}
@@ -38,8 +38,8 @@ export const ThemePage = () => {
         <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/mypage"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >
-          <div className="w-[9rem] hover:text-[2.8rem] mt-3">
-            MyPage
+          <div className="w-[13rem] hover:text-[2.8rem] mt-3">
+            마이페이지
           </div>
         </div>
       </div>
