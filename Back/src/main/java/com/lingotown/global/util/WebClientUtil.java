@@ -47,9 +47,6 @@ public class WebClientUtil {
     }
 
     public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
-        // 이미 외부에서 생성된 requestDto 객체를 이용하여 요청을 보냅니다.
-
-
         // user 인풋
         OpenAIMessageDto messageDtoUser = OpenAIMessageDto
                 .builder()
