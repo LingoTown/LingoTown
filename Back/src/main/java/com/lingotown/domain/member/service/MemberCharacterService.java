@@ -15,12 +15,14 @@ import com.lingotown.global.response.CommonResponse;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -100,6 +102,7 @@ public class MemberCharacterService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_CHARACTER_NOT_FOUND));
 
         memberCharacter.lockOff();
+        log.info("!!!!!!!!!!!!!!!!!!!");
 
         return new CommonResponse(ResponseStatus.UPDATED_SUCCESS.getCode(), ResponseStatus.UPDATED_SUCCESS.getMessage());
     }
