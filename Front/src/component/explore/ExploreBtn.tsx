@@ -68,15 +68,23 @@ export const ExploreBtn = () => {
   
   const exit = async() => {
     setTalkBalloon(prevState => ({...prevState, isMove: false}));
+    setTalkBalloon(prevState => ({...prevState, isModal: true}))
     const flag = await customConfirm("Notice", "Are you sure you want to leave the Explore?");
     if (flag)
       navigate("/");
     setTalkBalloon(prevState => ({...prevState, isMove: true}));
+    setTalkBalloon(prevState => ({...prevState, isModal: false}))
   }
   
   useEffect(() => {
     setTalkBalloon(prevState => ({...prevState, isMove: !isOpenQuizModal}));
   }, [isOpenQuizModal])
+
+  const openQuestModal = () => {
+    setTalkBalloon(prevState => ({...prevState, isModal: true}))
+    setTalkBalloon(prevState => ({...prevState, isMove: false}))
+    setIsOpenQuizModal(!isOpenQuizModal)
+  }
   
   return(
     <>
@@ -105,7 +113,7 @@ export const ExploreBtn = () => {
         <div className="absolute top-14 right-0 z-10 flex flex-col space-y-2 mr-1.5 mt-1">
           <button 
             className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
-            onClick={() => { setIsOpenQuizModal(!isOpenQuizModal) }}
+            onClick={ openQuestModal }
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           >Quest</button>
         </div>

@@ -35,7 +35,8 @@ export const MapUtilComp = () => {
     await getQuizListByWorld(world, ({data}) => {
       const result = data.data as QuizType[];
       setQuizList([...result]);
-      setTranslateList(new Array(result.length).fill(0));
+      if (quizList.length == 0)
+        setTranslateList(new Array(result.length).fill(0));
     },() => {
       navigate("/departure");
       customAlert("Notice", "올바르지 않은 접근입니다.");
@@ -57,19 +58,19 @@ export const MapUtilComp = () => {
 
   const exitPage = async() => {
     setTalkBalloon(prevState => ({ ...prevState, isMove: false }));
+    setTalkBalloon(prevState => ({...prevState, isModal: true}))
     const flag = await customConfirm("Notice", "Would you like to leave the theme?");
     setTalkBalloon(prevState => ({ ...prevState, isMove: true }));
+    setTalkBalloon(prevState => ({...prevState, isModal: false}))
     if (flag) {
       navigate("/departure");
     }
   }
 
-  const modalOn = () => {
+  const openQuestModal = () => {
     setTalkBalloon(prevState => ({...prevState, isModal: true}))
-  }
-  
-  const modalOff = () => {
-    setTalkBalloon(prevState => ({...prevState, isModal: false}))
+    setTalkBalloon(prevState => ({...prevState, isMove: false}))
+    setIsOpenQuizModal(!isOpenQuizModal)
   }
 
   return(
@@ -79,7 +80,7 @@ export const MapUtilComp = () => {
           <button
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
-            onClick={ exitPage } onMouseOver={ modalOn } onMouseOut={ modalOff }
+            onClick={ exitPage }
           >Back To Main</button>
         </div>
         <QuizComp
@@ -101,7 +102,7 @@ export const MapUtilComp = () => {
           <button 
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
             className="px-4 py-2 bg-[#95E5F9] text-[#000] text-lg rounded hover:bg-[#B1EFFF] font-['passero-one']"
-            onClick={() => {setIsOpenQuizModal(!isOpenQuizModal)}}
+            onClick={ openQuestModal }
           >Quest</button>
         </div>
       </div>
