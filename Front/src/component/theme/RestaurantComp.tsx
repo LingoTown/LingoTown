@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
@@ -11,7 +10,8 @@ import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Restaurant } from "../../../public/map/Restaurant";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { talkStateAtom } from '../../atom/TalkStateAtom';
+import { talkStateAtom, initialTalkState } from '../../atom/TalkStateAtom';
+import { talkBalloonAtom, initialTalkBalloon } from "../../atom/TalkBalloonAtom";
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
 import { Isabel } from '../../../public/name/restaurant/Isabel.tsx'
@@ -133,6 +133,8 @@ export const RestaurantComp: React.FC = () => {
     if(loading) setLoading(() => ({loading:false}));
 
     return () => {
+      setTalkBalloon(initialTalkBalloon);
+      setTalkState(initialTalkState);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };

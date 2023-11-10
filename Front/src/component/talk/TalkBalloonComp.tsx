@@ -59,11 +59,7 @@ export const TalkBalloonComp = () => {
   // End 버튼 눌렀을때
   const handleEnd = async() => {
 
-    await endTalk(talkState.talkId, ({data}) => {
-      console.log(data)
-    }, (res) => {
-      console.log(res)
-    })
+    await endTalk(talkState.talkId, ({}) => {}, (res) => { console.log(res) })
 
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
