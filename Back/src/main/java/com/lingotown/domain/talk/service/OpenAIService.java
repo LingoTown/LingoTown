@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -85,6 +86,7 @@ public class OpenAIService {
 
 
     @TrackExecutionTime
+    @Transactional
     public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, TalkReqDto talkReqDto) throws Exception {
         Gson gson = new Gson();
 
@@ -164,7 +166,7 @@ public class OpenAIService {
         /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
         if (talkReqDto.getTalkFile() != null) {
 
-            //사용자 질문 DB 저장
+            // 사용자 질문 DB 저장
             CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
                     .talkId(talkReqDto.getTalkId())
                     .isMember(true)
@@ -179,6 +181,7 @@ public class OpenAIService {
                     // 발음 체크를 실행
                     return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
                             .map(pronunciationResDtoAsString -> {
+
                                 // JSON 문자열을 PronunciationResDto 객체로 변환
                                 PronunciationResDto pronunciationResDto;
                                 try {
@@ -187,10 +190,7 @@ public class OpenAIService {
                                     throw new RuntimeException(e);
                                 }
 
-                                // findById를 사용하여 저장된 TalkDetail을 찾고 추가 처리 수행
-//                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
-//                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-                                TalkDetail talkDetail = talkDetailRepository.save(userReqDataResponse.getData());
+                                TalkDetail talkDetail = userReqDataResponse.getData();
 
                                 ResultResDto resultResDto = pronunciationResDto.getResult();
                                 SentenceScore sentenceScore = SentenceScore.builder()
@@ -204,6 +204,8 @@ public class OpenAIService {
 
                                 sentenceScoreRepository.save(sentenceScore);
 
+                                System.out.println(Arrays.toString(pronunciationResDto.getResult().getWords()));
+
                                 for (WordResDto word : pronunciationResDto.getResult().getWords()) {
                                     VocaScore vocaScore = VocaScore.builder()
                                             .word(word.getWord())
@@ -214,82 +216,20 @@ public class OpenAIService {
                                     vocaScoreRepository.save(vocaScore);
                                 }
 
+                                TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
+
                                 return Tuples.of(userReqDataResponse, pronunciationResDto);
                             });
                 } catch (IOException e) {
                     return Mono.error(new RuntimeException(e));
                 }
-            }).subscribe(tuple -> {
-                log.info(String.valueOf(tuple));
+            })
+            .subscribe(tuple -> {
+            log.info(String.valueOf(tuple));
             }, err -> {
                 // 오류 처리
                 log.error("Error occurred: ", err);
             });
-
-
-
-//            Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
-//
-//            saveTalkDetailMono.flatMap(userReqDataResponse -> {
-//                // 저장이 완료된 후에 발음 체크를 실행
-//                try {
-//                    Mono<String> pronunciationMono = webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
-//                    return Mono.zip(Mono.just(userReqDataResponse), pronunciationMono)
-//                            .map(tuple -> Tuples.of(tuple.getT1(), tuple.getT2()));
-//                } catch (IOException e) {
-//                    return Mono.error(new RuntimeException(e));
-//                }
-//            }).subscribe(tuple -> {
-//                DataResponse<TalkDetail> userReqDataResponse = tuple.getT1();
-//                String pronunciationResDtoAsString = tuple.getT2();
-//
-//                // JSON 문자열을 PronunciationResDto 객체로 변환
-//                PronunciationResDto pronunciationResDto;
-//                try {
-//                    pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
-//                } catch (JsonProcessingException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                // 여기에서 userReqDataResponse의 데이터와 pronunciationResDto를 사용하여 처리
-//                // findById를 사용하여 저장된 TalkDetail을 찾고 추가 처리 수행
-//                // ...
-//                log.info("!!");
-//                log.info(String.valueOf(userReqDataResponse));
-//                log.info(String.valueOf(userReqDataResponse.getData()));
-//                log.info(String.valueOf(userReqDataResponse.getData().getId()));
-//
-//                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
-//                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-//
-//                ResultResDto resultResDto = pronunciationResDto.getResult();
-//                SentenceScore sentenceScore = SentenceScore.builder()
-//                        .overallScore(resultResDto.getOverall())
-//                        .pronunciationScore(resultResDto.getPronunciation())
-//                        .fluencyScore(resultResDto.getFluency())
-//                        .rhythmScore(resultResDto.getRhythm())
-//                        .talkDetail(talkDetail)
-//                        .build();
-//
-//                sentenceScoreRepository.save(sentenceScore);
-//                WordResDto[] WordResDtoArray = pronunciationResDto.getResult().getWords();
-//
-//                List<VocaScore> vocaScoreList = new ArrayList<>();
-//                for (WordResDto word : WordResDtoArray) {
-//                    VocaScore vocaScore = VocaScore.builder()
-//                            .word(word.getWord())
-//                            .score(word.getScores().getOverall())
-//                            .talkDetail(talkDetail)
-//                            .build();
-//
-//                    vocaScoreRepository.save(vocaScore);
-//                    vocaScoreList.add(vocaScore);
-//                }
-//
-//            }, err -> {
-//                // 오류 처리
-//                log.error("Error occurred: ", err);
-//            });
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
@@ -312,10 +252,11 @@ public class OpenAIService {
                   .responseS3URL(systemResDataResponse.getData().getTalkFile())
                     .build();
 
+            talkDetailRepository.save(systemResDataResponse.getData());
+
             return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                     ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
-
 
 
 
