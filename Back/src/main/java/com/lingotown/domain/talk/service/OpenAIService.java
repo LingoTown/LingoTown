@@ -37,6 +37,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -58,7 +60,6 @@ public class OpenAIService {
     private final TalkService talkService;
     private final TTSService ttsService;
 
-
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
 
@@ -74,13 +75,10 @@ public class OpenAIService {
     @Value("${SPEECH_SUPER.SECRET_KEY}")
     private String SPEECH_SECRET_KEY;
 
-
     //발음평가 테스트
     public String checkPronunciation(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
         return webClientUtil.checkPronunciation(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
     }
-
-
 
     @TrackExecutionTime
     @Transactional
@@ -198,51 +196,51 @@ public class OpenAIService {
 
 
             //비동기 발음처리
-            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
-                    .subscribe(
-                            res -> {
-                                ObjectMapper objectMapper = new ObjectMapper();
-                                PronunciationResDto pronunciationResDto = null;
-                                try {
-                                    pronunciationResDto = objectMapper.readValue(res, PronunciationResDto.class);
-
-                                    TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
-                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-
-                                    ResultResDto resultResDto = pronunciationResDto.getResult();
-                                    SentenceScore sentenceScore = SentenceScore.builder()
-                                            .overallScore(resultResDto.getOverall())
-                                            .pronunciationScore(resultResDto.getPronunciation())
-                                            .fluencyScore(resultResDto.getFluency())
-                                            .integrityScore(resultResDto.getIntegrity())
-                                            .rhythmScore(resultResDto.getRhythm())
-                                            .talkDetail(talkDetail)
-                                            .build();
-
-                                    sentenceScoreRepository.save(sentenceScore);
-                                    WordResDto[] WordResDtoArray = pronunciationResDto.getResult().getWords();
-
-                                    List<VocaScore> vocaScoreList = new ArrayList<>();
-                                    for(WordResDto word : WordResDtoArray){
-                                        VocaScore vocaScore = VocaScore.builder()
-                                                .word(word.getWord())
-                                                .score(word.getScores().getOverall())
-                                                .talkDetail(talkDetail)
-                                                .build();
-
-                                        vocaScoreRepository.save(vocaScore);
-                                        vocaScoreList.add(vocaScore);
-                                    }
-
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            },
-                            err -> {
-                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
-                                log.error("Error occurred: ", err);
-                            }
-                    );
+//            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+//                    .subscribe(
+//                            res -> {
+//                                ObjectMapper objectMapper = new ObjectMapper();
+//                                PronunciationResDto pronunciationResDto = null;
+//                                try {
+//                                    pronunciationResDto = objectMapper.readValue(res, PronunciationResDto.class);
+//
+//                                    TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+//                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+//
+//                                    ResultResDto resultResDto = pronunciationResDto.getResult();
+//                                    SentenceScore sentenceScore = SentenceScore.builder()
+//                                            .overallScore(resultResDto.getOverall())
+//                                            .pronunciationScore(resultResDto.getPronunciation())
+//                                            .fluencyScore(resultResDto.getFluency())
+//                                            .integrityScore(resultResDto.getIntegrity())
+//                                            .rhythmScore(resultResDto.getRhythm())
+//                                            .talkDetail(null)
+//                                            .build();
+//
+//                                    System.out.println("--------------------");
+//
+//                                    sentenceScoreRepository.save(sentenceScore);
+//                                    WordResDto[] WordResDtoArray = pronunciationResDto.getResult().getWords();
+//
+//                                    for(WordResDto word : WordResDtoArray){
+//                                        VocaScore vocaScore = VocaScore.builder()
+//                                                .word(word.getWord())
+//                                                .score(word.getScores().getOverall())
+//                                                .talkDetail(null)
+//                                                .build();
+//
+//                                        vocaScoreRepository.save(vocaScore);
+//                                    }
+//
+//                                } catch (JsonProcessingException e) {
+//                                    throw new RuntimeException(e);
+//                                }
+//                            },
+//                            err -> {
+//                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+//                                log.error("Error occurred: ", err);
+//                            }
+//                    );
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
