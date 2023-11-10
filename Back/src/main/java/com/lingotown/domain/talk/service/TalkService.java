@@ -234,15 +234,13 @@ public class TalkService {
         List<VocaScore> vocaScoreList = talkDetail.getVocaScoreList();
 
         List<ReadWordScoreResDto> vocaScoreResList = new ArrayList<>();
-        for(int i=0; i<vocaScoreList.size(); i++){
-            if(vocaScoreList.get(i).getScore()<70) {
+        for(VocaScore vocaScore : vocaScoreList){
                 ReadWordScoreResDto readWordScoreResDto = ReadWordScoreResDto.builder()
-                        .index(i)
-                        .score(vocaScoreList.get(i).getScore())
+                        .word(vocaScore.getWord())
+                        .score(vocaScore.getScore())
                         .build();
 
                 vocaScoreResList.add(readWordScoreResDto);
-            }
         }
 
         SentenceScore sentenceScore = talkDetail.getSentenceScore();

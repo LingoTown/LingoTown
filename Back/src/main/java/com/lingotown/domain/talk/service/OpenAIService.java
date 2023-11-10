@@ -260,7 +260,7 @@ public class OpenAIService {
             CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                     .builder()
                     .responseMessage(responseDto.getContent())
-                  .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                    .responseS3URL(systemResDataResponse.getData().getTalkFile())
                     .build();
 
             return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
