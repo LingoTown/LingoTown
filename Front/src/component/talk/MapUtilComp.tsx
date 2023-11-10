@@ -1,12 +1,13 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCustomConfirm, useCustomAlert } from "../util/ModalUtil"
 import { talkBalloonAtom } from '../../atom/TalkBalloonAtom';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
 import { getQuizListByWorld } from '../../api/Quiz';
 import { QuizType } from '../../type/QuizType';
 import { QuizComp } from './QuizComp';
 import { tutorialAtom } from '../../atom/TutorialAtom';
+import { loadingAtom } from '../../atom/LoadingAtom';
 
 
 export const MapUtilComp = () => {
@@ -29,6 +30,7 @@ export const MapUtilComp = () => {
   const [quizList, setQuizList] = useState<QuizType[]>([]);
   const [quizLender, setQuizLender] = useState<boolean>(true);
   const [translateList, setTranslateList] = useState<boolean[]>([]);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // API
   const doGetQuizList = async() => {
@@ -63,6 +65,7 @@ export const MapUtilComp = () => {
     setTalkBalloon(prevState => ({ ...prevState, isMove: true }));
     setTalkBalloon(prevState => ({...prevState, isModal: false}))
     if (flag) {
+      if(!loading.loading) setLoading({loading:true});
       navigate(`/theme?language=${lang}`);
     }
   }

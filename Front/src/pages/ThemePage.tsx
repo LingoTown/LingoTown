@@ -1,13 +1,14 @@
 import { Canvas } from "@react-three/fiber";
 import { ThemeComp } from "../component/category/ThemeComp";
 import LoadingPage from "./LoadingPage";
-import { useRecoilValue } from "recoil"
+import { useRecoilState } from "recoil"
 import { loadingAtom } from "../atom/LoadingAtom";
 import { useNavigate } from "react-router-dom";
 
 export const ThemePage = () => {
-  const loading = useRecoilValue(loadingAtom);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
   const navigate = useNavigate();
+
   return(
     <div
       className="z-0"
@@ -28,7 +29,7 @@ export const ThemePage = () => {
             뒤로가기
           </div>
         </div>
-        <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { navigate("/introduce"); }}
+        <div className="mr-8 mt-3.5 drop-shadow-lg" onClick={() => { setLoading({loading:true}); navigate("/introduce"); }}
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         >
           <div className="w-[5rem] hover:text-[2.8rem] mt-3">
