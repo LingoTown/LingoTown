@@ -8,6 +8,7 @@ import { npcStateName } from '../../atom/ScriptAtom';
 function ScriptDetail() {
     const [talkId, ] = useRecoilState(talkIdAtom);
     const [detailList, setDetailList] = useState<talkDetailType[]>([]);
+    const [showCorr, setShowCorr] = useState<boolean[]>([]);
     const [, setDetailVerAtom] = useRecoilState(detailVerAtom);
     const [npcName, ] = useRecoilState(npcStateName);
     const [corrMode, setCorrMode] = useState(false);
@@ -17,13 +18,37 @@ function ScriptDetail() {
       HttpJson.get(`/api/talk/${talkId}`)
           .then((res) => {
             console.log(res.data.data);
-              const reversedData = [...res.data.data];
+            const reversedData = [...res.data.data];
+            const arr = new Array(reversedData.length).fill(false);
+            setShowCorr(arr); 
               setDetailList(reversedData);
               // Reset the refs array to match the number of detailList items
               audioRefs.current = reversedData.map(() => null);
           })
           .catch(console.log);
   }, [talkId]);
+
+  //showCorr 배열 조정
+  const handleCorrMode = (i:number) => {
+    const arr = [...showCorr];
+    arr[i] = !arr[i];
+    setShowCorr(arr);
+    
+  }
+
+  const handleGrammar = (talkDetailId:number, content:string) => {
+    HttpJson.get(`api/talk/score/${talkDetailId}`)
+      .then((res)=>{
+        console.log(res.data.data);
+      })
+      .catch(console.log)
+      return(
+        <>
+        <div className='text-white'>test! {talkDetailId}</div>
+        <div className='text-white'>{content}</div>
+        </>
+      )
+  }
 
     //mp3 재생 로직
     const playAudio = (audioIndex: number) => {
@@ -40,7 +65,7 @@ function ScriptDetail() {
             <div className="m-5 my-0 text-white font-['passero-one'] font-[30] text-[1.8rem] ">
               My Talk Script &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <span 
-                onClick={()=>{setCorrMode(!corrMode)}}
+                
                 className='hover:text-[1.15rem] text-[1.2rem] text-red-300'
                 style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               >View correction
@@ -57,6 +82,7 @@ function ScriptDetail() {
                   detailList?.map((arr, i) => {
                     return(
                       <>
+                      {/* 마이크 아이콘 */}
                       <div key={i} className='flex flex-row'>
                         <audio ref={(el) => audioRefs.current[i] = el} src={arr.talkFile} preload="none" />
                         <span 
@@ -66,7 +92,10 @@ function ScriptDetail() {
                         >
                           mic
                         </span>
-                        <div className='m-1 mt-2 text-white font-[30]'>
+                        {/* 문장 하나씩 */}
+                        <div 
+                          onClick={()=>{handleCorrMode(i)}}
+                          className='m-1 mt-2 text-white font-[30] hover:text-red-300'>
                           {
                             arr.member == false?
                             <span>{npcName} : </span>
@@ -74,11 +103,13 @@ function ScriptDetail() {
                             <span>Me : </span>
                           }
                           {arr.content}
-                          </div>
+                        </div>
                       </div>
+                      {/* 문법 검사 내용 */}
                       {
-                        corrMode && 
-                        <div className='text-white -mt-1 ml-10'>test</div>
+                        showCorr[i] && 
+                        handleGrammar(arr.talkDetailId, arr.content)
+                        // <div className='text-white -mt-1 ml-10'>test {arr.talkDetailId}</div>
                       }
                       </>
                     );
