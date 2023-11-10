@@ -7,8 +7,5 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PronunciationResDto {
     private String refText;
-    private ResultResDto resultResDto;
-//    private String error;
-//    private int errorId;
-
+    private ResultResDto result;
 }

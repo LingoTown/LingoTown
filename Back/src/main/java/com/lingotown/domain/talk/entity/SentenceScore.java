@@ -1,15 +1,13 @@
 package com.lingotown.domain.talk.entity;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Table(name = "sentence_score")
 public class SentenceScore {
 
@@ -35,4 +33,13 @@ public class SentenceScore {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private TalkDetail talkDetail;
 
+
+    @Builder
+    public SentenceScore(int overallScore, int pronunciationScore, int fluencyScore, int rhythmScore, TalkDetail talkDetail){
+        this.overallScore = overallScore;
+        this.pronunciationScore = pronunciationScore;
+        this.fluencyScore = fluencyScore;
+        this.rhythmScore = rhythmScore;
+        this.talkDetail = talkDetail;
+    }
 }

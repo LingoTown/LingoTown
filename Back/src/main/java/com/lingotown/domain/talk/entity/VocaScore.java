@@ -1,6 +1,7 @@
 package com.lingotown.domain.talk.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.checkerframework.checker.units.qual.C;
@@ -26,5 +27,12 @@ public class VocaScore {
     @JoinColumn(name = "talk_detail_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private TalkDetail talkDetail;
+
+    @Builder
+    public VocaScore(String word, int score, TalkDetail talkDetail){
+        this.word = word;
+        this.score = score;
+        this.talkDetail = talkDetail;
+    }
 
 }

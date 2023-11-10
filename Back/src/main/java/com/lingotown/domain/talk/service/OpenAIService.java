@@ -9,11 +9,16 @@ import com.lingotown.domain.talk.dto.request.*;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.ResultResDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.WordResDto;
 import com.lingotown.domain.talk.entity.SentenceScore;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
+import com.lingotown.domain.talk.entity.VocaScore;
+import com.lingotown.domain.talk.repository.SentenceScoreRepository;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.domain.talk.repository.VocaScoreRepository;
 import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -47,6 +52,8 @@ public class OpenAIService {
     private final TalkRepository talkRepository;
     private final MemberRepository memberRepository;
     private final TalkDetailRepository talkDetailRepository;
+    private final SentenceScoreRepository sentenceScoreRepository;
+    private final VocaScoreRepository vocaScoreRepository;
     private final CacheService cacheService;
     private final TalkService talkService;
     private final TTSService ttsService;
@@ -167,27 +174,27 @@ public class OpenAIService {
             DataResponse<TalkDetail> userReqDataResponse = talkService.createTalkDetail(userReqDto);
 
             //비동기 문법 처리
-//            webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
-//                    .subscribe(
-//                            res -> {
-//                                System.out.println("grammarRes : " +res.toString());
-//                                // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
-//                                // 예: 응답을 분석하고 데이터베이스에 저장하기
-//
-//                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
-//                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
-//
-//                                // 문법 조언 DB 저장
-//                                talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
-//
-//                                // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
-//                                talkDetailRepository.save(talkDetail);
-//                            },
-//                            err -> {
-//                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
-//                                log.error("Error occurred: ", err);
-//                            }
-//                    );
+            webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
+                    .subscribe(
+                            res -> {
+                                System.out.println("grammarRes : " +res.toString());
+                                // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
+                                // 예: 응답을 분석하고 데이터베이스에 저장하기
+
+                                TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                                // 문법 조언 DB 저장
+                                talkDetail.updateGrammerAdvise(String.valueOf(res.getChoices()[0].getMessage().getContent()));
+
+                                // 비동기기 때문에 Transaction의 영향을 안받기에 반드시 강제 저장 해야함.
+                                talkDetailRepository.save(talkDetail);
+                            },
+                            err -> {
+                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+                                log.error("Error occurred: ", err);
+                            }
+                    );
 
 
             //비동기 발음처리
@@ -198,13 +205,37 @@ public class OpenAIService {
                                 PronunciationResDto pronunciationResDto = null;
                                 try {
                                     pronunciationResDto = objectMapper.readValue(res, PronunciationResDto.class);
-                                    System.out.println("pronunciationResDto : " +pronunciationResDto.toString());
+
+                                    TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                                    ResultResDto resultResDto = pronunciationResDto.getResult();
+                                    SentenceScore sentenceScore = SentenceScore.builder()
+                                            .overallScore(resultResDto.getOverall())
+                                            .pronunciationScore(resultResDto.getPronunciation())
+                                            .fluencyScore(resultResDto.getFluency())
+                                            .rhythmScore(resultResDto.getRhythm())
+                                            .talkDetail(talkDetail)
+                                            .build();
+
+                                    sentenceScoreRepository.save(sentenceScore);
+                                    WordResDto[] WordResDtoArray = pronunciationResDto.getResult().getWords();
+
+                                    List<VocaScore> vocaScoreList = new ArrayList<>();
+                                    for(WordResDto word : WordResDtoArray){
+                                        VocaScore vocaScore = VocaScore.builder()
+                                                .word(word.getWord())
+                                                .score(word.getScores().getOverall())
+                                                .talkDetail(talkDetail)
+                                                .build();
+
+                                        vocaScoreRepository.save(vocaScore);
+                                        vocaScoreList.add(vocaScore);
+                                    }
+
                                 } catch (JsonProcessingException e) {
                                     throw new RuntimeException(e);
                                 }
-                                System.out.println("pronunciationRes : " +res.toString());
-                                
-
                             },
                             err -> {
                                 // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
@@ -214,23 +245,23 @@ public class OpenAIService {
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
-//        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
-//
-//
-//        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
-//                .talkId(talkReqDto.getTalkId())
-//                .isMember(false)
-//                .content(responseDto.getContent())
-//                .talkFile(GPTResponseFile)
-//                .build();
-//
-//        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
+
+
+        CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
+                .talkId(talkReqDto.getTalkId())
+                .isMember(false)
+                .content(responseDto.getContent())
+                .talkFile(GPTResponseFile)
+                .build();
+
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
             //응답 반환
             CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                     .builder()
                     .responseMessage(responseDto.getContent())
-//                  .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                  .responseS3URL(systemResDataResponse.getData().getTalkFile())
                     .build();
 
             return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
