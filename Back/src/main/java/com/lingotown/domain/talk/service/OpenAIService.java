@@ -233,14 +233,13 @@ public class OpenAIService {
         /* GPT 응답 TTS 변환 및 DB 저장 */
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
 
-
         CreateTalkDetailReqDto systemResDto = CreateTalkDetailReqDto.builder()
                 .talkId(talkReqDto.getTalkId())
                 .isMember(false)
                 .content(responseDto.getContent())
                 .talkFile(GPTResponseFile)
                 .build();
-//
+
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
         //응답 반환
