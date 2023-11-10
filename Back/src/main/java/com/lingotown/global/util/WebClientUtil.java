@@ -1,6 +1,5 @@
 package com.lingotown.global.util;
 
-import com.google.gson.Gson;
 import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -23,16 +21,31 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.*;
+//import org.apache.http.HttpEntity;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 @Slf4j
@@ -61,6 +74,8 @@ public class WebClientUtil {
                 .messages(messages)
                 .build();
 
+        System.out.println("body : " +BodyInserters.fromValue(requestDto));
+
         return webClientConfig.webClient().post()
                 .uri(GPTUrl)
                 .headers(headers -> {
@@ -73,82 +88,7 @@ public class WebClientUtil {
     }
 
 
-//    public Mono<PronunciationResDto> checkPronunciationAsync(String url, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-//
-//        Resource fileAsResource = new ByteArrayResource(talkReqDto.getTalkFile().getBytes()) {
-//            public String getFilename() {
-//                return talkReqDto.getTalkFile().getOriginalFilename();
-//            }
-//        };
-//
-//
-//        String coreType = "para.eval";
-//        String dict_dialect = null;
-//
-//        if(talkReqDto.getLanguage().equals("FR")) coreType = "para.eval.fr";
-//        else if(talkReqDto.getLanguage().equals("UK")) dict_dialect = "en_br";
-//        else dict_dialect = "en_us";
-//
-//        String userId = String.valueOf((int) Math.round(Math.random() * (5)));
-//        String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
-//        String sig = makeSig(userId, applicationId, secretKey, timestamp);
-//
-//        AppReqDto appReqDto = AppReqDto
-//                .builder()
-//                .userId(userId)
-//                .applicationId(applicationId)
-//                .timestamp(timestamp)
-//                .sig(sig)
-//                .build();
-//
-//        ScriptReqDto scriptReqDto = ScriptReqDto
-//                .builder()
-//                .coreType(coreType)
-//                .refText(talkReqDto.getPrompt())
-//                .build();
-//
-//        PronunciationReqDto pronunciationReqDto = PronunciationReqDto
-//                .builder()
-//                .app(appReqDto)
-//                .request(scriptReqDto)
-//                .build();
-//
-//
-//        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-//        body.add("text", pronunciationReqDto);
-//        body.add("audio", fileAsResource);
-//
-////        String fullUrl = url;
-////        if(!dict_dialect.isEmpty()) fullUrl+="?coreType=" +coreType+ "&refText=" +talkReqDto.getPrompt()+ "&dict_dialect=" +dict_dialect;
-//
-//        String fullUrl = UriComponentsBuilder.fromHttpUrl(url)
-//                .queryParam("coreType", coreType)
-//                .queryParam("refText", talkReqDto.getPrompt())
-//                .queryParam("dict_dialect", dict_dialect)
-//                .toUriString();
-//
-//        InternalLogger logger = null;
-//        return WebClient.create()
-//                .post()
-//                .uri(fullUrl)
-//                .contentType(MediaType.MULTIPART_FORM_DATA)
-//                .body(BodyInserters.fromMultipartData(body))
-//                .retrieve()
-//                .onStatus(HttpStatus::isError, clientResponse -> clientResponse.bodyToMono(String.class)
-//                        .flatMap(errorBody -> {
-//                            logger.error("API 요청 실패: {}", errorBody);
-//                            return Mono.error(new RuntimeException("API 요청 실패: " + errorBody));
-//                        }))
-//                .bodyToMono(PronunciationResDto.class)
-//                .doOnNext(pronunciationResDto -> logger.info("API 요청 성공: {}", pronunciationResDto))
-//                .doOnError(error -> logger.error("API 요청 중 에러 발생: {}", error.getMessage())
-//
-//                );
-//    }
-
-    public String checkPronunciation(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-
-        System.out.println("file : " +talkReqDto.getTalkFile());
+    public Mono<String> checkPronunciationAsync(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws IOException {
 
         String coreType = "sent.eval";
         String dict_dialect = "";
@@ -160,56 +100,49 @@ public class WebClientUtil {
             dict_dialect = "en_us";
         }
 
-        String url = baseUrl + "/" + coreType;
         String userId = getRandomString(5);
-        String res = null;
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
         String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
 
-        try {
-            HttpPost httppost = new HttpPost(url);
-            httppost.addHeader("Request-Index", "0");
+        Path tempFilePath = Files.createTempFile(null, ".mp3");
+        talkReqDto.getTalkFile().transferTo(tempFilePath.toFile());
 
-            StringBody comment = new StringBody(params, ContentType.APPLICATION_JSON);
-            ContentBody bin = new InputStreamBody(talkReqDto.getTalkFile().getInputStream(), talkReqDto.getTalkFile().getContentType(), talkReqDto.getTalkFile().getOriginalFilename());
+        Flux<DataBuffer> fileContentBuffer = DataBufferUtils.read(tempFilePath, new DefaultDataBufferFactory(), 4096);
 
-            HttpEntity reqEntity = MultipartEntityBuilder.create()
-                    .addPart("text", comment)
-                    .addPart("audio", bin)
-                    .build();
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.asyncPart("audio", fileContentBuffer, DataBuffer.class);
 
-            httppost.setEntity(reqEntity);
+        builder.part("text", params, MediaType.APPLICATION_JSON);
 
-            CloseableHttpResponse response = httpclient.execute(httppost);
-            try {
-                HttpEntity resEntity = response.getEntity();
-                if (resEntity != null) {
-                    res = EntityUtils.toString(resEntity, "UTF-8");
-                    System.out.println("Response: " + res); // 응답 출력
-                }
-            } finally {
-                response.close();
-            }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                httpclient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
 
-        return res;
+        return webClientConfig.webClient().post()
+                .uri(baseUrl + "/" + coreType + "?dict_dialect=" + dict_dialect)
+                .header("Request-Index", "0")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartBody))
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnSuccess(System.out::println)
+                .doOnError(e -> {
+                    if (e instanceof WebClientResponseException) {
+                        WebClientResponseException ex = (WebClientResponseException) e;
+                        System.out.println("오류 응답 코드: " + ex.getRawStatusCode() + " 본문: " + ex.getResponseBodyAsString());
+                    } else {
+                        System.out.println("오류 발생: " + e.getMessage() + " > " +e);
+                    }
+                })
+                .doFinally(signalType -> {
+                    try {
+                        Files.deleteIfExists(tempFilePath);
+                    } catch (IOException e) {
+                        System.out.println("임시 파일 삭제 실패: " + tempFilePath +" > " +e);
+                    }
+                });
     }
 
-//    public PronunciationResDto checkPronunciation(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-//
-//        Gson gson = new Gson();
-//        PronunciationResDto pronunciationResDto = null;
+
+    public String checkPronunciation(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
 //
 //        String coreType = "sent.eval";
 //        String dict_dialect = "";
@@ -221,7 +154,7 @@ public class WebClientUtil {
 //            dict_dialect = "en_us";
 //        }
 //
-//        String url = baseUrl + "/" + coreType;
+//        String url = baseUrl + "/" + coreType +"?dict_dialect="+dict_dialect;
 //        String userId = getRandomString(5);
 //        String res = null;
 //
@@ -246,8 +179,8 @@ public class WebClientUtil {
 //            try {
 //                HttpEntity resEntity = response.getEntity();
 //                if (resEntity != null) {
-//                    String jsonString = EntityUtils.toString(resEntity, "UTF-8");
-//                    pronunciationResDto = gson.fromJson(jsonString, PronunciationResDto.class); // JSON 문자열을 객체로 변환
+//                    res = EntityUtils.toString(resEntity, "UTF-8");
+//                    System.out.println("Response: " + res); // 응답 출력
 //                }
 //            } finally {
 //                response.close();
@@ -264,11 +197,13 @@ public class WebClientUtil {
 //            }
 //        }
 //
-//        return pronunciationResDto;
-//    }
+//        return res;
+        return "1234";
+    }
 
 
-    private static String buildParam(String appkey, String secretKey, String userId, String audioType, String audioSampleRate, String refText, String coreType) {
+    private static String buildParam(String appkey, String secretKey, String userId, String audioType,
+                                     String audioSampleRate, String refText, String coreType) {
 
         MessageDigest digest = DigestUtils.getSha1Digest();
 
