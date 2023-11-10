@@ -3,7 +3,7 @@ import { useCustomConfirm, useCustomAlert } from "../util/ModalUtil"
 import { talkBalloonAtom } from '../../atom/TalkBalloonAtom';
 import { useSetRecoilState } from 'recoil';
 import { useEffect, useState } from 'react';
-import { getQuizList } from '../../api/Quiz';
+import { getQuizListByWorld } from '../../api/Quiz';
 import { QuizType } from '../../type/QuizType';
 import { QuizComp } from './QuizComp';
 import { tutorialAtom } from '../../atom/TutorialAtom';
@@ -32,7 +32,7 @@ export const MapUtilComp = () => {
 
   // API
   const doGetQuizList = async() => {
-    await getQuizList(world, ({data}) => {
+    await getQuizListByWorld(world, ({data}) => {
       const result = data.data as QuizType[];
       setQuizList([...result]);
       setTranslateList(new Array(result.length).fill(0));
