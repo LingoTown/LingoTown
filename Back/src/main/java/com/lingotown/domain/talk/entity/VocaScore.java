@@ -15,7 +15,7 @@ import javax.persistence.*;
 public class VocaScore {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "voca_id")
+    @Column(name = "voca_score_id")
     private Long id;
 
     @Column(nullable = false)
