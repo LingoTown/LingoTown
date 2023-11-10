@@ -327,7 +327,7 @@ export const EventHallComp: React.FC = () => {
     // NPC와 대화
     useEffect(() => {
         const handleKeyDown = async(event: KeyboardEvent) => {
-            if (talkBalloon.isModal)
+            if (talkBalloon.isModal || talkBalloon.isShow)
                 return
             // NPC의 원형 대화 범위 내에서 스페이스 바를 눌렀을 때
             if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {

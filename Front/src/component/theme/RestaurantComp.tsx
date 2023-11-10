@@ -150,7 +150,7 @@ export const RestaurantComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (talkBalloon.isModal)
+      if (talkBalloon.isModal || talkBalloon.isShow)
         return
       if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
