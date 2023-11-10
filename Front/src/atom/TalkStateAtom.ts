@@ -26,3 +26,13 @@ export const talkStateAtom = atom<TalkStateAtom>({
 });
 
 
+export const initialTalkState = {
+  onRec: false,
+  offRec: false, 
+  reset: false,
+  finish: false,
+  selectTopic: false,
+  isToast: false,
+  talkId: 0,
+  gender: ""
+}

@@ -59,11 +59,7 @@ export const TalkBalloonComp = () => {
   // End 버튼 눌렀을때
   const handleEnd = async() => {
 
-    await endTalk(talkState.talkId, ({data}) => {
-      console.log(data)
-    }, (res) => {
-      console.log(res)
-    })
+    await endTalk(talkState.talkId, ({}) => {}, (res) => { console.log(res) })
 
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
@@ -223,7 +219,7 @@ export const TalkBalloonComp = () => {
         <div className="absolute top-[35vh] right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Previous conversation</div>
           <hr className="border-black"/>
-          <div className="font-['passero-one'] mt-2">{ talkBalloon.prevSectence }</div>
+          <div className="font-['GabiaSolmee'] text-xl mt-2">{ talkBalloon.prevSectence }</div>
         </div>:null
       }
       {
@@ -232,7 +228,7 @@ export const TalkBalloonComp = () => {
         <div className="absolute top-[35vh] left-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Translate</div>
           <hr className="border-black"/>
-          <div className="font-['passero-one'] mt-2">{ talkBalloon.translate }</div>
+          <div className="font-['GabiaSolmee'] text-xl mt-2">{ talkBalloon.translate }</div>
         </div>:null
       }
       {
