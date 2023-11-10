@@ -10,7 +10,7 @@ import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { HandleKeyDown, HandleKeyUp } from "./util/SYKeyboardUtil";
+import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil.ts";
 import { PlayerMove, SetAction } from "./util/SYPlayerUtil";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
@@ -224,6 +224,8 @@ export const EventHallComp: React.FC = () => {
     const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
     // 움직이는지 : 컴포넌트의 렌더링 사이에서도 값이 유지된다. 초기 값 : true => 움직임이 가능한 상태
     const isMove = useRef(true);
+    // 모달이 나타나 있는지
+    const isModal = useRef(false);
 
     /* Camera Action */
 
@@ -263,7 +265,7 @@ export const EventHallComp: React.FC = () => {
 
     const customConfirm = useCustomConfirm();
     // 키가 눌러졌을 때
-    const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+    const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef, isModal);
     // 키가 떼졌을 때
     const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
 
@@ -277,7 +279,9 @@ export const EventHallComp: React.FC = () => {
     }, []);
 
     const animate = () => {
-        requestAnimationFrame(animate);
+        if (!isModal.current) {
+            requestAnimationFrame(animate);
+          }
       
         if (currentNpc.current.targetPosition && currentNpc.current.targetRotation) {
             // Lerp(선형 보간)을 사용하여 부드럽게 위치를 변경
@@ -322,7 +326,8 @@ export const EventHallComp: React.FC = () => {
     // NPC와 대화
     useEffect(() => {
         const handleKeyDown = async(event: KeyboardEvent) => {
-            
+            if (talkBalloon.isModal)
+                return
             // NPC의 원형 대화 범위 내에서 스페이스 바를 눌렀을 때
             if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
                 
@@ -338,7 +343,7 @@ export const EventHallComp: React.FC = () => {
                     if (flag) {
                         // 카메라 애니메이션
                         animate();
-
+                        setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));
                         // 대화창 Open
                         setTalkBalloon(prev => ({ ...prev, isShow: true, profileImg: currentNpc.current.img }));
 
@@ -372,10 +377,15 @@ export const EventHallComp: React.FC = () => {
         isMove.current = !talkBalloon.isShow;
     }, [talkBalloon.isShow])
 
-    // ??
+    // 캐릭터 이동 가능한지 업데이트
     useEffect(() => {
         isMove.current = talkBalloon.isMove;
     }, [talkBalloon.isMove])
+
+    // modal 떠있는지 
+    useEffect(() => {
+        isModal.current = talkBalloon.isModal;
+    }, [talkBalloon.isModal])
 
     useFrame((_state, deltaTime) => {
 
