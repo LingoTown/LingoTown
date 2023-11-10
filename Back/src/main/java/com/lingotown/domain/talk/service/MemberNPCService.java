@@ -2,6 +2,7 @@ package com.lingotown.domain.talk.service;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.member.repository.MemberRepository;
+import com.lingotown.domain.talk.dto.response.IntimacyResDto;
 import com.lingotown.domain.talk.dto.response.ReadMemberNPCResDto;
 import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.domain.talk.repository.MemberNPCRepository;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,9 +48,11 @@ public class MemberNPCService {
             World world = npc.getWorld();
 
             List<Talk> talkList = talkRepository.findTalkList(memberNPC.getId());
-            int count = talkList.size();
 
-            if(count==0)  continue;
+            int count=0;
+            for(Talk talk : talkList) {
+                if (!talk.getTalkDetailList().isEmpty()) count++;
+            }
 
             ReadMemberNPCResDto memberNPCResDto = ReadMemberNPCResDto
                     .builder()
@@ -59,7 +63,7 @@ public class MemberNPCService {
                     .npcName(npc.getName())
                     .npcImage(npc.getNpcImage())
                     .language(world.getLanguage().toString())
-                    .theme(world.getTheme().toString())
+                    .theme(world.getTheme())
                     .lastVisited(talkList.get(0).getCreatedAt())
                     .build();
 
@@ -74,9 +78,10 @@ public class MemberNPCService {
     public MemberNPC createMemberNPCConnect(Principal principal, Long npcId){
 
         Long memberId = Long.valueOf(principal.getName());
-        MemberNPC connectedMemberNPC = memberNPCRepository.findByMemberIdNPCId(memberId, npcId);
 
-        if(connectedMemberNPC != null) return connectedMemberNPC;
+        Optional<MemberNPC> connectedMemberNPC = memberNPCRepository.findByMemberIdAndNpcId(memberId, npcId);
+
+        if(connectedMemberNPC.isPresent()) return connectedMemberNPC.get();
 
         Member member = getMemberEntity(memberId);
         NPC npc = getNPCEntity(npcId);
@@ -90,6 +95,45 @@ public class MemberNPCService {
         return memberNPCRepository.save(memberNPC);
     }
 
+    public DataResponse<List<IntimacyResDto>> getMemberNPCList(Principal principal) {
+        Long memberId = Long.valueOf(principal.getName());
+
+        List<IntimacyResDto> intimacyResDtoList = new ArrayList<>();
+
+        List<MemberNPC> memberNPCList = memberNPCRepository.findByMemberId(memberId);
+
+        for (MemberNPC memberNPC : memberNPCList) {
+            IntimacyResDto intimacyResDto = IntimacyResDto.builder()
+                    .memberNpcId(memberNPC.getId())
+                    .memberId(memberNPC.getMember().getId())
+                    .npcId(memberNPC.getNpc().getId())
+                    .intimacy(memberNPC.getIntimacy())
+                    .build();
+
+            intimacyResDtoList.add(intimacyResDto);
+        }
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), intimacyResDtoList);
+    }
+
+    public DataResponse<IntimacyResDto> getMemberNPC(Principal principal, Long npcId) {
+        Long memberId = Long.valueOf(principal.getName());
+
+        MemberNPC memberNPC = memberNPCRepository.findByMemberIdAndNpcId(memberId, npcId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
+
+        IntimacyResDto intimacyResDto = IntimacyResDto.builder()
+                .memberNpcId(memberNPC.getId())
+                .memberId(memberNPC.getMember().getId())
+                .npcId(memberNPC.getNpc().getId())
+                .intimacy(memberNPC.getIntimacy())
+                .build();
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(), ResponseStatus.RESPONSE_SUCCESS.getMessage(), intimacyResDto);
+    }
+
+    /* Service 내부 사용 메서드들 (중복 코드 제거를 위함) */
+
     private NPC getNPCEntity(Long npcId){
         return npcRepository.findById(npcId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.NPC_NOT_FOUND));
@@ -100,5 +144,4 @@ public class MemberNPCService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
     }
-
 }

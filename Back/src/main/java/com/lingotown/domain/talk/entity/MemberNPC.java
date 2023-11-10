@@ -44,7 +44,7 @@ public class MemberNPC {
     }
 
     //친밀도 증가
-    public void increaseIntimacy(){
-        this.intimacy+=10;
+    public void increaseIntimacy(int talkCount){
+        this.intimacy+=talkCount;
     }
 }

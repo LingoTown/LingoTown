@@ -1,11 +1,17 @@
 package com.lingotown.domain.member.service;
 
 
+import com.lingotown.domain.character.entity.Character;
+import com.lingotown.domain.character.repository.CharacterRepository;
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
+import com.lingotown.domain.member.dto.response.CharacterLockResponseDto;
 import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.entity.Member;
+import com.lingotown.domain.member.entity.MemberCharacter;
+import com.lingotown.domain.member.repository.MemberCharacterRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
 
+import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -33,7 +39,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +50,11 @@ import java.util.HashMap;
 public class SocialLoginService {
 
     private final MemberRepository memberRepository;
+    private final MemberCharacterRepository memberCharacterRepository;
+    private final CharacterRepository characterRepository;
+
     private final MemberService memberService;
+    private final MemberCharacterService memberCharacterService;
 
     @Value("${social-login.kakao.client}")
     private String KAKAO_CLIENT;
@@ -66,6 +79,9 @@ public class SocialLoginService {
 
     @Value("${social-login.google.user-info-uri}")
     private String GOOGLE_USER_INFO_URI;
+
+    @Value("s3url")
+    private String S3URL;
 
 
     public DataResponse<LoginResponseDto> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
@@ -143,8 +159,9 @@ public class SocialLoginService {
         JsonElement element = JsonParser.parseString(result.toString());
 
         String email = "";
-        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-        if (has_email) {
+        System.out.println(element.getAsJsonObject());
+        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
+        if (!has_email) {
             email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
         }
 
@@ -190,7 +207,7 @@ public class SocialLoginService {
     private LoginResponseDto getLoginResponseDto(HashMap<String, Object> userInfo, LoginType loginType) {
 
         if (memberService.isEmpty(userInfo.get("loginId").toString(), loginType)) {
-            Member user = memberService.enterMember(userInfo, loginType);
+            memberService.enterMember(userInfo, loginType);
         }
 
         Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get("loginId").toString(), loginType)
@@ -198,7 +215,61 @@ public class SocialLoginService {
 
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
-        return LoginResponseDto.of(member, accessToken, refreshToken);
+
+        Optional<MemberCharacter> optionalMemberCharacter = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
+
+        Long characterId = null;
+        GenderType characterGender = null;
+        String characterLink = null;
+        String characterImage = null;
+
+
+        if(optionalMemberCharacter.isEmpty()) {
+            characterId = 1L;
+            characterGender = GenderType.MAN;
+            characterLink = S3URL + "Player/m_1.glb";
+            characterImage = S3URL + "Player/2D/m1Img.png";
+        }
+        else {
+            characterId = optionalMemberCharacter.get().getCharacter().getId();
+            characterGender = optionalMemberCharacter.get().getCharacter().getGender();
+            characterLink = optionalMemberCharacter.get().getCharacter().getLink();
+            characterImage = optionalMemberCharacter.get().getCharacter().getImage();
+        }
+
+        List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+        List<Character> characterList = characterRepository.findAll();
+
+        if(memberCharacterListByMemberId.isEmpty() || memberCharacterListByMemberId.size() != characterList.size()) {
+            memberCharacterService.createMemberCharacter(member);
+            memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+        }
+
+        List<CharacterLockResponseDto> lockDtoList = new ArrayList<>();
+
+        for (MemberCharacter memberCharacter : memberCharacterListByMemberId) {
+            CharacterLockResponseDto characterLockResponseDto = CharacterLockResponseDto.builder()
+                    .characterId(memberCharacter.getCharacter().getId())
+                    .islocked(memberCharacter.isLocked())
+                    .build();
+
+            lockDtoList.add(characterLockResponseDto);
+        }
+
+        return LoginResponseDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .email(member.getEmail())
+                    .gender(member.getGenderType().toString())
+                    .social(member.getLoginType().toString())
+                    .nickname(member.getNickname())
+                    .profileImg(member.getProfile())
+                    .characterId(characterId)
+                    .characterGender(characterGender)
+                    .characterLink(characterLink)
+                    .characterImage(characterImage)
+                    .lockList(lockDtoList)
+                    .build();
     }
 
 
