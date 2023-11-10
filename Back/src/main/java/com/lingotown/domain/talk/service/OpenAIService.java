@@ -39,6 +39,8 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -61,7 +63,6 @@ public class OpenAIService {
     private final TalkService talkService;
     private final TTSService ttsService;
 
-
     @Value("${OPEN_AI.URL}")
     private String ENDPOINT_URL;
 
@@ -77,13 +78,10 @@ public class OpenAIService {
     @Value("${SPEECH_SUPER.SECRET_KEY}")
     private String SPEECH_SECRET_KEY;
 
-
     //발음평가 테스트
     public String checkPronunciation(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
         return webClientUtil.checkPronunciation(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
     }
-
-
 
     @TrackExecutionTime
     @Transactional
@@ -177,59 +175,59 @@ public class OpenAIService {
             Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
 
             saveTalkDetailMono.flatMap(userReqDataResponse -> {
-                try {
-                    // 발음 체크를 실행
-                    return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
-                            .map(pronunciationResDtoAsString -> {
+                        try {
+                            // 발음 체크를 실행
+                            return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+                                    .map(pronunciationResDtoAsString -> {
 
-                                // JSON 문자열을 PronunciationResDto 객체로 변환
-                                PronunciationResDto pronunciationResDto;
-                                try {
-                                    pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
-                                } catch (JsonProcessingException e) {
-                                    throw new RuntimeException(e);
-                                }
+                                        // JSON 문자열을 PronunciationResDto 객체로 변환
+                                        PronunciationResDto pronunciationResDto;
+                                        try {
+                                            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+                                        } catch (JsonProcessingException e) {
+                                            throw new RuntimeException(e);
+                                        }
 
-                                TalkDetail talkDetail = userReqDataResponse.getData();
+                                        TalkDetail talkDetail = userReqDataResponse.getData();
 
-                                ResultResDto resultResDto = pronunciationResDto.getResult();
-                                SentenceScore sentenceScore = SentenceScore.builder()
-                                        .overallScore(resultResDto.getOverall())
-                                        .pronunciationScore(resultResDto.getPronunciation())
-                                        .fluencyScore(resultResDto.getFluency())
-                                        .integrityScore(resultResDto.getIntegrity())
-                                        .rhythmScore(resultResDto.getRhythm())
-                                        .talkDetail(talkDetail)
-                                        .build();
+                                        ResultResDto resultResDto = pronunciationResDto.getResult();
+                                        SentenceScore sentenceScore = SentenceScore.builder()
+                                                .overallScore(resultResDto.getOverall())
+                                                .pronunciationScore(resultResDto.getPronunciation())
+                                                .fluencyScore(resultResDto.getFluency())
+                                                .integrityScore(resultResDto.getIntegrity())
+                                                .rhythmScore(resultResDto.getRhythm())
+                                                .talkDetail(talkDetail)
+                                                .build();
 
-                                sentenceScoreRepository.save(sentenceScore);
+                                        sentenceScoreRepository.save(sentenceScore);
 
-                                System.out.println(Arrays.toString(pronunciationResDto.getResult().getWords()));
+                                        System.out.println(Arrays.toString(pronunciationResDto.getResult().getWords()));
 
-                                for (WordResDto word : pronunciationResDto.getResult().getWords()) {
-                                    VocaScore vocaScore = VocaScore.builder()
-                                            .word(word.getWord())
-                                            .score(word.getScores().getOverall())
-                                            .talkDetail(talkDetail)
-                                            .build();
+                                        for (WordResDto word : pronunciationResDto.getResult().getWords()) {
+                                            VocaScore vocaScore = VocaScore.builder()
+                                                    .word(word.getWord())
+                                                    .score(word.getScores().getOverall())
+                                                    .talkDetail(talkDetail)
+                                                    .build();
 
-                                    vocaScoreRepository.save(vocaScore);
-                                }
+                                            vocaScoreRepository.save(vocaScore);
+                                        }
 
-                                TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
+                                        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
 
-                                return Tuples.of(userReqDataResponse, pronunciationResDto);
-                            });
-                } catch (IOException e) {
-                    return Mono.error(new RuntimeException(e));
-                }
-            })
-            .subscribe(tuple -> {
-            log.info(String.valueOf(tuple));
-            }, err -> {
-                // 오류 처리
-                log.error("Error occurred: ", err);
-            });
+                                        return Tuples.of(userReqDataResponse, pronunciationResDto);
+                                    });
+                        } catch (IOException e) {
+                            return Mono.error(new RuntimeException(e));
+                        }
+                    })
+                    .subscribe(tuple -> {
+                        log.info(String.valueOf(tuple));
+                    }, err -> {
+                        // 오류 처리
+                        log.error("Error occurred: ", err);
+                    });
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
@@ -245,20 +243,18 @@ public class OpenAIService {
 
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
 
-            //응답 반환
-            CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
-                    .builder()
-                    .responseMessage(responseDto.getContent())
-                  .responseS3URL(systemResDataResponse.getData().getTalkFile())
-                    .build();
+        //응답 반환
+        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
+                .builder()
+                .responseMessage(responseDto.getContent())
+                .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                .build();
 
-            talkDetailRepository.save(systemResDataResponse.getData());
+        talkDetailRepository.save(systemResDataResponse.getData());
 
-            return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
-                    ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
+        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
+                ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
-
-
 
     @Transactional
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
