@@ -5,6 +5,7 @@ type TalkBalloonAtom = {
   sentence: string;
   prevSectence: string;
   audio: string;
+  translate: string;
   audioPlay: boolean;
   isShow: boolean;
   isMove: boolean;
@@ -20,6 +21,7 @@ export const talkBalloonAtom = atom<TalkBalloonAtom>({
     sentence: "",
     prevSectence:"",
     audio: "", 
+    translate:"",
     audioPlay: false,
     isShow: false,
     isMove: true,
@@ -34,6 +36,7 @@ export const initialTalkBalloon = {
   sentence: "",
   prevSectence: "",
   audio: "",
+  translate:"",
   audioPlay: false,
   isShow: false,
   isMove: true,

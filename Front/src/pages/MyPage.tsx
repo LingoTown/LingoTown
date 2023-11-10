@@ -32,8 +32,8 @@ const MyPage = () => {
   const setUser = useSetRecoilState(userAtom);
   const logout = async() =>{
     setUser(initialUser)
-    await customAlert("", "로그아웃 되었습니다.")
     navigate("/")
+    await customAlert("", "로그아웃 되었습니다.")
   }
   //list 국가별로 바꾸기 - npcid, talkcount
   const groupByCountry = (arr:any) => {
