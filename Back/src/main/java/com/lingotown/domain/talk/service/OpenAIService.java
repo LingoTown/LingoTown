@@ -1,5 +1,7 @@
 package com.lingotown.domain.talk.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.npc.entity.NPC;
@@ -7,10 +9,16 @@ import com.lingotown.domain.talk.dto.request.*;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.ResultResDto;
+import com.lingotown.domain.talk.dto.response.speechsuper.WordResDto;
+import com.lingotown.domain.talk.entity.SentenceScore;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.entity.TalkDetail;
+import com.lingotown.domain.talk.entity.VocaScore;
+import com.lingotown.domain.talk.repository.SentenceScoreRepository;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.domain.talk.repository.VocaScoreRepository;
 import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -27,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -43,6 +52,8 @@ public class OpenAIService {
     private final TalkRepository talkRepository;
     private final MemberRepository memberRepository;
     private final TalkDetailRepository talkDetailRepository;
+    private final SentenceScoreRepository sentenceScoreRepository;
+    private final VocaScoreRepository vocaScoreRepository;
     private final CacheService cacheService;
     private final TalkService talkService;
     private final TTSService ttsService;
@@ -68,6 +79,7 @@ public class OpenAIService {
     public String checkPronunciation(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
         return webClientUtil.checkPronunciation(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
     }
+
 
 
     @TrackExecutionTime
@@ -165,6 +177,7 @@ public class OpenAIService {
             webClientUtil.checkGrammarAsync(API_KEY, ENDPOINT_URL, talkReqDto)
                     .subscribe(
                             res -> {
+                                System.out.println("grammarRes : " +res.toString());
                                 // TODO: 응답에 기반한 추가 로직을 여기에 구현합니다.
                                 // 예: 응답을 분석하고 데이터베이스에 저장하기
 
@@ -185,16 +198,50 @@ public class OpenAIService {
 
 
             //비동기 발음처리
-//            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
-//                    .subscribe(
-//                            res -> {
-//                                System.out.println("res : " +res.toString());
-//                            },
-//                            err -> {
-//                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
-//                                log.error("Error occurred: ", err);
-//                            }
-//                    );
+            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+                    .subscribe(
+                            res -> {
+                                ObjectMapper objectMapper = new ObjectMapper();
+                                PronunciationResDto pronunciationResDto = null;
+                                try {
+                                    pronunciationResDto = objectMapper.readValue(res, PronunciationResDto.class);
+
+                                    TalkDetail talkDetail = talkDetailRepository.findById(userReqDataResponse.getData().getId())
+                                        .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
+
+                                    ResultResDto resultResDto = pronunciationResDto.getResult();
+                                    SentenceScore sentenceScore = SentenceScore.builder()
+                                            .overallScore(resultResDto.getOverall())
+                                            .pronunciationScore(resultResDto.getPronunciation())
+                                            .fluencyScore(resultResDto.getFluency())
+                                            .rhythmScore(resultResDto.getRhythm())
+                                            .talkDetail(talkDetail)
+                                            .build();
+
+                                    sentenceScoreRepository.save(sentenceScore);
+                                    WordResDto[] WordResDtoArray = pronunciationResDto.getResult().getWords();
+
+                                    List<VocaScore> vocaScoreList = new ArrayList<>();
+                                    for(WordResDto word : WordResDtoArray){
+                                        VocaScore vocaScore = VocaScore.builder()
+                                                .word(word.getWord())
+                                                .score(word.getScores().getOverall())
+                                                .talkDetail(talkDetail)
+                                                .build();
+
+                                        vocaScoreRepository.save(vocaScore);
+                                        vocaScoreList.add(vocaScore);
+                                    }
+
+                                } catch (JsonProcessingException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            },
+                            err -> {
+                                // 오류 발생 시 로깅 또는 다른 오류 처리 로직을 구현합니다.
+                                log.error("Error occurred: ", err);
+                            }
+                    );
         }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
@@ -214,7 +261,7 @@ public class OpenAIService {
             CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
                     .builder()
                     .responseMessage(responseDto.getContent())
-                .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                  .responseS3URL(systemResDataResponse.getData().getTalkFile())
                     .build();
 
             return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
