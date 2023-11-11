@@ -31,7 +31,7 @@ const Rows = () => {
       className="hover:bg-[#ddd]/40 text-[1.1rem] flex flex-row bg-[#222] p-3 rounded-lg mb-1"
       style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
       >
-        <div className="flex w-1/6 text-yellow-300">{el.time}</div>
+        <div className="flex w-1/6 text-yellow-300">&nbsp;&nbsp;{el.time}</div>
         <div className="flex w-2/6 font-bold text-[1.3rem]">&nbsp;{el.destination}</div>
         <div className="flex w-1/6">{el.Flight}</div>
         <div className="flex w-1/6">{el.Gate}</div>

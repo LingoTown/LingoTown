@@ -107,7 +107,7 @@ export const GalleryComp: React.FC = () => {
   // value
   const CIRCLE_RADIUS = 3;
   const LANGUAGE = "fr-FR";
-  const SENTENCE = "Would you like to start a conversation with ";
+  const SENTENCE = "와(과) 이야기를 시작하시겠습니까";
 
   // function
   const customConfirm = useCustomConfirm();
@@ -158,13 +158,13 @@ export const GalleryComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (talkBalloon.isModal)
+      if (talkBalloon.isModal || talkBalloon.isShow)
         return
       if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
-          const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+          const flag = await customConfirm(npc + "", npc + SENTENCE + "?");
           if (flag) {
             animate();
             setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));

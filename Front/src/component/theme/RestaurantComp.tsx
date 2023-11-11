@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
@@ -11,7 +10,8 @@ import { STTAndRecord } from '../talk/SttAndRecordComp';
 import { Restaurant } from "../../../public/map/Restaurant";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { talkStateAtom } from '../../atom/TalkStateAtom';
+import { talkStateAtom, initialTalkState } from '../../atom/TalkStateAtom';
+import { talkBalloonAtom, initialTalkBalloon } from "../../atom/TalkBalloonAtom";
 import { Wall } from '../util/block/Wall';
 import { useCylinder } from '@react-three/cannon'
 import { Isabel } from '../../../public/name/restaurant/Isabel.tsx'
@@ -99,7 +99,7 @@ export const RestaurantComp: React.FC = () => {
   // value
   const CIRCLE_RADIUS = 3;
   const LANGUAGE = "en-US";
-  const SENTENCE = "Would you like to start a conversation with ";
+  const SENTENCE = "와(과) 이야기를 시작하시겠습니까";
 
   // function
   const customConfirm = useCustomConfirm();
@@ -133,6 +133,8 @@ export const RestaurantComp: React.FC = () => {
     if(loading) setLoading(() => ({loading:false}));
 
     return () => {
+      setTalkBalloon(initialTalkBalloon);
+      setTalkState(initialTalkState);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
@@ -150,13 +152,13 @@ export const RestaurantComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (talkBalloon.isModal)
+      if (talkBalloon.isModal || talkBalloon.isShow)
         return
       if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
-          const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+          const flag = await customConfirm(npc + "", npc + SENTENCE + "?");
           if (flag) {
             setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));
             animate();

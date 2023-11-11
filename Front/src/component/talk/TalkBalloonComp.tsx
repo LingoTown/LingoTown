@@ -6,7 +6,7 @@ import { useCustomAlert, useCustomConfirm } from "../util/ModalUtil";
 import { topic } from "../../type/TalkType";
 import { talkingTopic } from "../../api/Talk";
 import { talkingType } from "../../type/TalkType";
-import { translateSentence } from "../../api/Talk";
+import { translateSentence, endTalk } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
 
 
@@ -58,6 +58,9 @@ export const TalkBalloonComp = () => {
 
   // End 버튼 눌렀을때
   const handleEnd = async() => {
+
+    await endTalk(talkState.talkId, ({}) => {}, (res) => { console.log(res) })
+
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
@@ -185,7 +188,7 @@ export const TalkBalloonComp = () => {
       <button className="absolute top-0 left-0 z-10 flex flex-col space-y-2 ml-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         onClick={() => { setShowDictionary(!showDictionary) }}
-      >Dictionary</button>
+      >Voca</button>
       {
         // 토픽 리스트 보여주기
         showList?
@@ -216,7 +219,7 @@ export const TalkBalloonComp = () => {
         <div className="absolute top-[35vh] right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Previous conversation</div>
           <hr className="border-black"/>
-          <div className="font-['passero-one'] mt-2">{ talkBalloon.prevSectence }</div>
+          <div className="font-['GabiaSolmee'] text-xl mt-2">{ talkBalloon.prevSectence }</div>
         </div>:null
       }
       {
@@ -225,13 +228,13 @@ export const TalkBalloonComp = () => {
         <div className="absolute top-[35vh] left-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Translate</div>
           <hr className="border-black"/>
-          <div className="font-['passero-one'] mt-2">{ talkBalloon.translate }</div>
+          <div className="font-['GabiaSolmee'] text-xl mt-2">{ talkBalloon.translate }</div>
         </div>:null
       }
       {
         showDictionary ? 
-        <div className="absolute top-[7vh] left-2 w-[300px] bg-gray-100 rounded-lg px-4 py-2">
-          <div className="justify-center text-2xl font-bold font-['passero-one']">Dictionary</div>
+        <div className="absolute top-[8vh] left-2 w-[300px] bg-gray-100 rounded-lg px-4 py-2">
+          <div className="justify-center text-2xl font-bold font-['passero-one']">Voca</div>
           <hr className="border-black"/>
           <input
             className="mt-2 w-full p-2 border-2 border-gray-300 rounded-md leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline"
@@ -254,7 +257,7 @@ export const TalkBalloonComp = () => {
         </p>
         <hr className="mt-7 bg-gray-500 h-px border-none"></hr>
         <div className="flex items-center justify-center">
-          <p className="w-4/5 mt-1 ml-4 text-xl font-extrabold text-gray-600 p-2 break-words">
+          <p className="w-4/5 mt-1 ml-4 text-2xl text-gray-600 p-2 break-words font-['GabiaSolmee']">
             {
               // 말풍선 본문
               talkBalloon.isLoading?
@@ -263,7 +266,7 @@ export const TalkBalloonComp = () => {
                 {
                   talkBalloon.isUser?
                   <span className="text-blue-800">{talkBalloon.sentence}</span>:
-                  <span className="text-pink-800">{talkBalloon.sentence}</span>
+                  <span className="text-black">{talkBalloon.sentence}</span>
                 }
               </>
             }
