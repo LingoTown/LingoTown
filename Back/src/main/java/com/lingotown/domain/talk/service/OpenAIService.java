@@ -228,19 +228,21 @@ public class OpenAIService {
 //                        log.error("Error occurred: ", err);
 //                    });
 //        }
-        CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
-                .talkId(talkReqDto.getTalkId())
-                .isMember(true)
-                .content(talkReqDto.getPrompt())
-                .talkFile(talkReqDto.getTalkFile())
-                .build();
 
-// talkService를 통해 TalkDetail을 생성하고 바로 저장합니다.
-        TalkDetail savedTalkDetail = talkService.createTalkDetail(userReqDto).getData();
-        talkDetailRepository.save(savedTalkDetail);
 
-// 발음 체크 비동기 처리 시작
+        // 발음 체크 비동기 처리 시작
         if (talkReqDto.getTalkFile() != null) {
+            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
+                    .talkId(talkReqDto.getTalkId())
+                    .isMember(true)
+                    .content(talkReqDto.getPrompt())
+                    .talkFile(talkReqDto.getTalkFile())
+                    .build();
+
+            // talkService를 통해 TalkDetail을 생성하고 바로 저장합니다.
+            TalkDetail savedTalkDetail = talkService.createTalkDetail(userReqDto).getData();
+            talkDetailRepository.save(savedTalkDetail);
+            
             webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
                     .map(pronunciationResDtoAsString -> {
                         // JSON 문자열을 PronunciationResDto 객체로 변환
