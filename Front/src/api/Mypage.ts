@@ -25,7 +25,7 @@ const getTalkList = async (npcId: number, success: ({data} : {data: ReturnType})
   await HttpJson.get(`/api/talk/list/${npcId}`).then(success).catch(fail);
 }
 
-const deleteTalk = async (talkId:number, success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
+const deleteTalk = async (talkId: number, success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
   await HttpJson.delete(`/api/talk/${talkId}`).then(success).catch(fail);
 }
 
