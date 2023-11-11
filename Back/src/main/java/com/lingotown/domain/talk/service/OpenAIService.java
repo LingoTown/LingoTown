@@ -172,6 +172,9 @@ public class OpenAIService {
                     .talkFile(talkReqDto.getTalkFile())
                     .build();
 
+            DataResponse<TalkDetail> userResponse = talkService.createTalkDetail(userReqDto);
+            talkDetailRepository.save(userResponse.getData());
+
             Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
 
             saveTalkDetailMono.flatMap(userReqDataResponse -> {
