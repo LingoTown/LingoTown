@@ -173,6 +173,9 @@ public class OpenAIService {
                     .build();
 
             Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
+            TalkDetail savedTalkDetail = talkService.createTalkDetail(userReqDto).getData();
+            talkDetailRepository.save(savedTalkDetail);
+
 
             saveTalkDetailMono.flatMap(userReqDataResponse -> {
                         try {
@@ -202,8 +205,6 @@ public class OpenAIService {
 
                                         sentenceScoreRepository.save(sentenceScore);
 
-                                        System.out.println(Arrays.toString(pronunciationResDto.getResult().getWords()));
-
                                         for (WordResDto word : pronunciationResDto.getResult().getWords()) {
                                             VocaScore vocaScore = VocaScore.builder()
                                                     .word(word.getWord())
@@ -214,7 +215,7 @@ public class OpenAIService {
                                             vocaScoreRepository.save(vocaScore);
                                         }
 
-                                        TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
+
 
                                         return Tuples.of(userReqDataResponse, pronunciationResDto);
                                     });
