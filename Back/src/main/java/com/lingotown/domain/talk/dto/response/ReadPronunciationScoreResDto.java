@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReadPronunciationScoreResDto {
+    private Long talkDetailId;
     private int overallScore;
     private int pronunciationScore;
     private int fluencyScore;
