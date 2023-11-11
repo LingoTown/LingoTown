@@ -25,6 +25,7 @@ import com.lingotown.global.exception.ExceptionStatus;
 import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.CacheService;
+import com.lingotown.global.service.S3Service;
 import com.lingotown.global.tts.TTSService;
 import com.lingotown.global.util.WebClientUtil;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,7 @@ public class OpenAIService {
     private final VocaScoreRepository vocaScoreRepository;
     private final CacheService cacheService;
     private final TalkService talkService;
+    private final S3Service s3Service;
     private final TTSService ttsService;
 
     @Value("${OPEN_AI.URL}")
@@ -231,16 +233,20 @@ public class OpenAIService {
 
         if (talkReqDto.getTalkFile() != null) {
             // 사용자 질문 DB 저장
-            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
-                    .talkId(talkReqDto.getTalkId())
+            Talk talk = getTalkEntity(talkReqDto.getTalkId());
+            String fileUrl = s3Service.uploadFile(talkReqDto.getTalkFile());
+
+            TalkDetail talkDetail = TalkDetail
+                    .builder()
                     .isMember(true)
                     .content(talkReqDto.getPrompt())
-                    .talkFile(talkReqDto.getTalkFile())
+                    .talkFile(fileUrl)
+                    .talk(talk)
+                    .grammarAdvise(null)
                     .build();
 
             // 동기적으로 TalkDetail 생성 및 저장
-            DataResponse<TalkDetail> userResponse = talkService.createTalkDetail(userReqDto);
-            TalkDetail savedTalkDetail = talkDetailRepository.save(userResponse.getData());
+            TalkDetail savedTalkDetail = talkDetailRepository.save(talkDetail);
 
             // 발음 체크를 실행
             webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
@@ -376,5 +382,10 @@ public class OpenAIService {
         Long memberId = Long.valueOf(principal.getName());
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND)).getNickname();
+    }
+
+    private Talk getTalkEntity(Long talkId){
+        return talkRepository.findById(talkId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
     }
 }
