@@ -248,6 +248,7 @@ public class TalkService {
                 .pronunciationScore(sentenceScore.getPronunciationScore())
                 .fluencyScore(sentenceScore.getFluencyScore())
                 .integrityScore(sentenceScore.getIntegrityScore())
+                .rhythmScore(sentenceScore.getRhythmScore())
                 .wordScoreList(vocaScoreResList)
                 .rhythmScore(sentenceScore.getRhythmScore())
                 .build();
