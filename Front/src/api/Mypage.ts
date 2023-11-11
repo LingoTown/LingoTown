@@ -1,15 +1,32 @@
-// import { HttpJson, HttpForm } from "./common/Http";
+import { HttpJson, HttpForm } from "./common/Http";
+import { ReturnType } from "../type/ReturnType";
 
-// /api/talk/list
+const callMyList = async (success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.get(`/api/talk/list`).then(success).catch(fail);
+}
 
-// /api/member/leave
+const deleteAccount = async (success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.delete(`/api/member/leave`).then(success).catch(fail);
+}
 
-// /api/member/nickname
+const saveNickname = async (param: object, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.put(`/api/member/nickname`, JSON.stringify(param)).then(success).catch(fail);
+}
 
-// /api/member/profile
+const updateProfile = async (param: FormData, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpForm.put(`/api/member/profile`, param).then(success).catch(fail);
+}
 
-// /api/member
+const getInfo = async (success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.get(`/api/member`).then(success).catch(fail);
+}
 
-// /api/talk/list/${npcId}
+const getTalkList = async (npcId: number, success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.get(`/api/talk/list/${npcId}`).then(success).catch(fail);
+}
 
-// /api/talk/${talkId}
+const deleteTalk = async (talkId: number, success: ({data} : {data: ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.delete(`/api/talk/${talkId}`).then(success).catch(fail);
+}
+
+export { callMyList, deleteAccount, saveNickname, updateProfile, getInfo, getTalkList, deleteTalk }
