@@ -19,13 +19,8 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import javax.persistence.EntityManager;
-
 @ExtendWith(MockitoExtension.class)
 class NPCServiceTest {
-
-    @Mock
-    EntityManager em;
 
     @Mock
     private NPCRepository npcRepository;

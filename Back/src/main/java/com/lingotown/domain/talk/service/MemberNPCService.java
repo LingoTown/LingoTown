@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -103,13 +104,21 @@ public class MemberNPCService {
         List<IntimacyResDto> intimacyResDtoList = new ArrayList<>();
 
         List<MemberNPC> memberNPCList = memberNPCRepository.findByMemberId(memberId);
+        List<NPC> npcList = npcRepository.findAll();
 
-        for (MemberNPC memberNPC : memberNPCList) {
+
+        for (NPC npc : npcList) {
+            int intimacy = 0;
+
+            for (MemberNPC memberNPC : memberNPCList) {
+                if(Objects.equals(npc.getId(), memberNPC.getNpc().getId()))
+                    intimacy = memberNPC.getIntimacy();
+            }
+
             IntimacyResDto intimacyResDto = IntimacyResDto.builder()
-                    .memberNpcId(memberNPC.getId())
-                    .memberId(memberNPC.getMember().getId())
-                    .npcId(memberNPC.getNpc().getId())
-                    .intimacy(memberNPC.getIntimacy())
+                    .memberId(memberId)
+                    .npcId(npc.getId())
+                    .intimacy(intimacy)
                     .build();
 
             intimacyResDtoList.add(intimacyResDto);
@@ -125,7 +134,6 @@ public class MemberNPCService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NPC_NOT_FOUND));
 
         IntimacyResDto intimacyResDto = IntimacyResDto.builder()
-                .memberNpcId(memberNPC.getId())
                 .memberId(memberNPC.getMember().getId())
                 .npcId(memberNPC.getNpc().getId())
                 .intimacy(memberNPC.getIntimacy())
