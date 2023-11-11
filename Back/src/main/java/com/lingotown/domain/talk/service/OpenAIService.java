@@ -33,7 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,6 +57,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OpenAIService {
 
+    private final PlatformTransactionManager transactionManager;
     private final EntityManager entityManager;
     private final WebClientUtil webClientUtil;
     private final TalkRepository talkRepository;
@@ -167,7 +170,6 @@ public class OpenAIService {
 
         TalkDetail savedUserTalkDetail = null;
         if (talkReqDto.getTalkFile() != null) {
-            // 사용자 질문 DB 저장
             Talk talk = getTalkEntity(talkReqDto.getTalkId());
             String fileUrl = s3Service.uploadFile(talkReqDto.getTalkFile());
 
@@ -180,7 +182,6 @@ public class OpenAIService {
                     .grammarAdvise(null)
                     .build();
 
-            // 동기적으로 TalkDetail 생성 및 저장
             savedUserTalkDetail = talkDetailRepository.save(talkDetail);
         }
 
@@ -191,46 +192,73 @@ public class OpenAIService {
 
         // System 응답 DB 저장
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
+        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
 
-        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile, responseDto.getContent());
+
         CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
+
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
-    // 발음 체크를 실행
-    // 발음 체크 후 저장 로직
+
     private void performAsyncPronunciationCheck(TalkDetail talkDetail, TalkReqDto talkReqDto) throws IOException {
         webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
                 .map(pronunciationResDtoAsString -> {
-                    PronunciationResDto pronunciationResDto;
                     try {
-                        pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+                        return new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-                    return pronunciationResDto;
                 })
-                .subscribe(
-                        pronunciationResDto -> {
-                            // 이곳에서 talkDetail 엔티티를 데이터베이스에 저장하거나 업데이트합니다.
-                            // 이미 저장된 talkDetail인 경우에는 merge를 사용합니다.
-                            updatePronunciationResults(talkDetail, pronunciationResDto);
-                        },
-                        error -> {
-                            // 오류 처리 로직
-                            log.error("Error occurred during pronunciation check: ", error);
-                        }
-                );
+                .subscribe(pronunciationResDto -> {
+                    TransactionTemplate template = new TransactionTemplate(transactionManager);
+                    template.execute(status -> {
+                        updatePronunciationResults(talkDetail, pronunciationResDto);
+                        return null;
+                    });
+                }, error -> {
+                    // 오류 로깅
+                    log.error("Error occurred during pronunciation check: {}", error.getMessage(), error);
+                });
     }
 
-    // pronunciationResDto의 결과를 talkDetail에 추가하는 로직 구현
-    private void updatePronunciationResults(TalkDetail talkDetail, PronunciationResDto pronunciationResDto) {
-        if (talkDetail.getId() != null) {
-            talkDetail = entityManager.merge(talkDetail);
-        } else {
-            entityManager.persist(talkDetail);
+    // 발음 평가 DB 저장
+    public void updatePronunciationResults(TalkDetail talkDetail, PronunciationResDto pronunciationResDto) {
+
+
+        if (talkDetail.getId() != null &&  !entityManager.contains(talkDetail)) {
+            entityManager.merge(talkDetail);
+        }
+
+        System.out.println("---------------------------------------------------");
+        System.out.println("talkDetail : " +talkDetail.getId());
+
+        TalkDetail savedTalkDetail = getTalkDetailEntity(talkDetail.getId());
+
+        ResultResDto resultResDto = pronunciationResDto.getResult();
+        SentenceScore sentenceScore = SentenceScore.builder()
+                .overallScore(resultResDto.getOverall())
+                .pronunciationScore(resultResDto.getPronunciation())
+                .fluencyScore(resultResDto.getFluency())
+                .integrityScore(resultResDto.getIntegrity())
+                .rhythmScore(resultResDto.getRhythm())
+                .talkDetail(savedTalkDetail)
+                .build();
+
+        sentenceScoreRepository.save(sentenceScore);
+
+        for (WordResDto word : pronunciationResDto.getResult().getWords()) {
+            VocaScore vocaScore = VocaScore.builder()
+                    .word(word.getWord())
+                    .score(word.getScores().getOverall())
+                    .talkDetail(savedTalkDetail)
+                    .build();
+
+            VocaScore vocaScore1 = vocaScoreRepository.save(vocaScore);
+            System.out.println("======voca : " +vocaScore1);
+
         }
 
         entityManager.flush();
@@ -329,5 +357,10 @@ public class OpenAIService {
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
+    }
+
+    private TalkDetail getTalkDetailEntity(Long talkId){
+        return talkDetailRepository.findById(talkId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
     }
 }
