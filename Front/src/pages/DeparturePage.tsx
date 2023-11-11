@@ -6,6 +6,15 @@ import { useSetRecoilState, useRecoilState } from 'recoil';
 import toast, { Toaster } from 'react-hot-toast';
 import { useEffect } from "react";
 import { PlayerSelectAtom } from "../atom/PlayerSelectAtom";
+import { quizAtom } from "../atom/QuizAtom";
+import { getAllQuizList } from "../api/Quiz";
+import { quizTypeForAtom } from "../type/QuizType";
+import { characterAtom } from "../atom/CharacterAtom";
+import { CharacterResponseType } from "../type/CharacterType";
+import { getCharacterList } from "../api/Character";
+import { intimacyType } from "../type/IntimacyType";
+import { getMemberNpcRelationship } from "../api/NPC";
+import { intimacyAtom } from "../atom/IntimacyAtom";
 
 const Rows = () => {
     /* loading */
@@ -43,10 +52,68 @@ const Rows = () => {
 const DeparturePage = () => {
   /* loading */
   const setLoading = useSetRecoilState(loadingAtom);
+  const setQuiz = useSetRecoilState(quizAtom);
+  const [, setCharacter] = useRecoilState(characterAtom);
+  const [, setIntimacy] = useRecoilState(intimacyAtom);
+  const [playerChange, setPlayerChange] = useRecoilState(PlayerSelectAtom);
 
   const navigate = useNavigate();
 
-  const [playerChange, setPlayerChange] = useRecoilState(PlayerSelectAtom);
+  /* 캐릭터 정보 불러오기 */
+  const fetchCharacterList = async() => {
+    await getCharacterList(({data}: any) => {
+      const result = data.data as CharacterResponseType[];
+
+        console.log(result)
+
+        setCharacter(prev => ({
+            ...prev, 
+            characterList: result,
+        }))
+    }, 
+    (error) => {
+      console.log(error);
+    });
+  }
+
+  /* 친밀도 정보 가져오기 */
+  const fetchIntimacyInfo = async() => {
+    await getMemberNpcRelationship(({data}: any) => {
+      const result  = data.data as intimacyType[];
+
+      setIntimacy(prev => ({
+        ...prev, 
+        npcList: result,
+      }))
+    }, 
+    (error) => {
+      console.log(error);
+    });
+  }
+
+  /* 퀴즈 정보 불러오기 */
+  const getQuizInfo = async () => {
+
+    await getAllQuizList(({data}: any) => {
+        const result = data.data as quizTypeForAtom[];
+
+        console.log(result)
+
+        setQuiz(prev => ({
+            ...prev, 
+            quizList: result,
+        }))
+    }, 
+    (error) => {
+      console.log(error);
+    });
+  };
+
+  useEffect(() => {
+    getQuizInfo();
+    fetchCharacterList();
+    fetchIntimacyInfo();
+  }, [])
 
   // 캐릭터 변경 토스트 메세지
   

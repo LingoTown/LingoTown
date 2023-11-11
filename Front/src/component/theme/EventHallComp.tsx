@@ -32,6 +32,10 @@ import { useRecoilValue } from 'recoil';
 */
 
 export const EventHallComp: React.FC = () => {
+    const user = useRecoilValue(userAtom);
+
+    // 캐릭터 불러오기
+    let playerFile = useGLTF(user.characterLink);
 
   /* NPC Data */    
   const JaydenData: NPCData = {
@@ -201,13 +205,8 @@ export const EventHallComp: React.FC = () => {
     
     /* Value */
 
-    const user = useRecoilValue(userAtom);
-
     const playerPosition = [0.25, 0, 28];
     const playerRotation = [0, 3.15, 0];
-
-    // 캐릭터 불러오기
-    let playerFile = useGLTF(user.characterLink);
 
     // 캐릭터 크기
     const playerScale = 1;
