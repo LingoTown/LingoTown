@@ -11,9 +11,9 @@ const cursorHoverLink = import.meta.env.VITE_S3_URL + 'MousePointer/navigation_h
 const Tutorial = () => {
   const [step, setStep] = useState<number>(0);
   const [isPressed, setIsPressed] = React.useState(false);
-  const img:string[] = ["", "Tutorial/DirectionalKey.png", "Tutorial/SpaceBarkey.png", "Tutorial/A_key.png", "Tutorial/S_key.png", "Tutorial/SS_key.png", "Tutorial/D_key.png"];
-  const title:string[] = ["LingoTown", "방향키", "스페이스바", "Ask키", "Start키", "Start Stop키", "Done키"];
-  const statement:string[] = ["", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "링고타운 주민들에게 가까이 다가가 A키로 말을 걸어보세요!", "빔프로젝트 앞에서 S키를 눌러 영상을 감상해보세요!", "S키를 2번 누르면 일시정지가 됩니다!", "어디서든 D키를 눌러 영상을 종료하실 수 있습니다!"]; 
+  const img:string[] = ["", "/tutorial/keyboard_handling.png", `${import.meta.env.VITE_S3_URL}Tutorial/DirectionalKey.png`, `${import.meta.env.VITE_S3_URL}Tutorial/SpaceBarkey.png`, `${import.meta.env.VITE_S3_URL}Tutorial/A_key.png`, `${import.meta.env.VITE_S3_URL}Tutorial/S_key.png`, `${import.meta.env.VITE_S3_URL}Tutorial/SS_key.png`, `${import.meta.env.VITE_S3_URL}Tutorial/D_key.png`, `/tutorial/topic.png`, `/tutorial/topic_select.png`, `/tutorial/topic_answer.png`];
+  const title:string[] = ["LingoTown", "키보드 조작편", "방향키", "스페이스바", "Ask키", "Start키", "Start Stop키", "Done키", "Topic 대화편", "Topic 버튼", "start talk!! 버튼"];
+  const statement:string[] = ["", "", "방향키로 링고타운을 돌아다녀 보세요!", "스페이스바를 눌러 신나게 점프해볼까요?!", "링고타운 주민들에게 가까이 다가가 A키로 말을 걸어보세요!", "빔프로젝트 앞에서 S키를 눌러 영상을 감상해보세요!", "S키를 2번 누르면 일시정지가 됩니다!", "어디서든 D키를 눌러 영상을 종료하실 수 있습니다!","", "NPC별로 준비된 Topic을 선택해 대화하실 수 있습니다.", "말할 답변을 생각하고, start talk!! 버튼을 눌러 대답해보세요!"]; 
   const setVisit = useSetRecoilState(tutorialAtom);
   const [animationData, setAnimationData] = useState(null);
 
@@ -93,7 +93,7 @@ const Tutorial = () => {
           step===0?
           <Lottie className="mx-auto max-w-[270px]" animationData={animationData} />
           :
-          <img className="mx-auto max-w-[300px]" src={import.meta.env.VITE_S3_URL+img[step]} />
+          <img className="mx-auto max-w-[400px]" src={img[step]} />
         }
       </div>
 
