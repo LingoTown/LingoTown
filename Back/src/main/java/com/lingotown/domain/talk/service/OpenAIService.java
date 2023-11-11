@@ -161,77 +161,10 @@ public class OpenAIService {
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
 
-//        /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
-//        if (talkReqDto.getTalkFile() != null) {
-//
-//            // 사용자 질문 DB 저장
-//            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
-//                    .talkId(talkReqDto.getTalkId())
-//                    .isMember(true)
-//                    .content(talkReqDto.getPrompt())
-//                    .talkFile(talkReqDto.getTalkFile())
-//                    .build();
-//
-//            Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
-//            TalkDetail savedTalkDetail = talkService.createTalkDetail(userReqDto).getData();
-//            talkDetailRepository.save(savedTalkDetail);
-//
-//
-//            saveTalkDetailMono.flatMap(userReqDataResponse -> {
-//                        try {
-//                            // 발음 체크를 실행
-//                            return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
-//                                    .map(pronunciationResDtoAsString -> {
-//
-//                                        // JSON 문자열을 PronunciationResDto 객체로 변환
-//                                        PronunciationResDto pronunciationResDto;
-//                                        try {
-//                                            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
-//                                        } catch (JsonProcessingException e) {
-//                                            throw new RuntimeException(e);
-//                                        }
-//
-//                                        TalkDetail talkDetail = userReqDataResponse.getData();
-//
-//                                        ResultResDto resultResDto = pronunciationResDto.getResult();
-//                                        SentenceScore sentenceScore = SentenceScore.builder()
-//                                                .overallScore(resultResDto.getOverall())
-//                                                .pronunciationScore(resultResDto.getPronunciation())
-//                                                .fluencyScore(resultResDto.getFluency())
-//                                                .integrityScore(resultResDto.getIntegrity())
-//                                                .rhythmScore(resultResDto.getRhythm())
-//                                                .talkDetail(talkDetail)
-//                                                .build();
-//
-//                                        sentenceScoreRepository.save(sentenceScore);
-//
-//                                        for (WordResDto word : pronunciationResDto.getResult().getWords()) {
-//                                            VocaScore vocaScore = VocaScore.builder()
-//                                                    .word(word.getWord())
-//                                                    .score(word.getScores().getOverall())
-//                                                    .talkDetail(talkDetail)
-//                                                    .build();
-//
-//                                            vocaScoreRepository.save(vocaScore);
-//                                        }
-//
-//                                        return Tuples.of(userReqDataResponse, pronunciationResDto);
-//                                    });
-//                        } catch (IOException e) {
-//                            return Mono.error(new RuntimeException(e));
-//                        }
-//                    })
-//                    .subscribe(tuple -> {
-//                        log.info(String.valueOf(tuple));
-//                    }, err -> {
-//                        // 오류 처리
-//                        log.error("Error occurred: ", err);
-//                    });
-//        }
-
-
-        // 발음 체크 비동기 처리 시작
+        /*  사용자 질문 DB 저장 및 비동기 문법, 발음 체크 */
         if (talkReqDto.getTalkFile() != null) {
+
+            // 사용자 질문 DB 저장
             CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
                     .talkId(talkReqDto.getTalkId())
                     .isMember(true)
@@ -239,51 +172,115 @@ public class OpenAIService {
                     .talkFile(talkReqDto.getTalkFile())
                     .build();
 
-            // talkService를 통해 TalkDetail을 생성하고 바로 저장합니다.
-            TalkDetail savedTalkDetail = talkService.createTalkDetail(userReqDto).getData();
-            talkDetailRepository.save(savedTalkDetail);
-            
-            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
-                    .map(pronunciationResDtoAsString -> {
-                        // JSON 문자열을 PronunciationResDto 객체로 변환
-                        PronunciationResDto pronunciationResDto;
+            Mono<DataResponse<TalkDetail>> saveTalkDetailMono = Mono.fromCallable(() -> talkService.createTalkDetail(userReqDto));
+
+            saveTalkDetailMono.flatMap(userReqDataResponse -> {
                         try {
-                            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
+                            // 발음 체크를 실행
+                            return webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+                                    .map(pronunciationResDtoAsString -> {
 
-                        // 결과를 DB에 저장
-                        ResultResDto resultResDto = pronunciationResDto.getResult();
-                        SentenceScore sentenceScore = SentenceScore.builder()
-                                .overallScore(resultResDto.getOverall())
-                                .pronunciationScore(resultResDto.getPronunciation())
-                                .fluencyScore(resultResDto.getFluency())
-                                .integrityScore(resultResDto.getIntegrity())
-                                .rhythmScore(resultResDto.getRhythm())
-                                .talkDetail(savedTalkDetail)
-                                .build();
-                        sentenceScoreRepository.save(sentenceScore);
+                                        // JSON 문자열을 PronunciationResDto 객체로 변환
+                                        PronunciationResDto pronunciationResDto;
+                                        try {
+                                            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+                                        } catch (JsonProcessingException e) {
+                                            throw new RuntimeException(e);
+                                        }
 
-                        // 개별 단어 점수 저장
-                        for (WordResDto word : pronunciationResDto.getResult().getWords()) {
-                            VocaScore vocaScore = VocaScore.builder()
-                                    .word(word.getWord())
-                                    .score(word.getScores().getOverall())
-                                    .talkDetail(savedTalkDetail)
-                                    .build();
-                            vocaScoreRepository.save(vocaScore);
+                                        TalkDetail talkDetail = userReqDataResponse.getData();
+
+                                        ResultResDto resultResDto = pronunciationResDto.getResult();
+                                        SentenceScore sentenceScore = SentenceScore.builder()
+                                                .overallScore(resultResDto.getOverall())
+                                                .pronunciationScore(resultResDto.getPronunciation())
+                                                .fluencyScore(resultResDto.getFluency())
+                                                .integrityScore(resultResDto.getIntegrity())
+                                                .rhythmScore(resultResDto.getRhythm())
+                                                .talkDetail(talkDetail)
+                                                .build();
+
+                                        sentenceScoreRepository.save(sentenceScore);
+
+                                        for (WordResDto word : pronunciationResDto.getResult().getWords()) {
+                                            VocaScore vocaScore = VocaScore.builder()
+                                                    .word(word.getWord())
+                                                    .score(word.getScores().getOverall())
+                                                    .talkDetail(talkDetail)
+                                                    .build();
+
+                                            vocaScoreRepository.save(vocaScore);
+                                        }
+
+                                        return Tuples.of(userReqDataResponse, pronunciationResDto);
+                                    });
+                        } catch (IOException e) {
+                            return Mono.error(new RuntimeException(e));
                         }
-                        return pronunciationResDto;
                     })
-                    .subscribe(pronunciationResDto -> {
-                        // 비동기 처리 결과를 로깅
-                        log.info("Pronunciation check completed: {}", pronunciationResDto);
+                    .subscribe(tuple -> {
+                        log.info(String.valueOf(tuple));
                     }, err -> {
                         // 오류 처리
-                        log.error("Error occurred during pronunciation check: ", err);
+                        log.error("Error occurred: ", err);
                     });
         }
+
+
+        // 발음 체크 비동기 처리 시작
+//        if (talkReqDto.getTalkFile() != null) {
+//            CreateTalkDetailReqDto userReqDto = CreateTalkDetailReqDto.builder()
+//                    .talkId(talkReqDto.getTalkId())
+//                    .isMember(true)
+//                    .content(talkReqDto.getPrompt())
+//                    .talkFile(talkReqDto.getTalkFile())
+//                    .build();
+//
+//            // talkService를 통해 TalkDetail을 생성하고 바로 저장합니다.
+//            TalkDetail savedTalkDetail = talkService.createTalkDetail(userReqDto).getData();
+//            talkDetailRepository.save(savedTalkDetail);
+//
+//            webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+//                    .map(pronunciationResDtoAsString -> {
+//                        // JSON 문자열을 PronunciationResDto 객체로 변환
+//                        PronunciationResDto pronunciationResDto;
+//                        try {
+//                            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+//                        } catch (JsonProcessingException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//
+//                        // 결과를 DB에 저장
+//                        ResultResDto resultResDto = pronunciationResDto.getResult();
+//                        SentenceScore sentenceScore = SentenceScore.builder()
+//                                .overallScore(resultResDto.getOverall())
+//                                .pronunciationScore(resultResDto.getPronunciation())
+//                                .fluencyScore(resultResDto.getFluency())
+//                                .integrityScore(resultResDto.getIntegrity())
+//                                .rhythmScore(resultResDto.getRhythm())
+//                                .talkDetail(savedTalkDetail)
+//                                .build();
+//                        sentenceScoreRepository.save(sentenceScore);
+//
+//                        // 개별 단어 점수 저장
+//                        for (WordResDto word : pronunciationResDto.getResult().getWords()) {
+//                            VocaScore vocaScore = VocaScore.builder()
+//                                    .word(word.getWord())
+//                                    .score(word.getScores().getOverall())
+//                                    .talkDetail(savedTalkDetail)
+//                                    .build();
+//                            vocaScoreRepository.save(vocaScore);
+//                        }
+//                        return pronunciationResDto;
+//                    })
+//                    .subscribe(pronunciationResDto -> {
+//                        // 비동기 처리 결과를 로깅
+//                        log.info("Pronunciation check completed: {}", pronunciationResDto);
+//                    }, err -> {
+//                        // 오류 처리
+//                        log.error("Error occurred during pronunciation check: ", err);
+//                    });
+//        }
 
         /* GPT 응답 TTS 변환 및 DB 저장 */
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
