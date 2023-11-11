@@ -100,7 +100,7 @@ sonar {
 /* 2023.11.08 : Jacoco */
 jacoco {
     // JaCoCo 버전
-    toolVersion = '0.8.6'
+    toolVersion = '0.8.8'
 
 //  테스트결과 리포트를 저장할 경로 변경
 //  default는 "${project.reporting.baseDir}/jacoco"
