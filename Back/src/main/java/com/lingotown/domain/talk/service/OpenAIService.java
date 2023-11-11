@@ -245,7 +245,12 @@ public class OpenAIService {
             // 발음 체크를 실행
             webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
                     .map(pronunciationResDtoAsString -> {
-                        PronunciationResDto pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+                        PronunciationResDto pronunciationResDto = null;
+                        try {
+                            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
                         ResultResDto resultResDto = pronunciationResDto.getResult();
                         SentenceScore sentenceScore = SentenceScore.builder()
                                 .overallScore(resultResDto.getOverall())
