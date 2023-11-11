@@ -238,7 +238,7 @@ public class OpenAIService {
             Talk talk = getTalkEntity(talkReqDto.getTalkId());
             String fileUrl = s3Service.uploadFile(talkReqDto.getTalkFile());
 
-            TalkDetail talkDetail = TalkDetail
+            TalkDetail savedTalkDetail = TalkDetail
                     .builder()
                     .isMember(true)
                     .content(talkReqDto.getPrompt())
@@ -248,12 +248,12 @@ public class OpenAIService {
                     .build();
 
             // 동기적으로 TalkDetail 생성 및 저장
-            TalkDetail savedTalkDetail;
-            if (talkDetail.getId() != null && entityManager.contains(talkDetail)) {
-                savedTalkDetail = entityManager.merge(talkDetail);
-            } else {
-                savedTalkDetail = talkDetailRepository.save(talkDetail);
-            }
+//            TalkDetail savedTalkDetail;
+//            if (talkDetail.getId() != null && entityManager.contains(talkDetail)) {
+//                savedTalkDetail = entityManager.merge(talkDetail);
+//            } else {
+//                savedTalkDetail = talkDetailRepository.save(talkDetail);
+//            }
 
             // 발음 체크를 실행
             webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
