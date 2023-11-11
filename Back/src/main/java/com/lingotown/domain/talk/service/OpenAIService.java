@@ -236,19 +236,23 @@ public class OpenAIService {
                 .talkFile(GPTResponseFile)
                 .build();
 
-        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
-
-        //응답 반환
-        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
-                .builder()
-                .responseMessage(responseDto.getContent())
-                .responseS3URL(systemResDataResponse.getData().getTalkFile())
-                .build();
-
-        talkDetailRepository.save(systemResDataResponse.getData());
+        CreateOpenAIResDto openAIResDto = savedGPTResponse(systemResDto);
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
+    }
+
+    public CreateOpenAIResDto savedGPTResponse(CreateTalkDetailReqDto systemResDto) throws IOException {
+        DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
+        talkDetailRepository.save(systemResDataResponse.getData());
+
+        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
+                .builder()
+                .responseMessage(systemResDto.getContent())
+                .responseS3URL(systemResDataResponse.getData().getTalkFile())
+                .build();
+
+        return openAIResDto;
     }
 
     @Transactional
