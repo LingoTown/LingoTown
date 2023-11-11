@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
@@ -246,8 +247,8 @@ public class OpenAIService {
                 );
     }
 
-    private TalkDetail createSystemTalkDetail(TalkReqDto talkReqDto, MultipartFile responseFile, String responseContent) {
-        // 시스템 응답에 대한 TalkDetail 객체 생성 및 저장 로직
+    // 시스템 응답에 대한 TalkDetail 객체 생성 및 저장 로직
+    private TalkDetail createSystemTalkDetail(TalkReqDto talkReqDto, MultipartFile responseFile, String responseContent) throws IOException {
         CreateTalkDetailReqDto systemReqDto = CreateTalkDetailReqDto.builder()
                 .talkId(talkReqDto.getTalkId())
                 .isMember(false)
@@ -259,13 +260,24 @@ public class OpenAIService {
         return talkDetailRepository.save(systemResDataResponse.getData());
     }
 
+    // 최종 응답 DTO 생성 로직
     private CreateOpenAIResDto createOpenAIResponseDto(TalkDetail talkDetail) {
-        // 최종 응답 DTO 생성 로직
         return CreateOpenAIResDto
                 .builder()
                 .responseMessage(talkDetail.getContent())
                 .responseS3URL(talkDetail.getTalkFile())
                 .build();
+    }
+
+    public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
+        TalkReqDto talkReqDto = TalkReqDto.builder()
+                .talkId(topicReqDto.getTalkId())
+                .prompt(topicReqDto.getTopic())
+                .language(topicReqDto.getLanguage())
+                .talkFile(null)
+                .build();
+
+        return askGPT(principal, talkReqDto);
     }
 
 
