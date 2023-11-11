@@ -128,7 +128,6 @@ public class TalkService {
     }
 
     //NPC와 대화하기
-    @Transactional
     public DataResponse<TalkDetail> createTalkDetail(CreateTalkDetailReqDto createTalkDetailReqDto) throws IOException {
         Long talkId = createTalkDetailReqDto.getTalkId();
         Talk talk = getTalkEntity(talkId);
