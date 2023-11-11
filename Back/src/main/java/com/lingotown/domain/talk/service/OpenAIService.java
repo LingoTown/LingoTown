@@ -190,61 +190,50 @@ public class OpenAIService {
         }
 
         // System 응답 DB 저장
-        // GPT-3로부터 응답을 받아 TTS 변환을 수행합니다.
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
 
-        // 시스템의 응답에 대한 TalkDetail 객체 생성 및 저장
         TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile, responseDto.getContent());
-
-        // 최종 응답 생성 및 반환
         CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
+    // 발음 체크를 실행
+    // 발음 체크 후 저장 로직
     private void performAsyncPronunciationCheck(TalkDetail talkDetail, TalkReqDto talkReqDto) throws IOException {
-        // 발음 체크를 실행
         webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
                 .map(pronunciationResDtoAsString -> {
-                    PronunciationResDto pronunciationResDto = null;
+                    PronunciationResDto pronunciationResDto;
                     try {
                         pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-                    ResultResDto resultResDto = pronunciationResDto.getResult();
-                    SentenceScore sentenceScore = SentenceScore.builder()
-                            .overallScore(resultResDto.getOverall())
-                            .pronunciationScore(resultResDto.getPronunciation())
-                            .fluencyScore(resultResDto.getFluency())
-                            .integrityScore(resultResDto.getIntegrity())
-                            .rhythmScore(resultResDto.getRhythm())
-                            .talkDetail(talkDetail)
-                            .build();
-
-                    sentenceScoreRepository.save(sentenceScore);
-
-                    for (WordResDto word : pronunciationResDto.getResult().getWords()) {
-                        VocaScore vocaScore = VocaScore.builder()
-                                .word(word.getWord())
-                                .score(word.getScores().getOverall())
-                                .talkDetail(talkDetail)
-                                .build();
-
-                        vocaScoreRepository.save(vocaScore);
-                    }
                     return pronunciationResDto;
                 })
                 .subscribe(
                         pronunciationResDto -> {
-                            // 처리 결과 로깅 또는 추가 작업
+                            // 이곳에서 talkDetail 엔티티를 데이터베이스에 저장하거나 업데이트합니다.
+                            // 이미 저장된 talkDetail인 경우에는 merge를 사용합니다.
+                            updatePronunciationResults(talkDetail, pronunciationResDto);
                         },
                         error -> {
-                            // 오류 로깅
+                            // 오류 처리 로직
                             log.error("Error occurred during pronunciation check: ", error);
                         }
                 );
+    }
+
+    // pronunciationResDto의 결과를 talkDetail에 추가하는 로직 구현
+    private void updatePronunciationResults(TalkDetail talkDetail, PronunciationResDto pronunciationResDto) {
+        if (talkDetail.getId() != null) {
+            talkDetail = entityManager.merge(talkDetail);
+        } else {
+            entityManager.persist(talkDetail);
+        }
+
+        entityManager.flush();
     }
 
     // 시스템 응답에 대한 TalkDetail 객체 생성 및 저장 로직
