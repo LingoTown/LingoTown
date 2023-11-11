@@ -8,6 +8,11 @@ import { talkingTopic } from "../../api/Talk";
 import { talkingType } from "../../type/TalkType";
 import { translateSentence, endTalk } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
+import { getMemberNpcRelationship } from "../../api/NPC";
+import { intimacyAtom } from "../../atom/IntimacyAtom";
+import { intimacyType } from "../../type/IntimacyType";
+import { userAtom } from "../../atom/UserAtom";
+import { lockOffCharacter } from "../../api/Character";
 
 
 export const TalkBalloonComp = () => {
@@ -26,10 +31,44 @@ export const TalkBalloonComp = () => {
   const [showDictionary, setShowDictionary] = useState<boolean>(false);
   const [dictionary, setDictionary] = useState<string>("");
   const [word, setWord] = useState<string>("");
-  
+  const [intimacy, setIntimacy] = useRecoilState(intimacyAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  const [flag, setFlag] = useState<number>(0);
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const lang = queryParams.get('language');
+  /* 친밀도 정보 가져오기 */
+  const fetchIntimacyInfo = async() => {
+    await getMemberNpcRelationship(({data}: any) => {
+      const result  = data.data as intimacyType[];
+
+      setIntimacy(prev => ({
+        ...prev, 
+        npcList: result,
+      }));
+
+      console.log("fetchIntimacyInfo 완료")
+      console.log(flag)
+      setFlag(f => f + 1);
+      console.log(flag)
+    }, 
+    (error) => {
+      console.log(error);
+    });
+  }
+
+  /* 캐릭터 잠금 해제 */
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
 
 
   const handleOnRec = () => {
@@ -61,9 +100,14 @@ export const TalkBalloonComp = () => {
 
     await endTalk(talkState.talkId, ({}) => {}, (res) => { console.log(res) })
 
+    console.log(talkState)
+
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
+
+    /*  */
+    fetchIntimacyInfo();
   };
 
   // 대화음악 재생
@@ -173,6 +217,53 @@ export const TalkBalloonComp = () => {
       isMounted.current.audioPlay = true;
     }
   }, [talkBalloon.audioPlay])
+
+  useEffect(() => {
+    console.log("Flag 상태 변경됨: ", flag);
+  }, [flag]);
+  
+  /* 친밀도가 업데이트 될 때, 캐릭터 잠금 해제 여부를 파악한다. */
+  useEffect(() => {
+    console.log(flag)
+    console.log("useEffect 안")
+
+    if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
+      console.log("setUser")
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 4 ? {...item, islocked: false} : item
+        )
+      })
+
+      characterLockOff(5);
+      alert("characterId 5번, f14 캐릭터 잠금 해제");
+    }
+
+    if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 8 ? {...item, islocked: false} : item
+        )
+      })
+
+      characterLockOff(9);
+      alert("characterId 9번, f21 캐릭터 잠금 해제");
+    }
+
+    if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 7 ? {...item, islocked: false} : item
+        )
+      })
+
+      characterLockOff(8);
+      alert("characterId 8번, m29 캐릭터 잠금 해제");
+    }
+  }, [intimacy, flag]);
 
   return(
     <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>

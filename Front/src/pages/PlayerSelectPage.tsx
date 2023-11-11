@@ -11,6 +11,9 @@ import { useRecoilState, useRecoilValue } from "recoil"
 import { userAtom } from '../atom/UserAtom';
 import { CharacterLockInfo } from '../type/CharacterType';
 import { getCharacterLockInfo } from '../api/Character'
+import { lockOffCharacter } from '../api/Character';
+import { intimacyAtom } from '../atom/IntimacyAtom';
+
 
 interface playerSelectPage {
   theme: JSX.Element;
@@ -30,6 +33,7 @@ export const showToaster = (sentence:string, emoji:string) => {
 export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
 
   const [user, setUser] = useRecoilState(userAtom);
+  const [intimacy] = useRecoilState(intimacyAtom);
 
   /* 캐릭터 잠금정보 불러오기 */
   const getCharacterLock = async () => {
@@ -47,6 +51,18 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
     });
   };
 
+  /* 캐릭터 잠금 해제 */
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
+
 useEffect(() => {
   getCharacterLock();
 }, [])
@@ -60,6 +76,46 @@ useEffect(() => {
     document.body.style.cursor = `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`;
   },[]);
 
+  useEffect(() => {
+    console.log("!!")
+    if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
+      console.log("??")
+      console.log("setUser")
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 4 ? {...item, islocked: false} : item
+        )
+      })
+
+      characterLockOff(5);
+      alert("characterId 5번, f14 캐릭터 잠금 해제");
+    }
+
+    if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 8 ? {...item, islocked: false} : item
+        )
+      })
+
+      characterLockOff(9);
+      alert("characterId 9번, f21 캐릭터 잠금 해제");
+    }
+
+    if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 7 ? {...item, islocked: false} : item
+        )
+      })
+
+      characterLockOff(8);
+      alert("characterId 8번, m29 캐릭터 잠금 해제");
+    }
+  }, []);
 
   return(
     <>

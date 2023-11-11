@@ -47,7 +47,7 @@ export const SelectButtonComp = () => {
           characterId: result.characterId,
           characterGender: result.characterGender,
           characterLink: result.characterLink,
-          characterImage: result.characterImg
+          characterImage: result.characterImage
         }));
       },
       error => {
