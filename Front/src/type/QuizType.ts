@@ -3,7 +3,6 @@ export type QuizType = {
   quiz: string;
   koQuiz: string;
   solved: string;
-
 }
 
 export type quizSubmitType = {
