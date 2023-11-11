@@ -242,6 +242,7 @@ public class OpenAIService {
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
+    @Transactional
     public CreateOpenAIResDto savedGPTResponse(CreateTalkDetailReqDto systemResDto) throws IOException {
         DataResponse<TalkDetail> systemResDataResponse = talkService.createTalkDetail(systemResDto);
         talkDetailRepository.save(systemResDataResponse.getData());
