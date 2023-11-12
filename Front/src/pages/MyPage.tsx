@@ -155,7 +155,12 @@ const MyPage = () => {
   return(
     <>
       <Toaster position="top-center" />
-      {!visit.visit?<Tutorial/>:null}
+      {!visit.visit?
+        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10">
+          <Tutorial/>
+        </div>
+        :null
+      }
       <div
         className="min-h-screen flex flex-col items-center justify-center bg-cover" 
         style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`,
