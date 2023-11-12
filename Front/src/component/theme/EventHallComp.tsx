@@ -56,7 +56,7 @@ export const EventHallComp: React.FC = () => {
     circleEmissiveIntensity: 5,
     circleSide: THREE.DoubleSide,
     circleTransparent: true,
-    circleOpacity: 0.2
+    circleOpacity: 0.2,
   };
 
   const KevinData: NPCData = {
@@ -132,11 +132,13 @@ export const EventHallComp: React.FC = () => {
     const npcCircleSide = circleSide;
     const npcCircleTransparent = circleTransparent;
     const npcCircleOpacity = circleOpacity;
+    const action = useRef<AnimationAction>();
+    const actions = useAnimations(npcModel.animations, npcModel.scene).actions;
 
     return { npcId, npcName, npcModel, npcPosition, npcRotation, npcScale, npcCameraPosition, npcCameraRotation,
             npcCircleRef, npcCircleArgs, npcCirclePosition, npcCircleRotation,
             npcCircleAttach, npcCircleColor, npcCircleEmissive, npcCircleEmissiveIntensity,
-            npcCircleSide, npcCircleTransparent, npcCircleOpacity };
+            npcCircleSide, npcCircleTransparent, npcCircleOpacity, action, actions };
     }
 
 
@@ -311,6 +313,9 @@ export const EventHallComp: React.FC = () => {
     useEffect(() => {
         // 기본 상태
         SetAction('Idle', activeAction, actions, playerRef);
+        SetAction('Idle',  Jayden.action, Jayden.actions, null);
+        SetAction('Idle',  Daen.action, Daen.actions, null);
+        SetAction('Idle',  Kevin.action, Kevin.actions, null);
 
         window.addEventListener("keydown", handleKeyDown);
         window.addEventListener("keyup", handleKeyUp);
