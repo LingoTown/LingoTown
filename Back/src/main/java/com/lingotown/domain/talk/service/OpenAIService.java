@@ -11,14 +11,13 @@ import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.domain.talk.dto.response.speechsuper.ResultResDto;
 import com.lingotown.domain.talk.dto.response.speechsuper.WordResDto;
-import com.lingotown.domain.talk.entity.SentenceScore;
-import com.lingotown.domain.talk.entity.Talk;
-import com.lingotown.domain.talk.entity.TalkDetail;
-import com.lingotown.domain.talk.entity.VocaScore;
+import com.lingotown.domain.talk.entity.*;
 import com.lingotown.domain.talk.repository.SentenceScoreRepository;
 import com.lingotown.domain.talk.repository.TalkDetailRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
 import com.lingotown.domain.talk.repository.VocaScoreRepository;
+import com.lingotown.domain.world.entity.World;
+import com.lingotown.domain.world.repository.WorldRepository;
 import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -197,7 +196,6 @@ public class OpenAIService {
 
         CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
 
-
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
@@ -231,9 +229,6 @@ public class OpenAIService {
         if (talkDetail.getId() != null &&  !entityManager.contains(talkDetail)) {
             entityManager.merge(talkDetail);
         }
-
-        System.out.println("---------------------------------------------------");
-        System.out.println("talkDetail : " +talkDetail.getId());
 
         TalkDetail savedTalkDetail = getTalkDetailEntity(talkDetail.getId());
 
@@ -286,6 +281,7 @@ public class OpenAIService {
                 .build();
     }
 
+    @Transactional
     public DataResponse<CreateOpenAIResDto> askTopic(Principal principal, TopicReqDto topicReqDto) throws Exception {
         TalkReqDto talkReqDto = TalkReqDto.builder()
                 .talkId(topicReqDto.getTalkId())
@@ -299,13 +295,14 @@ public class OpenAIService {
 
 
     //상황 설정 하기
-    private String createConcept(Principal principal, Long talkId, String topic){
+    public String createConcept(Principal principal, Long talkId, String topic){
         NPC npc = getNPCEntity(talkId);
+        World world = npc.getWorld();
 
         String npcJob = npc.getNpcRole();
         String npcName = npc.getName();
         int npcAge = npc.getNpcAge();
-        String language = npc.getWorld().getLanguage().toString();
+        String language = world.getLanguage().toString();
         String npcGender = npc.getGenderType().toString();
         String npcSituation = npc.getSituation();
 
@@ -344,8 +341,8 @@ public class OpenAIService {
     private NPC getNPCEntity(Long talkId){
         Talk talk = talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
-
-        return talk.getMemberNPC().getNpc();
+        NPC npc = talk.getMemberNPC().getNpc();
+        return npc;
     }
 
     private String getNickname(Principal principal){
