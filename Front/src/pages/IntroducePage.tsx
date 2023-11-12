@@ -31,7 +31,7 @@ export const IntroducePage: React.FC<IntroducePage> = (props: IntroducePage): JS
         </div>:
         null
       }
-      <Canvas shadows style={{ height:loading.loading?"0.01vh":"96vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
+      <Canvas shadows style={{ height:loading.loading?"0.01vh":"100vh" }} camera={{ position: [0, 0, 10], fov: 30 }}>
         {props.theme}
       </Canvas>
     </div>
