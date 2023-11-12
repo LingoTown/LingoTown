@@ -4,7 +4,7 @@ export const departures = [
 		destination : "Las Vegas",
 		Flight : "KA4701",
 		Gate : "A56",
-		flag : "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/us.jpg",
+		flag : import.meta.env.VITE_S3_URL + "Picture/flag/us.jpg",
 		Status : "Boarding",
 		language : "US"
 	}
@@ -14,7 +14,7 @@ export const departures = [
     destination : "Shanghai",
     Flight : "LT201",
     Gate : "C33",
-		flag : "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/china.jpg",
+		flag : import.meta.env.VITE_S3_URL + "Picture/flag/china.jpg",
     Status : "Cancelled",
     language : "Chinese"
 	}
@@ -24,7 +24,7 @@ export const departures = [
     destination : "Manchester",
     Flight : "LT3307",
     Gate : "C55",
-		flag : "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/uk.jpg",
+		flag : import.meta.env.VITE_S3_URL + "Picture/flag/uk.jpg",
     Status : "Boarding",
     language : "UK"
 	}
@@ -34,7 +34,7 @@ export const departures = [
     destination : "Tokyo",
     Flight : "KA5513",
     Gate : "A12",
-		flag : "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/japan.jpg",
+		flag : import.meta.env.VITE_S3_URL + "Picture/flag/japan.jpg",
     Status : "Cancelled",
     language : "Japanese"
 	}
@@ -44,7 +44,7 @@ export const departures = [
     destination : "Paris",
     Flight : "LM4707",
     Gate : "F53",
-		flag : "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/france.jpg",
+		flag : import.meta.env.VITE_S3_URL + "Picture/flag/france.jpg",
     Status : "Boarding",
     language : "FR"
 	}
@@ -54,7 +54,7 @@ export const departures = [
     destination : "Barcelona",
     Flight : "KA801",
     Gate : "C73",
-		flag : "https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/spain.jpg",
+		flag : import.meta.env.VITE_S3_URL + "Picture/flag/spain.jpg",
     Status : "Cancelled",
     language : "Spanish"
 }]
