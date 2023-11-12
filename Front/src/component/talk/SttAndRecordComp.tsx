@@ -2,11 +2,13 @@ import 'regenerator-runtime';
 import { useEffect, useState, useRef } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { talking } from '../../api/Talk';
-import { talkingType } from '../../type/TalkType';
+import { talkDetailType, talkingType } from '../../type/TalkType';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { userAtom } from '../../atom/UserAtom';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import { talkHistoryAtom } from '../../atom/TalkHistoryAtom';
+import { getTalkList } from '../../api/Script';
 
 declare global {
   interface Window {
@@ -21,6 +23,7 @@ type STTAndRecordProps = {
 
 export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
 
+  const setTalkHistoryList = useSetRecoilState(talkHistoryAtom)
   const { transcript, resetTranscript, browserSupportsSpeechRecognition, listening } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
   const [media, setMedia] = useState<MediaRecorder | null>();
@@ -155,6 +158,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
         isLoading: false,
         isUser: false,
       }));
+      doGetTalkList(talkState.talkId);
     }, (error) => {
       console.log(error);
 
@@ -171,13 +175,21 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
         ...prev,
         sentence: errSentence,
         prevSectence: errSentence,
-        // audio: import.meta.env.VITE_S3_URL + "Record/error.mp3",
         audio: errAudioLink,
         isLoading: false,
         isUser: false,
       }));
     })
     setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
+  }
+
+  const doGetTalkList = async(talkId: number) => {
+    await getTalkList(talkId,({data}) => {
+      const result = data.data as talkDetailType[];
+      setTalkHistoryList([...result]);
+    }, (err) => {
+      console.log(err);
+    })
   }
 
   const stopMicrophoneAccess = () => {
