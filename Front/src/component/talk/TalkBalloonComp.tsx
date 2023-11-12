@@ -8,12 +8,9 @@ import { talkingTopic } from "../../api/Talk";
 import { talkingType } from "../../type/TalkType";
 import { translateSentence, endTalk } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
-import { getMemberNpcRelationship } from "../../api/NPC";
-import { intimacyAtom } from "../../atom/IntimacyAtom";
-import { intimacyType } from "../../type/IntimacyType";
 import { userAtom } from "../../atom/UserAtom";
-import { lockOffCharacter } from "../../api/Character";
-
+import fetchIntimacy from "../../hook/AfterTalk/fetchIntimacy";
+import useCharacterUnlock from "../../hook/AfterTalk/CharacterLockOff";
 
 export const TalkBalloonComp = () => {
 
@@ -31,45 +28,14 @@ export const TalkBalloonComp = () => {
   const [showDictionary, setShowDictionary] = useState<boolean>(false);
   const [dictionary, setDictionary] = useState<string>("");
   const [word, setWord] = useState<string>("");
-  const [intimacy, setIntimacy] = useRecoilState(intimacyAtom);
-  const [user, setUser] = useRecoilState(userAtom);
-  const [flag, setFlag] = useState<number>(0);
+  const [, setUser] = useRecoilState(userAtom);
+  const {user, characterLockOff} = useCharacterUnlock();
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const lang = queryParams.get('language');
-  /* 친밀도 정보 가져오기 */
-  const fetchIntimacyInfo = async() => {
-    await getMemberNpcRelationship(({data}: any) => {
-      const result  = data.data as intimacyType[];
-
-      setIntimacy(prev => ({
-        ...prev, 
-        npcList: result,
-      }));
-
-      console.log("fetchIntimacyInfo 완료")
-      console.log(flag)
-      setFlag(f => f + 1);
-      console.log(flag)
-    }, 
-    (error) => {
-      console.log(error);
-    });
-  }
-
-  /* 캐릭터 잠금 해제 */
-  const characterLockOff = async(id: number) => {
-    const quizId = id;
-
-    await lockOffCharacter(quizId, ({data}) => {
-      console.log(data.message);
-    },
-    error => {
-      console.log(error);
-    })
-  }
-
+  
+  const { intimacy, flag } = fetchIntimacy();
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
@@ -107,7 +73,7 @@ export const TalkBalloonComp = () => {
     setTalkBalloon(initialTalkBalloon);
 
     /*  */
-    fetchIntimacyInfo();
+    fetchIntimacy();
   };
 
   // 대화음악 재생
