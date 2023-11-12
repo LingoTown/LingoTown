@@ -49,7 +49,11 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
     <>
       <Toaster position="top-center" />
       {
-        (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?<Tutorial/>:null
+        (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?
+          <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10">
+            <Tutorial/>
+          </div>
+          :null
       }
       {
         loading.loading? <LoadingPage/> : null
@@ -60,7 +64,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
         :
         <MapUtilComp />
       }
-      <Canvas style={{ height:loading.loading?"0.01vh":"100vh", cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>
+      <Canvas style={{ zIndex:"-1", height:loading.loading?"0.01vh":"100vh", cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
           {/* <Debug scale={1} color='red'> */}
           {/* <OrbitControls/> */}
