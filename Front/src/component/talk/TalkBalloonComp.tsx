@@ -96,6 +96,9 @@ export const TalkBalloonComp = () => {
       customAlert("Alert", "Please say at least 10 characters");
       return
     }
+    if (!talkBalloon.prevSectence) {
+      setTalkBalloon(prev => ({...prev, prevSectence: " "}))
+    }
     setTalkState(prevState => ({ ...prevState, offRec: !prevState.offRec }));
     setIsRec(false);
   };
