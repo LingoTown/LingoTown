@@ -1,9 +1,11 @@
+import { RoundedBox } from '@react-three/drei';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { TextUtil } from "./util/TextUtil";
-import { RoundedBox } from '@react-three/drei';
+import { useRecoilState, useRecoilValue } from "recoil";
 import { loadingAtom } from '../../atom/LoadingAtom';
-import { useRecoilState } from "recoil";
+import { userAtom } from '../../atom/UserAtom';
+import { useCustomAlert } from '../util/ModalUtil';
+import { TextUtil } from "./util/TextUtil";
 
 export const MapEnterComp: React.FC<{
   x: number;
@@ -19,8 +21,10 @@ export const MapEnterComp: React.FC<{
   x, y, z, path, name, active, setHovered, enabled, language
 }) => {
   const navigate = useNavigate();
+  const user = useRecoilValue(userAtom);
 
-  const text = useState([["Enter", "Entrez"], ["Locked", "Verrouillé"]])[0];
+  const text = useState(["입장", "잠금"])[0];
+  const customAlert = useCustomAlert();
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
@@ -30,9 +34,11 @@ export const MapEnterComp: React.FC<{
       position={[x, y, z]}
       onClick={() => {
         if (!enabled && active !== name) {
-          if ((language === 0 && name !== "gallery") || (language === 1 && name === "galerie")) {
+          if (((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리")) {
             if(!loading.loading) setLoading(() => ({loading:true}));
             navigate(`/${path}`)
+          } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
+            customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
           }
         }
       }}
@@ -50,11 +56,11 @@ export const MapEnterComp: React.FC<{
       <RoundedBox
         args={[0.8, 0.25, 0.1]}
       >
-        <meshStandardMaterial attach="material" color={"#5dc7f8"} />
+        <meshStandardMaterial attach="material" color={((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리") ? "#5dc7f8" : "#d67777"} />
         {
-          (language === 0 && name !== "gallery") || (language === 1 && name === "galerie") ?
-            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[0][language]} /> :
-            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[1][language]} />
+          ((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리") ?
+            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[0]} /> :
+            <TextUtil x={0} y={0} z={0.051} color="black" size={0.15} name={text[1]} />
         }
       </RoundedBox>
     </mesh>

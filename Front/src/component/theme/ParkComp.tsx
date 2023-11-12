@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState, useRecoilValue } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
@@ -22,7 +22,6 @@ import { Bonnie } from '../../../public/name/park/Bonnie.tsx';
 import { Jerry } from '../../../public/name/park/Jerry.tsx';
 import { Marco } from '../../../public/name/park/Marco.tsx';
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
-import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../atom/UserAtom.ts';
  
 export const ParkComp: React.FC = () => {
@@ -108,32 +107,35 @@ export const ParkComp: React.FC = () => {
     restitution: 0.7,
   }));
 
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 14, name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
-    { id: 35, name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
-    { id: 53, name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
-    { id: 16, name: "bonnie", targetPosition: bonniePosition, targetRotation:bonnieRotation, ref: bonnieCircleRef },
+    { id: 14, gender:"Man", name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
+    { id: 35, gender:"Woman", name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
+    { id: 53, gender:"Man", name: "marco", targetPosition: marcoPosition, targetRotation:marcoRotation, ref: marcoCircleRef },
+    { id: 16, gender:"Woman", name: "bonnie", targetPosition: bonniePosition, targetRotation:bonnieRotation, ref: bonnieCircleRef },
   ];
 
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const isMove = useRef(true);
+  const isModal = useRef(false);
   const setTalkState = useSetRecoilState(talkStateAtom);
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
   const LANGUAGE = "en-US";
-  const SENTENCE = "Would you like to start a conversation with ";
+  const SENTENCE = "와(과) 이야기를 시작하시겠습니까";
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef, isModal);
   const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
-    requestAnimationFrame(animate);
+    if (!isModal.current) {
+      requestAnimationFrame(animate);
+    }
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
     camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
     camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
@@ -178,7 +180,7 @@ export const ParkComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkState(prevState => ({ ...prevState, talkId: result.talkId }));      
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
       setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
     }, (error) => {
       console.log(error);
@@ -187,7 +189,9 @@ export const ParkComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (event.code === 'Space' && isInsideCircle) {
+      if (talkBalloon.isModal || talkBalloon.isShow)
+        return
+      if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
@@ -195,9 +199,10 @@ export const ParkComp: React.FC = () => {
             if(sanhaRef.current?.rotation.y == 1.5)sanhaRef.current?.rotateY(3);
             setSanhaTalk(true);
           }
-          const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+          const flag = await customConfirm(npc + "", npc + SENTENCE + "?");
           if (flag) {
             animate();
+            setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));
             setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);
             return
@@ -222,11 +227,9 @@ export const ParkComp: React.FC = () => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
 
-  // useEffect(()=>{
-  //   if(!sanhaTalk){
-  //     reRunSanha();
-  //   }
-  // },[sanhaTalk])
+  useEffect(() => {
+    isModal.current = talkBalloon.isModal;
+  }, [talkBalloon.isModal])
 
   //sanha run movement
   useFrame(() => {

@@ -13,7 +13,8 @@ import { useCylinder } from '@react-three/cannon'
 import { Luke } from '../../../public/name/restaurant/Luke.tsx'
 import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
 
 export const ExploreComp: React.FC = () => {
   //wall
@@ -67,17 +68,19 @@ export const ExploreComp: React.FC = () => {
   const customerAction = useRef<AnimationAction>();
   const customerActions = useAnimations(customerFile.animations, customerFile.scene).actions;
 
-  const talkBalloon = useRecoilValue(talkBalloonAtom);
+  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender:"", name: null, targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 6, name: "Luke", targetPosition: customerPosition, targetRotation:customerRotation, ref: customerCircleRef },
-    { id: 33, name: "Olivia", targetPosition: chefPosition, targetRotation:chefRotation, ref: chefCircleRef },
+    { id: 6, name: "Luke", gender:"Man", targetPosition: customerPosition, targetRotation:customerRotation, ref: customerCircleRef },
+    { id: 33, name: "Olivia", gender:"Woman", targetPosition: chefPosition, targetRotation:chefRotation, ref: chefCircleRef },
   ];
 
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
   const isMove = useRef(true);
+  const isModal = useRef(false);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
@@ -85,10 +88,12 @@ export const ExploreComp: React.FC = () => {
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef, isModal);
   const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
-    requestAnimationFrame(animate);
+    if (!isModal.current) {
+      requestAnimationFrame(animate);
+    }
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
     camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
     camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
@@ -108,6 +113,9 @@ export const ExploreComp: React.FC = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    if(loading.loading) setLoading(() => ({loading:false}));
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
@@ -116,15 +124,16 @@ export const ExploreComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (event.code === 'Space' && isInsideCircle) {
+      if (talkBalloon.isModal)
+        return
+      if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
           const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
-          if (flag) {
+          if (flag)
             animate();
-            alert("로그인후 사용 가능합니다.")
-          }
+            setTalkBalloon(prev => ({ ...prev, isUser: !prev.isUser}));
         }
         isMove.current = true;
       }
@@ -138,6 +147,10 @@ export const ExploreComp: React.FC = () => {
   useEffect(() => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
+
+  useEffect(() => {
+    isModal.current = talkBalloon.isModal;
+  }, [talkBalloon.isModal])
 
   return(
     <>

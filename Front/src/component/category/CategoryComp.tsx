@@ -9,8 +9,12 @@ import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { Suspense, lazy, useRef, useState } from "react";
 import * as THREE from "three";
-import { TextUtil } from './util/TextUtil';
+import background from "../../../public/background/background.png";
+import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
+import { TextUtil } from './util/TextUtil';
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../../atom/UserAtom";
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -38,7 +42,7 @@ export const CategoryComp: React.FC<{
 }> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
-  const text = useState([["Preview", "Avant-première"],["Locked", "Verrouillé"]])[0];
+  const text = useState(["미리보기", "잠금"])[0];
 
   const [isLoading, setLoading] = useState(true);
 
@@ -48,7 +52,10 @@ export const CategoryComp: React.FC<{
 
   const Loading: React.FC = () => {
     const textureLoader = new THREE.TextureLoader();
-    const backgroundTexture = textureLoader.load(`${import.meta.env.VITE_S3_URL}Introduce/bgggg.png`);
+    textureLoader.crossOrigin = 'anonymous';
+
+    const backgroundTexture = textureLoader.load(background);
+
 
     return (
       <group>
@@ -80,6 +87,9 @@ export const CategoryComp: React.FC<{
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
 
+  const user = useRecoilValue(userAtom);
+  const customAlert = useCustomAlert();
+
   return (
     <group {...props}>
       <BorderedRoundedBox />
@@ -89,9 +99,11 @@ export const CategoryComp: React.FC<{
         scale={[1, 1, 1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            if ((language === 0 && name !== "gallery") || (language === 1 && name === "galerie")) {
+            if (((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리")) {
               setActive(name);
               setEnabled(true);
+            } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
+              customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
             }
           }
         }}
@@ -116,22 +128,22 @@ export const CategoryComp: React.FC<{
           {children}
 
           <Suspense fallback={<Loading />}>
-            {texture === 1 && <Park position={[0, -1, 0]} rotation={[0, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 2 && <EventHall position={[0, -2, 0]} rotation={[0 * Math.PI / 180, 0, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 3 && <Restaurant position={[3, -2, 0]} rotation={[0, 0 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
-            {texture === 4 && <Gallery position={[3, 1, 2]} rotation={[0, 10 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 1 && <Park position={[-2, -1, -3]} rotation={[Math.PI / 50, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 2 && <EventHall position={[1.4, -2, 9]} rotation={[Math.PI / 80, Math.PI/2.5, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 3 && <Restaurant position={[2, -2.1, 1]} rotation={[-15*Math.PI/360, 0, 0]} onLoaded={() => handleLoad()} />}
+            {texture === 4 && <Gallery position={[-1, -4, 0]} rotation={[-10*Math.PI/360, Math.PI / 2, 0]} onLoaded={() => handleLoad()} />}
           </Suspense>
         </MeshPortalMaterial>
 
-        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0][language]} /> : <></>}
-        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0][language]} /> : <></>}
-        {texture === 0 ? (
+        {texture === 2 && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="white" name={text[0]} /> : <></>}
+        {(texture === 1 || texture === 3 || texture === 4) && !isLoading ? <TextUtil x={0} y={0} z={0} size={0.2} color="black" name={text[0]} /> : <></>}
+        {(texture === 0) ? (
           <>
-            <TextUtil x={language === 0 ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1][language]} />
+            <TextUtil x={(language === 0 || language === 2) ? -0.15 : -0.2} y={0} z={0} size={0.2} color="black" name={text[1]} />
             <primitive
               ref={lockRef}
               scale={0.05}
-              position-x={language === 0 ? 0.35 : 0.4}
+              position-x={0.2}
               position-y={-0.1}
               object={lock.scene.clone()}
             />

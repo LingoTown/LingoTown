@@ -1,8 +1,14 @@
 import { QuizType } from "../../type/QuizType";
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { submitQuiz } from "../../api/Quiz";
 import { useCustomPrompt } from "../util/ModalUtil";
 import toast, { Toaster } from 'react-hot-toast';
+import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import quizSuccess from "../../hook/QuizSuccess";
+import { userAtom } from "../../atom/UserAtom";
+import { quizAtom } from "../../atom/QuizAtom";
+import { lockOffCharacter } from "../../api/Character";
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -20,10 +26,25 @@ type resutltType = {
 export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, setQuizLender, setIsOpenQuizModal, translateList, setTranslateList}) => {
  
   const customPrompt = useCustomPrompt();
+  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  let [user, setUser] = useRecoilState(userAtom);
+  let [quiz, ] = useRecoilState(quizAtom);
+  const success = quizSuccess();
+
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
 
   const doSubmitQuiz = async(quizId:string, quizNum: number) => {
     setIsOpenQuizModal(false);
-    const submit = await customPrompt("Quiz " + quizNum, "Submit your answer");
+    const submit = await customPrompt("퀴즈 " + quizNum, "정답을 제출해주세요.");
     if (submit == null) {
       setIsOpenQuizModal(true);
       return
@@ -34,7 +55,11 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
 
     await submitQuiz(json, ({data}) => {
       const result = data.data as resutltType;
+      
       if (result.result) {
+        // QuizAtom 업데이트
+        success(Number(quizId));
+
         showToaster("정답입니다😄", "✔️");
       } else {
         showToaster("오답입니다😢", "❌");
@@ -44,6 +69,87 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       console.log(error);
     })
   }
+
+  useEffect(() => {
+    // 캐릭터 잠금 조건 확인 및 처리
+    const solvedCnt = quiz.quizList.filter(quiz => quiz.solved).length;
+    const USCnt = quiz.quizList.filter(quiz => quiz.theme !== "gallery").length;
+    const USSolvedCnt = quiz.quizList.filter(quiz => quiz.theme !== "gallery" && quiz.solved).length;
+    const FRCnt = quiz.quizList.filter(quiz => quiz.theme === "gallery").length;
+    const FRSolvedCnt = quiz.quizList.filter(quiz => quiz.theme === "gallery" && quiz.solved).length;
+
+    console.log(solvedCnt)
+    console.log(USCnt)
+    console.log(FRCnt)
+    console.log(USSolvedCnt)
+    console.log(FRSolvedCnt)
+
+    if(solvedCnt >= 1 && user.lockList[3].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 3 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 4번 해금 시도")
+      characterLockOff(4);
+      alert("characterId 4번, m14 캐릭터 잠금 해제");
+    }
+
+    if(solvedCnt >= 5 && user.lockList[5].islocked && !user.lockList[3].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 5 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 6번 해금 시도")
+      characterLockOff(6);
+      alert("characterId 6번, m28 캐릭터 잠금 해제");
+    }
+
+    if(solvedCnt >= 10 && user.lockList[6].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 6 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 7번 해금 시도")
+      characterLockOff(7);
+      alert("characterId 7번, f22 캐릭터 잠금 해제");
+    }
+
+    if(USSolvedCnt >= USCnt/2 && user.lockList[10].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked && !user.lockList[6].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 10 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 11번 해금 시도")
+      characterLockOff(11);
+      alert("characterId 11번, f12 캐릭터 잠금 해제");
+    }
+
+    if(FRSolvedCnt >= FRCnt/2 && user.lockList[11].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 11 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 12번 해금 시도")
+      characterLockOff(12);
+      alert("characterId 12번, m31 캐릭터 잠금 해제")
+    }
+
+  }, [user, quiz]); // user 및 quiz 상태에 대한 의존성 추가
 
   const showToaster = (sentence:string, emoji:string) => {
     toast(sentence, {
@@ -55,6 +161,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
     });
   }
 
+  // 영어로 보기
   const toEng = (event: React.MouseEvent<HTMLButtonElement>, index:number) => {
     event.stopPropagation();
     const newTranslateList = [...translateList];
@@ -62,12 +169,37 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
     setTranslateList(newTranslateList);
   }
 
+  // 한국말로 보기
   const toKor = (event: React.MouseEvent<HTMLButtonElement>, index:number) => {
     event.stopPropagation();
     const newTranslateList = [...translateList];
     newTranslateList[index] = true;
     setTranslateList(newTranslateList);
   }
+
+  // 닫기 버튼 클릭
+  const clickClose = () => {
+    setIsOpenQuizModal(false)
+    setTalkBalloon(prevState => ({...prevState, isModal: false}))
+    setTalkBalloon(prevState => ({...prevState, isMove: true}))
+  }
+
+  //
+  useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        clickClose();
+      }
+    };
+
+    // 키 다운 이벤트 리스너 추가
+    window.addEventListener('keydown', handleEsc);
+
+    // 컴포넌트 언마운트 시 리스너 제거
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
 
   return(
     <>
@@ -78,7 +210,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
           <div className="fixed inset-0 z-10 flex items-center justify-center">
             <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-4xl">
               <div className="border-[0.5px] border-white w-full rounded-lg p-1 px-3 flex flex-col items-center">
-                <div className="text-[#333] font-['passero-one'] text-[1.5rem] mt-2">Quiz List</div>
+                <div className="text-[#333] text-[1.5rem] mt-2" style={{ fontFamily: "GabiaSolmee" }}>퀘스트 목록</div>
                 <div className="text-[#333] font-bold text-[0.8rem] mb-1">* 각 질문을 클릭하여 정답을 입력해주세요</div>
                 {
                   quizList.map((data, index) => (
@@ -93,9 +225,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                           <span className="material-icons text-white text-[1.1rem]">check</span>
                         </span>
                       ) : (
-                        <span className="bg-[#aaaaaa] ml-2 w-5 h-5 rounded-full flex items-center justify-center">
-                          {/* <span className="material-icons text-white text-[0.9rem]">close</span> */}
-                        </span>
+                        <span className="bg-[#aaaaaa] ml-2 w-5 h-5 rounded-full flex items-center justify-center"></span>
                       )}
                       <div className="flex-grow">
                         {translateList[index] ?
@@ -118,11 +248,11 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                     </div>
                   ))
                 }
-                <div className="mt-2 mb-2 w-full flex justify-center">
+                <div className="mt-2 mb-2 w-full flex justify-center"  style={{ fontFamily: "GabiaSolmee" }}>
                   <button 
                     className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => setIsOpenQuizModal(false) }
-                  >Close
+                    onClick={ clickClose }
+                  >닫기
                   </button>
                 </div>
               </div>

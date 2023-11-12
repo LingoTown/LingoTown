@@ -10,8 +10,16 @@ const talking = async (param: FormData, success: (data : {data : ReturnType}) =>
   await HttpForm.post(`/api/talk`, param).then(success).catch(fail);
 }
 
-const talkingTopic = async (param:talkingTopicType,  success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+const talkingTopic = async (param: talkingTopicType,  success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
   await HttpJson.post(`/api/talk/topic`, param).then(success).catch(fail);
 }
 
-export { startTalk, talking, talkingTopic };
+const translateSentence = async (param: object, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.post(`/api/papago`, JSON.stringify(param)).then(success).catch(fail);
+}
+
+const endTalk = async (talkId: number, success: (data : {data : ReturnType}) => void, fail: (error: unknown) => void) => {
+  await HttpJson.put(`/api/talk/end/` + talkId).then(success).catch(fail);
+}
+
+export { startTalk, talking, talkingTopic, translateSentence, endTalk };

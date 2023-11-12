@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState, useContext } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { Polygonia } from "../../../public/map/Polygonia";
-import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
+import { Polygonia } from "../../../../public/map/Polygonia";
+import { talkBalloonAtom } from "../../../atom/TalkBalloonAtom";
 import { useRecoilState } from "recoil";
-import { startTalk} from "../../api/Talk";
-import { startTalkType } from "../../type/TalkType";
+import { startTalk} from "../../../api/Talk";
+import { startTalkType } from "../../../type/TalkType";
 import * as THREE from 'three';
 // import { userAtom } from "../../atom/UserAtom";
-import { KeyPressed, AnimationAction } from "./ThemeType";
+import { KeyPressed, AnimationAction } from "../ThemeType";
 // import { STTAndRecord } from "../town/SttAndRecordComp";
-import ConfirmContext from "../util/confirm/ConfirmContext";
+import ConfirmContext from "../../util/confirm/ConfirmContext";
 
 
 export const PolygoniaComp: React.FC = () => {

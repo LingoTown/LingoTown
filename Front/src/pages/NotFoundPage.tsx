@@ -12,7 +12,7 @@ const AppNotFound = () => {
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
       >
       </div>
-      <div className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`, cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}BackGround/WorldBackground.png')`, cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
         <div className="flex items-center justify-center bg-gray-200 z-10 rounded">
           <div className="max-w-md shadow-lg rounded-lg p-10 ">
             <div className="text-center">

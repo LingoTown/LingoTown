@@ -10,6 +10,7 @@ export type userType = {
   characterId: number,
   characterGender: string,
   characterLink: string,
+  characterImage: string,
   lockList: { characterId: number; islocked: boolean }[];
 }
 
@@ -18,4 +19,8 @@ export type userType = {
 export type UpdateSelectedCharacter = {
   previousId: number,
   nowId: number
+}
+
+export type lockOff = {
+  characterId: number
 }
