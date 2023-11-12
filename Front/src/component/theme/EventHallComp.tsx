@@ -51,7 +51,7 @@ export const EventHallComp: React.FC = () => {
     circlePosition: [-10.0, 0.05, 21.5],
     circleRotation: [90, 0, 0],
     circleAttach: "material",
-    circleColor: "pink",
+    circleColor: "white",
     circleEmissive: "#ff69b4",
     circleEmissiveIntensity: 5,
     circleSide: THREE.DoubleSide,
@@ -72,12 +72,12 @@ export const EventHallComp: React.FC = () => {
     circlePosition: [17.0, 1.05, -2.5],
     circleRotation: [90, 0, 0],
     circleAttach: "material",
-    circleColor: "red",
-    circleEmissive: "red",
+    circleColor: "white",
+    circleEmissive: "#ff69b4",
     circleEmissiveIntensity: 5,
     circleSide: THREE.DoubleSide,
     circleTransparent: true,
-    circleOpacity: 1
+    circleOpacity: 0.2
   }
 
   const DaenData: NPCData = {
@@ -93,12 +93,12 @@ export const EventHallComp: React.FC = () => {
     circlePosition: [-6, 1.025, 0],
     circleRotation: [90, 0, 0],
     circleAttach: "material",
-    circleColor: "skyblue",
-    circleEmissive: "black",
+    circleColor: "white",
+    circleEmissive: "#ff69b4",
     circleEmissiveIntensity: 5,
     circleSide: THREE.DoubleSide,
     circleTransparent: true,
-    circleOpacity: 1
+    circleOpacity: 0.2
   }
 
   /* NPC */
