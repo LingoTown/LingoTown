@@ -4,8 +4,11 @@ import { submitQuiz } from "../../api/Quiz";
 import { useCustomPrompt } from "../util/ModalUtil";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useSetRecoilState } from "recoil";
-
+import { useRecoilState, useSetRecoilState } from "recoil";
+import quizSuccess from "../../hook/QuizSuccess";
+import { userAtom } from "../../atom/UserAtom";
+import { quizAtom } from "../../atom/QuizAtom";
+import { lockOffCharacter } from "../../api/Character";
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -24,6 +27,20 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
  
   const customPrompt = useCustomPrompt();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  let [user, setUser] = useRecoilState(userAtom);
+  let [quiz, ] = useRecoilState(quizAtom);
+  const success = quizSuccess();
+
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
 
   const doSubmitQuiz = async(quizId:string, quizNum: number) => {
     setIsOpenQuizModal(false);
@@ -38,7 +55,11 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
 
     await submitQuiz(json, ({data}) => {
       const result = data.data as resutltType;
+      
       if (result.result) {
+        // QuizAtom 업데이트
+        success(Number(quizId));
+
         showToaster("정답입니다😄", "✔️");
       } else {
         showToaster("오답입니다😢", "❌");
@@ -48,6 +69,87 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       console.log(error);
     })
   }
+
+  useEffect(() => {
+    // 캐릭터 잠금 조건 확인 및 처리
+    const solvedCnt = quiz.quizList.filter(quiz => quiz.solved).length;
+    const USCnt = quiz.quizList.filter(quiz => quiz.theme !== "gallery").length;
+    const USSolvedCnt = quiz.quizList.filter(quiz => quiz.theme !== "gallery" && quiz.solved).length;
+    const FRCnt = quiz.quizList.filter(quiz => quiz.theme === "gallery").length;
+    const FRSolvedCnt = quiz.quizList.filter(quiz => quiz.theme === "gallery" && quiz.solved).length;
+
+    console.log(solvedCnt)
+    console.log(USCnt)
+    console.log(FRCnt)
+    console.log(USSolvedCnt)
+    console.log(FRSolvedCnt)
+
+    if(solvedCnt >= 1 && user.lockList[3].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 3 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 4번 해금 시도")
+      characterLockOff(4);
+      alert("characterId 4번, m14 캐릭터 잠금 해제");
+    }
+
+    if(solvedCnt >= 5 && user.lockList[5].islocked && !user.lockList[3].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 5 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 6번 해금 시도")
+      characterLockOff(6);
+      alert("characterId 6번, m28 캐릭터 잠금 해제");
+    }
+
+    if(solvedCnt >= 10 && user.lockList[6].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 6 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 7번 해금 시도")
+      characterLockOff(7);
+      alert("characterId 7번, f22 캐릭터 잠금 해제");
+    }
+
+    if(USSolvedCnt >= USCnt/2 && user.lockList[10].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked && !user.lockList[6].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 10 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 11번 해금 시도")
+      characterLockOff(11);
+      alert("characterId 11번, f12 캐릭터 잠금 해제");
+    }
+
+    if(FRSolvedCnt >= FRCnt/2 && user.lockList[11].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 11 ? {...item, islocked: false} : item
+        )
+      });
+
+      console.log("id 12번 해금 시도")
+      characterLockOff(12);
+      alert("characterId 12번, m31 캐릭터 잠금 해제")
+    }
+
+  }, [user, quiz]); // user 및 quiz 상태에 대한 의존성 추가
 
   const showToaster = (sentence:string, emoji:string) => {
     toast(sentence, {
@@ -114,7 +216,6 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                   quizList.map((data, index) => (
                     <div key={ index }
                       className="flex justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
-                      
                       onClick={() => {
                         doSubmitQuiz(data.quizId, index + 1)
                       }}

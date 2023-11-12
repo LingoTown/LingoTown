@@ -3,6 +3,7 @@ export type DepartureType = {
     destination : string,
     Flight : string,
     Gate : string,
+    flag : string,
     Status : string,
     language : string
 }
