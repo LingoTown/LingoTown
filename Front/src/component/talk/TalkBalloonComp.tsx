@@ -6,15 +6,15 @@ import { useCustomAlert, useCustomConfirm } from "../util/ModalUtil";
 import { topic, talkingType, talkDetailType } from "../../type/TalkType";
 import { translateSentence, endTalk, talkingTopic } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
-import { talkHistoryAtom, initialTalkHistoryState } from "../../atom/TalkHistoryAtom";
-import { getMemberNpcRelationship } from "../../api/NPC";
-import { intimacyAtom } from "../../atom/IntimacyAtom";
-import { intimacyType } from "../../type/IntimacyType";
-import { userAtom } from "../../atom/UserAtom";
-import { lockOffCharacter } from "../../api/Character";
+import { talkHistoryAtom } from "../../atom/TalkHistoryAtom";
 import { getTalkList } from "../../api/Script";
+import { userAtom } from "../../atom/UserAtom";
+import useCharacterUnlock from "../../hook/AfterTalk/CharacterLockOff";
+import fetchIntimacy from "../../hook/AfterTalk/FetchIntimacy";
+import { useCharacterUnlockCheck } from "../../hook/AfterTalk/CharacterUnlockCheck";
 
 export const TalkBalloonComp = () => {  
+  
   // url parsing
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -23,13 +23,14 @@ export const TalkBalloonComp = () => {
   // hook
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
+  const { intimacy }  = fetchIntimacy();
+  const {user, characterLockOff} = useCharacterUnlock();
 
   // global state
   const [talkHistoryList, setTalkHistoryList] = useRecoilState(talkHistoryAtom);
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const [talkState, setTalkState] = useRecoilState(talkStateAtom);
-  const [intimacy, setIntimacy] = useRecoilState(intimacyAtom);
-  const [user, setUser] = useRecoilState(userAtom);
+  const [, setUser] = useRecoilState(userAtom);
   
   // state
   const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
@@ -39,45 +40,9 @@ export const TalkBalloonComp = () => {
   const [isRec, setIsRec] = useState<boolean>(false);
   const [dictionary, setDictionary] = useState<string>("");
   const [word, setWord] = useState<string>("");
-  const [flag, setFlag] = useState<number>(0);
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isMounted = useRef({ audioPlay: false });
-
-
-  /* 친밀도 정보 가져오기 */
-  const fetchIntimacyInfo = async() => {
-    await getMemberNpcRelationship(({data}: any) => {
-      const result  = data.data as intimacyType[];
-
-      setIntimacy(prev => ({
-        ...prev, 
-        npcList: result,
-      }));
-
-      console.log("fetchIntimacyInfo 완료")
-      console.log(flag)
-      setFlag(f => f + 1);
-      console.log(flag)
-    }, 
-    (error) => {
-      console.log(error);
-    });
-  }
-
-  /* 캐릭터 잠금 해제 */
-  const characterLockOff = async(id: number) => {
-    const quizId = id;
-
-    await lockOffCharacter(quizId, ({data}) => {
-      console.log(data.message);
-    },
-    error => {
-      console.log(error);
-    })
-  }
-
-
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
@@ -112,9 +77,7 @@ export const TalkBalloonComp = () => {
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
-    setShowHistory(false)
-    setTalkHistoryList(initialTalkHistoryState);
-    fetchIntimacyInfo();
+    fetchIntimacy();
   };
 
   // 대화음악 재생
@@ -241,42 +204,8 @@ export const TalkBalloonComp = () => {
     }
   }, [talkBalloon.audioPlay])
 
-  useEffect(() => {
-    console.log("Flag 상태 변경됨: ", flag);
-  }, [flag]);
-  
-  /* 친밀도가 업데이트 될 때, 캐릭터 잠금 해제 여부를 파악한다. */
-  useEffect(() => {
-    if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
-      setUser({
-        ...user,
-        lockList: user.lockList.map((item, index) => 
-          index === 4 ? {...item, islocked: false} : item
-        )
-      })
-      characterLockOff(5);
-    }
 
-    if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
-      setUser({
-        ...user,
-        lockList: user.lockList.map((item, index) => 
-          index === 8 ? {...item, islocked: false} : item
-        )
-      })
-      characterLockOff(9);
-    }
-
-    if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
-      setUser({
-        ...user,
-        lockList: user.lockList.map((item, index) => 
-          index === 7 ? {...item, islocked: false} : item
-        )
-      })
-      characterLockOff(8);
-    }
-  }, [intimacy, flag]);
+  useCharacterUnlockCheck({intimacy, user, setUser, characterLockOff});
 
   return(
     <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>

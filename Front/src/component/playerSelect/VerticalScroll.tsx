@@ -25,6 +25,22 @@ const VerticalScroll = () => {
     if(!user.lockList[index].islocked) setSelPlayer({index:index, change:false});
   }
 
+  const playerDescriptions = [
+    "기본 캐릭터",
+    "기본 캐릭터",
+    "1차 배포에 회원가입 하신 분들을 위한 캐릭터",
+    "퀘스트를 한 번 이상 성공하기",
+    "NPC와 대화를 한 번 이상 완료하기",
+    "퀘스트를 다섯 개 이상 성공하기",
+    "퀘스트를 열 개 이상 성공하기",
+    "특정 캐릭터와 친밀도 100% 쌓기",
+    "모든 캐릭터와 한 번씩 대화 해보기",
+    "영상을 한 번 이상 틀어보기",
+    "영어 퀘스트를 50% 이상 완료하기",
+    "프랑스 퀘스트를 50% 이상 완료하기",
+    "2차 배포 이전에 회원가입 하신 분들을 위한 캐릭터"
+  ];
+
   useEffect(()=>{
     // 이전 캐릭터 불러오기
     setSelPlayer({
@@ -39,20 +55,20 @@ const VerticalScroll = () => {
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
         className="w-[100%] h-[90%] rounded-xl overflow-y-auto flex justify-center select-none">
         <div className="flex flex-col max-w-[300px] h-[90%]">
-          {PlayerImgList.map((img, index)=>{
-            return(
-              <div key={index}
-                style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
-                className={selPlayer.index === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
-                onClick={() => {settingPlayer(index)}}
-              > {/* 1부터 시작하는 id */}
-                <img className="rounded-xl w-[100%] h-[100%]" src={`${import.meta.env.VITE_S3_URL}`+img} alt={`Player${index}`}/>
-                { 
-                  user.lockList[index].islocked?
-                  <>
-                    <Tooltip id="my-tooltip" />
+        {PlayerImgList.map((img, index) => {
+          return (
+            <div key={index}
+              style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
+              className={selPlayer.index === index ? "rounded-xl mb-6 shadow-md bg-[#BDA4D5] h-[160px]" : "rounded-xl mb-6 shadow-md bg-white h-[160px] hover:bg-[#BDA4D5]"}
+              onClick={() => { settingPlayer(index) }}
+            >
+              <img className="rounded-xl w-[100%] h-[100%]" src={`${import.meta.env.VITE_S3_URL}`+img} alt={`Player${index}`}/>
+              { 
+                user.lockList[index].islocked ?
+                <>
+                  <Tooltip id={`tooltip-${index}`} />
 
-                    <div data-tooltip-id="my-tooltip" data-tooltip-content="Quest 10개를 완료하세요!" data-tooltip-place="right" onClick={()=>showToaster("미션을 해결하고 캐릭터를 얻어보세요!", "❌")} className="relative z-40 top-[-160px] bg-black/90 rounded-xl max-w-[200px] h-full">
+                    <div data-tooltip-id={`tooltip-${index}`} data-tooltip-content={playerDescriptions[index]} data-tooltip-place="right" onClick={() => showToaster("미션을 해결하고 캐릭터를 얻어보세요!", "❌")} className="relative z-40 top-[-160px] bg-black/90 rounded-xl max-w-[200px] h-full">
                       <Canvas>
                         <Suspense fallback={null}>
                           <Environment preset="sunset" />
