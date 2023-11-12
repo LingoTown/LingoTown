@@ -50,7 +50,11 @@ export const ExplorePage: React.FC<ExplorePage> = (props: ExplorePage): JSX.Elem
     <>
       <Toaster position="top-center" />
       {
-        (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?<Tutorial/>:null
+        (!loading.loading && (visited == null && !tutorialRead.visit)) || (!loading.loading && !tutorialRead.visit)?
+        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10">
+          <Tutorial/>
+        </div>
+        :null
       }
       { loading.loading? <LoadingPage/> : null }
       { loading.loading || talkBalloon.isShow? null : <ExploreBtn />}
