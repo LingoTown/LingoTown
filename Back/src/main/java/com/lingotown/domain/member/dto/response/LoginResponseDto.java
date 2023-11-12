@@ -4,6 +4,7 @@ import com.lingotown.domain.member.entity.Member;
 import com.lingotown.global.data.GenderType;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -19,6 +20,7 @@ public class LoginResponseDto {
     private String social;
     private String nickname;
     private String profileImg;
+    private LocalDateTime createdAt;
 
     private Long characterId;
     private GenderType characterGender;
@@ -39,6 +41,7 @@ public class LoginResponseDto {
                 .social(member.getLoginType().toString())
                 .nickname(member.getNickname())
                 .profileImg(member.getProfile())
+                .createdAt(member.getCreatedAt())
                 .build();
     }
 }
