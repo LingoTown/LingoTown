@@ -3,7 +3,7 @@ import { talkBalloonAtom, initialTalkBalloon } from "../../atom/TalkBalloonAtom"
 import { talkStateAtom } from "../../atom/TalkStateAtom";
 import { useRecoilState } from "recoil"
 import { useCustomAlert, useCustomConfirm } from "../util/ModalUtil";
-import { topic, talkingType } from "../../type/TalkType";
+import { topic, talkingType, talkDetailType } from "../../type/TalkType";
 import { translateSentence, endTalk, talkingTopic } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
 import { talkHistoryAtom, initialTalkHistoryState } from "../../atom/TalkHistoryAtom";
@@ -12,6 +12,7 @@ import { intimacyAtom } from "../../atom/IntimacyAtom";
 import { intimacyType } from "../../type/IntimacyType";
 import { userAtom } from "../../atom/UserAtom";
 import { lockOffCharacter } from "../../api/Character";
+import { getTalkList } from "../../api/Script";
 
 export const TalkBalloonComp = () => {  
   // url parsing
@@ -171,6 +172,7 @@ export const TalkBalloonComp = () => {
         isLoading: false,
         isUser: false,
       }));
+      doGetTalkList(talkState.talkId);
     }, (error) => {
       console.log(error);
 
@@ -211,6 +213,15 @@ export const TalkBalloonComp = () => {
       setTalkBalloon(prev => ({ ...prev, translate: result}));
     }, (error) => {
       console.log(error);
+    })
+  }
+
+  const doGetTalkList = async(talkId: number) => {
+    await getTalkList(talkId,({data}) => {
+      const result = data.data as talkDetailType[];
+      setTalkHistoryList([...result]);
+    }, (err) => {
+      console.log(err);
     })
   }
 
@@ -287,7 +298,7 @@ export const TalkBalloonComp = () => {
       <button className="absolute top-0 left-0 z-10 flex flex-col space-y-2 ml-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
         onClick={() => { setShowDictionary(!showDictionary) }}
-      >Voca</button>
+      >Help</button>
       {
         // 토픽 리스트 보여주기
         showList && !talkBalloon.prevSectence?
@@ -323,13 +334,13 @@ export const TalkBalloonComp = () => {
               talkHistoryList.map((value, index)=>(
                 <div key={index}>
                   {
-                    value.isUser?
+                    value.member?
                     <div className="mb-2 text-blue-800">
-                      Me : {value.talk}
+                      Me : { value.content }
                     </div>
                     :
                     <div className="mb-2">
-                      NPC : {value.talk}
+                      NPC : { value.content }
                     </div>
                   }
                 </div>
@@ -352,7 +363,7 @@ export const TalkBalloonComp = () => {
         // 사전 말 풍선
         showDictionary? 
         <div className="absolute top-[8vh] left-2 w-[300px] bg-gray-100 rounded-lg px-4 py-2">
-          <div className="justify-center text-2xl font-bold font-['passero-one']">Voca</div>
+          <div className="justify-center text-2xl font-bold font-['passero-one']">Help</div>
           <hr className="border-black"/>
           <input
             className="mt-2 w-full p-2 border-2 border-gray-300 rounded-md leading-tight focus:outline-none focus:border-blue-500 focus:shadow-outline"
