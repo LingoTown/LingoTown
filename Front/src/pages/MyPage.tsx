@@ -11,6 +11,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { loadingAtom } from "../atom/LoadingAtom";
 import { callMyList, deleteAccount, saveNickname, updateProfile, getInfo, getTalkList, deleteTalk } from "../api/Mypage";
 import { myPageNPCType, userInfo } from "../type/MyPageNpcType";
+import { tutorialAtom } from "../atom/TutorialAtom";
+import Tutorial from "../component/tutorial/Tutorial";
 
 const MyPage = () => {
 
@@ -33,6 +35,7 @@ const MyPage = () => {
   const setTalkId = useSetRecoilState(talkIdAtom);
   const setLoading = useSetRecoilState(loadingAtom);
   const [user, setUser] = useRecoilState(userAtom);
+  const [visit, setVisit] = useRecoilState(tutorialAtom);
   
   const logout = async() =>{
     setUser(initialUser)
@@ -152,6 +155,12 @@ const MyPage = () => {
   return(
     <>
       <Toaster position="top-center" />
+      {!visit.visit?
+        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-10">
+          <Tutorial/>
+        </div>
+        :null
+      }
       <div
         className="min-h-screen flex flex-col items-center justify-center bg-cover" 
         style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}Introduce/bgggg.png')`,
@@ -204,17 +213,24 @@ const MyPage = () => {
                 }
                 
               </div>
-              <div 
-              className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
+              <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
+                
                 <div className="h-[45px]">
+                  <span className='hover:text-[1.9rem]' onClick={()=>{setVisit({visit: false})}}
+                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
+                    📖 Guide
+                  </span>
+                </div>
+                
+                <div className="h-[45px] mt-10">
                   <span className='hover:text-[1.9rem]' onClick={logout}
                     style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
                     Logout
                   </span>
                 </div>
-                <div className="h-[45px]" 
-                  onClick={ doDeleteAccount }>
+                <div className="h-[45px]">
                   <span className='hover:text-[1.9rem]'
+                    onClick={ doDeleteAccount }
                     style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
                     Delete Account
                   </span>
