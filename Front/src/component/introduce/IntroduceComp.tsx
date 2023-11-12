@@ -9,6 +9,8 @@ import { useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { NPCStage } from "./NPCStage";
+import { loadingAtom } from "../../atom/LoadingAtom";
+import { useRecoilState } from "recoil";
 
 export const IntroduceComp: React.FC = () => {
   const jerry = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_7.glb`);
@@ -71,6 +73,8 @@ export const IntroduceComp: React.FC = () => {
   const [jimmyHovered, setJimmyHovered] = useState<string | null>(null);
   const [barryHovered, setBarryHovered] = useState<string | null>(null);
 
+  const [loading, setLoading] = useRecoilState(loadingAtom);
+
   useEffect(() => {
     const anyHovered =
       jerryHovered == "Jerry" ||
@@ -130,6 +134,8 @@ export const IntroduceComp: React.FC = () => {
         setCameraEnabled(false);
       }, 1000)
     }
+    console.log(loading.loading);
+    if(loading.loading) setLoading({loading:false});
   }, [active, sceneInstance]);
 
   useEffect(() => {
@@ -203,6 +209,7 @@ export const IntroduceComp: React.FC = () => {
       lukeActions[anim]?.fadeOut(0.5);
     }
   }, [lukeHovered, lukeActions]);
+  
   useEffect(() => {
     const anim = isabelHovered ? 'Defeat' : 'Idle';
     isabelActions[anim]?.reset()?.fadeIn(0.5)?.play();
