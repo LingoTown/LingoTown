@@ -53,25 +53,6 @@ const ScriptDetailComp = () => {
     })
   }
 
-  // useEffect(() => {
-  //   detailList.forEach((arr, i) => {
-  //     if (showCorr[i]) {
-  //       handleGrammar(arr.talkDetailId, i);
-  //     }
-  //   });
-  // }, [showCorr, detailList]);
-
-  // const handleGrammar = async (talkDetailId:number, index:number) => {
-  //   await getTalkDetailScore(talkDetailId, ({data}) => {
-  //     const result = data.data as grammarCheckType;
-  //     const temp = [...savedata];
-  //     temp[index] = result;
-  //     setData(temp);
-  //   }, (err) => {
-  //     console.log(err)
-  //   })
-  // }
-
   const playAudio = (audioIndex: number) => {
     const audioEl = audioRefs.current[audioIndex];
     if (audioEl) {
