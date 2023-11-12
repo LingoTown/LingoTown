@@ -9,8 +9,9 @@ import { talkingType } from "../../type/TalkType";
 import { translateSentence, endTalk } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
 import { userAtom } from "../../atom/UserAtom";
-import fetchIntimacy from "../../hook/AfterTalk/fetchIntimacy";
 import useCharacterUnlock from "../../hook/AfterTalk/CharacterLockOff";
+import fetchIntimacy from "../../hook/AfterTalk/FetchIntimacy";
+import { useCharacterUnlockCheck } from "../../hook/AfterTalk/CharacterUnlockCheck";
 
 export const TalkBalloonComp = () => {
 
@@ -35,7 +36,7 @@ export const TalkBalloonComp = () => {
   const queryParams = new URLSearchParams(location.search);
   const lang = queryParams.get('language');
   
-  const { intimacy, flag } = fetchIntimacy();
+  const { intimacy } = fetchIntimacy();
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
@@ -184,52 +185,7 @@ export const TalkBalloonComp = () => {
     }
   }, [talkBalloon.audioPlay])
 
-  useEffect(() => {
-    console.log("Flag 상태 변경됨: ", flag);
-  }, [flag]);
-  
-  /* 친밀도가 업데이트 될 때, 캐릭터 잠금 해제 여부를 파악한다. */
-  useEffect(() => {
-    console.log(flag)
-    console.log("useEffect 안")
-
-    if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
-      console.log("setUser")
-      setUser({
-        ...user,
-        lockList: user.lockList.map((item, index) => 
-          index === 4 ? {...item, islocked: false} : item
-        )
-      })
-
-      characterLockOff(5);
-      alert("characterId 5번, f14 캐릭터 잠금 해제");
-    }
-
-    if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
-      setUser({
-        ...user,
-        lockList: user.lockList.map((item, index) => 
-          index === 8 ? {...item, islocked: false} : item
-        )
-      })
-
-      characterLockOff(9);
-      alert("characterId 9번, f21 캐릭터 잠금 해제");
-    }
-
-    if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
-      setUser({
-        ...user,
-        lockList: user.lockList.map((item, index) => 
-          index === 7 ? {...item, islocked: false} : item
-        )
-      })
-
-      characterLockOff(8);
-      alert("characterId 8번, m29 캐릭터 잠금 해제");
-    }
-  }, [intimacy, flag]);
+  useCharacterUnlockCheck({intimacy, user, setUser, characterLockOff});
 
   return(
     <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
