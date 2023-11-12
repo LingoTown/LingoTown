@@ -7,36 +7,76 @@ import { topic, talkingType } from "../../type/TalkType";
 import { translateSentence, endTalk, talkingTopic } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
 import { talkHistoryAtom, initialTalkHistoryState } from "../../atom/TalkHistoryAtom";
+import { getMemberNpcRelationship } from "../../api/NPC";
+import { intimacyAtom } from "../../atom/IntimacyAtom";
+import { intimacyType } from "../../type/IntimacyType";
+import { userAtom } from "../../atom/UserAtom";
+import { lockOffCharacter } from "../../api/Character";
 
-export const TalkBalloonComp = () => {
-  
+export const TalkBalloonComp = () => {  
   // url parsing
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const lang = queryParams.get('language');
-  
+
   // hook
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
-  
-  // state
-  const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
-  // const [showSentenceModal, setShowSentenceModal] = useState<boolean>(false);
-  const [showDictionary, setShowDictionary] = useState<boolean>(false);
-  const [showHistory, setShowHistory] = useState<boolean>(false);
-  const [showList, setShowList] = useState<boolean>(false);
-  const [isRec, setIsRec] = useState<boolean>(false);
-  
-  const [dictionary, setDictionary] = useState<string>("");
-  const [word, setWord] = useState<string>("");
-  
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isMounted = useRef({ audioPlay: false });
 
   // global state
   const [talkHistoryList, setTalkHistoryList] = useRecoilState(talkHistoryAtom);
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const [talkState, setTalkState] = useRecoilState(talkStateAtom);
+  const [intimacy, setIntimacy] = useRecoilState(intimacyAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  
+  // state
+  const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
+  const [showDictionary, setShowDictionary] = useState<boolean>(false);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [showList, setShowList] = useState<boolean>(false);
+  const [isRec, setIsRec] = useState<boolean>(false);
+  const [dictionary, setDictionary] = useState<string>("");
+  const [word, setWord] = useState<string>("");
+  const [flag, setFlag] = useState<number>(0);
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isMounted = useRef({ audioPlay: false });
+
+
+  /* 친밀도 정보 가져오기 */
+  const fetchIntimacyInfo = async() => {
+    await getMemberNpcRelationship(({data}: any) => {
+      const result  = data.data as intimacyType[];
+
+      setIntimacy(prev => ({
+        ...prev, 
+        npcList: result,
+      }));
+
+      console.log("fetchIntimacyInfo 완료")
+      console.log(flag)
+      setFlag(f => f + 1);
+      console.log(flag)
+    }, 
+    (error) => {
+      console.log(error);
+    });
+  }
+
+  /* 캐릭터 잠금 해제 */
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
+
+
 
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
@@ -64,14 +104,13 @@ export const TalkBalloonComp = () => {
 
   // End 버튼 눌렀을때
   const handleEnd = async() => {
-
     await endTalk(talkState.talkId, ({}) => {}, (res) => { console.log(res) })
-
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
     setShowHistory(false)
     setTalkHistoryList(initialTalkHistoryState);
+    fetchIntimacyInfo();
   };
 
   // 대화음악 재생
@@ -188,10 +227,46 @@ export const TalkBalloonComp = () => {
     }
   }, [talkBalloon.audioPlay])
 
+  useEffect(() => {
+    console.log("Flag 상태 변경됨: ", flag);
+  }, [flag]);
+  
+  /* 친밀도가 업데이트 될 때, 캐릭터 잠금 해제 여부를 파악한다. */
+  useEffect(() => {
+    if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 4 ? {...item, islocked: false} : item
+        )
+      })
+      characterLockOff(5);
+    }
+
+    if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 8 ? {...item, islocked: false} : item
+        )
+      })
+      characterLockOff(9);
+    }
+
+    if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map((item, index) => 
+          index === 7 ? {...item, islocked: false} : item
+        )
+      })
+      characterLockOff(8);
+    }
+  }, [intimacy, flag]);
+
   return(
     <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
       {
-        // 토픽 보는 버튼
         !talkBalloon.prevSectence?
         <button
           className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
@@ -236,15 +311,6 @@ export const TalkBalloonComp = () => {
             </div>
           </div>
         </>:null
-      }
-      {
-        // // 이전 대화 말풍선
-        // showSentenceModal?
-        // <div className="absolute top-[35vh] right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
-        //   <div className="justify-center text-2xl font-bold font-['passero-one']">Previous conversation</div>
-        //   <hr className="border-black"/>
-        //   <div className="font-['GabiaSolmee'] text-l mt-2">{ talkBalloon.prevSectence }</div>
-        // </div>:null
       }
       {
         // History 말풍선
