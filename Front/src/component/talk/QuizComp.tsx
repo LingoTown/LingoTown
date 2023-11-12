@@ -216,7 +216,6 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                   quizList.map((data, index) => (
                     <div key={ index }
                       className="flex justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
-                      
                       onClick={() => {
                         doSubmitQuiz(data.quizId, index + 1)
                       }}

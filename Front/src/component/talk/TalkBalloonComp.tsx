@@ -3,41 +3,47 @@ import { talkBalloonAtom, initialTalkBalloon } from "../../atom/TalkBalloonAtom"
 import { talkStateAtom } from "../../atom/TalkStateAtom";
 import { useRecoilState } from "recoil"
 import { useCustomAlert, useCustomConfirm } from "../util/ModalUtil";
-import { topic } from "../../type/TalkType";
-import { talkingTopic } from "../../api/Talk";
-import { talkingType } from "../../type/TalkType";
-import { translateSentence, endTalk } from "../../api/Talk";
+import { topic, talkingType } from "../../type/TalkType";
+import { translateSentence, endTalk, talkingTopic } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
+import { talkHistoryAtom, initialTalkHistoryState } from "../../atom/TalkHistoryAtom";
 import { getMemberNpcRelationship } from "../../api/NPC";
 import { intimacyAtom } from "../../atom/IntimacyAtom";
 import { intimacyType } from "../../type/IntimacyType";
 import { userAtom } from "../../atom/UserAtom";
 import { lockOffCharacter } from "../../api/Character";
 
-
-export const TalkBalloonComp = () => {
-
-  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
-  const [isRec, setIsRec] = useState<boolean>(false);
-  const [talkState, setTalkState] = useRecoilState(talkStateAtom);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const customAlert = useCustomAlert();
-  const customConfirm = useCustomConfirm();
-  const isMounted = useRef({ audioPlay: false });
-
-  const [showList, setShowList] = useState<boolean>(false);
-  const [showSentenceModal, setShowSentenceModal] = useState<boolean>(false);
-  const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
-  const [showDictionary, setShowDictionary] = useState<boolean>(false);
-  const [dictionary, setDictionary] = useState<string>("");
-  const [word, setWord] = useState<string>("");
-  const [intimacy, setIntimacy] = useRecoilState(intimacyAtom);
-  const [user, setUser] = useRecoilState(userAtom);
-  const [flag, setFlag] = useState<number>(0);
-
+export const TalkBalloonComp = () => {  
+  // url parsing
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const lang = queryParams.get('language');
+
+  // hook
+  const customAlert = useCustomAlert();
+  const customConfirm = useCustomConfirm();
+
+  // global state
+  const [talkHistoryList, setTalkHistoryList] = useRecoilState(talkHistoryAtom);
+  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
+  const [talkState, setTalkState] = useRecoilState(talkStateAtom);
+  const [intimacy, setIntimacy] = useRecoilState(intimacyAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  
+  // state
+  const [showTranslateModal, setShowTranslateModal] = useState<boolean>(true);
+  const [showDictionary, setShowDictionary] = useState<boolean>(false);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [showList, setShowList] = useState<boolean>(false);
+  const [isRec, setIsRec] = useState<boolean>(false);
+  const [dictionary, setDictionary] = useState<string>("");
+  const [word, setWord] = useState<string>("");
+  const [flag, setFlag] = useState<number>(0);
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const isMounted = useRef({ audioPlay: false });
+
+
   /* 친밀도 정보 가져오기 */
   const fetchIntimacyInfo = async() => {
     await getMemberNpcRelationship(({data}: any) => {
@@ -71,6 +77,7 @@ export const TalkBalloonComp = () => {
   }
 
 
+
   const handleOnRec = () => {
     setTalkState(prevState => ({ ...prevState, onRec: !prevState.onRec }));
 
@@ -97,16 +104,12 @@ export const TalkBalloonComp = () => {
 
   // End 버튼 눌렀을때
   const handleEnd = async() => {
-
     await endTalk(talkState.talkId, ({}) => {}, (res) => { console.log(res) })
-
-    console.log(talkState)
-
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
-
-    /*  */
+    setShowHistory(false)
+    setTalkHistoryList(initialTalkHistoryState);
     fetchIntimacyInfo();
   };
 
@@ -116,6 +119,7 @@ export const TalkBalloonComp = () => {
   const selectTopic = async(topic:topic) => {
     const flag = await customConfirm("Topic", topic.keyword);
     if (flag) {
+      setTalkBalloon(prevState => ({...prevState, sentence: "", prevSectence: " "})) 
       setTalkState(prevState => ({ ...prevState, finish: true }));
       setIsRec(false);
       doTalking(topic);
@@ -209,6 +213,11 @@ export const TalkBalloonComp = () => {
       console.log(error);
     })
   }
+
+  const clickHistoryButton = () => {
+    setShowHistory(!showHistory);
+  }
+
   
   useEffect(() => {
     if (isMounted.current.audioPlay) {
@@ -224,20 +233,14 @@ export const TalkBalloonComp = () => {
   
   /* 친밀도가 업데이트 될 때, 캐릭터 잠금 해제 여부를 파악한다. */
   useEffect(() => {
-    console.log(flag)
-    console.log("useEffect 안")
-
     if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
-      console.log("setUser")
       setUser({
         ...user,
         lockList: user.lockList.map((item, index) => 
           index === 4 ? {...item, islocked: false} : item
         )
       })
-
       characterLockOff(5);
-      alert("characterId 5번, f14 캐릭터 잠금 해제");
     }
 
     if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
@@ -247,9 +250,7 @@ export const TalkBalloonComp = () => {
           index === 8 ? {...item, islocked: false} : item
         )
       })
-
       characterLockOff(9);
-      alert("characterId 9번, f21 캐릭터 잠금 해제");
     }
 
     if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
@@ -259,21 +260,28 @@ export const TalkBalloonComp = () => {
           index === 7 ? {...item, islocked: false} : item
         )
       })
-
       characterLockOff(8);
-      alert("characterId 8번, m29 캐릭터 잠금 해제");
     }
   }, [intimacy, flag]);
 
   return(
     <div style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
       {
-        // 토픽 보는 버튼
         !talkBalloon.prevSectence?
-        <button className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
-        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+        <button
+          className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
           onClick={() => { setShowList(!showList) }}
-        >Topics</button>:null
+        >Topics
+        </button>
+        :
+        <button
+          className="absolute top-0 right-0 z-10 flex flex-col space-y-2 mr-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
+          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+          onClick={ clickHistoryButton }
+        >
+          History
+        </button>
       }
       {/* 사전 보는 버튼 */}
       <button className="absolute top-0 left-0 z-10 flex flex-col space-y-2 ml-2 mt-2 px-4 py-2 bg-gray-600 text-white text-lg rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 font-['passero-one']"
@@ -282,7 +290,7 @@ export const TalkBalloonComp = () => {
       >Voca</button>
       {
         // 토픽 리스트 보여주기
-        showList?
+        showList && !talkBalloon.prevSectence?
         <>
           <div className="absolute top-16 right-2 w-[330px]">        
             <div className="p-4 bg-gray-100 rounded-lg shadow-md">
@@ -305,13 +313,31 @@ export const TalkBalloonComp = () => {
         </>:null
       }
       {
-        // 이전 대화 말풍선
-        showSentenceModal?
-        <div className="absolute top-[35vh] right-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
-          <div className="justify-center text-2xl font-bold font-['passero-one']">Previous conversation</div>
+        // History 말풍선
+        showHistory?
+        <div className="absolute top-[8vh] right-2 w-[330px] h-[60vh] bg-gray-100 rounded-lg px-4 py-2 overflow-auto">
+          <div className="justify-center text-2xl font-bold font-['passero-one']">History</div>
           <hr className="border-black"/>
-          <div className="font-['GabiaSolmee'] text-xl mt-2">{ talkBalloon.prevSectence }</div>
-        </div>:null
+          <div className="font-['GabiaSolmee'] text-l mt-2">
+            {
+              talkHistoryList.map((value, index)=>(
+                <div key={index}>
+                  {
+                    value.isUser?
+                    <div className="mb-2 text-blue-800">
+                      Me : {value.talk}
+                    </div>
+                    :
+                    <div className="mb-2">
+                      NPC : {value.talk}
+                    </div>
+                  }
+                </div>
+              ))
+            }
+          </div>
+        </div>
+        :null
       }
       {
         // 번역 말풍선
@@ -323,7 +349,8 @@ export const TalkBalloonComp = () => {
         </div>:null
       }
       {
-        showDictionary ? 
+        // 사전 말 풍선
+        showDictionary? 
         <div className="absolute top-[8vh] left-2 w-[300px] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Voca</div>
           <hr className="border-black"/>
@@ -380,8 +407,8 @@ export const TalkBalloonComp = () => {
             <button className="px-2 py-0 bg-purple-500 text-xl text-white rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
               style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               onClick={ handlePlay }
-              onMouseEnter={() => setShowSentenceModal(true)} 
-              onMouseLeave={() => setShowSentenceModal(false)}
+              // onMouseEnter={() => setShowSentenceModal(true)} 
+              // onMouseLeave={() => setShowSentenceModal(false)}
             >Listen Again</button>
             <audio ref={ audioRef } src={ talkBalloon.audio }/>
           </div>
