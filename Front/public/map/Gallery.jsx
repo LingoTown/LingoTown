@@ -92,10 +92,6 @@ export function Gallery(props) {
     TextureLoader,
     import.meta.env.VITE_S3_URL + "Picture/1026(1).jpg"
   );
-  const image1026B = useLoader(
-    TextureLoader,
-    import.meta.env.VITE_S3_URL + "Picture/1026(2).jpg"
-  );
   const image1027A = useLoader(
     TextureLoader,
     import.meta.env.VITE_S3_URL + "Picture/1027(1).jpg"
@@ -653,7 +649,7 @@ export function Gallery(props) {
             geometry={nodes.Art_Work_022_Art_022_0.geometry}
             position={[21.043, -17.072, 18.061]}
           >
-            <meshStandardMaterial map={image1026B} />
+            {/* <meshStandardMaterial map={} /> */}
           </mesh>
         </group>
         <group
