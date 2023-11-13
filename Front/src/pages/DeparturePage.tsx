@@ -15,6 +15,10 @@ import { getCharacterList } from "../api/Character";
 import { intimacyType } from "../type/IntimacyType";
 import { getMemberNpcRelationship } from "../api/NPC";
 import { intimacyAtom } from "../atom/IntimacyAtom";
+import { userType } from "../type/UserType";
+import { userAtom } from "../atom/UserAtom";
+import { lockOffCharacter } from "../api/Character";
+import { useCustomAlert } from "../component/util/ModalUtil";
 
 const Rows = () => {
   /* loading */
@@ -70,6 +74,8 @@ const DeparturePage = () => {
   const [, setCharacter] = useRecoilState(characterAtom);
   const [, setIntimacy] = useRecoilState(intimacyAtom);
   const [playerChange, setPlayerChange] = useRecoilState(PlayerSelectAtom);
+  const [user, setUser] = useRecoilState(userAtom);
+  const customAlert = useCustomAlert();
 
   const navigate = useNavigate();
 
@@ -77,8 +83,6 @@ const DeparturePage = () => {
   const fetchCharacterList = async() => {
     await getCharacterList(({data}: any) => {
       const result = data.data as CharacterResponseType[];
-
-        console.log(result)
 
         setCharacter(prev => ({
             ...prev, 
@@ -123,10 +127,41 @@ const DeparturePage = () => {
     });
   };
 
+  /* 캐릭터 잠금 해제 */
+  const characterLockOff = async(id: number) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
+
+  /* 회원가입 날짜가 2023.11.14 이전일때 */
+  const checkEnterDate = (user: userType) => {
+    const cutoffDate = new Date("2023-11-14");
+    const userCreatedAt = new Date(user.createdAt);
+
+    if(userCreatedAt < cutoffDate && user.lockList[2].islocked) {
+      setUser({
+        ...user,
+        lockList: user.lockList.map(
+          (item, index) => (index === 2 ? { ...item, islocked: false } : item)
+        )
+      });
+
+      characterLockOff(3);
+      customAlert("Notice", "1차 배포에 참가해주셔서 감사합니다! 3번 캐릭터가 잠금 해제 됩니다!");
+    }
+  };
+
   useEffect(() => {
     getQuizInfo();
     fetchCharacterList();
     fetchIntimacyInfo();
+    checkEnterDate(user);
   }, [])
 
   // 캐릭터 변경 토스트 메세지

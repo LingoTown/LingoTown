@@ -13,6 +13,7 @@ import { CharacterLockInfo } from '../type/CharacterType';
 import { getCharacterLockInfo } from '../api/Character'
 import { lockOffCharacter } from '../api/Character';
 import { intimacyAtom } from '../atom/IntimacyAtom';
+import { useCustomAlert } from '../component/util/ModalUtil';
 
 
 interface playerSelectPage {
@@ -34,13 +35,14 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
 
   const [user, setUser] = useRecoilState(userAtom);
   const [intimacy] = useRecoilState(intimacyAtom);
+  const customAlert = useCustomAlert();
 
   /* 캐릭터 잠금정보 불러오기 */
   const getCharacterLock = async () => {
 
     await getCharacterLockInfo(({data}: any) => {
         const result = data.data as CharacterLockInfo[];
-        console.log(result)
+
         setUser(prev => ({
             ...prev, 
             lockList: result,
@@ -63,9 +65,9 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
     })
   }
 
-useEffect(() => {
-  getCharacterLock();
-}, [])
+  useEffect(() => {
+    getCharacterLock();
+  }, [])
 
   const loading = useRecoilValue(loadingAtom);
 
@@ -77,10 +79,7 @@ useEffect(() => {
   },[]);
 
   useEffect(() => {
-    console.log("!!")
     if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
-      console.log("??")
-      console.log("setUser")
       setUser({
         ...user,
         lockList: user.lockList.map((item, index) => 
@@ -89,7 +88,7 @@ useEffect(() => {
       })
 
       characterLockOff(5);
-      alert("characterId 5번, f14 캐릭터 잠금 해제");
+      customAlert("Notice", "NPC와 대화를 최초 완료하셨습니다! 5번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
@@ -100,8 +99,7 @@ useEffect(() => {
         )
       })
 
-      characterLockOff(9);
-      alert("characterId 9번, f21 캐릭터 잠금 해제");
+      customAlert("Notice", "모든 NPC와 대화를 완료하셨습니다! 9번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
@@ -112,8 +110,7 @@ useEffect(() => {
         )
       })
 
-      characterLockOff(8);
-      alert("characterId 8번, m29 캐릭터 잠금 해제");
+      customAlert("Notice", "특정 NPC와 최대 친밀도를 달성했습니다! 8번 캐릭터가 잠금 해제 됩니다!");
     }
   }, []);
 

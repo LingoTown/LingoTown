@@ -18,3 +18,4 @@ export const characterAtom = atom<CharacterList>({
 export const initialCharacter = {
     characterList: []
 };
+

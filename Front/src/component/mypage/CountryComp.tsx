@@ -19,11 +19,11 @@ export const CountryComp = (props:myListProps & {onBoxClick : ()=>void} & {getTa
 
   const getIntimacy = (intimacy : number):string => {
     if(intimacy >= 100){
-      return import.meta.env.VITE_S3_URL + "Icon/GoldBar.png"
+      return import.meta.env.VITE_S3_URL + "Intimacy/level_3.png"
     } else if (intimacy >= 50){
-      return import.meta.env.VITE_S3_URL + "Icon/SilverBar.png"
+      return import.meta.env.VITE_S3_URL + "Intimacy/level_2.png"
     } else {
-      return import.meta.env.VITE_S3_URL + "Icon/BronzeBar.png"
+      return import.meta.env.VITE_S3_URL + "Intimacy/level_1.png"
     }
   }
 

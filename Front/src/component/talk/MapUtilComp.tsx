@@ -41,7 +41,7 @@ export const MapUtilComp = () => {
         setTranslateList(new Array(result.length).fill(0));
     },() => {
       navigate("/departure");
-      customAlert("공지", "올바르지 않은 접근입니다.");
+      customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -49,7 +49,7 @@ export const MapUtilComp = () => {
   useEffect(() => {
     if (lang == null || world == null) {  
       navigate("/departure");
-      customAlert("공지", "올바르지 않은 접근입니다.");
+      customAlert("Notice", "올바르지 않은 접근입니다.");
     }
   }, [])
 
@@ -61,7 +61,7 @@ export const MapUtilComp = () => {
   const exitPage = async() => {
     setTalkBalloon(prevState => ({ ...prevState, isMove: false }));
     setTalkBalloon(prevState => ({...prevState, isModal: true}))
-    const flag = await customConfirm("공지", "정말로 테마를 나가시겠어요?");
+    const flag = await customConfirm("Notice", "정말로 테마를 나가시겠어요?");
     setTalkBalloon(prevState => ({ ...prevState, isMove: true }));
     setTalkBalloon(prevState => ({...prevState, isModal: false}))
     if (flag) {
