@@ -231,10 +231,10 @@ public class SocialLoginService {
             characterImage = S3URL + "Player/2D/m1Img.png";
         }
         else {
-            characterId = memberCharacterList.get().getCharacter().getId();
-            characterGender = memberCharacterList.get().getCharacter().getGender();
-            characterLink = memberCharacterList.get().getCharacter().getLink();
-            characterImage = memberCharacterList.get().getCharacter().getImage();
+            characterId = memberCharacterList.get(0).getCharacter().getId();
+            characterGender = memberCharacterList.get(0).getCharacter().getGender();
+            characterLink = memberCharacterList.get(0).getCharacter().getLink();
+            characterImage = memberCharacterList.get(0).getCharacter().getImage();
         }
 
         List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
