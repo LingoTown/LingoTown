@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
@@ -10,7 +10,7 @@ export const ThemePage = () => {
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
   const navigate = useNavigate();
-  const canvasRef = useRef<HTMLCanvasElement>();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -31,7 +31,7 @@ export const ThemePage = () => {
       canvasElement?.removeEventListener('webglcontextlost', handleContextLost as EventListener);
       canvasElement?.removeEventListener('webglcontextrestored', handleContextRestored as EventListener);
     };
-  }, []);
+  }, [canvasRef]);
 
 
   return(
@@ -47,24 +47,32 @@ export const ThemePage = () => {
       }
       {
         !loading.loading ?
-        <div className="pt-8 px-5 flex place-content-between text-5xl font-bold text-[#5dc7f8] absolute w-full font-['GabiaSolmee']"
-          style={{zIndex:"1"}}
+        <div className={`w-[100%] pt-12 flex place-content-between text-5xl font-bold text-[#5dc7f8] absolute font-['GabiaSolmee']`}
+          style={{ zIndex: "1"}}
         >
-          <div className="flex-grow ml-4 drop-shadow-lg" style={{minWidth: '33%', cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
-            <div className="pr-80 text-center hover:text-[2.8rem]" onClick={() => { navigate("/departure"); }}>
-              뒤로가기
-            </div>
-          </div>
-          <div className="flex-grow drop-shadow-lg" style={{minWidth: '33%', cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
-            <div className="pr-5 text-center hover:text-[2.8rem]" onClick={() => { setLoading({loading:true}); navigate("/introduce"); }}>
-              NPC
-            </div>
-          </div>
-          <div className="flex-grow mr-8 drop-shadow-lg" style={{minWidth: '33%', cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
-            <div className="pl-[35vh] text-center hover:text-[2.8rem]" onClick={() => { navigate("/mypage"); }}>
-              마이페이지
-            </div>
-          </div>
+          <div className="w-[15%] text-center hover:text-[2.8rem] drop-shadow-lg" 
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
+            onClick={async() => {
+              setLoading({loading:true});
+              navigate("/departure")
+            }}
+          >뒤로가기</div>
+
+          <div className="w-[70%] text-center hover:text-[2.8rem] drop-shadow-lg" 
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
+            onClick={async() => {
+              setLoading({loading:true});
+              navigate("/introduce")
+            }}
+          >NPC</div>
+          
+          <div className="w-[18%] text-center hover:text-[2.8rem] drop-shadow-lg" 
+            style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
+            onClick={async() => {
+              setLoading({loading:true});
+              navigate("/mypage")
+            }}
+          >마이페이지</div>
         </div>
         :
         null
