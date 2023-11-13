@@ -115,8 +115,6 @@ const DeparturePage = () => {
     await getAllQuizList(({data}: any) => {
         const result = data.data as quizTypeForAtom[];
 
-        console.log(result)
-
         setQuiz(prev => ({
             ...prev, 
             quizList: result,
