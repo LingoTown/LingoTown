@@ -139,7 +139,7 @@ const DeparturePage = () => {
 
   /* 회원가입 날짜가 2023.11.14 이전일때 */
   const checkEnterDate = (user: userType) => {
-    const cutoffDate = new Date("2023-11-14");
+    const cutoffDate = new Date("2023-11-15");
     const userCreatedAt = new Date(user.createdAt);
 
     if(userCreatedAt < cutoffDate && user.lockList[2].islocked) {
