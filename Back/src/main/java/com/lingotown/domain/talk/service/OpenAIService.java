@@ -314,8 +314,8 @@ public class OpenAIService {
                 "The level of difficulty in responding should be relaxed so that users can understand it. " +
                 "You need to level your response to about eight years old, so that users can understand it. " +
                 "Please ask the appropriate questions so that the conversation can continue. " +
-                "The important thing is that it should be a complete sentence without exceeding 50token which is max_token. " +
-
+                "The most important thing is that you respond to the complete sentence. " +
+                "So you have to respond within 3 sentences. " +
                 "The sentence should not be interrupted in the sentence should not be interrupted. " +
                 "It is very important. If you think response's going to cut off in the middle, please finish responding before that sentence. " +
                 "And always put '.' at the end of the sentence. " +
