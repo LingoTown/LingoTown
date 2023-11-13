@@ -20,7 +20,7 @@ export const ThemePage = () => {
       // handle context loss
     };
 
-    const handleContextRestored = (event: Event) => {
+    const handleContextRestored = () => {
       // handle context restoration
     };
 
