@@ -40,7 +40,7 @@ const MyPage = () => {
   const logout = async() =>{
     setUser(initialUser)
     navigate("/")
-    await customAlert("", "로그아웃 되었습니다.")
+    await customAlert("Notice", "로그아웃 되었습니다.")
   }
 
   useEffect(()=> {
