@@ -28,12 +28,10 @@ export function Gallery(props) {
     TextureLoader,
     import.meta.env.VITE_S3_URL + "Picture/1011(1).jpg"
   );
-
   const image1011B = useLoader(
     TextureLoader,
     import.meta.env.VITE_S3_URL + "Picture/1011(2).jpg"
   );
-
   const image1012A = useLoader(
     TextureLoader,
     import.meta.env.VITE_S3_URL + "Picture/1012(1).jpg"
@@ -122,7 +120,12 @@ export function Gallery(props) {
     TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1103(1).jpg"
   );
   const image1106A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1106(1).jpg");
-  const image1106B = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1106(2).jpg")
+  const image1106B = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1106(2).jpg");
+  const image1107A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1107(1).jpeg");
+  const image1108A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1108(1).jpg");
+  const image1109A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1109(1).jpg");
+  const image1110A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1110(1).jpg");
+  const image1112A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1112(1).jpeg");
 
   useEffect(
     () => {
@@ -643,7 +646,7 @@ export function Gallery(props) {
 
         <group
           position={[1326.003, 184.435, 724.845]}
-          rotation={[-Math.PI / 2, -Math.PI / 2, 0]}
+          rotation={[-Math.PI / 2, -Math.PI / 2, Math.PI]}
           scale={0.666}
         >
           <mesh
@@ -872,16 +875,20 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1107A */}
+        
         <group
           position={[-514.1, 184.435, 1328.228]}
-          rotation={[-Math.PI, 0, -Math.PI / 2]}
+          rotation={[-Math.PI, 0, -Math.PI]}
           scale={0.666}
         >
           <mesh
             geometry={nodes.Art_Work_031_Art_031_0.geometry}
-            material={materials.Art_031}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1107A} />
+          </mesh>
         </group>
         <group
           position={[-514.1, 184.435, 1328.228]}
@@ -894,6 +901,9 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1108A */}
+
         <group
           position={[-853.113, 184.435, 1094.524]}
           rotation={[Math.PI / 2, Math.PI / 2, 0]}
@@ -901,9 +911,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_032_Art_032_0.geometry}
-            material={materials.Art_032}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1108A} />
+          </mesh>
         </group>
         <group
           position={[-853.113, 184.435, 1094.524]}
@@ -916,16 +927,20 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1109A */}
+
         <group
           position={[-853.113, 184.435, 702.602]}
-          rotation={[Math.PI / 2, Math.PI / 2, 0]}
+          rotation={[Math.PI / 2, Math.PI / 2, Math.PI]}
           scale={0.666}
         >
           <mesh
             geometry={nodes.Art_Work_033_Art_033_0.geometry}
-            material={materials.Art_033}
             position={[21.043, -17.072, 18.061]}
-          />
+          >
+            <meshStandardMaterial map={image1109A} />
+          </mesh>
         </group>
         <group
           position={[-853.113, 184.435, 702.602]}
@@ -938,94 +953,117 @@ export function Gallery(props) {
             position={[21.043, -17.072, 5.478]}
           />
         </group>
+
+        {/* 1110A */}
+
         <group
-          position={[-1046.997, 184.435, 464.792]}
+          position={[-936.997, 184.435, 464.792]}
           rotation={[-Math.PI, 0, -Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_034_Art_034_0.geometry}
-            material={materials.Art_034}
+            geometry={nodes.Art_Work_033_Art_033_0.geometry}
             position={[21.043, -109.836, 5.478]}
-          />
+          >
+            <meshStandardMaterial map={image1110A} />
+          </mesh>
         </group>
+
         <group
-          position={[-1276.343, 184.435, 464.792]}
-          rotation={[-Math.PI, 0, -Math.PI / 2]}
+          position={[-936.996, 184.435, 473.166]}
+          rotation={[Math.PI, 0, -Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_035_Art_035_0.geometry}
-            material={materials.Art_035}
-            position={[21.043, -109.836, 5.478]}
+            geometry={nodes.Art_Work_Frame_033_Metal_02_0.geometry}
+            material={materials.Metal_02}
+            position={[21.042, -109.836, 5.478]}
           />
         </group>
+
+        {/* 1112A */}
+        
+        <group
+          position={[-1350.343, 184.435, 464.792]}
+          rotation={[-Math.PI, 0, Math.PI / 2]}
+          scale={0.666}
+        >
+          <mesh
+            geometry={nodes.Art_Work_033_Art_033_0.geometry}
+            position={[21.043, -109.836, 5.478]}
+          >
+            <meshStandardMaterial map={image1112A} />
+          </mesh>
+        </group>
+        <group
+          position={[-1226.343, 184.435, 473.166]}
+          rotation={[Math.PI, 0, -Math.PI / 2]}
+          scale={0.666}
+        >
+          <mesh
+            geometry={nodes.Art_Work_Frame_033_Metal_02_0.geometry}
+            material={materials.Metal_02}
+            position={[21.042, -109.836, 5.478]}
+          />
+        </group>
+
+        {/*  */}
+
         <group
           position={[-1498.85, 184.435, 464.792]}
           rotation={[-Math.PI, 0, -Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_036_Art_036_0.geometry}
+            geometry={nodes.Art_Work_033_Art_033_0.geometry}
             material={materials.Art_036}
             position={[21.043, -109.836, 5.478]}
           />
         </group>
-        <group
-          position={[-1046.996, 184.435, 473.166]}
-          rotation={[Math.PI, 0, -Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_Frame_034_Metal_02_0.geometry}
-            material={materials.Metal_02}
-            position={[21.042, -109.836, 5.478]}
-          />
-        </group>
-        <group
-          position={[-1276.343, 184.435, 473.166]}
-          rotation={[Math.PI, 0, -Math.PI / 2]}
-          scale={0.666}
-        >
-          <mesh
-            geometry={nodes.Art_Work_Frame_035_Metal_02_0.geometry}
-            material={materials.Metal_02}
-            position={[21.042, -109.836, 5.478]}
-          />
-        </group>
+
+        {/*  */}
+
         <group
           position={[-1498.85, 184.435, 473.166]}
           rotation={[Math.PI, 0, -Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_Frame_036_Metal_02_0.geometry}
+            geometry={nodes.Art_Work_Frame_033_Metal_02_0.geometry}
             material={materials.Metal_02}
             position={[21.042, -109.836, 5.478]}
           />
         </group>
+
+        {/*  */}
+        
         <group
-          position={[-1716.328, 184.435, 464.792]}
+          position={[-1766.328, 184.435, 464.792]}
           rotation={[-Math.PI, 0, -Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_037_Art_037_0.geometry}
+            geometry={nodes.Art_Work_033_Art_033_0.geometry}
             material={materials.Art_037}
             position={[21.043, -109.836, 5.478]}
           />
         </group>
         <group
-          position={[-1716.328, 184.435, 473.166]}
+          position={[-1766.328, 184.435, 473.166]}
           rotation={[Math.PI, 0, -Math.PI / 2]}
           scale={0.666}
         >
           <mesh
-            geometry={nodes.Art_Work_Frame_037_Metal_02_0.geometry}
+            geometry={nodes.Art_Work_Frame_033_Metal_02_0.geometry}
             material={materials.Metal_02}
             position={[21.042, -109.836, 5.478]}
           />
         </group>
+
+
+
+
+
         <group
           position={[2300.65, 369.568, -730.147]}
           rotation={[-Math.PI / 2, 0, 0]}
