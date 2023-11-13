@@ -67,7 +67,7 @@ export function EventHall(props) {
   const loadVideo = () => {
     if (!videoLoaded) {
       video.current.src =
-      import.meta.env.VITE_S3_URL + "UCC/%EC%9E%84%EC%8B%9C.mp4";
+      import.meta.env.VITE_S3_URL + "UCC/temp.mp4";
       video.current.crossOrigin = "anonymous";
       video.current.loop = true;
       video.current.muted = false;

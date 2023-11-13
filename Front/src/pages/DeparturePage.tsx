@@ -30,7 +30,7 @@ const Rows = () => {
     toast(sentence, {
       duration: 2000,
       icon: emoji,
-      style: { fontSize: "15px" },
+      style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
       iconTheme: { primary: '#000', secondary: '#fff' },
       ariaProps: { role: 'status', 'aria-live': 'polite' },
     });
@@ -46,7 +46,7 @@ const Rows = () => {
     } else if (language === "UK") {
       navigate("/theme?language=2");
     } else {
-      showToaster(destination + "행 운항 준비중 입니다.","✈️")
+      showToaster(destination + " 행 운항 준비중 입니다.","✈️")
     }
   }
 
@@ -115,8 +115,6 @@ const DeparturePage = () => {
     await getAllQuizList(({data}: any) => {
         const result = data.data as quizTypeForAtom[];
 
-        console.log(result)
-
         setQuiz(prev => ({
             ...prev, 
             quizList: result,
@@ -141,7 +139,7 @@ const DeparturePage = () => {
 
   /* 회원가입 날짜가 2023.11.14 이전일때 */
   const checkEnterDate = (user: userType) => {
-    const cutoffDate = new Date("2023-11-14");
+    const cutoffDate = new Date("2023-11-15");
     const userCreatedAt = new Date(user.createdAt);
 
     if(userCreatedAt < cutoffDate && user.lockList[2].islocked) {
@@ -219,7 +217,7 @@ export const showToaster = (sentence:string, emoji:string) => {
   toast(sentence, {
     duration: 2000,
     icon: emoji,
-    style: { fontSize: "15px" },
+    style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
     iconTheme: { primary: '#000', secondary: '#fff' },
     ariaProps: { role: 'status', 'aria-live': 'polite' },
   });

@@ -38,7 +38,7 @@ export const MapEnterComp: React.FC<{
             if(!loading.loading) setLoading(() => ({loading:true}));
             navigate(`/${path}`)
           } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
-            customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
+            customAlert(user.nickname + "님", "해당 테마는 프랑스로 출국하시면 이용하실 수 있습니다.");
           }
         }
       }}
