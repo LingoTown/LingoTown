@@ -273,30 +273,37 @@ public class TalkService {
 
     //대화 기록에서 발음평가 조회하기
     public DataResponse<ReadPronunciationScoreResDto> readPronunciationScore(Long talkDetailId){
+        List<ReadWordScoreResDto> vocaScoreResList = new ArrayList<>();
+
         TalkDetail talkDetail = getTalkDetailEntity(talkDetailId);
         List<VocaScore> vocaScoreList = talkDetail.getVocaScoreList();
 
-        List<ReadWordScoreResDto> vocaScoreResList = new ArrayList<>();
-        for(VocaScore vocaScore : vocaScoreList){
-                ReadWordScoreResDto readWordScoreResDto = ReadWordScoreResDto.builder()
-                        .word(vocaScore.getWord())
-                        .score(vocaScore.getScore())
-                        .build();
+        if(vocaScoreList!=null) {
+            for(VocaScore vocaScore : vocaScoreList){
+                    ReadWordScoreResDto readWordScoreResDto = ReadWordScoreResDto.builder()
+                            .word(vocaScore.getWord())
+                            .score(vocaScore.getScore())
+                            .build();
 
-                vocaScoreResList.add(readWordScoreResDto);
+                    vocaScoreResList.add(readWordScoreResDto);
+            }
         }
 
         SentenceScore sentenceScore = talkDetail.getSentenceScore();
-        ReadPronunciationScoreResDto pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
-                .talkDetailId(sentenceScore.getTalkDetail().getId())
-                .overallScore(sentenceScore.getOverallScore())
-                .pronunciationScore(sentenceScore.getPronunciationScore())
-                .fluencyScore(sentenceScore.getFluencyScore())
-                .integrityScore(sentenceScore.getIntegrityScore())
-                .rhythmScore(sentenceScore.getRhythmScore())
-                .wordScoreList(vocaScoreResList)
-                .rhythmScore(sentenceScore.getRhythmScore())
-                .build();
+        ReadPronunciationScoreResDto pronunciationScoreDto = null;
+        if(sentenceScore!=null) {
+            pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
+                    .talkDetailId(sentenceScore.getTalkDetail().getId())
+                    .overallScore(sentenceScore.getOverallScore())
+                    .pronunciationScore(sentenceScore.getPronunciationScore())
+                    .fluencyScore(sentenceScore.getFluencyScore())
+                    .integrityScore(sentenceScore.getIntegrityScore())
+                    .rhythmScore(sentenceScore.getRhythmScore())
+                    .wordScoreList(vocaScoreResList)
+                    .rhythmScore(sentenceScore.getRhythmScore())
+                    .build();
+
+        }
 
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
                 ResponseStatus.RESPONSE_SUCCESS.getMessage(), pronunciationScoreDto);
