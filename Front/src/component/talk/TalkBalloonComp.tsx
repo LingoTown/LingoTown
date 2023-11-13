@@ -7,11 +7,12 @@ import { topic, talkingType, talkDetailType } from "../../type/TalkType";
 import { translateSentence, endTalk, talkingTopic } from "../../api/Talk";
 import { useLocation } from "react-router-dom";
 import { talkHistoryAtom } from "../../atom/TalkHistoryAtom";
-import { getTalkList } from "../../api/Script";
+import { getTalkList, getTalkDetailScore } from "../../api/Script";
 import { userAtom } from "../../atom/UserAtom";
 import useCharacterUnlock from "../../hook/AfterTalk/CharacterLockOff";
-import fetchIntimacy from "../../hook/AfterTalk/FetchIntimacy";
+import useFetchIntimacy from "../../hook/AfterTalk/FetchIntimacy";
 import { useCharacterUnlockCheck } from "../../hook/AfterTalk/CharacterUnlockCheck";
+import { grammarCheckType } from "../../type/TalkListType";
 
 export const TalkBalloonComp = () => {  
   
@@ -23,7 +24,7 @@ export const TalkBalloonComp = () => {
   // hook
   const customAlert = useCustomAlert();
   const customConfirm = useCustomConfirm();
-  const { intimacy }  = fetchIntimacy();
+  const { intimacy } = useFetchIntimacy();
   const {user, characterLockOff} = useCharacterUnlock();
 
   // global state
@@ -40,6 +41,10 @@ export const TalkBalloonComp = () => {
   const [isRec, setIsRec] = useState<boolean>(false);
   const [dictionary, setDictionary] = useState<string>("");
   const [word, setWord] = useState<string>("");
+
+  const initialHistoryState = Array(500).fill(false);
+  const [historyState, setHistoryState] = useState<boolean[]>(initialHistoryState);
+  const [currentScore, setCurrentScore] = useState<grammarCheckType>();
   
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const isMounted = useRef({ audioPlay: false });
@@ -77,7 +82,7 @@ export const TalkBalloonComp = () => {
     setIsRec(false);
     setTalkState(prevState => ({ ...prevState, finish: true, isToast: true }));
     setTalkBalloon(initialTalkBalloon);
-    fetchIntimacy();
+    intimacy;
   };
 
   // 대화음악 재생
@@ -195,6 +200,20 @@ export const TalkBalloonComp = () => {
     setShowHistory(!showHistory);
   }
 
+  const showScore = async(talkDetailId: number, index: number) => {
+
+
+    await getTalkDetailScore(talkDetailId, ({data}) => {
+      const result = data.data as grammarCheckType;
+      setCurrentScore({...result})
+      // 펼치기
+      const temp = initialHistoryState;
+      temp[index] = true;
+      setHistoryState(temp);
+    }, (err) => {
+      console.log(err)
+    })
+  }
   
   useEffect(() => {
     if (isMounted.current.audioPlay) {
@@ -258,7 +277,7 @@ export const TalkBalloonComp = () => {
       {
         // History 말풍선
         showHistory?
-        <div className="absolute top-[8vh] right-2 w-[330px] h-[60vh] bg-gray-100 rounded-lg px-4 py-2 overflow-auto">
+        <div className="absolute top-[8vh] right-2 w-[450px] h-[60vh] bg-gray-100 rounded-lg px-4 py-2 overflow-auto">
           <div className="justify-center text-2xl font-bold font-['passero-one']">History</div>
           <hr className="border-black"/>
           <div className="font-['GabiaSolmee'] text-l mt-2">
@@ -267,12 +286,38 @@ export const TalkBalloonComp = () => {
                 <div key={index}>
                   {
                     value.member?
-                    <div className="mb-2 text-blue-800">
-                      Me : { value.content }
-                    </div>
+                    <>
+                      <div
+                        className="text-blue-800"
+                        onClick={() => showScore(value.talkDetailId, index) }
+                      >
+                        Me : { value.content }
+                      </div>
+                      {
+                        historyState[index]?
+                        <div className='bg-blue-200 pt-4 pb-1 pl-3 pr-3 rounded-lg mb-1'>
+                          {
+                            currentScore?.overallScore !== undefined?
+                            <div className='flex justify-between text-green-900 mb-2'>
+                              <div className="text-red-900">총점 : {currentScore?.overallScore !== null && currentScore?.overallScore !== undefined ? `${currentScore?.overallScore}` : '  0'}</div>|
+                              <div>유창성 : {currentScore?.fluencyScore !== null && currentScore?.fluencyScore !== undefined ? `${currentScore?.fluencyScore}` : '  0'}</div>|
+                              <div>정확도 : {currentScore?.integrityScore !== null && currentScore?.integrityScore !== undefined ? `${currentScore?.integrityScore}` : '  0'}</div>|
+                              <div>발음 : {currentScore?.pronunciationScore !== null && currentScore?.pronunciationScore !== undefined ? `${currentScore?.pronunciationScore}` : '  0'}</div>|
+                              <div>강세 : {currentScore?.rhythmScore !== null && currentScore?.rhythmScore !== undefined ? `${currentScore?.rhythmScore}` : '  0'}</div>
+                            </div>
+                            :
+                            <div className='flex justify-between text-green-900 mb-2'>조용한 공간에서 명확하게 말씀해주세요!</div>
+                          }
+                          
+                        </div>
+                        :
+                        null
+                      }
+                    
+                    </>
                     :
                     <div className="mb-2">
-                      NPC : { value.content }
+                      {talkBalloon.npc} : { value.content }
                     </div>
                   }
                 </div>
@@ -285,7 +330,7 @@ export const TalkBalloonComp = () => {
       {
         // 번역 말풍선
         showTranslateModal && talkBalloon.translate.length > 0?
-        <div className="absolute top-[35vh] left-2 w-[330px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
+        <div className="absolute top-[35vh] left-2 w-[450px] h-[35vh] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Translate</div>
           <hr className="border-black"/>
           <div className="font-['GabiaSolmee'] text-xl mt-2">{ talkBalloon.translate }</div>
@@ -294,7 +339,7 @@ export const TalkBalloonComp = () => {
       {
         // 사전 말 풍선
         showDictionary? 
-        <div className="absolute top-[8vh] left-2 w-[300px] bg-gray-100 rounded-lg px-4 py-2">
+        <div className="absolute top-[8vh] left-2 w-[450px] bg-gray-100 rounded-lg px-4 py-2">
           <div className="justify-center text-2xl font-bold font-['passero-one']">Help</div>
           <hr className="border-black"/>
           <input
@@ -322,7 +367,7 @@ export const TalkBalloonComp = () => {
             {
               // 말풍선 본문
               talkBalloon.isLoading?
-              <>답변 준비중 입니다.</>:
+              <>답변 준비중 입니다. 잠시만 기다려 주세요😀</>:
               <>
                 {
                   talkBalloon.isUser?
@@ -350,8 +395,6 @@ export const TalkBalloonComp = () => {
             <button className="px-2 py-0 bg-purple-500 text-xl text-white rounded hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-pink-400 focus:ring-opacity-50 font-['passero-one']"
               style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
               onClick={ handlePlay }
-              // onMouseEnter={() => setShowSentenceModal(true)} 
-              // onMouseLeave={() => setShowSentenceModal(false)}
             >Listen Again</button>
             <audio ref={ audioRef } src={ talkBalloon.audio }/>
           </div>

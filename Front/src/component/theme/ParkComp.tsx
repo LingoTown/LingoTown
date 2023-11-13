@@ -107,7 +107,7 @@ export const ParkComp: React.FC = () => {
     restitution: 0.7,
   }));
 
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: "", targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
     { id: 14, gender:"Man", name: "jerry", targetPosition: jerryPosition, targetRotation:jerryRotation, ref: jerryCircleRef },
     { id: 35, gender:"Woman", name: "sanha", targetPosition: sanhaPosition, targetRotation:sanhaRotation, ref: sanhaCircleRef },
@@ -181,7 +181,7 @@ export const ParkComp: React.FC = () => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
       setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
-      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
+      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList, npc: currentNpc.current.name }));
     }, (error) => {
       console.log(error);
     }); 

@@ -245,7 +245,7 @@ export const EventHallComp: React.FC = () => {
     const lerpFactor = 0.04;
 
     // 현재 상호작용하는 NPC
-    const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
+    const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: "", targetPosition:null, targetRotation:null });
 
     // 이 맵의 NPC 리스트
     const npcInfoList: NpcInfo[] = [
@@ -301,7 +301,7 @@ export const EventHallComp: React.FC = () => {
       await startTalk(npcId, ({data}) => {
         const result = data.data as startTalkType;
         setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));   
-        setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
+        setTalkBalloon(prev => ({ ...prev, topicList: result.topicList, npc: currentNpc.current.name }));
       }, (error) => {
         console.log(error);
       }); 
