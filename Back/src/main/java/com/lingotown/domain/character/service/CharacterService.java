@@ -7,7 +7,6 @@ import com.lingotown.global.response.DataResponse;
 import com.lingotown.global.response.ResponseStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.protocol.ResponseDate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

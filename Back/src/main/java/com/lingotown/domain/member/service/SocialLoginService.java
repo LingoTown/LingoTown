@@ -42,7 +42,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -159,7 +158,6 @@ public class SocialLoginService {
         JsonElement element = JsonParser.parseString(result.toString());
 
         String email = "";
-        System.out.println(element.getAsJsonObject());
         boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
         if (!has_email) {
             email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();

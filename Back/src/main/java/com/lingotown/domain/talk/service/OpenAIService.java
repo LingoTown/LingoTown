@@ -339,8 +339,7 @@ public class OpenAIService {
     private NPC getNPCEntity(Long talkId){
         Talk talk = talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
-        NPC npc = talk.getMemberNPC().getNpc();
-        return npc;
+        return talk.getMemberNPC().getNpc();
     }
 
     private String getNickname(Principal principal){

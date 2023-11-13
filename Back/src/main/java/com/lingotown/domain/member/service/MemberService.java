@@ -27,17 +27,13 @@ import com.lingotown.global.response.ResponseStatus;
 import com.lingotown.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -45,8 +41,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MemberService {
 
-    @Value("s3url")
-    private String S3url;
 
     private final MemberRepository memberRepository;
     private final WorldRepository worldRepository;
@@ -183,7 +177,6 @@ public class MemberService {
 
 
     /* 내부 메서드 */
-
     @Transactional
     public void tempRejoinService(Long memberId) {
         Member member = getMemberEntity(memberId);
@@ -191,7 +184,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void enterMember(HashMap<String, Object> userInfo, LoginType loginType) {
+    public void enterMember(Map<String, Object> userInfo, LoginType loginType) {
         Member member = Member
                 .builder()
                 .loginId(userInfo.get("loginId").toString())
