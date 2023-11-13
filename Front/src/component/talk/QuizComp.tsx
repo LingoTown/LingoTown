@@ -206,7 +206,9 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       <Toaster position="top-center" />
       {
         isOpenQuizModal?
-        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-20">
+        <div
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }} 
+          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-20">
           <div className="fixed inset-0 z-10 flex items-center justify-center">
             <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-4xl">
               <div className="border-[0.5px] border-white w-full rounded-lg p-1 px-3 flex flex-col items-center">
@@ -215,6 +217,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                 {
                   quizList.map((data, index) => (
                     <div key={ index }
+                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                       className="flex justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
                       onClick={() => {
                         doSubmitQuiz(data.quizId, index + 1)
@@ -237,11 +240,13 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                       {translateList[index] ?
                         <button
                           onClick={ (event) => toEng(event, index) }
+                          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                           className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded shadow"
                         >To Eng</button>
                         :
                         <button 
                           onClick={ (event) => toKor(event, index) }
+                          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                           className="bg-green-700 hover:bg-green-700 text-white font-bold py-1 px-2 rounded shadow"
                         >To Kor</button>
                       }
@@ -250,6 +255,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                 }
                 <div className="mt-2 mb-2 w-full flex justify-center"  style={{ fontFamily: "GabiaSolmee" }}>
                   <button 
+                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                     className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                     onClick={ clickClose }
                   >닫기
