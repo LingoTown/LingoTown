@@ -26,7 +26,7 @@ const Rows = () => {
     toast(sentence, {
       duration: 2000,
       icon: emoji,
-      style: { fontSize: "15px" },
+      style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
       iconTheme: { primary: '#000', secondary: '#fff' },
       ariaProps: { role: 'status', 'aria-live': 'polite' },
     });
@@ -42,7 +42,7 @@ const Rows = () => {
     } else if (language === "UK") {
       navigate("/theme?language=2");
     } else {
-      showToaster(destination + "행 운항 준비중 입니다.","✈️")
+      showToaster(destination + " 행 운항 준비중 입니다.","✈️")
     }
   }
 
@@ -184,7 +184,7 @@ export const showToaster = (sentence:string, emoji:string) => {
   toast(sentence, {
     duration: 2000,
     icon: emoji,
-    style: { fontSize: "15px" },
+    style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
     iconTheme: { primary: '#000', secondary: '#fff' },
     ariaProps: { role: 'status', 'aria-live': 'polite' },
   });

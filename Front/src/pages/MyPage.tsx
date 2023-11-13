@@ -146,7 +146,7 @@ const MyPage = () => {
     toast(sentence, {
       duration: 2000,
       icon: emoji,
-      style: { fontSize: "15px" },
+      style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
       iconTheme: { primary: '#000', secondary: '#fff' },
       ariaProps: { role: 'status', 'aria-live': 'polite' },
     });

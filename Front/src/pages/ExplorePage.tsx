@@ -40,7 +40,7 @@ export const ExplorePage: React.FC<ExplorePage> = (props: ExplorePage): JSX.Elem
     toast(sentence, {
       duration: 2000,
       icon: emoji,
-      style: { fontSize: "14px" },
+      style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
       iconTheme: { primary: '#000', secondary: '#fff' },
       ariaProps: { role: 'status', 'aria-live': 'polite' },
     });
