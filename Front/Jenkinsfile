@@ -1,9 +1,9 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "LingoTownNodeJS"
-    }
+    // tools {
+    //     nodejs "LingoTownNodeJS"
+    // }
 
     stages {
         stage("Set Variable") {
