@@ -218,13 +218,22 @@ public class SocialLoginService {
 
         List<MemberCharacter> memberCharacterList = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
 
+        if(memberCharacterList.size() > 1) {
+            for (int i=0; i<memberCharacterList.size(); i++) {
+                if(i == 0)
+                    continue;
+
+                memberCharacterList.get(i).selectOff();
+            }
+        }
+
         Long characterId = null;
         GenderType characterGender = null;
         String characterLink = null;
         String characterImage = null;
 
 
-        if(memberCharacterList.isEmpty() || memberCharacterList.size() > 2) {
+        if(memberCharacterList.isEmpty()) {
             characterId = 1L;
             characterGender = GenderType.MAN;
             characterLink = S3URL + "Player/m_1.glb";
