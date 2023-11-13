@@ -1,6 +1,5 @@
 package com.lingotown.domain.talk.dto.response;
 
-import com.lingotown.domain.talk.dto.response.speechsuper.WordResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

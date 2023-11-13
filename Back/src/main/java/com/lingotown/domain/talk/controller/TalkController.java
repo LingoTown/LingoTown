@@ -2,7 +2,6 @@ package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.talk.dto.request.QuizReqDto;
 import com.lingotown.domain.talk.dto.request.TopicReqDto;
-import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.dto.response.*;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
@@ -13,6 +12,8 @@ import com.lingotown.global.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class TalkController {
     }
 
     @PostMapping("/test")
-    public String check(TalkReqDto talkReqDto) throws Exception {
+    public String check(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
         return openAIService.checkPronunciation(talkReqDto);
     }
 
