@@ -264,6 +264,7 @@ public class SocialLoginService {
                     .social(member.getLoginType().toString())
                     .nickname(member.getNickname())
                     .profileImg(member.getProfile())
+                    .createdAt(member.getCreatedAt())
                     .characterId(characterId)
                     .characterGender(characterGender)
                     .characterLink(characterLink)
