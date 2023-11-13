@@ -127,7 +127,7 @@ const ScriptDetailComp = () => {
                         savedata[index]?.wordScoreList?.map((item, index) => (
                           <div key={index}>
                             {
-                              item.score >= 90?
+                              item.score >= 80?
                               <div>{item.word}&nbsp;</div>
                               :
                               <div className='text-red-300'>{item.word}&nbsp;</div>

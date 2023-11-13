@@ -70,7 +70,7 @@ export const ExploreComp: React.FC = () => {
 
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender:"", name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender:"", name: "", targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
     { id: 6, name: "Luke", gender:"Man", targetPosition: customerPosition, targetRotation:customerRotation, ref: customerCircleRef },
     { id: 33, name: "Olivia", gender:"Woman", targetPosition: chefPosition, targetRotation:chefRotation, ref: chefCircleRef },

@@ -13,6 +13,7 @@ type TalkBalloonAtom = {
   isLoading: boolean;
   isUser: boolean;
   isModal: boolean;
+  npc: string;
 };
 
 export const talkBalloonAtom = atom<TalkBalloonAtom>({
@@ -29,6 +30,7 @@ export const talkBalloonAtom = atom<TalkBalloonAtom>({
     isLoading: false,
     isUser: true,
     isModal: false,
+    npc: "",
   }
 });
 
@@ -43,5 +45,6 @@ export const initialTalkBalloon = {
   topicList: [],
   isLoading: false,
   isUser: true,
-  isModal: false
+  isModal: false,
+  npc: "",
 };
