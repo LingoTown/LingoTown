@@ -96,10 +96,10 @@ return (
 
     <CameraControls ref={controlsRef} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 6} />
 
-      <TextUtil x={-2} y={1.8} z={-2} color="black" size={0.2} name={text[0]} />
-      <TextUtil x={2} y={1.8} z={-2} color="black" size={0.2} name={text[1]} />
-      <TextUtil x={-2} y={-0.7} z={-2} color="black" size={0.2} name={text[2]} />
-      <TextUtil x={2} y={-0.7} z={-2} color="black" size={0.2} name={text[3]} />
+      <TextUtil x={-2} y={1.8} z={-2} color="black" size={0.25} name={text[0]} />
+      <TextUtil x={2} y={1.8} z={-2} color="black" size={0.25} name={text[1]} />
+      <TextUtil x={-2} y={-0.7} z={-2} color="black" size={0.25} name={text[2]} />
+      <TextUtil x={2} y={-0.7} z={-2} color="black" size={0.25} name={text[3]} />
 
       <MapEnterComp x={-1} y={1.8} z={-2} path={`park?language=${language}&world=1`} name={text[0]} active={active} enabled={enabled} setHovered={setParkEnterHovered} language={language} />
       <MapEnterComp x={language === 1 ? 3.3 : 3} y={1.8} z={-2} path={`eventhall?language=${language}&world=2`} name={text[1]} active={active} enabled={enabled} setHovered={setEventhallEnterHovered} language={language} />

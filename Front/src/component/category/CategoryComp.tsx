@@ -42,7 +42,18 @@ export const CategoryComp: React.FC<{
 }> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
-  const text = useState(["미리보기", "잠금"])[0];
+
+  const params = new URLSearchParams(window.location.search);
+
+  const languageParam: number = params.get("language");
+
+  let lockMessage = "\n        프랑스로 출국하시면 \n         이용하실 수 있어요!";
+
+  if(languageParam === 1)
+    lockMessage = "\n                     미국이나 영국으로 \n           출국하시면 들어가실 수 있어요!"
+
+
+  const text = useState(["클릭하시면 맵을 미리 볼 수 있어요!", lockMessage])[0];
 
   const [isLoading, setLoading] = useState(true);
 
@@ -143,8 +154,8 @@ export const CategoryComp: React.FC<{
             <primitive
               ref={lockRef}
               scale={0.05}
-              position-x={0.2}
-              position-y={-0.1}
+              position-x={0}
+              position-y={0.2}
               object={lock.scene.clone()}
             />
           </>
