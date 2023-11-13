@@ -1,15 +1,10 @@
 package com.lingotown.domain.world.service;
 
-import com.lingotown.domain.member.entity.Member;
-import com.lingotown.domain.member.entity.MemberQuiz;
-import com.lingotown.domain.member.repository.MemberRepository;
 import com.lingotown.domain.npc.dto.response.ReadTopicResDto;
 import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.npc.entity.Topic;
-import com.lingotown.domain.world.dto.response.ReadMemberQuizResDto;
 import com.lingotown.domain.world.dto.response.ReadNPCInfoResDto;
 import com.lingotown.domain.world.dto.response.ReadWorldInfoResDto;
-import com.lingotown.domain.world.entity.Quiz;
 import com.lingotown.domain.world.entity.World;
 import com.lingotown.domain.world.repository.WorldRepository;
 import com.lingotown.global.data.Language;
@@ -21,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
