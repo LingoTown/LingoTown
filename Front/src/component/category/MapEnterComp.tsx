@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loadingAtom } from '../../atom/LoadingAtom';
-import { userAtom } from '../../atom/UserAtom';
 import { useCustomAlert } from '../util/ModalUtil';
 import { TextUtil } from "./util/TextUtil";
+import { userAtom } from '../../atom/UserAtom';
 
 export const MapEnterComp: React.FC<{
   x: number;
@@ -21,10 +21,10 @@ export const MapEnterComp: React.FC<{
   x, y, z, path, name, active, setHovered, enabled, language
 }) => {
   const navigate = useNavigate();
-  const user = useRecoilValue(userAtom);
 
   const text = useState(["입장", "잠금"])[0];
   const customAlert = useCustomAlert();
+  const user = useRecoilValue(userAtom);
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
