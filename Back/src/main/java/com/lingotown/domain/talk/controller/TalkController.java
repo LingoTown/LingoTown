@@ -69,8 +69,13 @@ public class TalkController {
     }
 
     @GetMapping("/{talkId}")
-    public DataResponse<List<ReadTalkDetailResDto>> readTalkDetailList(Principal principal, @PathVariable("talkId") Long talkId) {
+    public DataResponse<List<ReadTalkDetailResDto>> readTalkDetail(Principal principal, @PathVariable("talkId") Long talkId) {
         return talkService.readTalkDetail(principal,talkId);
+    }
+
+    @GetMapping("/detail/{talkId}")
+    public DataResponse<List<ReadTalkDetailInfoResDto>> readTalkDetailList(Principal principal, @PathVariable("talkId") Long talkId) {
+        return talkService.readTalkDetailList(principal,talkId);
     }
 
     @DeleteMapping("/{talkId}")

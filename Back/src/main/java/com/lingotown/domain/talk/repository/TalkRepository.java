@@ -16,6 +16,6 @@ public interface TalkRepository extends JpaRepository<Talk, Long> {
 
     @Query("select t from Talk t join t.memberNPC as mn where mn.id = :memberNPCId and t.deletedAt is null order by t.createdAt desc")
     List<Talk> findTalkList(@Param("memberNPCId") Long memberNPCId);
-    
+
 
 }

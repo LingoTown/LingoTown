@@ -32,6 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -102,6 +103,50 @@ public class TalkService {
 
         return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
                 ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkDetailResDtoList);
+    }
+
+    //해당 대화 모든 정보 조회
+    public DataResponse<List<ReadTalkDetailInfoResDto>> readTalkDetailList(Principal principal, Long talkId){
+        Talk talk = getTalkEntity(talkId);
+        LocalDateTime createAt = talk.getCreatedAt();
+
+        Long memberId = talk.getMemberNPC().getMember().getId();
+        Long loginMemberId = Long.valueOf(principal.getName());
+        if(!memberId.equals(loginMemberId)) throw new CustomException(ExceptionStatus.FORBIDDEN_FAILED);
+
+        List<TalkDetail> talkDetailList = talk.getTalkDetailList();
+
+        List<ReadTalkDetailInfoResDto> talkDetailInfoList = new ArrayList<>();
+        for(TalkDetail talkDetail : talkDetailList){
+            Long talkDetailId = talkDetail.getId();
+            Boolean isMember = talkDetail.getIsMember();
+            String content = talkDetail.getContent();
+            String talkFile = talkDetail.getTalkFile();
+            LocalDateTime createdAt = talkDetail.getCreatedAt();
+
+            ReadTalkDetailResDto readTalkDetailResDto = ReadTalkDetailResDto.builder()
+                    .talkDetailId(talkDetailId)
+                    .isMember(isMember)
+                    .content(content)
+                    .talkFile(talkFile)
+                    .createdAt(createdAt)
+                    .build();
+
+            ReadPronunciationScoreResDto readPronunciationScoreList = null;
+            if(isMember) readPronunciationScoreList = readPronunciationScore(talkDetailId).getData();
+
+            ReadTalkDetailInfoResDto readTalkDetailInfoList = ReadTalkDetailInfoResDto
+                    .builder()
+                    .createAt(createAt)
+                    .talkDetailList(readTalkDetailResDto)
+                    .pronunciationScoreList(readPronunciationScoreList)
+                    .build();
+
+            talkDetailInfoList.add(readTalkDetailInfoList);
+        }
+
+        return new DataResponse<>(ResponseStatus.RESPONSE_SUCCESS.getCode(),
+                ResponseStatus.RESPONSE_SUCCESS.getMessage(), talkDetailInfoList);
     }
 
     //NPC와 대화 시작하기
@@ -212,7 +257,6 @@ public class TalkService {
     }
 
 
-
     //대화 종료 후 친밀도 변경과 캐시 삭제
     @Transactional
     public CommonResponse increaseIntimacy(Long talkId){
@@ -244,6 +288,7 @@ public class TalkService {
 
         SentenceScore sentenceScore = talkDetail.getSentenceScore();
         ReadPronunciationScoreResDto pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
+                .talkDetailId(sentenceScore.getTalkDetail().getId())
                 .overallScore(sentenceScore.getOverallScore())
                 .pronunciationScore(sentenceScore.getPronunciationScore())
                 .fluencyScore(sentenceScore.getFluencyScore())
