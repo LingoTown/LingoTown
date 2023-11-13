@@ -13,8 +13,6 @@ import background from "../../../public/background/background.png";
 import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
 import { TextUtil } from './util/TextUtil';
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../../atom/UserAtom";
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -87,7 +85,6 @@ export const CategoryComp: React.FC<{
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
 
-  const user = useRecoilValue(userAtom);
   const customAlert = useCustomAlert();
 
   return (
@@ -103,7 +100,7 @@ export const CategoryComp: React.FC<{
               setActive(name);
               setEnabled(true);
             } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
-              customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
+              customAlert("Notice", "해당 테마는 아직 사용하실 수 없습니다.");
             }
           }
         }}

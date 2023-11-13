@@ -84,7 +84,7 @@ export const ExploreComp: React.FC = () => {
 
   // value
   const CIRCLE_RADIUS = 3;
-  const SENTENCE = "Would you like to start a conversation with ";
+  const SENTENCE = "와(과) 이야기를 시작하시겠습니까?";
 
   // function
   const customConfirm = useCustomConfirm();
@@ -130,7 +130,7 @@ export const ExploreComp: React.FC = () => {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
-          const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+          const flag = await customConfirm(npc + "", npc + SENTENCE);
           if (flag)
             animate();
             setTalkBalloon(prev => ({ ...prev, isUser: !prev.isUser}));
