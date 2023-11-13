@@ -266,7 +266,7 @@ export const IntroduceComp: React.FC = () => {
         position={[1.5, 1.8, 0.051]}
         anchorY={"bottom"}
       >
-        컨퍼런스 홀
+        이벤트 홀
       </Text>
 
       <Text
