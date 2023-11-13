@@ -84,8 +84,6 @@ const DeparturePage = () => {
     await getCharacterList(({data}: any) => {
       const result = data.data as CharacterResponseType[];
 
-        console.log(result)
-
         setCharacter(prev => ({
             ...prev, 
             characterList: result,
@@ -155,7 +153,7 @@ const DeparturePage = () => {
       });
 
       characterLockOff(3);
-      customAlert("Alert", "1차 배포에 참가해주셔서 감사합니다! 3번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "1차 배포에 참가해주셔서 감사합니다! 3번 캐릭터가 잠금 해제 됩니다!");
     }
   };
 
