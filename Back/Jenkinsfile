@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     IMAGE_NAME_BE = "lingotown_back_image"
-                    CONTAINER_NAME_BE = "LingoTown_Back_Dev"
+                    CONTAINER_NAME_BE = "LingoTown_Back_Prod"
                     APPLICATION_YML_PATH = "/usr/spring/resources"
                     PROJECT_DIR_BE = "Back"
                 }
@@ -56,24 +56,24 @@ pipeline {
         }
 
         // SonarQube 분석
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    // 젠킨스에서 설정한 Sonarqube 서버 이름
-                    withSonarQubeEnv('SonarQube') {
-                        dir("${PROJECT_DIR_BE}") {
-                            sh "./gradlew sonar"
-                        }
-                    }
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         script {
+        //             // 젠킨스에서 설정한 Sonarqube 서버 이름
+        //             withSonarQubeEnv('SonarQube') {
+        //                 dir("${PROJECT_DIR_BE}") {
+        //                     sh "./gradlew sonar"
+        //                 }
+        //             }
 
-                    // SonarQube의 QualityGate의 결과에 따라 파이프라인 중단 여부 결정 : 일단 이번 프로젝트에서는 적용하지 않습니다.
-                    // def qg = waitForQualityGate()
-                    // if (qg.status != 'OK') {
-                    //     error "Pipeline aborted due to quality gate failure"
-                    // }
-                }
-            }
-        }
+        //             // SonarQube의 QualityGate의 결과에 따라 파이프라인 중단 여부 결정 : 일단 이번 프로젝트에서는 적용하지 않습니다.
+        //             // def qg = waitForQualityGate()
+        //             // if (qg.status != 'OK') {
+        //             //     error "Pipeline aborted due to quality gate failure"
+        //             // }
+        //         }
+        //     }
+        // }
 
         // 컨테이너 클리닝
         stage("Docker Container Cleaning") {
