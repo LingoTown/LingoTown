@@ -13,6 +13,10 @@ import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useLoader, useFrame } from "@react-three/fiber";
 import { MeshStandardMaterial, TextureLoader, VideoTexture } from "three";
+import { userAtom } from "../../src/atom/UserAtom";
+import { lockOffCharacter } from "../../src/api/Character";
+import { useRecoilState } from "recoil";
+import { useCustomAlert } from "../../src/component/util/ModalUtil";
 
 export function EventHall(props) {
   /* Map */
@@ -20,13 +24,28 @@ export function EventHall(props) {
     import.meta.env.VITE_S3_URL + "Map/EventHall/scene.gltf"
   );
 
-  // const highTable = useNPC(highTableData);
+  
   const beamProjector = useGLTF(
     import.meta.env.VITE_S3_URL + "Objects/BeamProjector/scene.gltf"
   );
   const highTable = useGLTF(
     import.meta.env.VITE_S3_URL + "Objects/HighTable/scene.gltf"
   );
+
+  const [user, setUser] = useRecoilState(userAtom);
+  const customAlert = useCustomAlert();
+
+  /* 캐릭터 잠금 해제 */
+  const characterLockOff = async(id) => {
+    const quizId = id;
+
+    await lockOffCharacter(quizId, ({data}) => {
+      console.log(data.message);
+    },
+    error => {
+      console.log(error);
+    })
+  }
 
   const { camera } = useThree();
 
@@ -48,7 +67,7 @@ export function EventHall(props) {
   const loadVideo = () => {
     if (!videoLoaded) {
       video.current.src =
-      import.meta.env.VITE_S3_URL + "UCC/UCC(%EC%A0%9C%EC%B6%9C).mp4";
+      import.meta.env.VITE_S3_URL + "UCC/%EC%9E%84%EC%8B%9C.mp4";
       video.current.crossOrigin = "anonymous";
       video.current.loop = true;
       video.current.muted = false;
@@ -92,9 +111,25 @@ export function EventHall(props) {
             video.current.pause();
           }
         }
+
+        if(user.lockList[9].islocked) {
+          setUser({
+            ...user,
+            lockList: user.lockList.map(
+              (item, index) => (index === 9 ? { ...item, islocked: false } : item)
+            )
+          });
+    
+          characterLockOff(10);
+          customAlert("알림", "영상을 시청해주셔서 감사합니다! 10번 캐릭터가 잠금 해제 됩니다!");
+        }
+
         break;
       case "KeyD":
         disposeVideoResources(); // 'D'을 누를 때 비디오 자원 해제
+        break;
+      case "KeyA":
+        disposeVideoResources();
         break;
       default:
         // 다른 키 처리

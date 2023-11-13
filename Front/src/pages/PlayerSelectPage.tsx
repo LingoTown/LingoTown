@@ -91,7 +91,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
       })
 
       characterLockOff(5);
-      customAlert("Alert", "NPC와 대화를 최초 완료하셨습니다! 5번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "NPC와 대화를 최초 완료하셨습니다! 5번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(intimacy.npcList.every(npc => npc.intimacy > 0) && user.lockList[8] && !user.lockList[4].islocked) {
@@ -102,7 +102,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
         )
       })
 
-      customAlert("Alert", "모든 NPC와 대화를 완료하셨습니다! 9번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "모든 NPC와 대화를 완료하셨습니다! 9번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(intimacy.npcList.some(npc => npc.intimacy === 100) && user.lockList[7] && !user.lockList[4].islocked) {
@@ -113,7 +113,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
         )
       })
 
-      customAlert("Alert", "특정 NPC와 최대 친밀도를 달성했습니다! 8번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "특정 NPC와 최대 친밀도를 달성했습니다! 8번 캐릭터가 잠금 해제 됩니다!");
     }
   }, []);
 
