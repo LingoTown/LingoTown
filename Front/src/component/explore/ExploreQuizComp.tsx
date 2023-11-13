@@ -64,7 +64,8 @@ export const ExploreQuizComp: React.FC<ExploreQuizCompProps> = ({ quizList, isOp
                 {
                   quizList.map((data, index) => (
                     <div key={ index }
-                      className="flex justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
+                      style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
+                      className="flex text-xl justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
                       onClick={() => {
                         setIsOpenQuizModal(false)
                         setTalkBalloon(prev => ({ ...prev, isUser: !prev.isUser}));
