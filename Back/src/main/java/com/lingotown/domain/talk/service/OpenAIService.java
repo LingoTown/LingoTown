@@ -319,7 +319,7 @@ public class OpenAIService {
                 "The most important thing is that you respond to the complete sentence. " +
                 "In order to make a complete sentence, it seems good that you respond within 3 sentences. " +
                 "The sentence should not be interrupted in the sentence should not be interrupted. " +
-                "It is very important. If you think response's going to cut off in the middle, please finish responding before that sentence. " +
+                "It is very important. If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. " +
                 "And always put '.' at the end of the sentence. " +
 
                 "Now, " + "you are " +npcName +", and " + npcGender +
@@ -327,7 +327,7 @@ public class OpenAIService {
                 ". and This is your situation. " +npcSituation+ ". " +
                 "You don't have to put your name in front of the response. " +
                 "And It is very important thing. If you can't answer in a skit I've created, think you're a person and answer appropriately. " +
-                "If a user asks you something you don't know, think you're a person and respond. You should never answer ai";
+                "Once again, If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. ";
 
         if(topic != null) {
             concept += " Now let's talk about " +topic+
