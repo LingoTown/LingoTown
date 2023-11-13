@@ -216,7 +216,16 @@ public class SocialLoginService {
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
 
-        Optional<MemberCharacter> optionalMemberCharacter = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
+        List<MemberCharacter> memberCharacterList = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
+
+        if(memberCharacterList.size() > 1) {
+            for (int i=0; i<memberCharacterList.size(); i++) {
+                if(i == 0)
+                    continue;
+
+                memberCharacterList.get(i).selectOff();
+            }
+        }
 
         Long characterId = null;
         GenderType characterGender = null;
@@ -224,17 +233,17 @@ public class SocialLoginService {
         String characterImage = null;
 
 
-        if(optionalMemberCharacter.isEmpty()) {
+        if(memberCharacterList.isEmpty()) {
             characterId = 1L;
             characterGender = GenderType.MAN;
             characterLink = S3URL + "Player/m_1.glb";
             characterImage = S3URL + "Player/2D/m1Img.png";
         }
         else {
-            characterId = optionalMemberCharacter.get().getCharacter().getId();
-            characterGender = optionalMemberCharacter.get().getCharacter().getGender();
-            characterLink = optionalMemberCharacter.get().getCharacter().getLink();
-            characterImage = optionalMemberCharacter.get().getCharacter().getImage();
+            characterId = memberCharacterList.get(0).getCharacter().getId();
+            characterGender = memberCharacterList.get(0).getCharacter().getGender();
+            characterLink = memberCharacterList.get(0).getCharacter().getLink();
+            characterImage = memberCharacterList.get(0).getCharacter().getImage();
         }
 
         List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
