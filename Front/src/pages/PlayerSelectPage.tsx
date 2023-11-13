@@ -42,7 +42,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
 
     await getCharacterLockInfo(({data}: any) => {
         const result = data.data as CharacterLockInfo[];
-        console.log(result)
+
         setUser(prev => ({
             ...prev, 
             lockList: result,
@@ -79,10 +79,7 @@ export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelect
   },[]);
 
   useEffect(() => {
-    console.log("!!")
     if(intimacy.npcList.some(npc => npc.intimacy > 0) && user.lockList[4].islocked) {
-      console.log("??")
-      console.log("setUser")
       setUser({
         ...user,
         lockList: user.lockList.map((item, index) => 

@@ -143,7 +143,7 @@ export const ParkComp: React.FC = () => {
   }
 
   const reRunSanha = () => {
-    console.log(sanhaTalk);
+    
     if(sanhaTalk && isMove.current == true || !sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
       setSanhaTalk(false);
       if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {

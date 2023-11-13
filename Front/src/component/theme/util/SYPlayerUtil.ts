@@ -63,7 +63,6 @@ export const PlayerMove = (keysPressed: any, camera: THREE.Camera, cameraOffset:
             if (playerRef.current.position.y <= 0) {
                     
                 playerRef.current.position.y = getCurrentFloorHeight(playerRef.current.position, container)
-                console.log(playerRef.current.position.y)
 
                 // 땅에 위치를 리셋한다.
                 playerRef.current.position.y = 0; 

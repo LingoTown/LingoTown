@@ -100,7 +100,6 @@ export function EventHall(props) {
           beamProjector.scene.matrixWorld
         );
         const distance = beamProjectorPosition.distanceTo(camera.position); // Replace `camera.position` with your actual camera or player position vector
-        console.log(distance);
 
         if (distance <= 10) {
           loadVideo(); // 'S'를 누를 때 비디오 로드
@@ -121,7 +120,7 @@ export function EventHall(props) {
           });
     
           characterLockOff(10);
-          customAlert("알림", "영상을 시청해주셔서 감사합니다! 10번 캐릭터가 잠금 해제 됩니다!");
+          customAlert("Notice", "영상을 시청해주셔서 감사합니다! 10번 캐릭터가 잠금 해제 됩니다!");
         }
 
         break;

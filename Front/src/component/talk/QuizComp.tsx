@@ -89,7 +89,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       });
 
       characterLockOff(4);
-      customAlert("알림", "퀴즈를 1개 이상 해결하셨습니다! 4번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "퀴즈를 1개 이상 해결하셨습니다! 4번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(solvedCnt >= 5 && user.lockList[5].islocked && !user.lockList[3].islocked) {
@@ -100,9 +100,8 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
         )
       });
 
-      console.log("id 6번 해금 시도")
       characterLockOff(6);
-      customAlert("알림", "퀴즈를 5개 이상 해결하셨습니다! 6번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "퀴즈를 5개 이상 해결하셨습니다! 6번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(solvedCnt >= 10 && user.lockList[6].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
@@ -113,9 +112,8 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
         )
       });
 
-      console.log("id 7번 해금 시도")
       characterLockOff(7);
-      customAlert("알림", "퀴즈를 10개 이상 해결하셨습니다! 7번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "퀴즈를 10개 이상 해결하셨습니다! 7번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(USSolvedCnt >= USCnt/2 && user.lockList[10].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked && !user.lockList[6].islocked) {
@@ -126,9 +124,8 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
         )
       });
 
-      console.log("id 11번 해금 시도")
       characterLockOff(11);
-      customAlert("알림", "영어 퀴즈를 절반 이상 해결하셨습니다! 11번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "영어 퀴즈를 절반 이상 해결하셨습니다! 11번 캐릭터가 잠금 해제 됩니다!");
     }
 
     if(FRSolvedCnt >= FRCnt/2 && user.lockList[11].islocked && !user.lockList[3].islocked && !user.lockList[5].islocked) {
@@ -139,9 +136,8 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
         )
       });
 
-      console.log("id 12번 해금 시도")
       characterLockOff(12);
-      customAlert("알림", "프랑스 퀴즈를 절반 이상 해결하셨습니다! 12번 캐릭터가 잠금 해제 됩니다!");
+      customAlert("Notice", "프랑스 퀴즈를 절반 이상 해결하셨습니다! 12번 캐릭터가 잠금 해제 됩니다!");
     }
 
   }, [user, quiz]); // user 및 quiz 상태에 대한 의존성 추가
