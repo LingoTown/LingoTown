@@ -182,11 +182,11 @@ export const PolygoniaComp: React.FC = () => {
       if (event.code === 'Space') {
         if (isInsideCircle) {
           const flag = await customConfirm(npc, npc + "와 대화를 시작하시겠습니까?")
-          console.log("asdas" + flag)
+
           if (flag) {
             const copy = {...talkBalloon};
             copy.isShow = true;
-            // copy.profileImg = user.profileImg;
+
             setTalkBalloon(copy);
             doStartTalk(1);
 

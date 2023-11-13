@@ -18,7 +18,7 @@ export const useFetchIntimacy = () => {
               ...prev,
               npcList: result
             }));
-            console.log("fetchIntimacyInfo 완료");
+
             setFlag(f => f + 1);
           },
           error => {

@@ -149,7 +149,7 @@ export const PlayerMove = (
       if (match) {
         direction = match[0].slice(0, 1);
         type = match[0].slice(1, 2);
-      } else console.log("해당 컨테이너 Id를 분리할 수 없습니다.");
+      } 
 
       // 벽일때
       if (type == "W") {
