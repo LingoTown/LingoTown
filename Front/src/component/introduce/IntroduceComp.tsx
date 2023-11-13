@@ -134,7 +134,7 @@ export const IntroduceComp: React.FC = () => {
         setCameraEnabled(false);
       }, 1000)
     }
-    console.log(loading.loading);
+    
     if(loading.loading) setLoading({loading:false});
   }, [active, sceneInstance]);
 
