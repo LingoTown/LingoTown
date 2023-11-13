@@ -216,7 +216,7 @@ public class SocialLoginService {
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
 
-        Optional<MemberCharacter> optionalMemberCharacter = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
+        List<MemberCharacter> memberCharacterList = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
 
         Long characterId = null;
         GenderType characterGender = null;
@@ -224,17 +224,17 @@ public class SocialLoginService {
         String characterImage = null;
 
 
-        if(optionalMemberCharacter.isEmpty()) {
+        if(memberCharacterList.isEmpty() || memberCharacterList.size() > 2) {
             characterId = 1L;
             characterGender = GenderType.MAN;
             characterLink = S3URL + "Player/m_1.glb";
             characterImage = S3URL + "Player/2D/m1Img.png";
         }
         else {
-            characterId = optionalMemberCharacter.get().getCharacter().getId();
-            characterGender = optionalMemberCharacter.get().getCharacter().getGender();
-            characterLink = optionalMemberCharacter.get().getCharacter().getLink();
-            characterImage = optionalMemberCharacter.get().getCharacter().getImage();
+            characterId = memberCharacterList.get().getCharacter().getId();
+            characterGender = memberCharacterList.get().getCharacter().getGender();
+            characterLink = memberCharacterList.get().getCharacter().getLink();
+            characterImage = memberCharacterList.get().getCharacter().getImage();
         }
 
         List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
