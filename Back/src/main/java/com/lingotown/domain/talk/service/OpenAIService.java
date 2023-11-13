@@ -194,14 +194,7 @@ public class OpenAIService {
         TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
 
 
-        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
-                .builder()
-                .responseMessage("123")
-                .responseS3URL("123")
-                .build();
-
-
-//                createOpenAIResponseDto(systemTalkDetail);
+        CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
