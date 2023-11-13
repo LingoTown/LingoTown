@@ -199,7 +199,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
         isOpenQuizModal?
         <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-20">
           <div className="fixed inset-0 z-10 flex items-center justify-center">
-            <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-4xl">
+            <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-6xl">
               <div className="border-[0.5px] border-white w-full rounded-lg p-1 px-3 flex flex-col items-center">
                 <div className="text-[#333] text-[1.5rem] mt-2" style={{ fontFamily: "GabiaSolmee" }}>퀘스트 목록</div>
                 <div className="text-[#333] font-bold text-[0.8rem] mb-1">* 각 질문을 클릭하여 정답을 입력해주세요</div>
@@ -207,7 +207,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                   quizList.map((data, index) => (
                     <div key={ index }
                       style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
-                      className="flex justify-between items-center w-full mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
+                      className="flex justify-between items-center w-full text-xl mb-1 hover:bg-[#fff] bg-[#fff]/60 p-1 py-2 rounded-lg cursor-pointer"
                       onClick={() => {
                         doSubmitQuiz(data.quizId, index + 1)
                       }}
