@@ -70,7 +70,7 @@ public class TalkService {
         List<Talk> talkList = memberNpcRepository.findTalkList(memberNPCId);
         for(Talk talk : talkList){
             List<TalkDetail> talkDetailList = talk.getTalkDetailList();
-            if(talkDetailList.size()<=0) continue;
+            if(talkDetailList.isEmpty()) continue;
 
             ReadTalkListResDto talkListDto = ReadTalkListResDto
                     .builder()
@@ -133,7 +133,7 @@ public class TalkService {
                     .build();
 
             ReadPronunciationScoreResDto readPronunciationScoreList = null;
-            if(isMember) readPronunciationScoreList = readPronunciationScore(talkDetailId).getData();
+            if(isMember.equals(true)) readPronunciationScoreList = readPronunciationScore(talkDetailId).getData();
 
             ReadTalkDetailInfoResDto readTalkDetailInfoList = ReadTalkDetailInfoResDto
                     .builder()
