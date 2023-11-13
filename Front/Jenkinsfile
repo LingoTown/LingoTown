@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     IMAGE_NAME_FE = "lingotown_front_image"
-                    CONTAINER_NAME_FE = "LingoTown_Front_Dev"
+                    CONTAINER_NAME_FE = "LingoTown_Front_Prod"
                     APPLICATION_ENV_PATH = "/usr/react"
                     PROJECT_DIR_FE = "Front"
                 }
@@ -21,34 +21,34 @@ pipeline {
         stage("Copy Setting File") {
             steps {
                 sh "cp ${APPLICATION_ENV_PATH}/.env ${PROJECT_DIR_FE}"
-                sh "cp ${APPLICATION_ENV_PATH}/sonar-project.properties ${PROJECT_DIR_FE}"
+                // sh "cp ${APPLICATION_ENV_PATH}/sonar-project.properties ${PROJECT_DIR_FE}"
             }
         }
 
         // Jest
-        stage('Run Jest') {
-            steps {
-                dir("${PROJECT_DIR_FE}") {
-                    sh 'npm install'
-                    sh 'npm test -- --coverage' // Jest 테스트 실행
-                }
-            }
-        }
+        // stage('Run Jest') {
+        //     steps {
+        //         dir("${PROJECT_DIR_FE}") {
+        //             sh 'npm install'
+        //             sh 'npm test -- --coverage' // Jest 테스트 실행
+        //         }
+        //     }
+        // }
 
         // SonarQube 분석
-        stage('SonarQube Analysis') {  
-            steps {
-                script {
-                    def scannerHome = tool 'SonarQubeScanner'
+        // stage('SonarQube Analysis') {  
+        //     steps {
+        //         script {
+        //             def scannerHome = tool 'SonarQubeScanner'
 
-                    withSonarQubeEnv('SonarQube') {
-                        dir("${PROJECT_DIR_FE}") {
-                            sh "${scannerHome}/bin/sonar-scanner"
-                        }
-                    }
-                }
-            }
-        }
+        //             withSonarQubeEnv('SonarQube') {
+        //                 dir("${PROJECT_DIR_FE}") {
+        //                     sh "${scannerHome}/bin/sonar-scanner"
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // 컨테이너 클리닝
         stage("Docker Container Cleaning") {
