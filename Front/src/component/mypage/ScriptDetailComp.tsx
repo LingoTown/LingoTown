@@ -106,16 +106,16 @@ const ScriptDetailComp = () => {
                   showCorr[index]?
                   <div className='flex flex-col font-[30] ml-5 text-blue-100 p-1 px-3 border-[1px] border-blue-100 rounded-[7px]' >
                     <div className='w-1/2 flex flex-row justify-between text-blue-200 mb-2'>
-                      <div>총점 : {savedata[index].overallScore}점</div>|
-                      <div>유창성 : {savedata[index].fluencyScore}점</div>|
-                      <div>정확도 : {savedata[index].integrityScore}점</div>|
-                      <div>발음 : {savedata[index].pronunciationScore}점</div>|
-                      <div>강세 : {savedata[index].rhythmScore}점</div>
+                      <div>총점 : {savedata[index]?.overallScore !== null && savedata[index]?.overallScore !== undefined ? `${savedata[index]?.overallScore}점` : ' 점'}</div>|
+                      <div>유창성 : {savedata[index]?.fluencyScore !== null && savedata[index]?.fluencyScore !== undefined ? `${savedata[index]?.fluencyScore}점` : ' 점'}</div>|
+                      <div>정확도 : {savedata[index]?.integrityScore !== null && savedata[index]?.integrityScore !== undefined ? `${savedata[index]?.integrityScore}점` : ' 점'}</div>|
+                      <div>발음 : {savedata[index]?.pronunciationScore !== null && savedata[index]?.pronunciationScore !== undefined ? `${savedata[index]?.pronunciationScore}점` : ' 점'}</div>|
+                      <div>강세 : {savedata[index]?.rhythmScore !== null && savedata[index]?.rhythmScore !== undefined ? `${savedata[index]?.rhythmScore}점` : ' 점'}</div>
                     </div>
                     <div>[단어별 발음 평가] &nbsp;</div>
                     <div className='flex flex-row '>
                       {
-                        savedata[index].wordScoreList?.map((item, index) => (
+                        savedata[index]?.wordScoreList?.map((item, index) => (
                           <div key={index}>
                             {
                               item.score >= 90?
