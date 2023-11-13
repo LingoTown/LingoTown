@@ -113,10 +113,10 @@ const ScriptDetailComp = () => {
                       <div>강세 : {savedata[index]?.rhythmScore !== null && savedata[index]?.rhythmScore !== undefined ? `${savedata[index]?.rhythmScore}점` : '  0점'}</div>
                     </div>
                     <div>[단어별 발음 평가] &nbsp; : &nbsp; 빨간 단어는 점수가 낮은 단어입니다!</div>
-                    <div className='flex flex-row '>
+                    <div className='flex flex-row mt-1'>
                       {
                         savedata[index]?.overallScore !== undefined ? (
-                          <div className='w-1/2 flex flex-row justify-between text-blue-200 mb-2'>
+                          <div className='flex flex-row justify-between text-blue-200 mb-2'>
                             {/* Existing score display code */}
                           </div>
                         ) : (
