@@ -13,6 +13,8 @@ import background from "../../../public/background/background.png";
 import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
 import { TextUtil } from './util/TextUtil';
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../../atom/UserAtom";
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -40,7 +42,18 @@ export const CategoryComp: React.FC<{
 }> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
-  const text = useState(["미리보기", "잠금"])[0];
+
+  const params = new URLSearchParams(window.location.search);
+
+  const languageParam: string | null = params.get("language");
+
+  let lockMessage = "\n        프랑스로 출국하시면 \n         이용하실 수 있어요!";
+
+  if(languageParam == "1")
+    lockMessage = "\n                     미국이나 영국으로 \n           출국하시면 들어가실 수 있어요!"
+
+
+  const text = useState(["클릭하시면 맵을 미리 볼 수 있어요!", lockMessage])[0];
 
   const [isLoading, setLoading] = useState(true);
 
@@ -85,6 +98,7 @@ export const CategoryComp: React.FC<{
     if (lockRef.current) lockRef.current.rotation.y = Math.sin(time) * 0.2;
   });
 
+  const user = useRecoilValue(userAtom);
   const customAlert = useCustomAlert();
 
   return (
@@ -100,7 +114,7 @@ export const CategoryComp: React.FC<{
               setActive(name);
               setEnabled(true);
             } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
-              customAlert("Notice", "해당 테마는 아직 사용하실 수 없습니다.");
+              customAlert(user.nickname + "님", "해당 테마는 미국 또는 영국으로 출국하시면 이용하실 수 있습니다.");
             }
           }
         }}
@@ -140,8 +154,8 @@ export const CategoryComp: React.FC<{
             <primitive
               ref={lockRef}
               scale={0.05}
-              position-x={0.2}
-              position-y={-0.1}
+              position-x={0}
+              position-y={0.2}
               object={lock.scene.clone()}
             />
           </>

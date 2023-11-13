@@ -1,10 +1,11 @@
 import { RoundedBox } from '@react-three/drei';
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { loadingAtom } from '../../atom/LoadingAtom';
 import { useCustomAlert } from '../util/ModalUtil';
 import { TextUtil } from "./util/TextUtil";
+import { userAtom } from '../../atom/UserAtom';
 
 export const MapEnterComp: React.FC<{
   x: number;
@@ -23,6 +24,7 @@ export const MapEnterComp: React.FC<{
 
   const text = useState(["입장", "잠금"])[0];
   const customAlert = useCustomAlert();
+  const user = useRecoilValue(userAtom);
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
@@ -36,7 +38,7 @@ export const MapEnterComp: React.FC<{
             if(!loading.loading) setLoading(() => ({loading:true}));
             navigate(`/${path}`)
           } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
-            customAlert("Notice", "해당 테마는 아직 사용하실 수 없습니다.");
+            customAlert(user.nickname + "님", "해당 테마는 프랑스로 출국하시면 이용하실 수 있습니다.");
           }
         }
       }}
