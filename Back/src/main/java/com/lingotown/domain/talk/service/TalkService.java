@@ -293,7 +293,6 @@ public class TalkService {
         ReadPronunciationScoreResDto pronunciationScoreDto = null;
         if(sentenceScore!=null) {
             pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
-                    .talkDetailId(sentenceScore.getTalkDetail().getId())
                     .overallScore(sentenceScore.getOverallScore())
                     .pronunciationScore(sentenceScore.getPronunciationScore())
                     .fluencyScore(sentenceScore.getFluencyScore())
@@ -330,7 +329,6 @@ public class TalkService {
 
             SentenceScore sentenceScore = talkDetail.getSentenceScore();
             ReadPronunciationScoreResDto pronunciationScoreDto = ReadPronunciationScoreResDto.builder()
-                    .talkDetailId(talkDetail.getId())
                     .overallScore(sentenceScore.getOverallScore())
                     .pronunciationScore(sentenceScore.getPronunciationScore())
                     .fluencyScore(sentenceScore.getFluencyScore())
