@@ -194,7 +194,14 @@ public class OpenAIService {
         TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
 
 
-        CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
+        CreateOpenAIResDto openAIResDto = CreateOpenAIResDto
+                .builder()
+                .responseMessage("123")
+                .responseS3URL("123")
+                .build();
+
+
+//                createOpenAIResponseDto(systemTalkDetail);
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
@@ -232,6 +239,8 @@ public class OpenAIService {
         TalkDetail savedTalkDetail = getTalkDetailEntity(talkDetail.getId());
 
         ResultResDto resultResDto = pronunciationResDto.getResult();
+        System.out.println("result : " +resultResDto.getError());
+
         SentenceScore sentenceScore = SentenceScore.builder()
                 .overallScore(resultResDto.getOverall())
                 .pronunciationScore(resultResDto.getPronunciation())
