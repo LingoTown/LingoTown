@@ -225,7 +225,6 @@ public class OpenAIService {
     // 발음 평가 DB 저장
     public void updatePronunciationResults(TalkDetail talkDetail, PronunciationResDto pronunciationResDto) {
 
-
         if (talkDetail.getId() != null &&  !entityManager.contains(talkDetail)) {
             entityManager.merge(talkDetail);
         }
@@ -251,9 +250,7 @@ public class OpenAIService {
                     .talkDetail(savedTalkDetail)
                     .build();
 
-            VocaScore vocaScore1 = vocaScoreRepository.save(vocaScore);
-            System.out.println("======voca : " +vocaScore1);
-
+            vocaScoreRepository.save(vocaScore);
         }
 
         entityManager.flush();
@@ -318,9 +315,9 @@ public class OpenAIService {
                 "You need to level your response to about eight years old, so that users can understand it. " +
                 "Please ask the appropriate questions so that the conversation can continue. " +
                 "The important thing is that it should be a complete sentence without exceeding 50token which is max_token. " +
-                "So you should only respond to the core content. " +
+
                 "The sentence should not be interrupted in the sentence should not be interrupted. " +
-                "It is very important. If you think it's going to cut off in the middle, please finish responding before that sentence. " +
+                "It is very important. If you think response's going to cut off in the middle, please finish responding before that sentence. " +
                 "And always put '.' at the end of the sentence. " +
 
                 "Now, " + "you are " +npcName +", and " + npcGender +
