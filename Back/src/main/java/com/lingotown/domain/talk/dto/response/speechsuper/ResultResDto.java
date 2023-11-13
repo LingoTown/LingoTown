@@ -11,6 +11,8 @@ public class ResultResDto {
     private int fluency;                //유창 점수
     private int integrity;              //완전성 점수
     private int rhythm;                 //리듬 점수(음조와 강세)
-    private WordResDto[] words;
-
+    private WordResDto[] words;         //단어 점수
+    private WarnResDto warn;
+    private int errorId;
+    private String error;
 }
