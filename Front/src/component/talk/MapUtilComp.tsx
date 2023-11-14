@@ -84,7 +84,7 @@ export const MapUtilComp = () => {
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
             className="px-4 py-2 bg-gray-800 text-white text-lg rounded hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50"
             onClick={ exitPage }
-          >뒤로 가기</button>
+          >테마 선택</button>
         </div>
         <QuizComp
           quizList={quizList}

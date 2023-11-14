@@ -45,11 +45,11 @@ export const CategoryComp: React.FC<{
 
   const params = new URLSearchParams(window.location.search);
 
-  const languageParam: number = params.get("language");
+  const languageParam: string | null = params.get("language");
 
   let lockMessage = "\n        프랑스로 출국하시면 \n         이용하실 수 있어요!";
 
-  if(languageParam == 1)
+  if(languageParam == "1")
     lockMessage = "\n                     미국이나 영국으로 \n           출국하시면 들어가실 수 있어요!"
 
 

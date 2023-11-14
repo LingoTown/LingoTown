@@ -4,11 +4,11 @@ export type talkListType = {
   }
 
 export type grammarCheckType = {
-  fluencyScore : number,
-  integrityScore : number,
-  overallScore : number,
-  pronunciationScore : number,
-  rhythmScore : number,
+  fluencyScore : number | null,
+  integrityScore : number | null,
+  overallScore : number | null,
+  pronunciationScore : number | null,
+  rhythmScore : number | null,
   wordScoreList : wordScoreListType[]
 }
 

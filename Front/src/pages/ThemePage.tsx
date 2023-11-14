@@ -58,7 +58,7 @@ export const ThemePage = () => {
             }}
           >뒤로가기</div>
 
-          <div className="w-[70%] text-center hover:text-[2.8rem] drop-shadow-lg" 
+          <div className="w-[7%] text-center hover:text-[2.8rem] drop-shadow-lg" 
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, letterSpacing: '-0.3rem' }}
             onClick={async() => {
               setLoading({loading:true});
