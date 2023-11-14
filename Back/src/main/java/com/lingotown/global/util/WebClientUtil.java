@@ -37,7 +37,7 @@ public class WebClientUtil {
 
     private final WebClientConfig webClientConfig;
 
-    public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
+    public Mono<OpenAIResDto> checkGrammarAsync(String gptKey, String gptUrl, TalkReqDto talkReqDto) {
 
         // user 인풋
         OpenAIMessageDto messageDtoUser = OpenAIMessageDto
@@ -57,12 +57,12 @@ public class WebClientUtil {
                 .build();
 
         return webClientConfig.webClient().post()
-                .uri(GPTUrl)
+                .uri(gptUrl)
                 .headers(headers -> {
-                    headers.setBearerAuth(GPTKey); // 여기에 실제 GPT API 키를 설정합니다.
+                    headers.setBearerAuth(gptKey);
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 })
-                .body(BodyInserters.fromValue(requestDto)) // 준비된 DTO를 바디에 삽입합니다.
+                .body(BodyInserters.fromValue(requestDto))
                 .retrieve()
                 .bodyToMono(OpenAIResDto.class);
     }
@@ -98,26 +98,20 @@ public class WebClientUtil {
 
         MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
 
-        Mono<String> response =  webClientConfig.webClient().post()
+       return webClientConfig.webClient().post()
                 .uri(fullUrl)
                 .header("Request-Index", "0")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(multipartBody))
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(e -> {
-                    if (e instanceof WebClientResponseException) {
-                        WebClientResponseException ex = (WebClientResponseException) e;
-                    }
-                })
                 .doFinally(signalType -> {
                     try {
                         Files.deleteIfExists(tempFilePath);
                     } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 });
-
-        return response;
     }
 
 
@@ -134,7 +128,7 @@ public class WebClientUtil {
         String startSigStr = appkey + timeStartMillis + userId + secretKey;
         String startSig = Hex.encodeHexString(digest.digest(startSigStr.getBytes()));
 
-        String params = "{"
+        return "{"
                 + "\"connect\":{"
                 + "\"cmd\":\"connect\","
                 + "\"param\":{"
@@ -172,7 +166,6 @@ public class WebClientUtil {
                 + "}"
                 + "}"
                 + "}";
-        return params;
     }
 
     private static int getRandom(int count) {
