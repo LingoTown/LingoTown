@@ -70,7 +70,7 @@ export const ExploreComp: React.FC = () => {
 
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender:"", name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender:"", name: "", targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
     { id: 6, name: "Luke", gender:"Man", targetPosition: customerPosition, targetRotation:customerRotation, ref: customerCircleRef },
     { id: 33, name: "Olivia", gender:"Woman", targetPosition: chefPosition, targetRotation:chefRotation, ref: chefCircleRef },
@@ -84,7 +84,7 @@ export const ExploreComp: React.FC = () => {
 
   // value
   const CIRCLE_RADIUS = 3;
-  const SENTENCE = "Would you like to start a conversation with ";
+  const SENTENCE = "와(과) 이야기를 시작하시겠습니까?";
 
   // function
   const customConfirm = useCustomConfirm();
@@ -130,7 +130,7 @@ export const ExploreComp: React.FC = () => {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
-          const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+          const flag = await customConfirm(npc + "", npc + SENTENCE);
           if (flag)
             animate();
             setTalkBalloon(prev => ({ ...prev, isUser: !prev.isUser}));

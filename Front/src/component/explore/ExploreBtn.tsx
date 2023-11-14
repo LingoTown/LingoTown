@@ -17,12 +17,6 @@ export const ExploreBtn = () => {
   const setTutorialOpen = useSetRecoilState(tutorialAtom);
   const [quizList, setQuizList] = useState<QuizType[]>([
     {
-      quizId: "38",
-      quiz: "Your friend Jina is here. Find out what day you have to submit your art homework. (e.g. Monday)",
-      koQuiz: "친구 Jina가 있네요. 미술 숙제를 몇 요일 해야 하는지 알아보세요. (예시. Monday)",
-      solved: "true"
-    },
-    {
       quizId: "39",
       quiz: "Find out the name of the store where Jina works part-time. (e.g. LingoMongo)",
       koQuiz: "친구 Jina가 아르바이트하는 가게 이름을 알아보세요. (예시. LingoMongo)",
@@ -69,7 +63,7 @@ export const ExploreBtn = () => {
   const exit = async() => {
     setTalkBalloon(prevState => ({...prevState, isMove: false}));
     setTalkBalloon(prevState => ({...prevState, isModal: true}))
-    const flag = await customConfirm("Notice", "Are you sure you want to leave the Explore?");
+    const flag = await customConfirm("Notice", "Explore를 종료하시겠습니까?");
     if (flag)
       navigate("/");
     setTalkBalloon(prevState => ({...prevState, isMove: true}));

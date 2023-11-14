@@ -23,7 +23,7 @@ export type NpcInfo = {
 
 export type CurrentNpc = {
   id: number;
-  name: string | null;
+  name: string;
   gender: string;
   img: any;
   targetPosition: any;

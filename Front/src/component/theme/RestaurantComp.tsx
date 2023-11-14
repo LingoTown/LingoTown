@@ -81,7 +81,7 @@ export const RestaurantComp: React.FC = () => {
   const isabelAction = useRef<AnimationAction>();
   const isabelActions = useAnimations(isabelFile.animations, isabelFile.scene).actions;
 
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: null, targetPosition:null, targetRotation:null });
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: "", targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
     { id: 4, gender:"Man", name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
     { id: 33, gender:"Woman", name: "Olivia", targetPosition: oliviaCameraPosition, targetRotation:oliviaCameraRotation, ref: oliviaCircleRef },
@@ -144,7 +144,7 @@ export const RestaurantComp: React.FC = () => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
       setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));      
-      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList }));
+      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList, npc: currentNpc.current.name }));
     }, (error) => {
       console.log(error);
     }); 
