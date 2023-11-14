@@ -13,7 +13,7 @@ const LoginPage = () => {
   const setLoading = useSetRecoilState(loadingAtom);
 
   useEffect(() => {
-    if (user.accessToken !== "") {
+    if (user.email !== "") {
       navigate("/departure");
     }
   }, []);
