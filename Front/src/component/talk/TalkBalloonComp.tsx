@@ -202,6 +202,10 @@ export const TalkBalloonComp = () => {
 
   const showScore = async(talkDetailId: number, index: number) => {
 
+    if (historyState[index]) {
+      setHistoryState(initialHistoryState)
+      return
+    }
 
     await getTalkDetailScore(talkDetailId, ({data}) => {
       const result = data.data as grammarCheckType;
@@ -289,6 +293,7 @@ export const TalkBalloonComp = () => {
                     <>
                       <div
                         className="text-blue-800"
+                        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                         onClick={() => showScore(value.talkDetailId, index) }
                       >
                         Me : { value.content }
