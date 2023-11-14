@@ -99,10 +99,4 @@ public class TalkController {
         return talkService.readPronunciationEstimation(talkId);
     }
 
-    @PostMapping("/test")
-    public String check(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-        return openAIService.checkPronunciation(talkReqDto);
-    }
-
-
 }
