@@ -1,6 +1,5 @@
 package com.lingotown.domain.member.entity;
 
-import com.lingotown.domain.character.entity.Character;
 import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.global.basetimeentity.BaseTimeEntity;
 import com.lingotown.global.data.GenderType;
@@ -58,7 +57,9 @@ public class Member extends BaseTimeEntity {
     List<MemberQuiz> memberQuizList = new ArrayList<>();
 
     @Builder
-    public Member(Long id, String loginId, String nickname, String email, String profile, MemberRole role, LoginType loginType, GenderType genderType, LocalDateTime deletedAt, List<MemberNPC> memberNPCList, List<MemberQuiz> memberQuizList) {
+    public Member(Long id, String loginId, String nickname, String email, String profile,
+                  MemberRole role, LoginType loginType, GenderType genderType, LocalDateTime deletedAt,
+                  List<MemberNPC> memberNPCList, List<MemberQuiz> memberQuizList) {
         this.id = id;
         this.loginId = loginId;
         this.nickname = nickname;

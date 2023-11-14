@@ -1,6 +1,5 @@
 package com.lingotown.domain.talk.dto.response;
 
-import com.lingotown.domain.talk.dto.response.speechsuper.WordResDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReadPronunciationScoreResDto {
-
-    private Long talkDetailId;
     private int overallScore;
     private int pronunciationScore;
     private int fluencyScore;

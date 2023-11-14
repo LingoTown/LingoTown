@@ -4,24 +4,11 @@ import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
-import com.lingotown.domain.talk.dto.response.speechsuper.PronunciationResDto;
 import com.lingotown.global.config.WebClientConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-//import org.apache.http.HttpEntity;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
@@ -31,7 +18,6 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,14 +25,10 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
-
 
 @Slf4j
 @Component
@@ -73,8 +55,6 @@ public class WebClientUtil {
                 .max_tokens(100)
                 .messages(messages)
                 .build();
-
-        System.out.println("body : " +BodyInserters.fromValue(requestDto));
 
         return webClientConfig.webClient().post()
                 .uri(GPTUrl)
@@ -125,24 +105,17 @@ public class WebClientUtil {
                 .body(BodyInserters.fromMultipartData(multipartBody))
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnSuccess(System.out::println)
                 .doOnError(e -> {
                     if (e instanceof WebClientResponseException) {
                         WebClientResponseException ex = (WebClientResponseException) e;
-                        System.out.println("오류 응답 코드: " + ex.getRawStatusCode() + " 본문: " + ex.getResponseBodyAsString());
-                    } else {
-                        System.out.println("오류 발생: " + e.getMessage() + " > " +e);
                     }
                 })
                 .doFinally(signalType -> {
                     try {
                         Files.deleteIfExists(tempFilePath);
                     } catch (IOException e) {
-                        System.out.println("임시 파일 삭제 실패: " + tempFilePath +" > " +e);
                     }
                 });
-
-        System.out.println(response.toString());
 
         return response;
     }
@@ -269,7 +242,7 @@ public class WebClientUtil {
     private static String charString = "abcdefghijklmnopqrstuvwxyz123456789";
 
     private static String getRandomString(int length) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int len = charString.length();
         for (int i = 0; i < length; i++) {
             sb.append(charString.charAt(getRandom(len - 1)));

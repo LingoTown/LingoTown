@@ -33,8 +33,8 @@ public class PapagoService {
     public DataResponse<String> translate(PapagoRequestDto requestDto) throws JsonProcessingException {
 
         Map<String, String> requestHeaders = new HashMap<>();
-        requestHeaders.put("X-Naver-Client-Id", CLIENT);
-        requestHeaders.put("X-Naver-Client-Secret", SECRET);
+        requestHeaders.put("X-NCP-APIGW-API-KEY-ID", CLIENT);
+        requestHeaders.put("X-NCP-APIGW-API-KEY", SECRET);
 
         String responseBody = post(requestHeaders, API_URL, requestDto);
         JsonObject jsonObj = JsonParser.parseString(responseBody).getAsJsonObject();

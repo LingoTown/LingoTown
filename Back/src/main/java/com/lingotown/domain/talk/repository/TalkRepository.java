@@ -1,9 +1,7 @@
 package com.lingotown.domain.talk.repository;
 
-import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.domain.talk.entity.MemberNPC;
 import com.lingotown.domain.talk.entity.Talk;
-import com.lingotown.domain.talk.entity.TalkDetail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
