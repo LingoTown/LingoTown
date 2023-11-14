@@ -121,66 +121,6 @@ public class WebClientUtil {
     }
 
 
-    public String checkPronunciation(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-//
-//        String coreType = "sent.eval";
-//        String dict_dialect = "";
-//        if (talkReqDto.getLanguage().equals("FR")) {
-//            coreType = "para.eval.fr";
-//        } else if (talkReqDto.getLanguage().equals("UK")) {
-//            dict_dialect = "en_br";
-//        } else {
-//            dict_dialect = "en_us";
-//        }
-//
-//        String url = baseUrl + "/" + coreType +"?dict_dialect="+dict_dialect;
-//        String userId = getRandomString(5);
-//        String res = null;
-//
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
-//        String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
-//
-//        try {
-//            HttpPost httppost = new HttpPost(url);
-//            httppost.addHeader("Request-Index", "0");
-//
-//            StringBody comment = new StringBody(params, ContentType.APPLICATION_JSON);
-//            ContentBody bin = new InputStreamBody(talkReqDto.getTalkFile().getInputStream(), talkReqDto.getTalkFile().getContentType(), talkReqDto.getTalkFile().getOriginalFilename());
-//
-//            HttpEntity reqEntity = MultipartEntityBuilder.create()
-//                    .addPart("text", comment)
-//                    .addPart("audio", bin)
-//                    .build();
-//
-//            httppost.setEntity(reqEntity);
-//
-//            CloseableHttpResponse response = httpclient.execute(httppost);
-//            try {
-//                HttpEntity resEntity = response.getEntity();
-//                if (resEntity != null) {
-//                    res = EntityUtils.toString(resEntity, "UTF-8");
-//                    System.out.println("Response: " + res); // 응답 출력
-//                }
-//            } finally {
-//                response.close();
-//            }
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                httpclient.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return res;
-        return "1234";
-    }
-
-
     private static String buildParam(String appkey, String secretKey, String userId, String audioType,
                                      String audioSampleRate, String refText, String coreType) {
 
