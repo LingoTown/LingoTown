@@ -57,12 +57,12 @@ public class WebClientUtil {
                 .build();
 
         return webClientConfig.webClient().post()
-                .uri(GPTUrl)
+                .uri(gptUrl)
                 .headers(headers -> {
-                    headers.setBearerAuth(GPTKey); // 여기에 실제 GPT API 키를 설정합니다.
+                    headers.setBearerAuth(gptKey);
                     headers.setContentType(MediaType.APPLICATION_JSON);
                 })
-                .body(BodyInserters.fromValue(requestDto)) // 준비된 DTO를 바디에 삽입합니다.
+                .body(BodyInserters.fromValue(requestDto))
                 .retrieve()
                 .bodyToMono(OpenAIResDto.class);
     }
