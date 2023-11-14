@@ -29,7 +29,7 @@ class NPCServiceTest {
     private NPCService npcService;
 
     @Test
-    public void successReadNPCTopicList() {
+    void successReadNPCTopicList() {
         NPC npc = NPC.builder()
                 .id(1L)
                 .name("Name1")
@@ -57,7 +57,7 @@ class NPCServiceTest {
     }
 
     @Test
-    public void failReadNPC() {
+    void failReadNPC() {
         // given
         Long npcId = 1L;
 

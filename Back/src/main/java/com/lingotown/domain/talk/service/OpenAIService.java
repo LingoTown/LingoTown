@@ -85,10 +85,6 @@ public class OpenAIService {
     @Value("${SPEECH_SUPER.SECRET_KEY}")
     private String SPEECH_SECRET_KEY;
 
-    //발음평가 테스트
-    public String checkPronunciation(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-        return webClientUtil.checkPronunciation(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
-    }
 
     @TrackExecutionTime
     @Transactional
