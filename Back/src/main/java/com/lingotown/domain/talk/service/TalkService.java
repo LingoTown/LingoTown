@@ -209,7 +209,7 @@ public class TalkService {
 
         String answer = quiz.getAnswer();
 
-        if(answer.equals(quizReqDto.getResult())) {
+        if(answer.equals(quizReqDto.getResult().toLowerCase())) {
             result = true;
 
             Long memberId = Long.valueOf(principal.getName());
