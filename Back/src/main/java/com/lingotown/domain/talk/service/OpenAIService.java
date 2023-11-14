@@ -71,19 +71,19 @@ public class OpenAIService {
 
 
     @Value("${OPEN_AI.URL}")
-    private String ENDPOINT_URL;
+    private String GPTURL;
 
     @Value("${OPEN_AI.KEY}")
-    private String API_KEY;
+    private String APIKEY;
 
     @Value("${SPEECH_SUPER.URL}")
-    private String SPEECH_URL;
+    private String SPEECHURL;
 
     @Value("${SPEECH_SUPER.APP_KEY}")
-    private String SPEECH_APP_KEY;
+    private String APPKEY;
 
     @Value("${SPEECH_SUPER.SECRET_KEY}")
-    private String SPEECH_SECRET_KEY;
+    private String SECRETKEY;
 
 
     @TrackExecutionTime
@@ -95,7 +95,7 @@ public class OpenAIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(API_KEY);
+        headers.setBearerAuth(APIKEY);
 
         //요청을 담을 메세지 리스트
         List<OpenAIMessageDto> messages = new ArrayList<>();
@@ -150,7 +150,7 @@ public class OpenAIService {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
-        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
+        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(GPTURL, HttpMethod.POST, entity, OpenAIResDto.class);
 
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
@@ -198,7 +198,7 @@ public class OpenAIService {
 
 
     private void performAsyncPronunciationCheck(TalkDetail talkDetail, TalkReqDto talkReqDto) throws IOException {
-        webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+        webClientUtil.checkPronunciationAsync(SPEECHURL, APPKEY, SECRETKEY, talkReqDto)
                 .map(pronunciationResDtoAsString -> {
                     try {
                         return new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
@@ -228,7 +228,6 @@ public class OpenAIService {
         TalkDetail savedTalkDetail = getTalkDetailEntity(talkDetail.getId());
 
         ResultResDto resultResDto = pronunciationResDto.getResult();
-        System.out.println("result : " +resultResDto.getError());
 
         SentenceScore sentenceScore = SentenceScore.builder()
                 .overallScore(resultResDto.getOverall())
