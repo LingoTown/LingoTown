@@ -212,9 +212,6 @@ public class OpenAIService {
                         updatePronunciationResults(talkDetail, pronunciationResDto);
                         return null;
                     });
-                }, error -> {
-                    // 오류 로깅
-                    log.error("Error occurred during pronunciation check: {}", error.getMessage(), error);
                 });
     }
 
