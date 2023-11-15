@@ -35,7 +35,7 @@ public class TalkController {
 //        return openAIService.askGPT(principal, talkReqDto);
 //    }
 
-    @PostMapping(value = "/", consumes = {"multipart/form-data"})
+    @PostMapping(value = "", consumes = {"multipart/form-data"})
     public DataResponse<CreateOpenAIResDto> askGPTSync(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
         return openAIService.askGPTSync(principal, talkReqDto);
     }
