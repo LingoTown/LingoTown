@@ -30,6 +30,10 @@
   animation: flicker 0.5s infinite alternate; /* 1.5초마다 무한히 번갈아가며 실행 */
 }
 
+.bg-white-opacity {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 /* The entire scrollbar */
 ::-webkit-scrollbar {
   width: 10px; /* width of the entire scrollbar */
