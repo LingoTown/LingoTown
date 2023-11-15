@@ -19,6 +19,7 @@ import { userType } from "../type/UserType";
 import { userAtom } from "../atom/UserAtom";
 import { lockOffCharacter } from "../api/Character";
 import { useCustomAlert } from "../component/util/ModalUtil";
+import { isMobile } from 'react-device-detect';
 
 const Rows = () => {
   /* loading */
@@ -156,10 +157,14 @@ const DeparturePage = () => {
   };
 
   useEffect(() => {
-    getQuizInfo();
-    fetchCharacterList();
-    fetchIntimacyInfo();
-    checkEnterDate(user);
+    if(isMobile) 
+      navigate('/mobile');
+    else {
+      getQuizInfo();
+      fetchCharacterList();
+      fetchIntimacyInfo();
+      checkEnterDate(user);
+    }
   }, [])
 
   // 캐릭터 변경 토스트 메세지

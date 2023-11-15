@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { TalkBalloonComp } from "../component/talk/TalkBalloonComp";
 import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
@@ -23,6 +23,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   const tutorialRead = useRecoilValue(tutorialAtom);
   let visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
   const [talkState, setTalkState] = useRecoilState(talkStateAtom);
+  const [isSolved, setSolved] = useState<boolean>(false);
 
   useEffect(()=>{
     visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
@@ -64,7 +65,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
         loading.loading || talkBalloon.isShow?
         null
         :
-        <MapUtilComp />
+        <MapUtilComp isSolved={isSolved} setSolved={setSolved} />
       }
       <Canvas 
         style={{ zIndex:"-1", height:loading.loading?"0.01vh":"100vh", cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>

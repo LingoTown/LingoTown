@@ -20,6 +20,7 @@ import { ExplorePage } from "../pages/ExplorePage";
 import { ExploreComp } from "../component/explore/ExploreComp";
 import { PlayerSelectPage } from "../pages/PlayerSelectPage"
 import { PlayerSelect } from "../component/playerSelect/PlayerSelectComp"
+import { MobilePage } from "../pages/MobilePage";
 
 export const AppRouter = () => {
   return(
@@ -32,6 +33,7 @@ export const AppRouter = () => {
           <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
           <Route path="/google/callback" element={ <GoogleCallback/> }/>
           <Route path="/explore" element={ <ExplorePage theme={ <ExploreComp/> }/> }/>
+          <Route path="/mobile" element={ <MobilePage /> } />
           {/* 로그인 후 사용할 수 있는 페이지  */}
           <Route element={ <AuthRouter />} >
             <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>

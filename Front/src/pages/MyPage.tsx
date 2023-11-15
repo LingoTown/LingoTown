@@ -186,7 +186,7 @@ const MyPage = () => {
                 {
                   nickEditMode?
                   <div>Name : &nbsp;
-                    <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" placeholder={user.nickname}/>
+                    <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" value={user.nickname}/>
                     &nbsp;&nbsp;
                     <span 
                       onClick={doSaveNickname} 
