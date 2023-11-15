@@ -5,13 +5,13 @@ import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
 import { loadingAtom } from "../atom/LoadingAtom";
 import { useRecoilState, useRecoilValue } from "recoil"
 import { MapUtilComp } from "../component/talk/MapUtilComp";
-import { Physics, Debug } from '@react-three/cannon';
+import { Physics } from '@react-three/cannon';
 import LoadingPage from "./LoadingPage";
 import Tutorial from "../component/tutorial/Tutorial";
 import { tutorialAtom } from "../atom/TutorialAtom";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkStateAtom } from '../atom/TalkStateAtom';
-import { OrbitControls } from '@react-three/drei';
+// import { OrbitControls } from '@react-three/drei';
 
 interface CanvasPage {
   theme: JSX.Element;
@@ -71,10 +71,10 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
       <Canvas 
         style={{ zIndex:"-1", height:loading.loading?"0.01vh":"100vh", cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
-          <Debug scale={1} color='red'>
-            <OrbitControls/>
+          {/* <Debug scale={1} color='red'> */}
+            {/* <OrbitControls/> */}
             {props.theme}
-          </Debug>
+          {/* </Debug> */}
         </Physics>
       </Canvas>
 

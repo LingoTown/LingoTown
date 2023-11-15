@@ -178,16 +178,16 @@ export const PlayerMove = (
         oppositePosition.z
       ]);
     }
-    // const currentPos = playerRef.current.position.clone();
-    // const offset = cameraOffset.current
-    //   .clone()
-    //   .applyQuaternion(playerRef.current.quaternion);
-    // const desiredCameraPosition = currentPos.add(offset);
+    const currentPos = playerRef.current.position.clone();
+    const offset = cameraOffset.current
+      .clone()
+      .applyQuaternion(playerRef.current.quaternion);
+    const desiredCameraPosition = currentPos.add(offset);
 
-    // if (isMove.current) {
-    //   camera.position.lerp(desiredCameraPosition, 1);
-    //   camera.lookAt(playerRef.current.position);
-    // }
+    if (isMove.current) {
+      camera.position.lerp(desiredCameraPosition, 1);
+      camera.lookAt(playerRef.current.position);
+    }
   }
 };
 
