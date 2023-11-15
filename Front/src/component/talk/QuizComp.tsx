@@ -236,13 +236,13 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
                           onClick={ (event) => toEng(event, index) }
                           className="bg-blue-900 hover:bg-blue-700 text-white py-1 px-2 rounded shadow"
-                        >번역</button>
+                        >원본</button>
                         :
                         <button 
                           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
                           onClick={ (event) => toKor(event, index) }
                           className="bg-green-700 hover:bg-green-600 text-white py-1 px-2 rounded shadow"
-                        >원본</button>
+                        >번역</button>
                       }
                       <button 
                           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
