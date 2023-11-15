@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
 import { userAtom, initialUser } from '../atom/UserAtom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { myPageNPCListType, CountryComp } from "../component/mypage/CountryComp";
 import { useCustomAlert, useCustomConfirm } from "../component/util/ModalUtil";
 import { talkListType } from "../type/TalkListType";
@@ -35,7 +35,7 @@ const MyPage = () => {
   const setTalkId = useSetRecoilState(talkIdAtom);
   const setLoading = useSetRecoilState(loadingAtom);
   const [user, setUser] = useRecoilState(userAtom);
-  const [visit, setVisit] = useRecoilState(tutorialAtom);
+  const visit = useRecoilValue(tutorialAtom);
   
   const logout = async() =>{
     setUser(initialUser)
