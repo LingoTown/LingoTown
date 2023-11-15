@@ -215,13 +215,6 @@ const MyPage = () => {
               </div>
               <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
                 
-                <div className="h-[45px]">
-                  <span className='hover:text-[1.9rem]' onClick={()=>{setVisit({visit: false})}}
-                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
-                    📖 Guide
-                  </span>
-                </div>
-                
                 <div className="h-[45px] mt-10">
                   <span className='hover:text-[1.9rem]' onClick={logout}
                     style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
