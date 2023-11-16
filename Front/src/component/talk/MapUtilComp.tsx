@@ -47,8 +47,8 @@ export const MapUtilComp: React.FC<MapUtilProps> = ({ isSolved, setSolved }) => 
       if (quizList.length == 0)
         setTranslateList(new Array(result.length).fill(0));
     },() => {
-      navigate("/departure");
-      customAlert("Notice", "올바르지 않은 접근입니다.");
+      // navigate("/departure");
+      // customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -58,8 +58,8 @@ export const MapUtilComp: React.FC<MapUtilProps> = ({ isSolved, setSolved }) => 
       const result = data.data as QuizType[];
       setTotalQuizAmount([...result].length);
     },() => {
-      navigate("/departure");
-      customAlert("Notice", "올바르지 않은 접근입니다.");
+      // navigate("/departure");
+      // customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -72,8 +72,8 @@ export const MapUtilComp: React.FC<MapUtilProps> = ({ isSolved, setSolved }) => 
       
       setSolvedQuizAmount(solvedQuiz.length);
     },() => {
-      navigate("/departure");
-      customAlert("Notice", "올바르지 않은 접근입니다.");
+      // navigate("/departure");
+      // customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
