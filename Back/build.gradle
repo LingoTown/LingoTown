@@ -2,6 +2,12 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.16'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
+    /* 2023.10.25 : Sonarqube */
+    id 'org.sonarqube' version '4.2.1.3168'
+
+    /* 2023.11.08 : Jacoco */
+    id 'jacoco'
 }
 
 group = 'LingoTown'
@@ -30,8 +36,74 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    /* 2023.10.17 */
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    //gpt
+    implementation 'io.github.flashvayne:chatgpt-spring-boot-starter:1.0.4'
+
+    /* 2023.10.24 : 배포 모니터링 */
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    /* 23.10.26 WebClient 위한 WebFlux 의존성 추가 */
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    /* AOP : 실행시간 측정 용 */
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    /* 2023.10.30 : TTS */
+    implementation 'com.google.cloud:google-cloud-texttospeech:2.28.0'
+
+    /* 2023.10.30 : Multipart 변환기 */
+    implementation 'org.springframework:spring-test:5.3.30'
+
+    /* 2023.11.09 : Apache HttpClient 라이브러리 추가 */
+    implementation 'org.apache.httpcomponents:httpmime:4.5.13'
+
+    /* 2023.11.09 : Apache Commons Codec 라이브러리 추가 */
+    implementation 'commons-codec:commons-codec:1.15'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport' 
+}
+
+/* 2023.10.25 : Sonarqube */
+sonar {
+    properties {
+        property "sonar.projectKey", "s09-final_S09P31B305_AYtkLpUWXphQim437K7_"
+        property "sonar.projectName", "S09P31B305"
+        property 'sonar.test.inclusions', '**/*Test.java'
+        property 'sonar.exclusions', '**/test/**, **/Q*.java, **/*Doc*.java, **/resources/**'
+
+        // Jacoco의 Coverage 파일 분석
+        property 'sonar.coverage.jacoco.xmlReportPaths', '${buildDir}/reports/jacoco/test/jacocoTestReport.xml'
+    }
+}
+
+/* 2023.11.08 : Jacoco */
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+    // 테스트 결과를 받을 파일 형식
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+    }
 }

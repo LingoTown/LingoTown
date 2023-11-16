@@ -1,0 +1,108 @@
+pipeline {
+    agent any
+
+    stages {
+        stage("Set Variable") {
+            steps {
+                script {
+                    IMAGE_NAME_BE = "lingotown_back_image"
+                    CONTAINER_NAME_BE = "LingoTown_Back_Dev"
+                    APPLICATION_YML_PATH = "/usr/spring/resources"
+                    PROJECT_DIR_BE = "Back"
+                }
+            }
+        }
+
+        // 설정파일 참조
+        stage("Copy Setting File") {
+            steps {
+                script {
+                    try {
+                        sh """
+                            if [ ! -d "${PROJECT_DIR_BE}/src/main/resources" ]; then
+                                mkdir -p "${PROJECT_DIR_BE}/src/main/resources"
+                            fi
+
+                            cp ${APPLICATION_YML_PATH}/* ${PROJECT_DIR_BE}/src/main/resources
+                        """
+                    } catch (Exception e) {
+                        // 설정 파일 복사 중 오류가 발생하면, 파이프라인 실행을 중단합니다.
+                        echo "Failed to copy setting files, stopping the pipeline: ${e.getMessage()}"
+                        error "Stopping the pipeline because the setting file copying stage failed."
+                    }
+                }
+            }
+        }
+
+        // 백엔드 프로젝트 빌드
+        stage("Build") {
+            steps {
+                script {
+                    try {
+                        sh """
+                            cd ${PROJECT_DIR_BE}
+                            chmod 777 ./gradlew
+                            ls -al
+                            pwd
+                            ./gradlew clean build 
+                        """
+                    } catch (Exception e) {
+                        // 빌드 중 오류가 발생하면, 파이프라인 실행을 중단합니다.
+                        echo "Build failed, stopping the pipeline: ${e.getMessage()}"
+                        error "Stopping the pipeline because the build stage failed."
+                    }
+                }
+            }
+        }
+
+        // SonarQube 분석
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    // 젠킨스에서 설정한 Sonarqube 서버 이름
+                    withSonarQubeEnv('SonarQube') {
+                        dir("${PROJECT_DIR_BE}") {
+                            sh "./gradlew sonar"
+                        }
+                    }
+                }
+            }
+        }
+
+        // 컨테이너 클리닝
+        stage("Docker Container Cleaning") {
+            steps{
+                sh "docker ps -q -f name=${CONTAINER_NAME_BE} | xargs --no-run-if-empty docker container stop"
+                sh "docker container ls -a -q -f name=${CONTAINER_NAME_BE} | xargs --no-run-if-empty docker rm"
+            }
+        }
+
+        // 이미지 삭제
+        stage("Docker Image Cleaning") {
+            steps{
+                sh "docker images ${IMAGE_NAME_BE} -q | xargs -r docker rmi -f"
+            }
+        }
+
+        // 도커 이미지 빌드
+        stage("Docker Image Build") {
+            steps {
+                dir("${PROJECT_DIR_BE}") {
+                    script {
+                        sh "docker build --no-cache -t ${IMAGE_NAME_BE} ."
+                    }
+                }
+            }
+        }
+
+        // 컨테이너 실행
+        stage("Docker Container Run") {
+            steps {
+                script {
+                    // 환경변수 및 파일시스템 마운트 (Jenkins는 이미 Host로부터 마운트 받음)
+                    sh "docker run -d -p 8081:8081 -e GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS} -v /home/ubuntu/key/lingotown-403602-68f9b360791b.json:/home/ubuntu/key/lingotown-403602-68f9b360791b.json --name ${CONTAINER_NAME_BE} ${IMAGE_NAME_BE} -e TZ=Asia/Seoul"
+                }
+            }
+        }
+    }
+}
