@@ -76,7 +76,7 @@ const MyPage = () => {
     const flag = await customConfirm("Notice", "회원 탈퇴하시겠습니까?")
     if (flag) {
       await deleteAccount(({}) => {
-        localStorage.removeItem("userAtom");
+        setUser(initialUser);
         navigate("/");
       }, (err) => {
         console.log(err);
