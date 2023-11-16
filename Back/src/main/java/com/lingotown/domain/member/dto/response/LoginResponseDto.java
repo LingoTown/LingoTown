@@ -1,10 +1,11 @@
 package com.lingotown.domain.member.dto.response;
 
 import com.lingotown.domain.member.entity.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.lingotown.global.data.GenderType;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -19,8 +20,18 @@ public class LoginResponseDto {
     private String social;
     private String nickname;
     private String profileImg;
+    private LocalDateTime createdAt;
+
+    private Long characterId;
+    private GenderType characterGender;
+    private String characterLink;
+    private String characterImage;
+
+    private List<CharacterLockResponseDto> lockList;
 
     public static LoginResponseDto of(Member member, String accessToken, String refreshToken) {
+
+
         return LoginResponseDto
                 .builder()
                 .accessToken(accessToken)
@@ -30,7 +41,7 @@ public class LoginResponseDto {
                 .social(member.getLoginType().toString())
                 .nickname(member.getNickname())
                 .profileImg(member.getProfile())
+                .createdAt(member.getCreatedAt())
                 .build();
     }
-
 }

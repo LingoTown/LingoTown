@@ -1,9 +1,9 @@
 package com.lingotown.domain.world.entity;
 
 import com.lingotown.domain.npc.entity.NPC;
-import com.lingotown.global.data.Theme;
 import com.lingotown.global.data.Language;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class World {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "world_id")
     private Long id;
 
@@ -30,4 +29,14 @@ public class World {
 
     @OneToMany(mappedBy = "world", cascade = CascadeType.ALL)
     private List<NPC> npcList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "world", cascade = CascadeType.REMOVE)
+    private List<Quiz> quizList = new ArrayList<>();
+
+    @Builder
+    public World(Long id, String theme, Language language) {
+        this.id = id;
+        this.theme = theme;
+        this.language = language;
+    }
 }

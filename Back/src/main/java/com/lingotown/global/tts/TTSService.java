@@ -2,8 +2,13 @@ package com.lingotown.global.tts;
 
 import com.google.cloud.texttospeech.v1.*;
 import com.google.protobuf.ByteString;
-import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
-import com.lingotown.global.service.S3Service;
+import com.lingotown.domain.talk.dto.request.TalkReqDto;
+import com.lingotown.domain.talk.entity.Talk;
+import com.lingotown.domain.talk.repository.TalkRepository;
+import com.lingotown.global.aspect.executetime.TrackExecutionTime;
+import com.lingotown.global.data.GenderType;
+import com.lingotown.global.exception.CustomException;
+import com.lingotown.global.exception.ExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mock.web.MockMultipartFile;
@@ -11,23 +16,68 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 @Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class TTSService {
 
-    private final S3Service s3Service;
+    private final TalkRepository talkRepository;
 
     @TrackExecutionTime
-    public MultipartFile UseTTS(String prompt) throws Exception{
+    public MultipartFile useTTS(String prompt, TalkReqDto talkReqDto) throws Exception{
 
         log.info(prompt);
+        log.info(talkReqDto.getLanguage());
+
+        Talk talk = talkRepository.findById(talkReqDto.getTalkId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
+
+        GenderType npcGender = talk.getMemberNPC().getNpc().getGenderType();
+
+        String sttLanguage;
+        String sttModelName;
+        SsmlVoiceGender sttGender;
+
+        // 프랑스
+        if(talkReqDto.getLanguage().equals("FR")) {
+            sttLanguage = "fr-FR";
+
+            if(npcGender == GenderType.WOMAN) {
+                sttGender = SsmlVoiceGender.FEMALE;
+                sttModelName = "fr-FR-Standard-C";
+            }
+            else {
+                sttGender = SsmlVoiceGender.MALE;
+                sttModelName = "fr-FR-Standard-D";
+            }
+        }
+        // 영국
+        else if(talkReqDto.getLanguage().equals("UK")) {
+            sttLanguage = "en-GB";
+
+            if(npcGender == GenderType.WOMAN) {
+                sttGender = SsmlVoiceGender.FEMALE;
+                sttModelName = "en-GB-Standard-F";
+            }
+            else {
+                sttGender = SsmlVoiceGender.MALE;
+                sttModelName = "en-GB-Wavenet-B";
+            }
+        }
+        // 미국
+        else {
+            sttLanguage = "en-US";
+
+            if(npcGender == GenderType.WOMAN) {
+                sttGender = SsmlVoiceGender.FEMALE;
+                sttModelName = "en-US-Standard-F";
+            }
+            else {
+                sttGender = SsmlVoiceGender.MALE;
+                sttModelName = "en-US-Polyglot-1";
+            }
+        }
 
         // textToSpeechClient 초기화
         try (TextToSpeechClient textToSpeechClient = TextToSpeechClient.create()) {
@@ -38,9 +88,9 @@ public class TTSService {
             // 모델 : neutral
             VoiceSelectionParams voice =
                     VoiceSelectionParams.newBuilder()
-                            .setLanguageCode("en-US")
-                            .setName("en-US-Wavenet-F")
-                            .setSsmlGender(SsmlVoiceGender.FEMALE)
+                            .setLanguageCode(sttLanguage)
+                            .setName(sttModelName)
+                            .setSsmlGender(sttGender)
                             .build();
 
             // 리턴 받을 오디오 타입
@@ -55,15 +105,12 @@ public class TTSService {
             // Get the audio contents from the response
             ByteString audioContents = response.getAudioContent();
 
-// Convert ByteString to MultipartFile without saving to a file
-            MultipartFile audioFile = new MockMultipartFile(
+            return new MockMultipartFile(
                     "file",
                     "output.mp3",
                     "audio/mpeg",
                     audioContents.toByteArray()
             );
-
-            return audioFile;
         }
     }
 }

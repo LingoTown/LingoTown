@@ -26,6 +26,7 @@ public class WorldService {
 
     private final WorldRepository worldRepository;
 
+    //언어가 가진 테마 조회하기
     public DataResponse<List<ReadWorldInfoResDto>> readWorldInfoList(Language language){
         List<World> worldInfoList = worldRepository.findByLanguage(language);
 
@@ -38,7 +39,7 @@ public class WorldService {
                 ResponseStatus.RESPONSE_SUCCESS.getMessage(), worldInfoResDtoList);
     }
 
-
+    //테마가 가진 NPC, topic
     public DataResponse<List<ReadNPCInfoResDto>> readNPCInfoList(Long worldId){
         World world = getWorldEntity(worldId);
 
@@ -56,10 +57,9 @@ public class WorldService {
                         .builder()
                         .npcId(npc.getId())
                         .name(npc.getName())
-                        .npcRole(npc.getNpcRole().toString())
+                        .npcRole(npc.getNpcRole())
                         .genderType(npc.getGenderType().toString())
                         .npcAge(npc.getNpcAge())
-                        .situation(npc.getSituation())
                         .voice(npc.getVoice())
                         .topicList(topicResDtoList)
                         .build();

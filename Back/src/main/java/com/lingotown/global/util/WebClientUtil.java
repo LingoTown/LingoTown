@@ -1,24 +1,28 @@
 package com.lingotown.global.util;
 
-import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
-import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
-import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.global.config.WebClientConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
 
 @Slf4j
 @Component
@@ -27,57 +31,117 @@ public class WebClientUtil {
 
     private final WebClientConfig webClientConfig;
 
-    public <T> T get(String url, Class<T> responseDtoClass) {
-        return webClientConfig.webClient().method(HttpMethod.GET)
-                .uri(url)
+    public Mono<String> checkPronunciationAsync(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws IOException {
+
+        String coreType = "sent.eval";
+        String dictDialect = "";
+        if (talkReqDto.getLanguage().equals("FR")) {
+            coreType = "sent.eval.fr";
+        } else if (talkReqDto.getLanguage().equals("UK")) {
+            dictDialect = "en_br";
+        } else {
+            dictDialect = "en_us";
+        }
+
+        String userId = getRandomString(5);
+
+        String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
+
+        Path tempFilePath = Files.createTempFile(null, ".mp3");
+        talkReqDto.getTalkFile().transferTo(tempFilePath.toFile());
+
+        Flux<DataBuffer> fileContentBuffer = DataBufferUtils.read(tempFilePath, new DefaultDataBufferFactory(), 4096);
+
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.asyncPart("audio", fileContentBuffer, DataBuffer.class);
+        builder.part("text", params, MediaType.APPLICATION_JSON);
+
+        String fullUrl = baseUrl + "/" + coreType;
+        if (!talkReqDto.getLanguage().equals("FR")) fullUrl = fullUrl + "?dict_dialect=" +dictDialect;
+
+        MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
+
+       return webClientConfig.webClient().post()
+                .uri(fullUrl)
+                .header("Request-Index", "0")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartBody))
                 .retrieve()
-                .bodyToMono(responseDtoClass)
-                .block();
+                .bodyToMono(String.class)
+                .doFinally(signalType -> {
+                    try {
+                        Files.deleteIfExists(tempFilePath);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 
-    public <T, V> Mono<T> post(String url, V requestDto, Class<T> responseDtoClass) {
+    private static String buildParam(String appkey, String secretKey, String userId, String audioType,
+                                     String audioSampleRate, String refText, String coreType) {
 
-        log.info("url={}", url);
+        MessageDigest digest = DigestUtils.getSha1Digest();
 
-        return webClientConfig.webClient().method(HttpMethod.POST)
-                .uri(url)
-                .bodyValue(requestDto)
-                .retrieve()
-                .bodyToMono(responseDtoClass);
+        long timeReqMillis = System.currentTimeMillis();
+        String connectSigStr = appkey + timeReqMillis + secretKey;
+        String connectSig = Hex.encodeHexString(digest.digest(connectSigStr.getBytes()));
+
+        long timeStartMillis = System.currentTimeMillis();
+        String startSigStr = appkey + timeStartMillis + userId + secretKey;
+        String startSig = Hex.encodeHexString(digest.digest(startSigStr.getBytes()));
+
+        return "{"
+                + "\"connect\":{"
+                + "\"cmd\":\"connect\","
+                + "\"param\":{"
+                + "\"sdk\":{"
+                + "\"protocol\":2,"
+                + "\"version\":16777472,"
+                + "\"source\":9"
+                + "},"
+                + "\"app\":{"
+                + "\"applicationId\":\"" + appkey + "\","
+                + "\"sig\":\"" + connectSig + "\","
+                + "\"timestamp\":\"" + timeReqMillis + "\""
+                + "}"
+                + "}"
+                + "},"
+                + "\"start\":{"
+                + "\"cmd\":\"start\","
+                + "\"param\":{"
+                + "\"app\":{"
+                + "\"applicationId\":\"" + appkey + "\","
+                + "\"timestamp\":\"" + timeStartMillis + "\","
+                + "\"sig\":\"" + startSig + "\","
+                + "\"userId\":\"" + userId + "\""
+                + "},"
+                + "\"audio\":{"
+                + "\"sampleBytes\":2,"
+                + "\"channel\":1,"
+                + "\"sampleRate\":" + audioSampleRate + ","
+                + "\"audioType\":\"" + audioType + "\""
+                + "},"
+                + "\"request\":{"
+                + "\"refText\":\"" + refText + "\","
+                + "\"coreType\":\"" + coreType + "\""
+                + "}"
+                + "}"
+                + "}"
+                + "}";
     }
 
-    public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
-        // 이미 외부에서 생성된 requestDto 객체를 이용하여 요청을 보냅니다.
+    private static String getRandomString(int length) {
+        StringBuilder sb = new StringBuilder();
+        String charString = "abcdefghijklmnopqrstuvwxyz123456789";
+        int len = charString.length();
+        for (int i = 0; i < length; i++) {
+            sb.append(charString.charAt(getRandomSecure(len - 1)));
+        }
+        return sb.toString();
+    }
 
-
-        // user 인풋
-        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-                .builder()
-                .role("user")
-                .content(talkReqDto.getPrompt() + "  이 문장에 어떤 문법적 오류가 있는지 확인해줘. 한글로 대답해줘.")
-                .build();
-
-
-        List<OpenAIMessageDto> messages = new ArrayList<>();
-
-        //요청Dto
-        messages.add(messageDtoUser);
-        OpenAIReqDto requestDto = OpenAIReqDto
-                .builder()
-                .max_tokens(100)
-                .messages(messages)
-                .build();
-
-        log.info(String.valueOf(requestDto));
-
-        return webClientConfig.webClient().post()
-                .uri(GPTUrl)
-                .headers(headers -> {
-                    headers.setBearerAuth(GPTKey); // 여기에 실제 GPT API 키를 설정합니다.
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-                })
-                .body(BodyInserters.fromValue(requestDto)) // 준비된 DTO를 바디에 삽입합니다.
-                .retrieve()
-                .bodyToMono(OpenAIResDto.class);
+    private static int getRandomSecure(int count) {
+        SecureRandom random = new SecureRandom();
+        return random.nextInt(count);
     }
 }

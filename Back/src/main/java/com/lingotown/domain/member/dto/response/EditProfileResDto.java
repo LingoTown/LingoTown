@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class EditProfileResDto {
-    String profile;
+    private String profile;
 }

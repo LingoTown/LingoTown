@@ -2,7 +2,6 @@ package com.lingotown.domain.talk.entity;
 
 import com.lingotown.domain.member.entity.Member;
 import com.lingotown.domain.npc.entity.NPC;
-import com.lingotown.domain.talk.entity.Talk;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -44,7 +43,7 @@ public class MemberNPC {
     }
 
     //친밀도 증가
-    public void increaseIntimacy(){
-        this.intimacy+=10;
+    public void increaseIntimacy(int talkCount){
+        this.intimacy+=talkCount;
     }
 }

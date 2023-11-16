@@ -1,11 +1,17 @@
 package com.lingotown.domain.member.service;
 
 
+import com.lingotown.domain.character.entity.Character;
+import com.lingotown.domain.character.repository.CharacterRepository;
 import com.lingotown.domain.member.dto.request.SocialLoginRequestDto;
+import com.lingotown.domain.member.dto.response.CharacterLockResponseDto;
 import com.lingotown.domain.member.dto.response.LoginResponseDto;
 import com.lingotown.domain.member.entity.Member;
+import com.lingotown.domain.member.entity.MemberCharacter;
+import com.lingotown.domain.member.repository.MemberCharacterRepository;
 import com.lingotown.domain.member.repository.MemberRepository;
 
+import com.lingotown.global.data.GenderType;
 import com.lingotown.global.data.LoginType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -33,51 +39,67 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class SocialLoginService {
 
+    private static final String CONTENT_TYPE = "Content-type";
+    private static final String CONTENT_TYPE_DETAIL = "application/x-www-form-urlencoded;charset=utf-8";
+    private static final String EMAIL = "email";
+    private static final String LOGIN_ID = "loginId";
+    private static final String NICKNAME = "nickname";
+
     private final MemberRepository memberRepository;
+    private final MemberCharacterRepository memberCharacterRepository;
+    private final CharacterRepository characterRepository;
+
     private final MemberService memberService;
+    private final MemberCharacterService memberCharacterService;
 
     @Value("${social-login.kakao.client}")
-    private String KAKAO_CLIENT;
+    private String kakaoClient;
 
     @Value("${social-login.kakao.secret}")
-    private String KAKAO_SECRET;
+    private String kakaoSecret;
 
     @Value("${social-login.kakao.auth-uri}")
-    private String KAKAO_AUTH_URI;
+    private String kakaoAuthUri;
 
     @Value("${social-login.kakao.user-info-uri}")
-    private String KAKAO_USER_INFO_URI;
+    private String kakaoUserInfoUri;
 
     @Value("${social-login.google.client}")
-    private String GOOGLE_CLIENT;
+    private String googleClient;
 
     @Value("${social-login.google.secret}")
-    private String GOOGLE_SECRET;
+    private String googleSecret;
 
     @Value("${social-login.google.auth-uri}")
-    private String GOOGLE_AUTH_URI;
+    private String googleAuthUri;
 
     @Value("${social-login.google.user-info-uri}")
-    private String GOOGLE_USER_INFO_URI;
+    private String googleUserInfoUri;
+
+    @Value("${s3url}")
+    private String s3Url;
 
 
     public DataResponse<LoginResponseDto> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
         String accessToken = getAccessTokenByKakao(requestDto);
-        HashMap<String, Object> userInfo = getUserInfoByKakao(accessToken);
+        Map<String, Object> userInfo = getUserInfoByKakao(accessToken);
         LoginResponseDto responseDto = getLoginResponseDto(userInfo, LoginType.KAKAO);
         return new DataResponse<>(200, "로그인 성공", responseDto);
     }
 
     public DataResponse<LoginResponseDto> googleLogin(SocialLoginRequestDto requestDto) throws IOException {
         String accessToken = getAccessTokenByGoogle(requestDto);
-        HashMap<String, Object> userInfo = getUserInfoByGoogle(accessToken);
+        Map<String, Object> userInfo = getUserInfoByGoogle(accessToken);
         LoginResponseDto responseDto = getLoginResponseDto(userInfo, LoginType.GOOGLE);
         return new DataResponse<>(200, "로그인 성공", responseDto);
     }
@@ -85,7 +107,7 @@ public class SocialLoginService {
     public String getAccessTokenByKakao(SocialLoginRequestDto requestDto) throws JsonProcessingException {
         HttpEntity<MultiValueMap<String, String>> tokenRequest = getHttpEntityByKakao(requestDto);
         RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(KAKAO_AUTH_URI, HttpMethod.POST, tokenRequest, String.class);
+        ResponseEntity<String> response = rt.exchange(kakaoAuthUri, HttpMethod.POST, tokenRequest, String.class);
 
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -96,12 +118,12 @@ public class SocialLoginService {
 
     private HttpEntity<MultiValueMap<String, String>> getHttpEntityByKakao(SocialLoginRequestDto requestDto) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(CONTENT_TYPE, CONTENT_TYPE_DETAIL);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", KAKAO_CLIENT);
-        body.add("client_secret", KAKAO_SECRET);
+        body.add("client_id", kakaoClient);
+        body.add("client_secret", kakaoSecret);
         body.add("redirect_uri", requestDto.getRedirect());
         body.add("code", requestDto.getCode());
 
@@ -112,7 +134,7 @@ public class SocialLoginService {
     public String getAccessTokenByGoogle(SocialLoginRequestDto requestDto) throws JsonProcessingException {
         HttpEntity<MultiValueMap<String, String>> tokenRequest = getHttpEntityByGoogle(requestDto);
         RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(GOOGLE_AUTH_URI, HttpMethod.POST, tokenRequest, String.class);
+        ResponseEntity<String> response = rt.exchange(googleAuthUri, HttpMethod.POST, tokenRequest, String.class);
 
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -123,49 +145,49 @@ public class SocialLoginService {
 
     private HttpEntity<MultiValueMap<String, String>> getHttpEntityByGoogle(SocialLoginRequestDto requestDto) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(CONTENT_TYPE, CONTENT_TYPE_DETAIL);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", GOOGLE_CLIENT);
-        body.add("client_secret", GOOGLE_SECRET);
+        body.add("client_id", googleClient);
+        body.add("client_secret", googleSecret);
         body.add("redirect_uri", requestDto.getRedirect());
         body.add("code", requestDto.getCode());
 
         return new HttpEntity<>(body, headers);
     }
 
-    public HashMap<String, Object> getUserInfoByKakao(String accessToken) throws IOException {
+    public Map<String, Object> getUserInfoByKakao(String accessToken) throws IOException {
 
-        HashMap<String, Object> userInfo = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
 
-        StringBuilder result = getStringBuilder(accessToken, KAKAO_USER_INFO_URI);
+        StringBuilder result = getStringBuilder(accessToken, kakaoUserInfoUri);
         JsonElement element = JsonParser.parseString(result.toString());
 
-        String email = "";
-        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("has_email").getAsBoolean();
-        if (has_email) {
-            email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+        String email = "이메일 동의시 계정 정보가 표기됩니다.";
+        boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
+        if (!hasEmail) {
+            email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get(EMAIL).getAsString();
         }
 
-        userInfo.put("loginId", element.getAsJsonObject().get("id").getAsString());
-        userInfo.put("nickname", element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString());
+        userInfo.put(LOGIN_ID, element.getAsJsonObject().get("id").getAsString());
+        userInfo.put(NICKNAME, element.getAsJsonObject().get("properties").getAsJsonObject().get(NICKNAME).getAsString());
         userInfo.put("profileImg", element.getAsJsonObject().get("properties").getAsJsonObject().get("profile_image").getAsString());
-        userInfo.put("email", email);
+        userInfo.put(EMAIL, email);
 
         return userInfo;
     }
 
-    public HashMap<String, Object> getUserInfoByGoogle(String accessToken) throws IOException {
-        HashMap<String, Object> userInfo = new HashMap<>();
+    public Map<String, Object> getUserInfoByGoogle(String accessToken) throws IOException {
+        Map<String, Object> userInfo = new HashMap<>();
 
-        StringBuilder result = getStringBuilder(accessToken, GOOGLE_USER_INFO_URI);
+        StringBuilder result = getStringBuilder(accessToken, googleUserInfoUri);
         JsonElement element = JsonParser.parseString(result.toString());
 
-        userInfo.put("loginId", element.getAsJsonObject().get("id").getAsString());
-        userInfo.put("nickname", element.getAsJsonObject().get("name").getAsString());
+        userInfo.put(LOGIN_ID, element.getAsJsonObject().get("id").getAsString());
+        userInfo.put(NICKNAME, element.getAsJsonObject().get("name").getAsString());
         userInfo.put("profileImg", element.getAsJsonObject().get("picture").getAsString());
-        userInfo.put("email", element.getAsJsonObject().get("email").getAsString());
+        userInfo.put(EMAIL, element.getAsJsonObject().get(EMAIL).getAsString());
         return userInfo;
     }
 
@@ -176,7 +198,7 @@ public class SocialLoginService {
         conn.setRequestMethod("GET");
         conn.setDoOutput(true);
         conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-        conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        conn.setRequestProperty(CONTENT_TYPE, CONTENT_TYPE_DETAIL);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
@@ -187,18 +209,82 @@ public class SocialLoginService {
         return result;
     }
 
-    private LoginResponseDto getLoginResponseDto(HashMap<String, Object> userInfo, LoginType loginType) {
+    private LoginResponseDto getLoginResponseDto(Map<String, Object> userInfo, LoginType loginType) {
 
-        if (memberService.isEmpty(userInfo.get("loginId").toString(), loginType)) {
-            Member user = memberService.enterMember(userInfo, loginType);
+        if (memberService.isEmpty(userInfo.get(LOGIN_ID).toString(), loginType)) {
+            memberService.enterMember(userInfo, loginType);
         }
 
-        Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get("loginId").toString(), loginType)
+        Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get(LOGIN_ID).toString(), loginType)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
 
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());
         String refreshToken = JwtUtil.generateRefreshToken(member.getId().toString());
-        return LoginResponseDto.of(member, accessToken, refreshToken);
+
+        List<MemberCharacter> memberCharacterList = memberCharacterRepository.findSelectedCharacterByMemberId(member.getId());
+
+        if(memberCharacterList.size() > 1) {
+            for (int i=0; i<memberCharacterList.size(); i++) {
+                if(i == 0)
+                    continue;
+
+                memberCharacterList.get(i).selectOff();
+            }
+        }
+
+        Long characterId = null;
+        GenderType characterGender = null;
+        String characterLink = null;
+        String characterImage = null;
+
+
+        if(memberCharacterList.isEmpty()) {
+            characterId = 1L;
+            characterGender = GenderType.MAN;
+            characterLink = s3Url + "Player/m_1.glb";
+            characterImage = s3Url + "Player/2D/m1Img.png";
+        }
+        else {
+            characterId = memberCharacterList.get(0).getCharacter().getId();
+            characterGender = memberCharacterList.get(0).getCharacter().getGender();
+            characterLink = memberCharacterList.get(0).getCharacter().getLink();
+            characterImage = memberCharacterList.get(0).getCharacter().getImage();
+        }
+
+        List<MemberCharacter> memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+        List<Character> characterList = characterRepository.findAll();
+
+        if(memberCharacterListByMemberId.isEmpty() || memberCharacterListByMemberId.size() != characterList.size()) {
+            memberCharacterService.createMemberCharacter(member);
+            memberCharacterListByMemberId = memberCharacterRepository.findByMemberId(member.getId());
+        }
+
+        List<CharacterLockResponseDto> lockDtoList = new ArrayList<>();
+
+        for (MemberCharacter memberCharacter : memberCharacterListByMemberId) {
+            CharacterLockResponseDto characterLockResponseDto = CharacterLockResponseDto.builder()
+                    .characterId(memberCharacter.getCharacter().getId())
+                    .islocked(memberCharacter.isLocked())
+                    .build();
+
+            lockDtoList.add(characterLockResponseDto);
+        }
+
+        return LoginResponseDto.builder()
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .email(member.getEmail())
+                    .gender(member.getGenderType().toString())
+                    .social(member.getLoginType().toString())
+                    .nickname(member.getNickname())
+                    .profileImg(member.getProfile())
+                    .createdAt(member.getCreatedAt())
+                    .characterId(characterId)
+                    .characterGender(characterGender)
+                    .characterLink(characterLink)
+                    .characterImage(characterImage)
+                    .lockList(lockDtoList)
+                    .build();
     }
 
 

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateOpenAIResDto {
-    String responseMessage;
-    String responseS3URL;
+    private String responseMessage;
+    private String responseS3URL;
 }
