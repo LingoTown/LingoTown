@@ -8,23 +8,25 @@ import {
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import * as THREE from "three";
 import background from "../../../public/background/background.png";
 import { TextUtil } from "../category/util/TextUtil";
 
-export const NPCStage: React.FC<{
+type NPCStageProps = {
   children: React.ReactNode;
   texture: string;
   name: string;
   age: string;
   color: THREE.Color;
-  active: string | null;
-  setActive: (name: string | null) => void;
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
   enabled: boolean;
-  setEnabled: (name: boolean) => void;
-  setHovered: (name: string | null) => void;
-}> = ({
+  setEnabled: Dispatch<SetStateAction<boolean>>;
+  setHovered: Dispatch<SetStateAction<string>>;
+};
+
+export const NPCStage: React.FC<NPCStageProps> = ({
   children, texture, name, age, color, active, setActive, enabled, setEnabled, setHovered, ...props
 }) => {
   const information = [
@@ -82,7 +84,7 @@ export const NPCStage: React.FC<{
         scale={[0.5, 0.5, 0.1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            setActive(active === name ? null : name);
+            setActive(active === name ? "" : name);
             setEnabled(true);
           }
         }}
@@ -93,7 +95,7 @@ export const NPCStage: React.FC<{
         }}
         onPointerLeave={() => {
           if (!enabled && active !== name) {
-            setHovered(null);
+            setHovered("");
           }
         }}
       >
@@ -111,7 +113,7 @@ export const NPCStage: React.FC<{
           <mesh
             onClick={() => {
               if (enabled && active === name) {
-                setActive(null);
+                setActive("");
                 setEnabled(false);
               }
             }}
