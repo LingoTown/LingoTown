@@ -3,7 +3,7 @@ CameraControls,
 Environment,
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import { useLocation } from "react-router-dom";
 import * as THREE from "three";
 import { BackToCategoryComp } from "./BackToCategoryComp";
@@ -13,7 +13,11 @@ import { TextUtil } from "./util/TextUtil";
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { useRecoilState } from "recoil";
 
-export const ThemeComp: React.FC = () => {
+type ThemeCompProps = {
+  setWorking: Dispatch<SetStateAction<boolean>>;
+};
+
+export const ThemeComp: React.FC<ThemeCompProps> = ({ setWorking }) => {
 const text: string[] = useState(["공원", "이벤트 홀", "식당", "아트 갤러리"])[0];
 
 const location = useLocation();
@@ -80,9 +84,11 @@ useEffect(() => {
     const targetPosition = new THREE.Vector3();
     sceneInstance.getObjectByName(active)?.getWorldPosition(targetPosition);
 
-    controlsRef.current?.setLookAt(targetPosition.x-5, targetPosition.y+5, targetPosition.z+20, targetPosition.x-5, targetPosition.y, targetPosition.z, true);
+    controlsRef.current?.setLookAt(targetPosition.x - 5, targetPosition.y + 5, targetPosition.z + 20, targetPosition.x - 5, targetPosition.y, targetPosition.z, true);
+    setWorking(true);
   } else {
     controlsRef.current?.setLookAt(0, 0, 10, 0, 0, 0, true);
+    setWorking(false);
   }
 
   if(loading.loading) setLoading(() => ({loading:false}));
