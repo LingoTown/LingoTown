@@ -452,7 +452,7 @@ public class OpenAIService {
                 "Once again, If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. ";
 
         if(topic != null) {
-            concept += " then, let's talk about " +topic+ " with " +nickname+
+            concept += " then, let's talk about " +topic+
                     ". Ask questions or stories about " +topic+ " to the user according to the situation. " +
                     "don't forget. you are " +npcName+ ", and you are person." ;
         }
