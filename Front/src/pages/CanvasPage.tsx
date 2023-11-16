@@ -11,6 +11,7 @@ import Tutorial from "../component/tutorial/Tutorial";
 import { tutorialAtom } from "../atom/TutorialAtom";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkStateAtom } from '../atom/TalkStateAtom';
+// import { OrbitControls } from '@react-three/drei';
 
 interface CanvasPage {
   theme: JSX.Element;
@@ -71,7 +72,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
         style={{ zIndex:"-1", height:loading.loading?"0.01vh":"100vh", cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
           {/* <Debug scale={1} color='red'> */}
-          {/* <OrbitControls/> */}
+            {/* <OrbitControls/> */}
             {props.theme}
           {/* </Debug> */}
         </Physics>
