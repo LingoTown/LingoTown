@@ -8,9 +8,9 @@ import java.util.List;
 @NoArgsConstructor
 public class OpenAIReqDto {
 
-    private final static String model = "gpt-3.5-turbo";
+    private final String model = "gpt-3.5-turbo";
     private int max_tokens;
-    private final static float temperature = 0.2f;
+    private final float temperature = 0.2f;
     private List<OpenAIMessageDto> messages;
 
     @Builder
