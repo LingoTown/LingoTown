@@ -14,6 +14,19 @@ public class OpenAIMessageDto {
     @Builder
     public OpenAIMessageDto(String role, String content) {
         this.role = role;
-        this.content = content;
+        this.content = trimResponseContent(content);
     }
+
+    //응답이 중간에 끊기는 것을 막는 메서드
+    private String trimResponseContent(String response) {
+        int lastPeriodIndex = response.lastIndexOf('.');
+        int lastQuestionMarkIndex = response.lastIndexOf('?');
+
+        int cutIndex = Math.max(lastPeriodIndex, lastQuestionMarkIndex);
+        if (cutIndex != -1) {
+            return response.substring(0, cutIndex + 1);
+        }
+        return response;
+    }
+
 }

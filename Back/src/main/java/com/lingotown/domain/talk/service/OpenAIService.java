@@ -141,7 +141,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(50)
+                .max_tokens(40)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
@@ -250,7 +250,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(60)
+                .max_tokens(30)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
@@ -298,9 +298,6 @@ public class OpenAIService {
         }
 
         // System 응답 DB 저장
-
-
-
         CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
@@ -412,7 +409,7 @@ public class OpenAIService {
                 .talkFile(null)
                 .build();
 
-        return askGPT(principal, talkReqDto);
+        return askGPTSync(principal, talkReqDto);
     }
 
 
@@ -432,7 +429,7 @@ public class OpenAIService {
 
         String concept =  "\n" +
                 "We are trying to do situational comedy. " +
-                "The user is a beginner who has just started learning " + language + ". " +
+                "user is beginner in " + language + ". " +
                 "user nickname is " +nickname+ ". " +
                 "The user's " + language +" level is Beginner, and " +
                 "All you have to do is respond appropriately to what the user says. " +
@@ -440,7 +437,6 @@ public class OpenAIService {
                 "You need to level your response to about eight years old, so that users can understand it. " +
                 "Please ask the appropriate questions so that the conversation can continue. " +
                 "The most important thing is that you respond to the complete sentence. " +
-                "In order to make a complete sentence, it seems good that you respond within 3 sentences. " +
                 "The sentence should not be interrupted in the sentence should not be interrupted. " +
                 "It is very important. If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. " +
 
@@ -454,8 +450,10 @@ public class OpenAIService {
         if(topic != null) {
             concept += " then, let's talk about " +topic+
                     ". Ask questions or stories about " +topic+ " to the user according to the situation. " +
-                    "don't forget. you are " +npcName+ ", and you are person." ;
+                    "don't forget. you are " +npcName+ ", and you are person. ok. then, let's talk about " +topic;
         }
+
+        System.out.println("return : " + concept);
 
         return concept;
     }
