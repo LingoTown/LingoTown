@@ -27,7 +27,7 @@ public class ExecutionTimeTrackerAspect {
         double durationInSeconds = duration / 1000.0;
 
         // 커스텀 로그 메시지 생성
-        logger.info(String.format("메소드: %s, 실행 시간: %d ms (%d s)", pjp.getSignature(), duration, durationInSeconds));
+        logger.info("Method: " + pjp.getSignature() + " executed in " + duration + " ms (" + durationInSeconds + " s)");
 
         return obj;
     }
