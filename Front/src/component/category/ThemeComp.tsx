@@ -28,12 +28,10 @@ const language = languageParam ? parseInt(languageParam) : 0;
 const [active, setActive] = useState<string>("");
 const [enabled, setEnabled] = useState<boolean>(false);
 
-const [eventhallPreviewHovered, setEventhallPreviewHovered] = useState<string>("");
-const [parkPreviewHovered, setParkPreviewHovered] = useState<string>("");
+const [eventhallPreviewHovered] = useState<string>("");
+const [parkPreviewHovered] = useState<string>("");
 const [restaurantPreviewHovered, setRestaurantPreviewHovered] = useState<string>("");
 const [galleryPreviewHovered, setGalleryPreviewHovered] = useState<string>("");
-setEventhallPreviewHovered;
-setParkPreviewHovered;
 
 const [parkEnterHovered, setParkEnterHovered] = useState<string>("");
 const [eventhallEnterHovered, setEventhallEnterHovered] = useState<string>("");

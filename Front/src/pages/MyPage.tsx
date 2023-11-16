@@ -75,7 +75,7 @@ const MyPage = () => {
   const doDeleteAccount = async() => {
     const flag = await customConfirm("Notice", "회원 탈퇴하시겠습니까?")
     if (flag) {
-      await deleteAccount(({}) => {
+      await deleteAccount(() => {
         setUser(initialUser);
         navigate("/");
       }, (err) => {
@@ -100,7 +100,7 @@ const MyPage = () => {
     
     const json = { nickname : nick }
     
-    await saveNickname(json, ({}) => {
+    await saveNickname(json, () => {
       setUser(prevUser => ({ ...prevUser,  nickname: nick }));
       setNickMode(false);
       showToaster("닉네임이 변경 되었습니다.", "✏️");
@@ -112,7 +112,7 @@ const MyPage = () => {
   const handleProfileImg = (e:any) => {
     const form = new FormData();
     form.append("profile", e.target.files[0]);
-    updateProfile(form, ({}) => {
+    updateProfile(form, () => {
       getInfo(({data}) => {
         const newInfo = data.data as userInfo;
         setUser(prevUser => ({ ...prevUser, profileImg: newInfo.profileImg }))
@@ -137,7 +137,7 @@ const MyPage = () => {
   const doDeleteTalk = async(talkId:number) => {
     const flag = await customConfirm("Notice", "대화를 삭제하시겠습니까?");
     if (flag) {
-      deleteTalk(talkId, ({}) => {
+      deleteTalk(talkId, () => {
         doGetTalkList(npcNum);
         doCallMyList();
       }, (err) => {
