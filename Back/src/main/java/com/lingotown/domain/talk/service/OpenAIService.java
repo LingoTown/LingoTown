@@ -429,7 +429,7 @@ public class OpenAIService {
                 "We are trying to do situational comedy. " +
                 "user is beginner in " + language + ". " +
                 "user nickname is " +nickname+ ". " +
-                "The user's " + language +" level is Beginner, and " +
+                "From now on we will communicate in " + language + ". " +
                 "All you have to do is respond appropriately to what the user says. " +
                 "The level of difficulty in responding should be relaxed so that users can understand it. " +
                 "You need to level your response to about eight years old, so that users can understand it. " +
