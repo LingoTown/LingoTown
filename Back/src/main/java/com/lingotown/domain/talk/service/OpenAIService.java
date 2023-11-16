@@ -60,21 +60,22 @@ public class OpenAIService {
     private final S3Service s3Service;
     private final TTSService ttsService;
 
+    private final String ASSISTANT = "assistant";
 
     @Value("${OPEN_AI.URL}")
-    private String GPTURL;
+    private String gptUrl;
 
     @Value("${OPEN_AI.KEY}")
-    private String APIKEY;
+    private String apiKey;
 
     @Value("${SPEECH_SUPER.URL}")
-    private String SPEECHURL;
+    private String speechUrl;
 
     @Value("${SPEECH_SUPER.APP_KEY}")
-    private String APPKEY;
+    private String appKey;
 
     @Value("${SPEECH_SUPER.SECRET_KEY}")
-    private String SECRETKEY;
+    private String secretKey;
 
 
     @Transactional
@@ -85,7 +86,7 @@ public class OpenAIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(APIKEY);
+        headers.setBearerAuth(apiKey);
 
         //요청을 담을 메세지 리스트
         List<OpenAIMessageDto> messages = new ArrayList<>();
@@ -104,7 +105,7 @@ public class OpenAIService {
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                     .builder()
-                    .role("assistant")
+                    .role(ASSISTANT)
                     .content(concept)
                     .build();
 
@@ -140,12 +141,12 @@ public class OpenAIService {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
-        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(GPTURL, HttpMethod.POST, entity, OpenAIResDto.class);
+        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(gptUrl, HttpMethod.POST, entity, OpenAIResDto.class);
 
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
-                .role("assistant")
+                .role(ASSISTANT)
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 
@@ -153,7 +154,7 @@ public class OpenAIService {
         chatList.add(responseDto);
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
-        MultipartFile GPTResponseFile = ttsService.useTTS(responseDto.getContent(), talkReqDto);
+        MultipartFile gptResponseFile = ttsService.useTTS(responseDto.getContent(), talkReqDto);
 
         TalkDetail savedUserTalkDetail = null;
         if (talkReqDto.getTalkFile() != null) {
@@ -172,7 +173,7 @@ public class OpenAIService {
             savedUserTalkDetail = talkDetailRepository.save(talkDetail);
         }
 
-        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
+        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, gptResponseFile , responseDto.getContent());
 
         if (savedUserTalkDetail != null)
             performAsyncPronunciationCheck(savedUserTalkDetail, talkReqDto);
@@ -185,7 +186,7 @@ public class OpenAIService {
 
 
     private void performAsyncPronunciationCheck(TalkDetail talkDetail, TalkReqDto talkReqDto) throws IOException {
-        webClientUtil.checkPronunciationAsync(SPEECHURL, APPKEY, SECRETKEY, talkReqDto)
+        webClientUtil.checkPronunciationAsync(speechUrl, appKey, secretKey, talkReqDto)
                 .map(pronunciationResDtoAsString -> {
                     try {
                         return new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
@@ -312,7 +313,7 @@ public class OpenAIService {
                     "don't forget. you are " +npcName+ ", and you are person. ok. then, let's talk about " +topic;
         }
 
-        System.out.println("return : " + concept);
+        log.info("return : " + concept);
 
         return concept;
     }
@@ -349,7 +350,7 @@ public class OpenAIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(APIKEY);
+        headers.setBearerAuth(apiKey);
 
         //요청을 담을 메세지 리스트
         List<OpenAIMessageDto> messages = new ArrayList<>();
@@ -370,7 +371,7 @@ public class OpenAIService {
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                     .builder()
-                    .role("assistant")
+                    .role(ASSISTANT)
                     .content(concept)
                     .build();
 
@@ -380,13 +381,14 @@ public class OpenAIService {
             //이전 대화가 있을 경우 내용을 가져와서 추가
         } else {
             for(TalkDetail talkDetail : talkDetailList){
-                String role = "assistant";
-                if(talkDetail.getIsMember()) role="user";
+                String role = talkDetail.getIsMember() ? "user" : ASSISTANT;
+
                 OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                         .builder()
                         .role(role)
                         .content(talkDetail.getContent())
                         .build();
+
                 chatList.add(messageDtoAI);
             }
             messages.addAll(chatList);
@@ -414,17 +416,17 @@ public class OpenAIService {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
-        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(GPTURL, HttpMethod.POST, entity, OpenAIResDto.class);
+        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(gptUrl, HttpMethod.POST, entity, OpenAIResDto.class);
 
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
-                .role("assistant")
+                .role(ASSISTANT)
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 
-        MultipartFile GPTResponseFile = ttsService.useTTS(responseDto.getContent(), talkReqDto);
-        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
+        MultipartFile gptResponseFile = ttsService.useTTS(responseDto.getContent(), talkReqDto);
+        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, gptResponseFile , responseDto.getContent());
 
         TalkDetail savedUserTalkDetail = null;
         if (talkReqDto.getTalkFile() != null) {

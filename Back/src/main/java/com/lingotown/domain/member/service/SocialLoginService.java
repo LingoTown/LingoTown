@@ -158,8 +158,8 @@ public class SocialLoginService {
         JsonElement element = JsonParser.parseString(result.toString());
 
         String email = "이메일 동의시 계정 정보가 표기됩니다.";
-        boolean has_email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
-        if (!has_email) {
+        boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
+        if (!hasEmail) {
             email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
         }
 

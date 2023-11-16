@@ -5,7 +5,7 @@ import com.google.protobuf.ByteString;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
-import com.lingotown.global.aspect.executeTime.TrackExecutionTime;
+import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
@@ -105,15 +105,12 @@ public class TTSService {
             // Get the audio contents from the response
             ByteString audioContents = response.getAudioContent();
 
-            // Convert ByteString to MultipartFile without saving to a file
-            MultipartFile audioFile = new MockMultipartFile(
+            return new MockMultipartFile(
                     "file",
                     "output.mp3",
                     "audio/mpeg",
                     audioContents.toByteArray()
             );
-
-            return audioFile;
         }
     }
 }

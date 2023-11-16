@@ -16,7 +16,7 @@ public class PapagoController {
     private final PapagoService papagoService;
 
     @PostMapping
-    public DataResponse<String> translate(@RequestBody PapagoRequestDto requestDto) throws JsonProcessingException {
+    public DataResponse<String> translate(@RequestBody PapagoRequestDto requestDto) {
         return papagoService.translate(requestDto);
     }
 
