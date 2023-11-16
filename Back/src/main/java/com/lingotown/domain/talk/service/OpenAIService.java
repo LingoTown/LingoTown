@@ -273,7 +273,6 @@ public class OpenAIService {
         cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
 
         MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
-        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
 
         TalkDetail savedUserTalkDetail = null;
         if (talkReqDto.getTalkFile() != null) {
@@ -292,12 +291,11 @@ public class OpenAIService {
             savedUserTalkDetail = talkDetailRepository.save(talkDetail);
         }
 
-        // 비동기적으로 발음 체크 실행
-        if (savedUserTalkDetail != null) {
-            performAsyncPronunciationCheck(savedUserTalkDetail, talkReqDto);
-        }
+        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
 
-        // System 응답 DB 저장
+        if (savedUserTalkDetail != null)
+            performAsyncPronunciationCheck(savedUserTalkDetail, talkReqDto);
+
         CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
 
         return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
