@@ -4,6 +4,7 @@ import com.lingotown.domain.npc.entity.NPC;
 import com.lingotown.global.data.Theme;
 import com.lingotown.global.data.Language;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,4 +34,10 @@ public class World {
     @OneToMany(mappedBy = "world", cascade = CascadeType.REMOVE)
     private List<Quiz> quizList = new ArrayList<>();
 
+    @Builder
+    public World(Long id, String theme, Language language) {
+        this.id = id;
+        this.theme = theme;
+        this.language = language;
+    }
 }

@@ -71,24 +71,20 @@ public class OpenAIService {
 
 
     @Value("${OPEN_AI.URL}")
-    private String ENDPOINT_URL;
+    private String GPTURL;
 
     @Value("${OPEN_AI.KEY}")
-    private String API_KEY;
+    private String APIKEY;
 
     @Value("${SPEECH_SUPER.URL}")
-    private String SPEECH_URL;
+    private String SPEECHURL;
 
     @Value("${SPEECH_SUPER.APP_KEY}")
-    private String SPEECH_APP_KEY;
+    private String APPKEY;
 
     @Value("${SPEECH_SUPER.SECRET_KEY}")
-    private String SPEECH_SECRET_KEY;
+    private String SECRETKEY;
 
-    //발음평가 테스트
-    public String checkPronunciation(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-        return webClientUtil.checkPronunciation(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto);
-    }
 
     @TrackExecutionTime
     @Transactional
@@ -99,7 +95,7 @@ public class OpenAIService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(API_KEY);
+        headers.setBearerAuth(APIKEY);
 
         //요청을 담을 메세지 리스트
         List<OpenAIMessageDto> messages = new ArrayList<>();
@@ -145,7 +141,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(50)
+                .max_tokens(40)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
@@ -154,7 +150,7 @@ public class OpenAIService {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
-        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(ENDPOINT_URL, HttpMethod.POST, entity, OpenAIResDto.class);
+        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(GPTURL, HttpMethod.POST, entity, OpenAIResDto.class);
 
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
@@ -200,9 +196,117 @@ public class OpenAIService {
                 ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
     }
 
+    @Transactional
+    public DataResponse<CreateOpenAIResDto> askGPTSync(Principal principal, TalkReqDto talkReqDto) throws Exception {
+        Gson gson = new Gson();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(APIKEY);
+
+        //요청을 담을 메세지 리스트
+        List<OpenAIMessageDto> messages = new ArrayList<>();
+
+        //이전 대화를 담을 리스트
+        List<OpenAIMessageDto> chatList = new ArrayList<>();
+
+
+        //이전 대화가 없을 경우
+        if (!cacheService.hasCache(talkReqDto.getTalkId())) {
+            String concept = "";
+
+            if (talkReqDto.getTalkFile() != null) concept = createConcept(principal, talkReqDto.getTalkId(), null);
+            else concept = createConcept(principal, talkReqDto.getTalkId(), talkReqDto.getPrompt());
+
+            // AI 역할부여
+            OpenAIMessageDto messageDtoAI = OpenAIMessageDto
+                    .builder()
+                    .role("assistant")
+                    .content(concept)
+                    .build();
+
+            //메세지 리스트에 담기
+            messages.add(messageDtoAI);
+
+            //이전 대화가 있을 경우 내용을 가져와서 추가
+        } else {
+            List<OpenAIMessageDto> previousChatDataList
+                    = cacheService.getAllPreviousChatData(talkReqDto.getTalkId());
+            messages.addAll(previousChatDataList);
+        }
+
+        // user 인풋
+        if (talkReqDto.getTalkFile() != null) {
+            OpenAIMessageDto messageDtoUser = OpenAIMessageDto
+                    .builder()
+                    .role("user")
+                    .content(talkReqDto.getPrompt())
+                    .build();
+            messages.add(messageDtoUser);
+        }
+
+        //요청Dto
+        OpenAIReqDto requestDto = OpenAIReqDto
+                .builder()
+                .max_tokens(40)
+                .messages(messages)
+                .build();
+        String jsonString = gson.toJson(requestDto);
+
+        String body = jsonString;
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+        //HTTP 요청
+        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(GPTURL, HttpMethod.POST, entity, OpenAIResDto.class);
+
+        //현재 요청과 응답 캐싱
+        OpenAIMessageDto responseDto = OpenAIMessageDto
+                .builder()
+                .role("assistant")
+                .content(response.getBody().getChoices()[0].getMessage().getContent())
+                .build();
+
+        chatList.addAll(messages);
+        chatList.add(responseDto);
+        cacheService.cacheTalkData(talkReqDto.getTalkId(), chatList);
+
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
+        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
+
+        TalkDetail savedUserTalkDetail = null;
+        if (talkReqDto.getTalkFile() != null) {
+            Talk talk = getTalkEntity(talkReqDto.getTalkId());
+            String fileUrl = s3Service.uploadFile(talkReqDto.getTalkFile());
+
+            TalkDetail talkDetail = TalkDetail
+                    .builder()
+                    .isMember(true)
+                    .content(talkReqDto.getPrompt())
+                    .talkFile(fileUrl)
+                    .talk(talk)
+                    .grammarAdvise(null)
+                    .build();
+
+            savedUserTalkDetail = talkDetailRepository.save(talkDetail);
+        }
+
+        // 비동기적으로 발음 체크 실행
+        if (savedUserTalkDetail != null) {
+            performAsyncPronunciationCheck(savedUserTalkDetail, talkReqDto);
+        }
+
+        // System 응답 DB 저장
+        CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
+
+        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
+                ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
+    }
+
 
     private void performAsyncPronunciationCheck(TalkDetail talkDetail, TalkReqDto talkReqDto) throws IOException {
-        webClientUtil.checkPronunciationAsync(SPEECH_URL, SPEECH_APP_KEY, SPEECH_SECRET_KEY, talkReqDto)
+        webClientUtil.checkPronunciationAsync(SPEECHURL, APPKEY, SECRETKEY, talkReqDto)
                 .map(pronunciationResDtoAsString -> {
                     try {
                         return new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
@@ -216,10 +320,27 @@ public class OpenAIService {
                         updatePronunciationResults(talkDetail, pronunciationResDto);
                         return null;
                     });
-                }, error -> {
-                    // 오류 로깅
-                    log.error("Error occurred during pronunciation check: {}", error.getMessage(), error);
                 });
+    }
+
+    private void performSyncPronunciationCheck(TalkDetail talkDetail, TalkReqDto talkReqDto) throws IOException {
+        // 동기 메서드 호출
+        String pronunciationResDtoAsString = webClientUtil.checkGrammarSync(SPEECHURL, APPKEY, SECRETKEY, talkReqDto);
+
+        // 응답 처리
+        PronunciationResDto pronunciationResDto;
+        try {
+            pronunciationResDto = new ObjectMapper().readValue(pronunciationResDtoAsString, PronunciationResDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // 결과 업데이트
+        TransactionTemplate template = new TransactionTemplate(transactionManager);
+        template.execute(status -> {
+            updatePronunciationResults(talkDetail, pronunciationResDto);
+            return null;
+        });
     }
 
     // 발음 평가 DB 저장
@@ -232,7 +353,6 @@ public class OpenAIService {
         TalkDetail savedTalkDetail = getTalkDetailEntity(talkDetail.getId());
 
         ResultResDto resultResDto = pronunciationResDto.getResult();
-        System.out.println("result : " +resultResDto.getError());
 
         SentenceScore sentenceScore = SentenceScore.builder()
                 .overallScore(resultResDto.getOverall())
@@ -289,7 +409,7 @@ public class OpenAIService {
                 .talkFile(null)
                 .build();
 
-        return askGPT(principal, talkReqDto);
+        return askGPTSync(principal, talkReqDto);
     }
 
 
@@ -309,7 +429,7 @@ public class OpenAIService {
 
         String concept =  "\n" +
                 "We are trying to do situational comedy. " +
-                "The user is a beginner who has just started learning " + language + ". " +
+                "user is beginner in " + language + ". " +
                 "user nickname is " +nickname+ ". " +
                 "The user's " + language +" level is Beginner, and " +
                 "All you have to do is respond appropriately to what the user says. " +
@@ -317,22 +437,23 @@ public class OpenAIService {
                 "You need to level your response to about eight years old, so that users can understand it. " +
                 "Please ask the appropriate questions so that the conversation can continue. " +
                 "The most important thing is that you respond to the complete sentence. " +
-                "In order to make a complete sentence, it seems good that you respond within 3 sentences. " +
                 "The sentence should not be interrupted in the sentence should not be interrupted. " +
                 "It is very important. If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. " +
-                "And always put '.' at the end of the sentence. " +
 
                 "Now, " + "you are " +npcName +", and " + npcGender +
                 " and " + npcJob + ", and " + "your age is " + npcAge +
                 ". and This is your situation. " +npcSituation+ ". " +
-                "You don't have to put your name in front of the response. " +
+                "You don't have to put your name and user nickname in front of the response. " +
                 "And It is very important thing. If you can't answer in a skit I've created, think you're a person and answer appropriately. " +
                 "Once again, If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. ";
 
         if(topic != null) {
-            concept += " Now let's talk about " +topic+
-                    ". Ask questions or stories about " +topic+ " to the user according to the situation. ";
+            concept += " then, let's talk about " +topic+
+                    ". Ask questions or stories about " +topic+ " to the user according to the situation. " +
+                    "don't forget. you are " +npcName+ ", and you are person. ok. then, let's talk about " +topic;
         }
+
+        System.out.println("return : " + concept);
 
         return concept;
     }

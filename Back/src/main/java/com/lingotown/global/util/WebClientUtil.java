@@ -1,6 +1,5 @@
 package com.lingotown.global.util;
 
-import com.lingotown.domain.talk.dto.request.OpenAIMessageDto;
 import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.OpenAIResDto;
@@ -18,7 +17,6 @@ import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -26,9 +24,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Component
@@ -36,37 +31,6 @@ import java.util.List;
 public class WebClientUtil {
 
     private final WebClientConfig webClientConfig;
-
-    public Mono<OpenAIResDto> checkGrammarAsync(String GPTKey, String GPTUrl, TalkReqDto talkReqDto) {
-
-        // user 인풋
-        OpenAIMessageDto messageDtoUser = OpenAIMessageDto
-                .builder()
-                .role("user")
-                .content(talkReqDto.getPrompt() + "  이 문장에 어떤 문법적 오류가 있는지 확인해줘. 한글로 대답해줘.")
-                .build();
-
-        List<OpenAIMessageDto> messages = new ArrayList<>();
-
-        //요청Dto
-        messages.add(messageDtoUser);
-        OpenAIReqDto requestDto = OpenAIReqDto
-                .builder()
-                .max_tokens(100)
-                .messages(messages)
-                .build();
-
-        return webClientConfig.webClient().post()
-                .uri(GPTUrl)
-                .headers(headers -> {
-                    headers.setBearerAuth(GPTKey); // 여기에 실제 GPT API 키를 설정합니다.
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-                })
-                .body(BodyInserters.fromValue(requestDto)) // 준비된 DTO를 바디에 삽입합니다.
-                .retrieve()
-                .bodyToMono(OpenAIResDto.class);
-    }
-
 
     public Mono<String> checkPronunciationAsync(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws IOException {
 
@@ -98,87 +62,66 @@ public class WebClientUtil {
 
         MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
 
-        Mono<String> response =  webClientConfig.webClient().post()
+       return webClientConfig.webClient().post()
                 .uri(fullUrl)
                 .header("Request-Index", "0")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(multipartBody))
                 .retrieve()
                 .bodyToMono(String.class)
-                .doOnError(e -> {
-                    if (e instanceof WebClientResponseException) {
-                        WebClientResponseException ex = (WebClientResponseException) e;
-                    }
-                })
                 .doFinally(signalType -> {
                     try {
                         Files.deleteIfExists(tempFilePath);
                     } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 });
-
-        return response;
     }
 
+    public String checkGrammarSync(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws IOException {
+        String coreType = "sent.eval";
+        String dict_dialect = "";
+        if (talkReqDto.getLanguage().equals("FR")) {
+            coreType = "sent.eval.fr";
+        } else if (talkReqDto.getLanguage().equals("UK")) {
+            dict_dialect = "en_br";
+        } else {
+            dict_dialect = "en_us";
+        }
 
-    public String checkPronunciation(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-//
-//        String coreType = "sent.eval";
-//        String dict_dialect = "";
-//        if (talkReqDto.getLanguage().equals("FR")) {
-//            coreType = "para.eval.fr";
-//        } else if (talkReqDto.getLanguage().equals("UK")) {
-//            dict_dialect = "en_br";
-//        } else {
-//            dict_dialect = "en_us";
-//        }
-//
-//        String url = baseUrl + "/" + coreType +"?dict_dialect="+dict_dialect;
-//        String userId = getRandomString(5);
-//        String res = null;
-//
-//        CloseableHttpClient httpclient = HttpClients.createDefault();
-//        String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
-//
-//        try {
-//            HttpPost httppost = new HttpPost(url);
-//            httppost.addHeader("Request-Index", "0");
-//
-//            StringBody comment = new StringBody(params, ContentType.APPLICATION_JSON);
-//            ContentBody bin = new InputStreamBody(talkReqDto.getTalkFile().getInputStream(), talkReqDto.getTalkFile().getContentType(), talkReqDto.getTalkFile().getOriginalFilename());
-//
-//            HttpEntity reqEntity = MultipartEntityBuilder.create()
-//                    .addPart("text", comment)
-//                    .addPart("audio", bin)
-//                    .build();
-//
-//            httppost.setEntity(reqEntity);
-//
-//            CloseableHttpResponse response = httpclient.execute(httppost);
-//            try {
-//                HttpEntity resEntity = response.getEntity();
-//                if (resEntity != null) {
-//                    res = EntityUtils.toString(resEntity, "UTF-8");
-//                    System.out.println("Response: " + res); // 응답 출력
-//                }
-//            } finally {
-//                response.close();
-//            }
-//        } catch (ClientProtocolException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                httpclient.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return res;
-        return "1234";
+        String userId = getRandomString(5);
+
+        String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
+
+        Path tempFilePath = Files.createTempFile(null, ".mp3");
+
+        try {
+            talkReqDto.getTalkFile().transferTo(tempFilePath.toFile());
+
+            Flux<DataBuffer> fileContentBuffer = DataBufferUtils.read(tempFilePath, new DefaultDataBufferFactory(), 4096);
+
+            MultipartBodyBuilder builder = new MultipartBodyBuilder();
+            builder.asyncPart("audio", fileContentBuffer, DataBuffer.class);
+            builder.part("text", params, MediaType.APPLICATION_JSON);
+
+            String fullUrl = baseUrl + "/" + coreType;
+            if (!talkReqDto.getLanguage().equals("FR")) fullUrl = fullUrl + "?dict_dialect=" +dict_dialect;
+
+            MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
+
+            return webClientConfig.webClient().post()
+                    .uri(fullUrl)
+                    .header("Request-Index", "0")
+                    .contentType(MediaType.MULTIPART_FORM_DATA)
+                    .body(BodyInserters.fromMultipartData(multipartBody))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } finally {
+            Files.deleteIfExists(tempFilePath);
+        }
     }
+
 
 
     private static String buildParam(String appkey, String secretKey, String userId, String audioType,
@@ -194,7 +137,7 @@ public class WebClientUtil {
         String startSigStr = appkey + timeStartMillis + userId + secretKey;
         String startSig = Hex.encodeHexString(digest.digest(startSigStr.getBytes()));
 
-        String params = "{"
+        return "{"
                 + "\"connect\":{"
                 + "\"cmd\":\"connect\","
                 + "\"param\":{"
@@ -232,7 +175,6 @@ public class WebClientUtil {
                 + "}"
                 + "}"
                 + "}";
-        return params;
     }
 
     private static int getRandom(int count) {

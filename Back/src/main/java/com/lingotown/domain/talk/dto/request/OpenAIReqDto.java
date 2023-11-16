@@ -11,7 +11,6 @@ public class OpenAIReqDto {
     private final String model = "gpt-3.5-turbo";
     private int max_tokens;
     private final float temperature = 0.2f;
-    private final String[] stop = new String[] {".", "?"};
     private List<OpenAIMessageDto> messages;
 
     @Builder
