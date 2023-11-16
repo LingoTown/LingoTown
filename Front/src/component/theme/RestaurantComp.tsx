@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
@@ -19,7 +19,6 @@ import { Luke } from '../../../public/name/restaurant/Luke.tsx'
 import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { userAtom } from '../../atom/UserAtom.ts';
-import { useRecoilValue } from 'recoil';
 import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
 import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 

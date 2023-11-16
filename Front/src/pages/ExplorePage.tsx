@@ -11,10 +11,10 @@ import Tutorial from "../component/tutorial/Tutorial";
 import toast, { Toaster } from 'react-hot-toast';
 
 interface ExplorePage {
-  theme: JSX.Element;
+  theme: React.JSX.Element;
 }
 
-export const ExplorePage: React.FC<ExplorePage> = (props: ExplorePage): JSX.Element => {
+export const ExplorePage: React.FC<ExplorePage> = (props: ExplorePage): React.JSX.Element => {
 
   const loading = useRecoilValue(loadingAtom);
   const talkBalloon = useRecoilValue(talkBalloonAtom);

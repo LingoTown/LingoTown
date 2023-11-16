@@ -11,7 +11,7 @@ import { loadingAtom } from '../../atom/LoadingAtom';
 import '../../index.css'
 
 interface MapUtilProps {
-  isSolved: boolean | false;
+  isSolved: boolean;
   setSolved: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -58,8 +58,6 @@ export const MapUtilComp: React.FC<MapUtilProps> = ({ isSolved, setSolved }) => 
       const result = data.data as QuizType[];
       setTotalQuizAmount([...result].length);
     },() => {
-      // navigate("/departure");
-      // customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 
@@ -72,8 +70,6 @@ export const MapUtilComp: React.FC<MapUtilProps> = ({ isSolved, setSolved }) => 
       
       setSolvedQuizAmount(solvedQuiz.length);
     },() => {
-      // navigate("/departure");
-      // customAlert("Notice", "올바르지 않은 접근입니다.");
     });
   }
 

@@ -10,14 +10,13 @@ import { loadingAtom } from "../atom/LoadingAtom";
 import { useRecoilState, useRecoilValue } from "recoil"
 import { userAtom } from '../atom/UserAtom';
 import { CharacterLockInfo } from '../type/CharacterType';
-import { getCharacterLockInfo } from '../api/Character'
-import { lockOffCharacter } from '../api/Character';
+import { getCharacterLockInfo, lockOffCharacter } from '../api/Character'
 import { intimacyAtom } from '../atom/IntimacyAtom';
 import { useCustomAlert } from '../component/util/ModalUtil';
 
 
-interface playerSelectPage {
-  theme: JSX.Element;
+interface PlayerSelectPage {
+  theme: React.JSX.Element;
 }
 
 /* 알림 */
@@ -31,7 +30,7 @@ export const showToaster = (sentence:string, emoji:string) => {
   });
 }
 
-export const PlayerSelectPage: React.FC<playerSelectPage> = (props: playerSelectPage): JSX.Element => {
+export const PlayerSelectPage: React.FC<PlayerSelectPage> = (props: PlayerSelectPage): React.JSX.Element => {
 
   const [user, setUser] = useRecoilState(userAtom);
   const [intimacy] = useRecoilState(intimacyAtom);

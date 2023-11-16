@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
@@ -144,7 +143,7 @@ export const ParkComp: React.FC = () => {
 
   const reRunSanha = () => {
     
-    if(sanhaTalk && isMove.current == true || !sanhaTalk && isMove.current == true){ //다시 산하가 뛰게하기
+    if(sanhaTalk && isMove.current || !sanhaTalk && isMove.current){ //다시 산하가 뛰게하기
       setSanhaTalk(false);
       if(sanhaRef.current && sanhaRef.current?.rotation.y < -1) {
         sanhaRef.current.rotation.y = 1.5;

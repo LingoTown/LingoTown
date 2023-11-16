@@ -244,7 +244,7 @@ export const handleCollision = (playerRef: any, collidesWallKey: string, bounceB
     const wall = container.find(w => w.wallKey === collidesWallKey);
     
     // wall.rotation이 존재하면 Euler로 변환, 그렇지 않다면 기본 Euler 생성
-    const wallRotation = wall && wall.rotation
+    const wallRotation = wall?.rotation
     ? new THREE.Euler().setFromQuaternion(new THREE.Quaternion().setFromEuler(new THREE.Euler(wall.rotation.x, wall.rotation.y, wall.rotation.z)))
     : new THREE.Euler();
 

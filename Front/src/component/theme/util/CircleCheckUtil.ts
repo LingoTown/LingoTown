@@ -24,10 +24,8 @@ export const CircleCheck = (playerRef: RefType, npcInfoList: NpcInfo[], currentN
           currentNpc.current.targetRotation = npcRef.targetRotation;
         }
       }
-    } else {
-      if (isInsideCircle) {
+    } else if (isInsideCircle) {
         setIsInsideCircle(false);
-      }
     }
   };
 

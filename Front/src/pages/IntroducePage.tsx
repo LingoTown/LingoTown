@@ -6,7 +6,7 @@ import { loadingAtom } from "../atom/LoadingAtom";
 import { IntroduceComp } from "../component/introduce/IntroduceComp";
 import { useState } from 'react';
 
-export const IntroducePage: React.FC = (): JSX.Element => {
+export const IntroducePage: React.FC = (): React.JSX.Element => {
   const [loading, setLoading] = useRecoilState(loadingAtom);
   const [onWorking, setWorking] = useState<boolean>(false);
   const navigate = useNavigate();

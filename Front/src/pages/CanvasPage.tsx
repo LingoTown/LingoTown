@@ -11,14 +11,13 @@ import Tutorial from "../component/tutorial/Tutorial";
 import { tutorialAtom } from "../atom/TutorialAtom";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkStateAtom } from '../atom/TalkStateAtom';
-// import { OrbitControls } from '@react-three/drei';
 
 interface CanvasPage {
-  theme: JSX.Element;
+  theme: React.JSX.Element;
 }
 
 
-export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element => {
+export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): React.JSX.Element => {
   const loading = useRecoilValue(loadingAtom);
   const talkBalloon = useRecoilValue(talkBalloonAtom);
   const tutorialRead = useRecoilValue(tutorialAtom);

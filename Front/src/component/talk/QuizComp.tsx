@@ -1,7 +1,7 @@
 import { QuizType } from "../../type/QuizType";
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { submitQuiz } from "../../api/Quiz";
-import { useCustomPrompt } from "../util/ModalUtil";
+import { useCustomPrompt, useCustomAlert } from "../util/ModalUtil";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -9,7 +9,6 @@ import quizSuccess from "../../hook/QuizSuccess";
 import { userAtom } from "../../atom/UserAtom";
 import { quizAtom } from "../../atom/QuizAtom";
 import { lockOffCharacter } from "../../api/Character";
-import { useCustomAlert } from "../util/ModalUtil";
 
 interface QuizCompProps {
   quizList: QuizType[];
@@ -18,7 +17,7 @@ interface QuizCompProps {
   setIsOpenQuizModal: Dispatch<SetStateAction<boolean>>;
   translateList: boolean[];
   setTranslateList: Dispatch<SetStateAction<boolean[]>>;
-  isSolved: boolean | false;
+  isSolved: boolean;
   setSolved: Dispatch<SetStateAction<boolean>>;
 }
 

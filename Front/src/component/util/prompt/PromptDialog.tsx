@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import PromptContext from './PromptContext';
 import CustomPrompt from './CustomPrompt';
 import { PromptType } from './PromptType';
 
 const PromptDialog = ({ children }: { children: React.ReactNode }) => {
   const [state, setState] = useState<PromptType>();
+
   const prompt = (
     title?: string,
     message?: string,
@@ -27,8 +28,10 @@ const PromptDialog = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const contextValue = useMemo(() => ({ prompt }), []); // prompt 함수는 변경되지 않으므로 의존성 배열이 비어있습니다.
+
   return (
-    <PromptContext.Provider value={{ prompt }}>
+    <PromptContext.Provider value={contextValue}>
       {children}
       {state && (
         <CustomPrompt

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
@@ -21,7 +21,6 @@ import { Jimmy } from '../../../public/name/gallery/Jimmy.tsx'
 import { Jina } from '../../../public/name/gallery/Jina.tsx'
 import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { userAtom } from '../../atom/UserAtom.ts';
-import { useRecoilValue } from 'recoil';
 
 export const GalleryComp: React.FC = () => {
   //wall

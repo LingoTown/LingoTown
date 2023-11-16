@@ -11,13 +11,12 @@ import { getAllQuizList } from "../api/Quiz";
 import { quizTypeForAtom } from "../type/QuizType";
 import { characterAtom } from "../atom/CharacterAtom";
 import { CharacterResponseType } from "../type/CharacterType";
-import { getCharacterList } from "../api/Character";
+import { getCharacterList, lockOffCharacter } from "../api/Character";
 import { intimacyType } from "../type/IntimacyType";
 import { getMemberNpcRelationship } from "../api/NPC";
 import { intimacyAtom } from "../atom/IntimacyAtom";
 import { userType } from "../type/UserType";
 import { userAtom } from "../atom/UserAtom";
-import { lockOffCharacter } from "../api/Character";
 import { useCustomAlert } from "../component/util/ModalUtil";
 import { isMobile } from 'react-device-detect';
 

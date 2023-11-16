@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { tutorialAtom } from '../../atom/TutorialAtom';
 import { useSetRecoilState } from 'recoil';
 import Lottie from 'lottie-react';
@@ -75,6 +74,19 @@ const Tutorial: React.FC = () => {
     if(idx==4) setStep(23);
   }
   
+  function getClassForStep(step: number): string {
+    if ([8, 16, 23].includes(step)) {
+      return "mx-auto max-w-[200px]";
+    } else if ([10, 14, 25].includes(step)) {
+      return "mx-auto max-w-[250px]";
+    } else if (step === 24) {
+      return "mx-auto max-w-[300px]";
+    } else if (step === 9) {
+      return "mx-auto max-w-[350px]";
+    } else {
+      return "mx-auto max-w-[400px]";
+    }
+  }
 
   return (
     <div
@@ -134,8 +146,7 @@ const Tutorial: React.FC = () => {
             step===0?
             <Lottie className="mx-auto max-w-[270px]" animationData={animationData} />
             :
-            <img className={ step==8 || step==16 || step==23? "mx-auto max-w-[200px]" : ( step==10 || step==14 || step==25? "mx-auto max-w-[250px]":(step==24?"mx-auto max-w-[300px]":(step==9 ? "mx-auto max-w-[350px]" : "mx-auto max-w-[400px]")))} src={`${import.meta.env.VITE_S3_URL}`+img[step]} />
-          }
+            <img className={getClassForStep(step)} src={`${import.meta.env.VITE_S3_URL}${img[step]}`}/>          }
         </div>
 
         {/* 오 */}

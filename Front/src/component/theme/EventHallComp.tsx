@@ -1,11 +1,10 @@
 import { EventHall } from "../../../public/map/EventHall";
 import * as THREE from 'three';
-// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc, NPCData } from "./ThemeType";
@@ -21,8 +20,6 @@ import { JadenName } from '../../../public/name/eventhall/Jaden.tsx'
 import { KevinName } from '../../../public/name/eventhall/Kevin.tsx'
 import { loadingAtom } from "../../atom/LoadingAtom.ts";
 import { userAtom } from "../../atom/UserAtom";
-import { useRecoilValue } from 'recoil';
-
 /* 
     EventHall의 특징 : 
     기본 높이: 0, 무대 높이: 0.9
@@ -115,7 +112,6 @@ export const EventHallComp: React.FC = () => {
     const npcId = id;
     const npcName = name;
     const npcModel = useGLTF(path);
-    // const npcPosition = new THREE.Vector3(...position);
     const npcPosition = position;
     const npcRotation = rotation.map(deg => THREE.MathUtils.degToRad(deg));
     const npcScale = scale;
