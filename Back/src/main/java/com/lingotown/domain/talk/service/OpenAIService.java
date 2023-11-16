@@ -250,7 +250,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(50)
+                .max_tokens(60)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
@@ -448,13 +448,16 @@ public class OpenAIService {
                 "Now, " + "you are " +npcName +", and " + npcGender +
                 " and " + npcJob + ", and " + "your age is " + npcAge +
                 ". and This is your situation. " +npcSituation+ ". " +
-                "You don't have to put your name in front of the response. " +
+                "You don't have to put your name or user nickname in front of the response. " +
                 "And It is very important thing. If you can't answer in a skit I've created, think you're a person and answer appropriately. " +
-                "Once again, If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. ";
+                "Once again, If a user asks you something you don't know, think you're a person and respond appropriately. You should never respond with an ai. " +
+                "then, let's talk. ";
 
         if(topic != null) {
-            concept += " Now let's talk about " +topic+
+            concept += " Now " +npcName+ ", let's talk about " +topic+ " with " +nickname+
                     ". Ask questions or stories about " +topic+ " to the user according to the situation. ";
+        } else {
+            concept += " Now " +npcName+ ", let's talk with " +nickname;
         }
 
         return concept;
