@@ -1,19 +1,23 @@
 import {
-CameraControls,
-Environment,
+  CameraControls,
+  Environment,
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import * as THREE from "three";
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
 import { BackToCategoryComp } from "./BackToCategoryComp";
 import { CategoryComp } from "./CategoryComp";
 import { MapEnterComp } from "./MapEnterComp";
 import { TextUtil } from "./util/TextUtil";
-import { loadingAtom } from '../../atom/LoadingAtom.ts';
-import { useRecoilState } from "recoil";
 
-export const ThemeComp: React.FC = () => {
+type ThemeCompProps = {
+  setWorking: Dispatch<SetStateAction<boolean>>;
+};
+
+export const ThemeComp: React.FC<ThemeCompProps> = ({ setWorking }) => {
 const text: string[] = useState(["공원", "이벤트 홀", "식당", "아트 갤러리"])[0];
 
 const location = useLocation();
@@ -21,20 +25,20 @@ const queryParams = new URLSearchParams(location.search);
 const languageParam = queryParams.get('language');
 const language = languageParam ? parseInt(languageParam) : 0;
 
-const [active, setActive] = useState<string | null>(null);
-const [enabled, setEnabled] = useState<boolean | false>(false);
+const [active, setActive] = useState<string>("");
+const [enabled, setEnabled] = useState<boolean>(false);
 
-const [eventhallPreviewHovered, setEventhallPreviewHovered] = useState<string | null>(null);
-const [parkPreviewHovered, setParkPreviewHovered] = useState<string | null>(null);
-const [restaurantPreviewHovered, setRestaurantPreviewHovered] = useState<string | null>(null);
-const [galleryPreviewHovered, setGalleryPreviewHovered] = useState<string | null>(null);
+const [eventhallPreviewHovered, setEventhallPreviewHovered] = useState<string>("");
+const [parkPreviewHovered, setParkPreviewHovered] = useState<string>("");
+const [restaurantPreviewHovered, setRestaurantPreviewHovered] = useState<string>("");
+const [galleryPreviewHovered, setGalleryPreviewHovered] = useState<string>("");
 setEventhallPreviewHovered;
 setParkPreviewHovered;
 
-const [parkEnterHovered, setParkEnterHovered] = useState<string | null>(null);
-const [eventhallEnterHovered, setEventhallEnterHovered] = useState<string | null>(null);
-const [restaurantEnterHovered, setRestaurantEnterHovered] = useState<string | null>(null);
-const [galleryEnterHovered, setGalleryEnterHovered] = useState<string | null>(null);
+const [parkEnterHovered, setParkEnterHovered] = useState<string>("");
+const [eventhallEnterHovered, setEventhallEnterHovered] = useState<string>("");
+const [restaurantEnterHovered, setRestaurantEnterHovered] = useState<string>("");
+const [galleryEnterHovered, setGalleryEnterHovered] = useState<string>("");
 
 const [loading, setLoading] = useRecoilState(loadingAtom);
 
@@ -71,18 +75,20 @@ const [loading, setLoading] = useRecoilState(loadingAtom);
   language
 ]);
 
-const controlsRef = useRef<CameraControls | null>(null);
+const controlsRef = useRef<CameraControls>(null);
 
 const sceneInstance = useThree(state => state.scene);
 
 useEffect(() => {
   if (active) {
     const targetPosition = new THREE.Vector3();
-    sceneInstance.getObjectByName(active!)?.getWorldPosition(targetPosition);
+    sceneInstance.getObjectByName(active)?.getWorldPosition(targetPosition);
 
-    controlsRef.current?.setLookAt(targetPosition.x-5, targetPosition.y+5, targetPosition.z+20, targetPosition.x-5, targetPosition.y, targetPosition.z, true);
+    controlsRef.current?.setLookAt(targetPosition.x - 5, targetPosition.y + 5, targetPosition.z + 20, targetPosition.x - 5, targetPosition.y, targetPosition.z, true);
+    setWorking(true);
   } else {
     controlsRef.current?.setLookAt(0, 0, 10, 0, 0, 0, true);
+    setWorking(false);
   }
 
   if(loading.loading) setLoading(() => ({loading:false}));
@@ -130,7 +136,7 @@ return (
           setHovered={setParkEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? false : true}
+          isDisplayed={language !== 1}
         />
       </CategoryComp>
 
@@ -158,7 +164,7 @@ return (
           setHovered={setEventhallEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? false : true}
+          isDisplayed={language !== 1}
         />
       </CategoryComp>
 
@@ -180,13 +186,13 @@ return (
           y={0}
           z={1}
           name={text[2]}
-          color="white"
+          color="black"
           active={active}
           setActive={setActive}
           setHovered={setRestaurantPreviewHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? false : true}
+          isDisplayed={language !== 1}
         />
       </CategoryComp>
 
@@ -214,7 +220,7 @@ return (
           setHovered={setGalleryPreviewHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? true : false}
+          isDisplayed={language === 1}
         />
       </CategoryComp>
     </>

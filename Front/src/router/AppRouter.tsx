@@ -9,7 +9,6 @@ import { IntroducePage } from "../pages/IntroducePage";
 import { ThemePage } from "../pages/ThemePage";
 import { RestaurantComp } from "../component/theme/RestaurantComp";
 import { PolygoniaComp } from "../component/theme/unused/PolygoniaComp";
-import { IntroduceComp } from "../component/introduce/IntroduceComp";
 import { ParkComp } from "../component/theme/ParkComp";
 import { EventHallComp } from "../component/theme/EventHallComp";
 import { GalleryComp } from "../component/theme/GalleryComp";
@@ -20,6 +19,7 @@ import { ExplorePage } from "../pages/ExplorePage";
 import { ExploreComp } from "../component/explore/ExploreComp";
 import { PlayerSelectPage } from "../pages/PlayerSelectPage"
 import { PlayerSelect } from "../component/playerSelect/PlayerSelectComp"
+import { MobilePage } from "../pages/MobilePage";
 
 export const AppRouter = () => {
   return(
@@ -32,11 +32,12 @@ export const AppRouter = () => {
           <Route path="/kakao/callback" element={ <KakaoCallback/> }/>
           <Route path="/google/callback" element={ <GoogleCallback/> }/>
           <Route path="/explore" element={ <ExplorePage theme={ <ExploreComp/> }/> }/>
+          <Route path="/mobile" element={ <MobilePage /> } />
           {/* 로그인 후 사용할 수 있는 페이지  */}
           <Route element={ <AuthRouter />} >
             <Route path="/restaurant" element={ <CanvasPage theme={ <RestaurantComp/> }/> }/>
             <Route path="/polygonia" element={ <CanvasPage theme={ <PolygoniaComp/> }/> }/>
-            <Route path="/introduce" element={ <IntroducePage theme={ <IntroduceComp/> }/> }/>
+            <Route path="/introduce" element={ <IntroducePage/>  }/>
             <Route path="/park" element={ <CanvasPage theme={ <ParkComp/> }/> }/>
             <Route path="/eventhall" element={ <CanvasPage theme={ <EventHallComp/> }/> }/>
             <Route path="/gallery" element={ <CanvasPage theme={ <GalleryComp/> }/> }/>

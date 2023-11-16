@@ -1,20 +1,22 @@
-import { useState } from 'react';
-import { TextUtil } from "./util/TextUtil";
+import { Dispatch, SetStateAction, useState } from 'react';
 import { Earth } from "../../../public/smallmap/Earth";
+import { TextUtil } from "./util/TextUtil";
 
-export const BackToCategoryComp: React.FC<{
+type BackToCategoryCompProps = {
   x: number;
   y: number;
   z: number;
   name: string;
   color: string;
-  active: string | null;
-  setActive: (name: string | null) => void;
-  setHovered: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
-  isDisplayed: boolean | false;
-}> = ({
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
+  setHovered: Dispatch<SetStateAction<string>>;
+  enabled: boolean;
+  setEnabled: Dispatch<SetStateAction<boolean>>;
+  isDisplayed: boolean;
+}
+
+export const BackToCategoryComp: React.FC<BackToCategoryCompProps> = ({
   x, y, z, name, color, active, setActive, setHovered, enabled, setEnabled, isDisplayed
 }) => {
   const text = useState(["뒤로 가기"])[0];
@@ -22,10 +24,10 @@ export const BackToCategoryComp: React.FC<{
   return (
     <group position={[x, y, z]}>
       <mesh
-        visible={isDisplayed ? true : false}
+        visible={isDisplayed}
         onClick={() => {
           if (enabled && active === name) {
-            setActive(null);
+            setActive("");
             setEnabled(false);
           }
         }}
@@ -36,7 +38,7 @@ export const BackToCategoryComp: React.FC<{
         }}
         onPointerLeave={() => {
           if (enabled && active === name) {
-            setHovered(null);
+            setHovered("");
           }
         }}
       >

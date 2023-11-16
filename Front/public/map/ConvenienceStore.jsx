@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/the-convenience-store-d81380e64c2c4b85b4
 Title: The Convenience Store
 */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function ConvenienceStore(props) {

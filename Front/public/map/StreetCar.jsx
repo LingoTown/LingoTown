@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/little-game-town-6c223e9974944a8988f3908
 Title: Little game town
 */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function StreetCar(props) {

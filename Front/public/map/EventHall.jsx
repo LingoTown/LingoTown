@@ -8,11 +8,10 @@ Title: venue stage for great events
 */
 
 import React, { useRef, useEffect, useState } from "react";
-import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
-import { useLoader, useFrame } from "@react-three/fiber";
-import { MeshStandardMaterial, TextureLoader, VideoTexture } from "three";
+import { useFrame, useThree } from "@react-three/fiber";
+import { VideoTexture } from "three";
 import { userAtom } from "../../src/atom/UserAtom";
 import { lockOffCharacter } from "../../src/api/Character";
 import { useRecoilState } from "recoil";

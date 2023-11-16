@@ -12,6 +12,7 @@ const ScriptDetailComp = () => {
   const [showCorr, setShowCorr] = useState<boolean[]>([]);
   const [savedata, setData] = useState<grammarCheckType[]>([]);
   const audioRefs = useRef<Array<HTMLAudioElement | null>>([]);
+  const [triangleStates, setTriangleStates] = useState<boolean[]>([]);
 
   // global state
   const talkId = useRecoilValue(talkIdAtom);
@@ -35,6 +36,16 @@ const ScriptDetailComp = () => {
   useEffect(() => {
     doGetTalkList();
   }, []);
+
+  useEffect(() => {
+    setTriangleStates(new Array(detailList.length).fill(false));
+  }, [detailList]);
+
+  const toggleTriangle = (index: number) => {
+    const newStates = [...triangleStates];
+    newStates[index] = !newStates[index];
+    setTriangleStates(newStates);
+  };
 
   //showCorr 배열 조정
   const handleCorrMode = async(talkDetailId:number, index:number) => {
@@ -64,7 +75,41 @@ const ScriptDetailComp = () => {
     <div>
       <div className="flex flex-row justify-between">
         <div className="m-5 my-0 text-white font-['passero-one'] font-[30] text-[1.8rem] ">
-          My Talk Script &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <div style={{fontSize: "50px"}}>
+            My Talk Script &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+          <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+          <span style={{ fontFamily: 'Arial', fontSize: "16px"}}>
+            아래 &nbsp;
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px", color: "yellow", fontWeight: "bold"}}>
+            클릭 &nbsp;
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px"}}>
+            버튼과 &nbsp;
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px", color: "red", fontWeight: "bold"}}>
+            마이크 &nbsp;
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px"}}>
+            버튼을 클릭해보세요! 
+          </span>
+          <span style={{ fontFamily: 'Arial', fontSize: "16px"}}>
+            &nbsp;&nbsp;&nbsp; 나의 &nbsp;
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px", color: "yellow", fontWeight: "bold"}}>
+            스피킹 점수 
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px"}}>
+            와 &nbsp;
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px", color: "red", fontWeight: "bold"}}>
+            음성
+          </span>
+          <span style={{fontFamily: 'Arial', fontSize: "16px"}}>
+            을 알 수 있어요!
+          </span>
+          </div>
         </div>
         <div 
           className="hover:text-[1.2rem] align-center font-['passero-one'] font-[30] text-white text-[1.3rem] mr-5" 
@@ -78,11 +123,22 @@ const ScriptDetailComp = () => {
             return(
               <div key={index}>
                 <>
-                {/* 마이크 아이콘 */}
                 <div  className='flex flex-row'>
+                  <div style={{width: "40px", display: "flex", alignItems: "center"}}>
+                    {value.member ? (
+                      <img 
+                        src={(triangleStates[index] || showCorr[index]) ? `${import.meta.env.VITE_S3_URL}Button/back.png` : `${import.meta.env.VITE_S3_URL}Button/click2.png`}
+                        width={"40"}
+                        onClick={() => {toggleTriangle(index), handleCorrMode(value.talkDetailId, index)}}
+                      />
+                    ) : (
+                      <div style={{width: "40px", height: "40px"}}></div> // 투명한 플레이스홀더
+                    )}
+                  </div>
+                  {/* 마이크 아이콘 */}
                   <audio ref={(el) => audioRefs.current[index] = el} src={value.talkFile} preload="none" />
                   <span 
-                    className="hover:text-red-200 m-2 mt-3 material-icons text-red-400 text-[1.2rem] cursor-pointer"
+                    className="hover:text-red-200 m-2 mt-3 material-icons text-red-400 text-[2rem] cursor-pointer"
                     style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
                     onClick={() => {playAudio(index)}}
                   >mic</span>
@@ -90,51 +146,54 @@ const ScriptDetailComp = () => {
                   {
                     value.member?
                     <div className='m-1 mt-2 text-white font-[30] hover:text-blue-200'
-                      style={{ cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
-                      onClick={()=>{ handleCorrMode(value.talkDetailId, index) }}
+                      style={{ fontSize: "25px", cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
+                      onClick={()=>{ toggleTriangle(index), handleCorrMode(value.talkDetailId, index) }}
                     >
-                      <span>Me : </span>{value.content}
+                      <span style={{color: "pink", fontWeight: "bold"}}>Me : </span>{value.content}
                     </div>
                     :
-                    <div className='m-1 mt-2 text-white font-[30]'>
-                      <span>{npcName} : </span>{value.content}
+                    <div className='m-1 mt-2 text-white font-[30]'
+                        style={{fontSize: "25px"}}>
+                      <span style={{color: "yellow", fontWeight: "bold"}}>{npcName} : </span>{value.content}
                     </div>
                   }
                 </div>
                 {/* 문법 검사 내용 */}
                 {
                   showCorr[index]?
-                  <div className='flex flex-col font-[30] ml-5 text-blue-100 p-1 px-3 border-[1px] border-blue-100 rounded-[7px]' >
-                    <div className='w-1/2 flex flex-row justify-between text-blue-200 mb-2'>
-                      <div>총점 : {savedata[index]?.overallScore !== null && savedata[index]?.overallScore !== undefined ? `${savedata[index]?.overallScore}점` : '  0점'}</div>|
-                      <div>유창성 : {savedata[index]?.fluencyScore !== null && savedata[index]?.fluencyScore !== undefined ? `${savedata[index]?.fluencyScore}점` : '  0점'}</div>|
-                      <div>정확도 : {savedata[index]?.integrityScore !== null && savedata[index]?.integrityScore !== undefined ? `${savedata[index]?.integrityScore}점` : '  0점'}</div>|
-                      <div>발음 : {savedata[index]?.pronunciationScore !== null && savedata[index]?.pronunciationScore !== undefined ? `${savedata[index]?.pronunciationScore}점` : '  0점'}</div>|
-                      <div>강세 : {savedata[index]?.rhythmScore !== null && savedata[index]?.rhythmScore !== undefined ? `${savedata[index]?.rhythmScore}점` : '  0점'}</div>
-                    </div>
-                    <div>[단어별 발음 평가] &nbsp; : &nbsp; 빨간 단어는 점수가 낮은 단어입니다!</div>
-                    <div className='flex flex-row mt-1'>
-                      {
-                        savedata[index]?.overallScore !== undefined ? (
-                          <div className='flex flex-row justify-between text-blue-200 mb-2'>
-                            {/* Existing score display code */}
-                          </div>
-                        ) : (
-                          <div>발음 평가에 문제가 발생하였습니다.  더욱 조용한 공간에서 명확하게 말씀해주세요!</div>
-                        )
-                      }
-                      {
-                        savedata[index]?.wordScoreList?.map((item, index) => (
-                          <div key={index}>
-                            {
-                              item.score >= 80?
-                              <div>{item.word}&nbsp;</div>
-                              :
-                              <div className='text-red-300'>{item.word}&nbsp;</div>
-                            }
-                          </div>
-                        ))
-                      }
+                  <div >
+                    <div style={{marginLeft: "100px"}} className='flex flex-col font-[30] ml-5 text-blue-100 p-1 px-3 border-[1px] border-blue-100 rounded-[7px]' >
+                      <div  className=' flex flex-row text-blue-200 mb-2'>
+                        <span>총점 : {savedata[index]?.overallScore !== null && savedata[index]?.overallScore !== undefined ? `${savedata[index]?.overallScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;유창성 : {savedata[index]?.fluencyScore !== null && savedata[index]?.fluencyScore !== undefined ? `${savedata[index]?.fluencyScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;정확도 : {savedata[index]?.integrityScore !== null && savedata[index]?.integrityScore !== undefined ? `${savedata[index]?.integrityScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;발음 : {savedata[index]?.pronunciationScore !== null && savedata[index]?.pronunciationScore !== undefined ? `${savedata[index]?.pronunciationScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;강세 : {savedata[index]?.rhythmScore !== null && savedata[index]?.rhythmScore !== undefined ? `${savedata[index]?.rhythmScore}점` : '  0점'}</span>
+                      </div>
+                      <div>[단어별 발음 평가] &nbsp; : &nbsp;빨간 단어는 점수가 낮은 단어입니다!</div>
+                      <div className='flex flex-row mt-1'>
+                        {
+                          savedata[index]?.overallScore !== undefined ? (
+                            <div className='flex flex-row justify-between text-blue-200 mb-2'>
+                              {/* Existing score display code */}
+                            </div>
+                          ) : (
+                            <div>발음 평가에 문제가 발생하였습니다.  더욱 조용한 공간에서 명확하게 말씀해주세요!</div>
+                          )
+                        }
+                        {
+                          savedata[index]?.wordScoreList?.map((item, index) => (
+                            <div key={index}>
+                              {
+                                item.score >= 80?
+                                <div>{item.word}&nbsp;</div>
+                                :
+                                <div className='text-red-300'>{item.word}&nbsp;</div>
+                              }
+                            </div>
+                          ))
+                        }
+                      </div>
                     </div>
                   </div>
                   :
