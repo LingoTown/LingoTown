@@ -7,15 +7,27 @@ import {
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { Suspense, lazy, useRef, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, lazy, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import * as THREE from "three";
 import background from "../../../public/background/background.png";
+import { userAtom } from "../../atom/UserAtom";
 import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
-import { TextUtil } from './util/TextUtil';
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../../atom/UserAtom";
 import Loading from './util/Loading';
+import { TextUtil } from './util/TextUtil';
+
+type CategoryComp = {
+  children: React.ReactNode;
+  texture: number;
+  name: string;
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
+  setHovered: Dispatch<SetStateAction<string>>;
+  enabled: boolean;
+  setEnabled: Dispatch<SetStateAction<boolean>>;
+  language: number;
+}
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -30,17 +42,7 @@ const Gallery = lazy(() => import('../../../public/smallmap/Gallery').then(modul
   return { default: module.Gallery }
 }));
 
-export const CategoryComp: React.FC<{
-  children: React.ReactNode;
-  texture: number;
-  name: string;
-  active: string | null;
-  setActive: (name: string | null) => void;
-  setHovered: (name: string | null) => void;
-  enabled: boolean;
-  setEnabled: (name: boolean) => void;
-  language: number;
-}> = ({
+export const CategoryComp: React.FC<CategoryComp> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
 
@@ -67,7 +69,7 @@ export const CategoryComp: React.FC<{
 
   const backgroundTexture = textureLoader.load(background);
 
-  const portalMaterial = useRef<PortalMaterialType | null>(null);
+  const portalMaterial = useRef<PortalMaterialType>(null);
 
   useFrame((_state, delta) => {
     if (portalMaterial.current !== null) {
@@ -113,7 +115,7 @@ export const CategoryComp: React.FC<{
         }}
         onPointerLeave={() => {
           if (!enabled && active !== name) {
-            setHovered(null);
+            setHovered("");
           }
         }}
       >
