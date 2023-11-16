@@ -250,7 +250,7 @@ public class OpenAIService {
         //요청Dto
         OpenAIReqDto requestDto = OpenAIReqDto
                 .builder()
-                .max_tokens(30)
+                .max_tokens(35)
                 .messages(messages)
                 .build();
         String jsonString = gson.toJson(requestDto);
