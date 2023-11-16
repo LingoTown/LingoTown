@@ -60,7 +60,7 @@ public class OpenAIService {
     private final S3Service s3Service;
     private final TTSService ttsService;
 
-    private final String ASSISTANT = "assistant";
+    private final static String ASSISTANT = "assistant";
 
     @Value("${OPEN_AI.URL}")
     private String gptUrl;

@@ -1,6 +1,5 @@
 package com.lingotown.global.papago;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lingotown.global.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

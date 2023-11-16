@@ -1,4 +1,4 @@
-package com.lingotown.global.aspect.ExecuteTime;
+package com.lingotown.global.aspect.executeTime;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

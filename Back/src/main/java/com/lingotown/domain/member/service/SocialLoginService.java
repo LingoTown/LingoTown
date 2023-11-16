@@ -42,11 +42,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class SocialLoginService {
+
+    private final static String CONTENT_TYPE = "Content-type";
+    private final static String CONTENT_TYPE_DETAIL = "application/x-www-form-urlencoded;charset=utf-8";
+    private final static String EMAIL = "email";
+    private final static String LOGIN_ID = "loginId";
+    private final static String NICKNAME = "nickname";
 
     private final MemberRepository memberRepository;
     private final MemberCharacterRepository memberCharacterRepository;
@@ -85,14 +92,14 @@ public class SocialLoginService {
 
     public DataResponse<LoginResponseDto> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
         String accessToken = getAccessTokenByKakao(requestDto);
-        HashMap<String, Object> userInfo = getUserInfoByKakao(accessToken);
+        Map<String, Object> userInfo = getUserInfoByKakao(accessToken);
         LoginResponseDto responseDto = getLoginResponseDto(userInfo, LoginType.KAKAO);
         return new DataResponse<>(200, "로그인 성공", responseDto);
     }
 
     public DataResponse<LoginResponseDto> googleLogin(SocialLoginRequestDto requestDto) throws IOException {
         String accessToken = getAccessTokenByGoogle(requestDto);
-        HashMap<String, Object> userInfo = getUserInfoByGoogle(accessToken);
+        Map<String, Object> userInfo = getUserInfoByGoogle(accessToken);
         LoginResponseDto responseDto = getLoginResponseDto(userInfo, LoginType.GOOGLE);
         return new DataResponse<>(200, "로그인 성공", responseDto);
     }
@@ -111,7 +118,7 @@ public class SocialLoginService {
 
     private HttpEntity<MultiValueMap<String, String>> getHttpEntityByKakao(SocialLoginRequestDto requestDto) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(CONTENT_TYPE, CONTENT_TYPE_DETAIL);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
@@ -138,7 +145,7 @@ public class SocialLoginService {
 
     private HttpEntity<MultiValueMap<String, String>> getHttpEntityByGoogle(SocialLoginRequestDto requestDto) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.add(CONTENT_TYPE, CONTENT_TYPE_DETAIL);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
@@ -150,9 +157,9 @@ public class SocialLoginService {
         return new HttpEntity<>(body, headers);
     }
 
-    public HashMap<String, Object> getUserInfoByKakao(String accessToken) throws IOException {
+    public Map<String, Object> getUserInfoByKakao(String accessToken) throws IOException {
 
-        HashMap<String, Object> userInfo = new HashMap<>();
+        Map<String, Object> userInfo = new HashMap<>();
 
         StringBuilder result = getStringBuilder(accessToken, kakaoUserInfoUri);
         JsonElement element = JsonParser.parseString(result.toString());
@@ -160,27 +167,27 @@ public class SocialLoginService {
         String email = "이메일 동의시 계정 정보가 표기됩니다.";
         boolean hasEmail = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email_needs_agreement").getAsBoolean();
         if (!hasEmail) {
-            email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+            email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get(EMAIL).getAsString();
         }
 
-        userInfo.put("loginId", element.getAsJsonObject().get("id").getAsString());
-        userInfo.put("nickname", element.getAsJsonObject().get("properties").getAsJsonObject().get("nickname").getAsString());
+        userInfo.put(LOGIN_ID, element.getAsJsonObject().get("id").getAsString());
+        userInfo.put(NICKNAME, element.getAsJsonObject().get("properties").getAsJsonObject().get(NICKNAME).getAsString());
         userInfo.put("profileImg", element.getAsJsonObject().get("properties").getAsJsonObject().get("profile_image").getAsString());
-        userInfo.put("email", email);
+        userInfo.put(EMAIL, email);
 
         return userInfo;
     }
 
-    public HashMap<String, Object> getUserInfoByGoogle(String accessToken) throws IOException {
-        HashMap<String, Object> userInfo = new HashMap<>();
+    public Map<String, Object> getUserInfoByGoogle(String accessToken) throws IOException {
+        Map<String, Object> userInfo = new HashMap<>();
 
         StringBuilder result = getStringBuilder(accessToken, googleUserInfoUri);
         JsonElement element = JsonParser.parseString(result.toString());
 
-        userInfo.put("loginId", element.getAsJsonObject().get("id").getAsString());
-        userInfo.put("nickname", element.getAsJsonObject().get("name").getAsString());
+        userInfo.put(LOGIN_ID, element.getAsJsonObject().get("id").getAsString());
+        userInfo.put(NICKNAME, element.getAsJsonObject().get("name").getAsString());
         userInfo.put("profileImg", element.getAsJsonObject().get("picture").getAsString());
-        userInfo.put("email", element.getAsJsonObject().get("email").getAsString());
+        userInfo.put(EMAIL, element.getAsJsonObject().get(EMAIL).getAsString());
         return userInfo;
     }
 
@@ -191,7 +198,7 @@ public class SocialLoginService {
         conn.setRequestMethod("GET");
         conn.setDoOutput(true);
         conn.setRequestProperty("Authorization", "Bearer " + accessToken);
-        conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        conn.setRequestProperty(CONTENT_TYPE, CONTENT_TYPE_DETAIL);
 
         BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
@@ -202,13 +209,13 @@ public class SocialLoginService {
         return result;
     }
 
-    private LoginResponseDto getLoginResponseDto(HashMap<String, Object> userInfo, LoginType loginType) {
+    private LoginResponseDto getLoginResponseDto(Map<String, Object> userInfo, LoginType loginType) {
 
-        if (memberService.isEmpty(userInfo.get("loginId").toString(), loginType)) {
+        if (memberService.isEmpty(userInfo.get(LOGIN_ID).toString(), loginType)) {
             memberService.enterMember(userInfo, loginType);
         }
 
-        Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get("loginId").toString(), loginType)
+        Member member = memberRepository.findByLoginIdAndLoginTypeWhereDeleteAtIsNull(userInfo.get(LOGIN_ID).toString(), loginType)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.MEMBER_NOT_FOUND));
 
         String accessToken = JwtUtil.generateAccessToken(member.getId().toString());

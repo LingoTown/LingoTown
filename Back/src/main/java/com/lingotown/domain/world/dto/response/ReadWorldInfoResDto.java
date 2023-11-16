@@ -20,7 +20,7 @@ public class ReadWorldInfoResDto {
         return ReadWorldInfoResDto
                 .builder()
                 .worldId(world.getId())
-                .theme(world.getTheme().toString())
+                .theme(world.getTheme())
                 .language(world.getLanguage().toString())
                 .build();
     }

@@ -1,8 +1,6 @@
 package com.lingotown.global.util;
 
-import com.lingotown.domain.talk.dto.request.OpenAIReqDto;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
-import com.lingotown.domain.talk.dto.response.OpenAIResDto;
 import com.lingotown.global.config.WebClientConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +33,13 @@ public class WebClientUtil {
     public Mono<String> checkPronunciationAsync(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws IOException {
 
         String coreType = "sent.eval";
-        String dict_dialect = "";
+        String dictDialect = "";
         if (talkReqDto.getLanguage().equals("FR")) {
             coreType = "sent.eval.fr";
         } else if (talkReqDto.getLanguage().equals("UK")) {
-            dict_dialect = "en_br";
+            dictDialect = "en_br";
         } else {
-            dict_dialect = "en_us";
+            dictDialect = "en_us";
         }
 
         String userId = getRandomString(5);
@@ -58,7 +56,7 @@ public class WebClientUtil {
         builder.part("text", params, MediaType.APPLICATION_JSON);
 
         String fullUrl = baseUrl + "/" + coreType;
-        if (!talkReqDto.getLanguage().equals("FR")) fullUrl = fullUrl + "?dict_dialect=" +dict_dialect;
+        if (!talkReqDto.getLanguage().equals("FR")) fullUrl = fullUrl + "?dict_dialect=" +dictDialect;
 
         MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
 
@@ -77,52 +75,6 @@ public class WebClientUtil {
                     }
                 });
     }
-
-    public String checkGrammarSync(String baseUrl, String applicationId, String secretKey, TalkReqDto talkReqDto) throws IOException {
-        String coreType = "sent.eval";
-        String dict_dialect = "";
-        if (talkReqDto.getLanguage().equals("FR")) {
-            coreType = "sent.eval.fr";
-        } else if (talkReqDto.getLanguage().equals("UK")) {
-            dict_dialect = "en_br";
-        } else {
-            dict_dialect = "en_us";
-        }
-
-        String userId = getRandomString(5);
-
-        String params = buildParam(applicationId, secretKey, userId, "mp3", "16000", talkReqDto.getPrompt(), coreType);
-
-        Path tempFilePath = Files.createTempFile(null, ".mp3");
-
-        try {
-            talkReqDto.getTalkFile().transferTo(tempFilePath.toFile());
-
-            Flux<DataBuffer> fileContentBuffer = DataBufferUtils.read(tempFilePath, new DefaultDataBufferFactory(), 4096);
-
-            MultipartBodyBuilder builder = new MultipartBodyBuilder();
-            builder.asyncPart("audio", fileContentBuffer, DataBuffer.class);
-            builder.part("text", params, MediaType.APPLICATION_JSON);
-
-            String fullUrl = baseUrl + "/" + coreType;
-            if (!talkReqDto.getLanguage().equals("FR")) fullUrl = fullUrl + "?dict_dialect=" +dict_dialect;
-
-            MultiValueMap<String, HttpEntity<?>> multipartBody = builder.build();
-
-            return webClientConfig.webClient().post()
-                    .uri(fullUrl)
-                    .header("Request-Index", "0")
-                    .contentType(MediaType.MULTIPART_FORM_DATA)
-                    .body(BodyInserters.fromMultipartData(multipartBody))
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
-        } finally {
-            Files.deleteIfExists(tempFilePath);
-        }
-    }
-
-
 
     private static String buildParam(String appkey, String secretKey, String userId, String audioType,
                                      String audioSampleRate, String refText, String coreType) {
@@ -181,10 +133,9 @@ public class WebClientUtil {
         return (int) Math.round(Math.random() * (count));
     }
 
-    private static String charString = "abcdefghijklmnopqrstuvwxyz123456789";
-
     private static String getRandomString(int length) {
         StringBuilder sb = new StringBuilder();
+        String charString = "abcdefghijklmnopqrstuvwxyz123456789";
         int len = charString.length();
         for (int i = 0; i < length; i++) {
             sb.append(charString.charAt(getRandom(len - 1)));

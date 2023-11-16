@@ -57,7 +57,7 @@ public class WorldService {
                         .builder()
                         .npcId(npc.getId())
                         .name(npc.getName())
-                        .npcRole(npc.getNpcRole().toString())
+                        .npcRole(npc.getNpcRole())
                         .genderType(npc.getGenderType().toString())
                         .npcAge(npc.getNpcAge())
                         .voice(npc.getVoice())
