@@ -27,7 +27,7 @@ public class OpenAIMessageDto {
         int lastIndex = Math.max(lastPeriodIndex, lastQuestionMarkIndex);
         int cutIndex = Math.max(lastIndex, lastMarkIndex);
         if (startNameIndex != -1 && cutIndex != -1) {
-            return response.substring(startNameIndex+1, cutIndex + 1);
+            return response.substring(startNameIndex + 2, cutIndex + 1);
         } else if(startNameIndex == -1 && cutIndex != -1) {
             return response.substring(0, cutIndex + 1);
         }
