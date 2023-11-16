@@ -19,14 +19,14 @@ const Tutorial: React.FC = () => {
   const [animationData, setAnimationData] = useState(null);
 
   // 이미지 상태 관리
-  const [imageLeftSrc, setImageLeftSrc] = useState('/left_btn.png');
-  const [imageRightSrc, setImageRightSrc] = useState('/right_btn.png');
+  const [imageLeftSrc, setImageLeftSrc] = useState('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Button/left_btn.png');
+  const [imageRightSrc, setImageRightSrc] = useState('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Button/right_btn.png');
 
   // 마우스 호버 이벤트 핸들러
-  const onMouseOverLeft = () => setImageLeftSrc('/left_btn_hover.png');
-  const onMouseOutLeft = () => setImageLeftSrc('/left_btn.png');
-  const onMouseOverRight = () => setImageRightSrc('/right_btn_hover.png');
-  const onMouseOutRight = () => setImageRightSrc('/right_btn.png');
+  const onMouseOverLeft = () => setImageLeftSrc('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Button/left_btn_hover.png');
+  const onMouseOutLeft = () => setImageLeftSrc('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Button/left_btn.png');
+  const onMouseOverRight = () => setImageRightSrc('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Button/right_btn_hover.png');
+  const onMouseOutRight = () => setImageRightSrc('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/Button/right_btn.png');
 
 
   // 마우스가 버튼 위로 올라왔을 때와 떠났을 때의 이벤트 핸들러
