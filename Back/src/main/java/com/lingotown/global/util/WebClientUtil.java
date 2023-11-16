@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 
 @Slf4j
 @Component
@@ -129,17 +130,18 @@ public class WebClientUtil {
                 + "}";
     }
 
-    private static int getRandom(int count) {
-        return (int) Math.round(Math.random() * (count));
-    }
-
     private static String getRandomString(int length) {
         StringBuilder sb = new StringBuilder();
         String charString = "abcdefghijklmnopqrstuvwxyz123456789";
         int len = charString.length();
         for (int i = 0; i < length; i++) {
-            sb.append(charString.charAt(getRandom(len - 1)));
+            sb.append(charString.charAt(getRandomSecure(len - 1)));
         }
         return sb.toString();
+    }
+
+    private static int getRandomSecure(int count) {
+        SecureRandom random = new SecureRandom();
+        return random.nextInt(count);
     }
 }
