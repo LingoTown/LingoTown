@@ -480,4 +480,120 @@ public class OpenAIService {
         return talkDetailRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_DETAIL_NOT_FOUND));
     }
+
+
+    //데이터베이스 활용
+    @Transactional
+    public DataResponse<CreateOpenAIResDto> askDataBase(Principal principal, TalkReqDto talkReqDto) throws Exception {
+        Gson gson = new Gson();
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(APIKEY);
+
+        //요청을 담을 메세지 리스트
+        List<OpenAIMessageDto> messages = new ArrayList<>();
+
+        //이전 대화를 담을 리스트
+        List<OpenAIMessageDto> chatList = new ArrayList<>();
+
+        List<TalkDetail> talkDetailList = talkRepository.findById(talkReqDto.getTalkId()).get().getTalkDetailList();
+
+
+        //이전 대화가 없을 경우
+        if (talkDetailList.isEmpty()) {
+            String concept = "";
+
+            if (talkReqDto.getTalkFile() != null) concept = createConcept(principal, talkReqDto.getTalkId(), null);
+            else concept = createConcept(principal, talkReqDto.getTalkId(), talkReqDto.getPrompt());
+
+            // AI 역할부여
+            OpenAIMessageDto messageDtoAI = OpenAIMessageDto
+                    .builder()
+                    .role("assistant")
+                    .content(concept)
+                    .build();
+
+            //메세지 리스트에 담기
+            messages.add(messageDtoAI);
+
+            //이전 대화가 있을 경우 내용을 가져와서 추가
+        } else {
+            for(TalkDetail talkDetail : talkDetailList){
+                String role = "assistant";
+                if(talkDetail.getIsMember()) role="user";
+                OpenAIMessageDto messageDtoAI = OpenAIMessageDto
+                        .builder()
+                        .role(role)
+                        .content(talkDetail.getContent())
+                        .build();
+                chatList.add(messageDtoAI);
+            }
+            messages.addAll(chatList);
+        }
+
+        // user 인풋
+        if (talkReqDto.getTalkFile() != null) {
+            OpenAIMessageDto messageDtoUser = OpenAIMessageDto
+                    .builder()
+                    .role("user")
+                    .content(talkReqDto.getPrompt())
+                    .build();
+            messages.add(messageDtoUser);
+        }
+
+        //요청Dto
+        OpenAIReqDto requestDto = OpenAIReqDto
+                .builder()
+                .max_tokens(40)
+                .messages(messages)
+                .build();
+        String jsonString = gson.toJson(requestDto);
+
+        String body = jsonString;
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+
+        //HTTP 요청
+        ResponseEntity<OpenAIResDto> response = restTemplate.exchange(GPTURL, HttpMethod.POST, entity, OpenAIResDto.class);
+
+        //현재 요청과 응답 캐싱
+        OpenAIMessageDto responseDto = OpenAIMessageDto
+                .builder()
+                .role("assistant")
+                .content(response.getBody().getChoices()[0].getMessage().getContent())
+                .build();
+
+        MultipartFile GPTResponseFile = ttsService.UseTTS(responseDto.getContent(), talkReqDto);
+        TalkDetail systemTalkDetail = createSystemTalkDetail(talkReqDto, GPTResponseFile , responseDto.getContent());
+
+        TalkDetail savedUserTalkDetail = null;
+        if (talkReqDto.getTalkFile() != null) {
+            Talk talk = getTalkEntity(talkReqDto.getTalkId());
+            String fileUrl = s3Service.uploadFile(talkReqDto.getTalkFile());
+
+            TalkDetail talkDetail = TalkDetail
+                    .builder()
+                    .isMember(true)
+                    .content(talkReqDto.getPrompt())
+                    .talkFile(fileUrl)
+                    .talk(talk)
+                    .grammarAdvise(null)
+                    .build();
+
+            savedUserTalkDetail = talkDetailRepository.save(talkDetail);
+        }
+
+        // 비동기적으로 발음 체크 실행
+        if (savedUserTalkDetail != null) {
+            performAsyncPronunciationCheck(savedUserTalkDetail, talkReqDto);
+        }
+
+        // System 응답 DB 저장
+        CreateOpenAIResDto openAIResDto = createOpenAIResponseDto(systemTalkDetail);
+
+        return new DataResponse<>(ResponseStatus.CREATED_SUCCESS.getCode(),
+                ResponseStatus.CREATED_SUCCESS.getMessage(), openAIResDto);
+    }
 }
