@@ -1,23 +1,25 @@
 import { RoundedBox } from '@react-three/drei';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loadingAtom } from '../../atom/LoadingAtom';
+import { userAtom } from '../../atom/UserAtom';
 import { useCustomAlert } from '../util/ModalUtil';
 import { TextUtil } from "./util/TextUtil";
-import { userAtom } from '../../atom/UserAtom';
 
-export const MapEnterComp: React.FC<{
+type MapEnterCompProps = {
   x: number;
   y: number;
   z: number;
   path: string;
   name: string;
-  active: string | null;
-  setHovered: (name: string | null) => void;
+  active: string;
+  setHovered: Dispatch<SetStateAction<string>>;
   enabled: boolean;
   language: number;
-}> = ({ x, y, z, path, name, active, setHovered, enabled, language }) => {
+}
+
+export const MapEnterComp: React.FC<MapEnterCompProps> = ({ x, y, z, path, name, active, setHovered, enabled, language }) => {
 
   const navigate = useNavigate();
 
@@ -49,7 +51,7 @@ export const MapEnterComp: React.FC<{
   };
 
   const handlePointerLeave = () => {
-    if (!enabled && active !== name) setHovered(null);
+    if (!enabled && active !== name) setHovered("");
   };
 
   return (

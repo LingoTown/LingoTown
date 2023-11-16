@@ -26,7 +26,7 @@ export const IntroducePage: React.FC = (): JSX.Element => {
               setLoading({loading:true});
               navigate(-1);
           }}
-          >이전 페이지</div>
+          >테마</div>
         </div>:
         null
       }

@@ -6,11 +6,11 @@ import {
   useGLTF
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
-import * as THREE from "three";
-import { NPCStage } from "./NPCStage";
-import { loadingAtom } from "../../atom/LoadingAtom";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useRecoilState } from "recoil";
+import * as THREE from "three";
+import { loadingAtom } from "../../atom/LoadingAtom";
+import { NPCStage } from "./NPCStage";
 
 type IntroduceCompProps = {
   setWorking: Dispatch<SetStateAction<boolean>>;
@@ -59,23 +59,23 @@ export const IntroduceComp: React.FC<IntroduceCompProps> = ({ setWorking }) => {
   const { actions: jimmyActions } = useAnimations(jimmy.animations, jimmy.scene);
   const { actions: barryActions } = useAnimations(barry.animations, barry.scene);
 
-  const [active, setActive] = useState<string | null>(null);
+  const [active, setActive] = useState<string>("");
   const [enabled, setEnabled] = useState<boolean>(false);
-  const [cameraEnabled, setCameraEnabled] = useState<boolean | undefined>(false);
+  const [cameraEnabled, setCameraEnabled] = useState<boolean>(false);
 
-  const [jerryHovered, setJerryHovered] = useState<string | null>(null);
-  const [sanhaHovered, setSanhaHovered] = useState<string | null>(null);
-  const [marcoHovered, setMarcoHovered] = useState<string | null>(null);
-  const [bonnieHovered, setBonnieHovered] = useState<string | null>(null);
-  const [jadenHovered, setJadenHovered] = useState<string | null>(null);
-  const [kevinHovered, setKevinHovered] = useState<string | null>(null);
-  const [daenHovered, setDaenHovered] = useState<string | null>(null);
-  const [oliviaHovered, setOliviaHovered] = useState<string | null>(null);
-  const [lukeHovered, setLukeHovered] = useState<string | null>(null);
-  const [isabelHovered, setIsabelHovered] = useState<string | null>(null);
-  const [jinaHovered, setJinaHovered] = useState<string | null>(null);
-  const [jimmyHovered, setJimmyHovered] = useState<string | null>(null);
-  const [barryHovered, setBarryHovered] = useState<string | null>(null);
+  const [jerryHovered, setJerryHovered] = useState<string>("");
+  const [sanhaHovered, setSanhaHovered] = useState<string>("");
+  const [marcoHovered, setMarcoHovered] = useState<string>("");
+  const [bonnieHovered, setBonnieHovered] = useState<string>("");
+  const [jadenHovered, setJadenHovered] = useState<string>("");
+  const [kevinHovered, setKevinHovered] = useState<string>("");
+  const [daenHovered, setDaenHovered] = useState<string>("");
+  const [oliviaHovered, setOliviaHovered] = useState<string>("");
+  const [lukeHovered, setLukeHovered] = useState<string>("");
+  const [isabelHovered, setIsabelHovered] = useState<string>("");
+  const [jinaHovered, setJinaHovered] = useState<string>("");
+  const [jimmyHovered, setJimmyHovered] = useState<string>("");
+  const [barryHovered, setBarryHovered] = useState<string>("");
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
 
@@ -120,7 +120,7 @@ export const IntroduceComp: React.FC<IntroduceCompProps> = ({ setWorking }) => {
     barryHovered
   ]);
 
-  const controlsRef = useRef<CameraControls | null>(null);
+  const controlsRef = useRef<CameraControls>(null);
 
   const sceneInstance = useThree(state => state.scene);
 
