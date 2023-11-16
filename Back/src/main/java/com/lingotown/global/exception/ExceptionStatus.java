@@ -29,7 +29,13 @@ public enum ExceptionStatus {
     TOKEN_NOT_FOUND_IN_COOKIE(-1002, "토큰이 쿠키에 없습니다."),
     DATA_NOT_FOUND(5000, "데이터가 존재하지 않습니다."),
     TALK_DETAIL_NOT_FOUND(5006, "해당 문장(TALK DETAIL)이 존재하지 않습니다"),
-    TOPIC_NOT_FOUND(5007, "해당 토픽이 존재하지 않습니다");
+    TOPIC_NOT_FOUND(5007, "해당 토픽이 존재하지 않습니다"),
+    QUIZ_NOT_FOUND(5008, "해당 퀴즈가 존재하지 않습니다"),
+
+    CHARACTER_NOT_FOUND(5009, "해당 캐릭터가 존재하지 않습니다."),
+    MEMBER_CHARACTER_NOT_FOUND(5010, "해당 회원-캐릭터 중간 테이블 Row가 존재하지 않습니다."),
+
+    MEMBER_QUIZ_NOT_FOUND(5011, "해당 MemberQuiz 객체가 존재하지 않습니다.");
 
     private final int code;
     private final String message;

@@ -19,7 +19,6 @@ public class ReadNPCInfoResDto {
     private String npcRole;
     private String genderType;
     private int npcAge;
-    private String situation;
     private String voice;
     private List<ReadTopicResDto> topicList;
 

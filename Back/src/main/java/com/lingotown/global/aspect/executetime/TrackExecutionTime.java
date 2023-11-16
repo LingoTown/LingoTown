@@ -1,4 +1,4 @@
-package com.lingotown.global.aspect.ExecuteTime;
+package com.lingotown.global.aspect.executetime;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

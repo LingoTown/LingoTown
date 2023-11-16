@@ -20,12 +20,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CacheService {
 
+    private static final String TALK_ID = "talkId";
+
     private final CacheManager cacheManager;
     private final TalkRepository talkRepository;
 
     // 대화 데이터를 캐싱
     public void cacheTalkData(Long talkId, List<OpenAIMessageDto> chatList) {
-        Cache cache = cacheManager.getCache("talkId");
+        Cache cache = cacheManager.getCache(TALK_ID);
+        assert cache != null;
         cache.put(talkId, chatList);
     }
 
@@ -33,7 +36,8 @@ public class CacheService {
     public List<OpenAIMessageDto> getAllPreviousChatData(Long talkId) {
         List<OpenAIMessageDto> previousChatDataList = new ArrayList<>();
 
-        Cache cache = cacheManager.getCache("talkId");
+        Cache cache = cacheManager.getCache(TALK_ID);
+        assert cache != null;
         List<OpenAIMessageDto> chatList = cache.get(talkId, List.class);
         if (chatList != null) previousChatDataList.addAll(chatList);
 
@@ -42,7 +46,8 @@ public class CacheService {
 
     //캐시 삭제하기
     public void deleteTalkData(Long talkId) {
-        Cache cache = cacheManager.getCache("talkId");
+        Cache cache = cacheManager.getCache(TALK_ID);
+        assert cache != null;
         cache.evict(talkId);
     }
 
@@ -51,13 +56,11 @@ public class CacheService {
     public boolean hasCache(Long talkId) {
         Talk talk = getTalkEntity(talkId);
 
-        if(talk.getTalkDetailList().size()==0) return false;
-        return true;
+        return !talk.getTalkDetailList().isEmpty();
     }
 
     private Talk getTalkEntity(Long talkId){
         return talkRepository.findById(talkId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
     }
-
 }

@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class IncreaseIntimacyReqDto {
-    Long talkId;
+    private Long talkId;
 }
