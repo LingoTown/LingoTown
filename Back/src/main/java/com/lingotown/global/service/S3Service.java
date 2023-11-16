@@ -35,9 +35,8 @@ public class S3Service {
 
     public String getExtension(MultipartFile multipartFile) {
         String fileName = multipartFile.getOriginalFilename();
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+        assert fileName != null;
 
-        if(extension == null) throw new CustomException(ExceptionStatus.DATA_NOT_FOUND);
-        return extension;
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 }

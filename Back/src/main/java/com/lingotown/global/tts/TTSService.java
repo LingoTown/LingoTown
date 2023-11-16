@@ -5,7 +5,7 @@ import com.google.protobuf.ByteString;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.entity.Talk;
 import com.lingotown.domain.talk.repository.TalkRepository;
-import com.lingotown.global.aspect.executeTime.TrackExecutionTime;
+import com.lingotown.global.aspect.executetime.TrackExecutionTime;
 import com.lingotown.global.data.GenderType;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;

@@ -49,11 +49,11 @@ import java.util.Map;
 @Transactional
 public class SocialLoginService {
 
-    private final static String CONTENT_TYPE = "Content-type";
-    private final static String CONTENT_TYPE_DETAIL = "application/x-www-form-urlencoded;charset=utf-8";
-    private final static String EMAIL = "email";
-    private final static String LOGIN_ID = "loginId";
-    private final static String NICKNAME = "nickname";
+    private static final String CONTENT_TYPE = "Content-type";
+    private static final String CONTENT_TYPE_DETAIL = "application/x-www-form-urlencoded;charset=utf-8";
+    private static final String EMAIL = "email";
+    private static final String LOGIN_ID = "loginId";
+    private static final String NICKNAME = "nickname";
 
     private final MemberRepository memberRepository;
     private final MemberCharacterRepository memberCharacterRepository;

@@ -47,6 +47,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OpenAIService {
 
+    private static final String ASSISTANT = "assistant";
+
     private final PlatformTransactionManager transactionManager;
     private final EntityManager entityManager;
     private final WebClientUtil webClientUtil;
@@ -103,7 +105,7 @@ public class OpenAIService {
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                     .builder()
-                    .role("assistant")
+                    .role(ASSISTANT)
                     .content(concept)
                     .build();
 
@@ -144,7 +146,7 @@ public class OpenAIService {
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
-                .role("assistant")
+                .role(ASSISTANT)
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 
@@ -369,7 +371,7 @@ public class OpenAIService {
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                     .builder()
-                    .role("assistant")
+                    .role(ASSISTANT)
                     .content(concept)
                     .build();
 
@@ -379,7 +381,7 @@ public class OpenAIService {
             //이전 대화가 있을 경우 내용을 가져와서 추가
         } else {
             for(TalkDetail talkDetail : talkDetailList){
-                String role = talkDetail.getIsMember() ? "user" : "assistant";
+                String role = talkDetail.getIsMember() ? "user" : ASSISTANT;
 
                 OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                         .builder()
@@ -419,7 +421,7 @@ public class OpenAIService {
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
-                .role("assistant")
+                .role(ASSISTANT)
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 

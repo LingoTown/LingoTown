@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CacheService {
 
-    private final static String TALK_ID = "talkId";
+    private static final String TALK_ID = "talkId";
 
     private final CacheManager cacheManager;
     private final TalkRepository talkRepository;
@@ -56,8 +56,7 @@ public class CacheService {
     public boolean hasCache(Long talkId) {
         Talk talk = getTalkEntity(talkId);
 
-        if(talk.getTalkDetailList().isEmpty()) return false;
-        return true;
+        return !talk.getTalkDetailList().isEmpty();
     }
 
     private Talk getTalkEntity(Long talkId){
