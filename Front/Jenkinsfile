@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "LingoTownNodeJS"
+    }
+
     stages {
         stage("Set Variable") {
             steps {
@@ -17,9 +21,25 @@ pipeline {
         stage("Copy Setting File") {
             steps {
                 sh "cp ${APPLICATION_ENV_PATH}/.env ${PROJECT_DIR_FE}"
-                // sh "cp ${APPLICATION_ENV_PATH}/sonar-project.properties ${PROJECT_DIR_FE}"
+                sh "cp ${APPLICATION_ENV_PATH}/sonar-project.properties ${PROJECT_DIR_FE}"
             }
         }
+
+        // SonarQube 분석
+        stage('SonarQube Analysis') {  
+            steps {
+                script {
+                    def scannerHome = tool 'SonarQubeScanner'
+
+                    withSonarQubeEnv('SonarQube') {
+                        dir("${PROJECT_DIR_FE}") {
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                    }
+                }
+            }
+        }
+
 
         // 컨테이너 클리닝
         stage("Docker Container Cleaning") {
