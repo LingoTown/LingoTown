@@ -36,8 +36,8 @@ export const CategoryComp: React.FC<{
   active: string | null;
   setActive: (name: string | null) => void;
   setHovered: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
+  enabled: boolean;
+  setEnabled: (name: boolean) => void;
   language: number;
 }> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
@@ -61,12 +61,12 @@ export const CategoryComp: React.FC<{
     setLoading(false);
   };
 
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.crossOrigin = 'anonymous';
+
+  const backgroundTexture = textureLoader.load(background);
+
   const Loading: React.FC = () => {
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.crossOrigin = 'anonymous';
-
-    const backgroundTexture = textureLoader.load(background);
-
 
     return (
       <group>

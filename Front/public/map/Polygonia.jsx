@@ -4,7 +4,7 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 export function Polygonia(props) {
   const group = useRef()
   const { nodes, materials, animations } = useGLTF(import.meta.env.VITE_S3_URL + 'Map/Polygonia/scene.gltf')
-  const { actions } = useAnimations(animations, group)
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Sketchfab_Scene">

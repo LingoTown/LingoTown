@@ -11,9 +11,9 @@ export const BackToCategoryComp: React.FC<{
   active: string | null;
   setActive: (name: string | null) => void;
   setHovered: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
-  isDisplayed: boolean | false;
+  enabled: boolean;
+  setEnabled: (name: boolean) => void;
+  isDisplayed: boolean;
 }> = ({
   x, y, z, name, color, active, setActive, setHovered, enabled, setEnabled, isDisplayed
 }) => {
@@ -22,7 +22,7 @@ export const BackToCategoryComp: React.FC<{
   return (
     <group position={[x, y, z]}>
       <mesh
-        visible={isDisplayed ? true : false}
+        visible={isDisplayed}
         onClick={() => {
           if (enabled && active === name) {
             setActive(null);

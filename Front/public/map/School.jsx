@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/high-school-d3eec954bc51453e825e392a59b2
 Title: High School
 */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function School(props) {
