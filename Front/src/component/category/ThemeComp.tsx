@@ -22,7 +22,7 @@ const languageParam = queryParams.get('language');
 const language = languageParam ? parseInt(languageParam) : 0;
 
 const [active, setActive] = useState<string | null>(null);
-const [enabled, setEnabled] = useState<boolean | false>(false);
+const [enabled, setEnabled] = useState<boolean>(false);
 
 const [eventhallPreviewHovered, setEventhallPreviewHovered] = useState<string | null>(null);
 const [parkPreviewHovered, setParkPreviewHovered] = useState<string | null>(null);
@@ -78,7 +78,7 @@ const sceneInstance = useThree(state => state.scene);
 useEffect(() => {
   if (active) {
     const targetPosition = new THREE.Vector3();
-    sceneInstance.getObjectByName(active!)?.getWorldPosition(targetPosition);
+    sceneInstance.getObjectByName(active)?.getWorldPosition(targetPosition);
 
     controlsRef.current?.setLookAt(targetPosition.x-5, targetPosition.y+5, targetPosition.z+20, targetPosition.x-5, targetPosition.y, targetPosition.z, true);
   } else {
@@ -130,7 +130,7 @@ return (
           setHovered={setParkEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? false : true}
+          isDisplayed={language !== 1}
         />
       </CategoryComp>
 
@@ -158,7 +158,7 @@ return (
           setHovered={setEventhallEnterHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? false : true}
+          isDisplayed={language !== 1}
         />
       </CategoryComp>
 
@@ -186,7 +186,7 @@ return (
           setHovered={setRestaurantPreviewHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? false : true}
+          isDisplayed={language !== 1}
         />
       </CategoryComp>
 
@@ -214,7 +214,7 @@ return (
           setHovered={setGalleryPreviewHovered}
           enabled={enabled}
           setEnabled={setEnabled}
-          isDisplayed={language === 1 ? true : false}
+          isDisplayed={language === 1}
         />
       </CategoryComp>
     </>

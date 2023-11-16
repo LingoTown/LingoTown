@@ -56,7 +56,7 @@ export const IntroduceComp: React.FC = () => {
   const { actions: barryActions } = useAnimations(barry.animations, barry.scene);
 
   const [active, setActive] = useState<string | null>(null);
-  const [enabled, setEnabled] = useState<boolean | false>(false);
+  const [enabled, setEnabled] = useState<boolean>(false);
   const [cameraEnabled, setCameraEnabled] = useState<boolean | undefined>(false);
 
   const [jerryHovered, setJerryHovered] = useState<string | null>(null);
@@ -123,7 +123,7 @@ export const IntroduceComp: React.FC = () => {
   useEffect(() => {
     if (active) {
       const targetPosition = new THREE.Vector3();
-      sceneInstance.getObjectByName(active!)?.getWorldPosition(targetPosition);
+      sceneInstance.getObjectByName(active)?.getWorldPosition(targetPosition);
 
       controlsRef.current?.setLookAt(targetPosition.x + 2, targetPosition.y, targetPosition.z + 5, targetPosition.x + 2, targetPosition.y, targetPosition.z, true);
       setCameraEnabled(true);

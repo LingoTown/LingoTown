@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 
 export function Polygonia(props) {
   const group = useRef()
-  const { nodes, materials, animations } = useGLTF(import.meta.env.VITE_S3_URL + 'Map/Polygonia/scene.gltf')
+  const { nodes, materials } = useGLTF(import.meta.env.VITE_S3_URL + 'Map/Polygonia/scene.gltf')
 
   return (
     <group ref={group} {...props} dispose={null}>

@@ -20,8 +20,8 @@ export const NPCStage: React.FC<{
   color: THREE.Color;
   active: string | null;
   setActive: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
+  enabled: boolean;
+  setEnabled: (name: boolean) => void;
   setHovered: (name: string | null) => void;
 }> = ({
   children, texture, name, age, color, active, setActive, enabled, setEnabled, setHovered, ...props
