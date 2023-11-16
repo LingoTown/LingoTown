@@ -11,6 +11,7 @@ import { easing } from "maath";
 import { useRef } from "react";
 import * as THREE from "three";
 import background from "../../../public/background/background.png";
+import { TextUtil } from "../category/util/TextUtil";
 
 export const NPCStage: React.FC<{
   children: React.ReactNode;
@@ -102,6 +103,8 @@ export const NPCStage: React.FC<{
         >
           <ambientLight intensity={0.5} />
           <Environment preset="sunset" />
+
+          <TextUtil x={-0.7} y={2.2} z={1} color="black" size={0.4} name={"뒤로 가기"} />
 
           {children}
 

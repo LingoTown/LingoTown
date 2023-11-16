@@ -6,13 +6,17 @@ import {
   useGLTF
 } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Dispatch, SetStateAction } from "react";
 import * as THREE from "three";
 import { NPCStage } from "./NPCStage";
 import { loadingAtom } from "../../atom/LoadingAtom";
 import { useRecoilState } from "recoil";
 
-export const IntroduceComp: React.FC = () => {
+type IntroduceCompProps = {
+  setWorking: Dispatch<SetStateAction<boolean>>;
+};
+
+export const IntroduceComp: React.FC<IntroduceCompProps> = ({ setWorking }) => {
   const jerry = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_7.glb`);
   const sanha = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/f_18.glb`);
   const marco = useGLTF(`${import.meta.env.VITE_S3_URL}NPC/m_32.glb`);
@@ -127,12 +131,15 @@ export const IntroduceComp: React.FC = () => {
 
       controlsRef.current?.setLookAt(targetPosition.x + 2, targetPosition.y, targetPosition.z + 5, targetPosition.x + 2, targetPosition.y, targetPosition.z, true);
       setCameraEnabled(true);
+      setWorking(true);
     } else {
       controlsRef.current?.setLookAt(0, 0, 10, 0, 0, 0, true);
 
       setTimeout(() => {
         setCameraEnabled(false);
       }, 1000)
+
+      setWorking(false);
     }
     
     if(loading.loading) setLoading({loading:false});

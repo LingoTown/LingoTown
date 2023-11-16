@@ -46,7 +46,11 @@ const MyPage = () => {
   useEffect(()=> {
     doCallMyList();
   }, [])
-  
+
+  useEffect(() => {
+    setNick(user.nickname);
+  }, [user.nickname]);
+
   // list 국가별로 바꾸기 - npcid, talkcount
   const groupByCountry = (arr:myPageNPCType[]) => {
     return arr.reduce((arr:any, obj:any) => {
@@ -186,7 +190,7 @@ const MyPage = () => {
                 {
                   nickEditMode?
                   <div>Name : &nbsp;
-                    <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" value={user.nickname}/>
+                    <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" value={nick}/>
                     &nbsp;&nbsp;
                     <span 
                       onClick={doSaveNickname} 
