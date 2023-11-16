@@ -2,9 +2,7 @@ package com.lingotown.domain.talk.controller;
 
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.dto.response.CreateOpenAIResDto;
-import com.lingotown.domain.talk.service.MemberNPCService;
 import com.lingotown.domain.talk.service.OpenAIService;
-import com.lingotown.domain.talk.service.TalkService;
 import com.lingotown.global.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ModelAttribute;

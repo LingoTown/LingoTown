@@ -1,8 +1,5 @@
 package com.lingotown.global.papago;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lingotown.global.response.DataResponse;
@@ -22,21 +19,21 @@ import java.util.Map;
 public class PapagoService {
 
     @Value("${PAPAGO.CLIENT}")
-    private String CLIENT;
+    private String client;
 
     @Value("${PAPAGO.SECRET}")
-    private String SECRET;
+    private String secret;
 
     @Value("${PAPAGO.URL}")
-    private String API_URL;
+    private String apiUrl;
 
-    public DataResponse<String> translate(PapagoRequestDto requestDto) throws JsonProcessingException {
+    public DataResponse<String> translate(PapagoRequestDto requestDto) {
 
         Map<String, String> requestHeaders = new HashMap<>();
-        requestHeaders.put("X-NCP-APIGW-API-KEY-ID", CLIENT);
-        requestHeaders.put("X-NCP-APIGW-API-KEY", SECRET);
+        requestHeaders.put("X-NCP-APIGW-API-KEY-ID", client);
+        requestHeaders.put("X-NCP-APIGW-API-KEY", secret);
 
-        String responseBody = post(requestHeaders, API_URL, requestDto);
+        String responseBody = post(requestHeaders, apiUrl, requestDto);
         JsonObject jsonObj = JsonParser.parseString(responseBody).getAsJsonObject();
         JsonObject messageObj = jsonObj.getAsJsonObject("message");
         JsonObject resultObj = messageObj.getAsJsonObject("result");

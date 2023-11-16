@@ -4,25 +4,17 @@ import com.google.cloud.texttospeech.v1.*;
 import com.google.protobuf.ByteString;
 import com.lingotown.domain.talk.dto.request.TalkReqDto;
 import com.lingotown.domain.talk.entity.Talk;
-import com.lingotown.domain.talk.repository.MemberNPCRepository;
 import com.lingotown.domain.talk.repository.TalkRepository;
-import com.lingotown.global.aspect.ExecuteTime.TrackExecutionTime;
+import com.lingotown.global.aspect.executeTime.TrackExecutionTime;
 import com.lingotown.global.data.GenderType;
-import com.lingotown.global.data.Language;
 import com.lingotown.global.exception.CustomException;
 import com.lingotown.global.exception.ExceptionStatus;
-import com.lingotown.global.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 @Slf4j
 @Transactional(readOnly = true)
@@ -33,7 +25,7 @@ public class TTSService {
     private final TalkRepository talkRepository;
 
     @TrackExecutionTime
-    public MultipartFile UseTTS(String prompt, TalkReqDto talkReqDto) throws Exception{
+    public MultipartFile useTTS(String prompt, TalkReqDto talkReqDto) throws Exception{
 
         log.info(prompt);
         log.info(talkReqDto.getLanguage());
@@ -43,47 +35,47 @@ public class TTSService {
 
         GenderType npcGender = talk.getMemberNPC().getNpc().getGenderType();
 
-        String STTLanguage;
-        String STTModelName;
-        SsmlVoiceGender STTGender;
+        String sttLanguage;
+        String sttModelName;
+        SsmlVoiceGender sttGender;
 
         // 프랑스
         if(talkReqDto.getLanguage().equals("FR")) {
-            STTLanguage = "fr-FR";
+            sttLanguage = "fr-FR";
 
             if(npcGender == GenderType.WOMAN) {
-                STTGender = SsmlVoiceGender.FEMALE;
-                STTModelName = "fr-FR-Standard-C";
+                sttGender = SsmlVoiceGender.FEMALE;
+                sttModelName = "fr-FR-Standard-C";
             }
             else {
-                STTGender = SsmlVoiceGender.MALE;
-                STTModelName = "fr-FR-Standard-D";
+                sttGender = SsmlVoiceGender.MALE;
+                sttModelName = "fr-FR-Standard-D";
             }
         }
         // 영국
         else if(talkReqDto.getLanguage().equals("UK")) {
-            STTLanguage = "en-GB";
+            sttLanguage = "en-GB";
 
             if(npcGender == GenderType.WOMAN) {
-                STTGender = SsmlVoiceGender.FEMALE;
-                STTModelName = "en-GB-Standard-F";
+                sttGender = SsmlVoiceGender.FEMALE;
+                sttModelName = "en-GB-Standard-F";
             }
             else {
-                STTGender = SsmlVoiceGender.MALE;
-                STTModelName = "en-GB-Wavenet-B";
+                sttGender = SsmlVoiceGender.MALE;
+                sttModelName = "en-GB-Wavenet-B";
             }
         }
         // 미국
         else {
-            STTLanguage = "en-US";
+            sttLanguage = "en-US";
 
             if(npcGender == GenderType.WOMAN) {
-                STTGender = SsmlVoiceGender.FEMALE;
-                STTModelName = "en-US-Standard-F";
+                sttGender = SsmlVoiceGender.FEMALE;
+                sttModelName = "en-US-Standard-F";
             }
             else {
-                STTGender = SsmlVoiceGender.MALE;
-                STTModelName = "en-US-Polyglot-1";
+                sttGender = SsmlVoiceGender.MALE;
+                sttModelName = "en-US-Polyglot-1";
             }
         }
 
@@ -96,9 +88,9 @@ public class TTSService {
             // 모델 : neutral
             VoiceSelectionParams voice =
                     VoiceSelectionParams.newBuilder()
-                            .setLanguageCode(STTLanguage)
-                            .setName(STTModelName)
-                            .setSsmlGender(STTGender)
+                            .setLanguageCode(sttLanguage)
+                            .setName(sttModelName)
+                            .setSsmlGender(sttGender)
                             .build();
 
             // 리턴 받을 오디오 타입

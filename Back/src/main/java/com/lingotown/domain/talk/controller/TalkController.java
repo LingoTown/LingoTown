@@ -30,11 +30,6 @@ public class TalkController {
         return talkService.createTalk(principal, npcId);
     }
 
-//    @PostMapping(value = "", consumes = {"multipart/form-data"})
-//    public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
-//        return openAIService.askGPT(principal, talkReqDto);
-//    }
-
     @PostMapping(value = "", consumes = {"multipart/form-data"})
     public DataResponse<CreateOpenAIResDto> askGPTSync(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
         return openAIService.askGPTSync(principal, talkReqDto);

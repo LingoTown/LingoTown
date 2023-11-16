@@ -56,31 +56,31 @@ public class SocialLoginService {
     private final MemberCharacterService memberCharacterService;
 
     @Value("${social-login.kakao.client}")
-    private String KAKAO_CLIENT;
+    private String kakaoClient;
 
     @Value("${social-login.kakao.secret}")
-    private String KAKAO_SECRET;
+    private String kakaoSecret;
 
     @Value("${social-login.kakao.auth-uri}")
-    private String KAKAO_AUTH_URI;
+    private String kakaoAuthUri;
 
     @Value("${social-login.kakao.user-info-uri}")
-    private String KAKAO_USER_INFO_URI;
+    private String kakaoUserInfoUri;
 
     @Value("${social-login.google.client}")
-    private String GOOGLE_CLIENT;
+    private String googleClient;
 
     @Value("${social-login.google.secret}")
-    private String GOOGLE_SECRET;
+    private String googleSecret;
 
     @Value("${social-login.google.auth-uri}")
-    private String GOOGLE_AUTH_URI;
+    private String googleAuthUri;
 
     @Value("${social-login.google.user-info-uri}")
-    private String GOOGLE_USER_INFO_URI;
+    private String googleUserInfoUri;
 
     @Value("${s3url}")
-    private String S3URL;
+    private String s3Url;
 
 
     public DataResponse<LoginResponseDto> kakaoLogin(SocialLoginRequestDto requestDto) throws IOException {
@@ -100,7 +100,7 @@ public class SocialLoginService {
     public String getAccessTokenByKakao(SocialLoginRequestDto requestDto) throws JsonProcessingException {
         HttpEntity<MultiValueMap<String, String>> tokenRequest = getHttpEntityByKakao(requestDto);
         RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(KAKAO_AUTH_URI, HttpMethod.POST, tokenRequest, String.class);
+        ResponseEntity<String> response = rt.exchange(kakaoAuthUri, HttpMethod.POST, tokenRequest, String.class);
 
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -115,8 +115,8 @@ public class SocialLoginService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", KAKAO_CLIENT);
-        body.add("client_secret", KAKAO_SECRET);
+        body.add("client_id", kakaoClient);
+        body.add("client_secret", kakaoSecret);
         body.add("redirect_uri", requestDto.getRedirect());
         body.add("code", requestDto.getCode());
 
@@ -127,7 +127,7 @@ public class SocialLoginService {
     public String getAccessTokenByGoogle(SocialLoginRequestDto requestDto) throws JsonProcessingException {
         HttpEntity<MultiValueMap<String, String>> tokenRequest = getHttpEntityByGoogle(requestDto);
         RestTemplate rt = new RestTemplate();
-        ResponseEntity<String> response = rt.exchange(GOOGLE_AUTH_URI, HttpMethod.POST, tokenRequest, String.class);
+        ResponseEntity<String> response = rt.exchange(googleAuthUri, HttpMethod.POST, tokenRequest, String.class);
 
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -142,8 +142,8 @@ public class SocialLoginService {
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", GOOGLE_CLIENT);
-        body.add("client_secret", GOOGLE_SECRET);
+        body.add("client_id", googleClient);
+        body.add("client_secret", googleSecret);
         body.add("redirect_uri", requestDto.getRedirect());
         body.add("code", requestDto.getCode());
 
@@ -154,7 +154,7 @@ public class SocialLoginService {
 
         HashMap<String, Object> userInfo = new HashMap<>();
 
-        StringBuilder result = getStringBuilder(accessToken, KAKAO_USER_INFO_URI);
+        StringBuilder result = getStringBuilder(accessToken, kakaoUserInfoUri);
         JsonElement element = JsonParser.parseString(result.toString());
 
         String email = "이메일 동의시 계정 정보가 표기됩니다.";
@@ -174,7 +174,7 @@ public class SocialLoginService {
     public HashMap<String, Object> getUserInfoByGoogle(String accessToken) throws IOException {
         HashMap<String, Object> userInfo = new HashMap<>();
 
-        StringBuilder result = getStringBuilder(accessToken, GOOGLE_USER_INFO_URI);
+        StringBuilder result = getStringBuilder(accessToken, googleUserInfoUri);
         JsonElement element = JsonParser.parseString(result.toString());
 
         userInfo.put("loginId", element.getAsJsonObject().get("id").getAsString());
@@ -234,8 +234,8 @@ public class SocialLoginService {
         if(memberCharacterList.isEmpty()) {
             characterId = 1L;
             characterGender = GenderType.MAN;
-            characterLink = S3URL + "Player/m_1.glb";
-            characterImage = S3URL + "Player/2D/m1Img.png";
+            characterLink = s3Url + "Player/m_1.glb";
+            characterImage = s3Url + "Player/2D/m1Img.png";
         }
         else {
             characterId = memberCharacterList.get(0).getCharacter().getId();
