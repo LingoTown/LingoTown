@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -135,9 +136,8 @@ public class OpenAIService {
                 .max_tokens(40)
                 .messages(messages)
                 .build();
-        String jsonString = gson.toJson(requestDto);
 
-        String body = jsonString;
+        String body = gson.toJson(requestDto);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
@@ -147,7 +147,7 @@ public class OpenAIService {
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
                 .role(ASSISTANT)
-                .content(response.getBody().getChoices()[0].getMessage().getContent())
+                .content(Objects.requireNonNull(response.getBody()).getChoices()[0].getMessage().getContent())
                 .build();
 
         chatList.addAll(messages);
@@ -358,7 +358,10 @@ public class OpenAIService {
         //이전 대화를 담을 리스트
         List<OpenAIMessageDto> chatList = new ArrayList<>();
 
-        List<TalkDetail> talkDetailList = talkRepository.findById(talkReqDto.getTalkId()).get().getTalkDetailList();
+        Talk findTalk = talkRepository.findById(talkReqDto.getTalkId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TALK_NOT_FOUND));
+
+        List<TalkDetail> talkDetailList = findTalk.getTalkDetailList();
 
 
         //이전 대화가 없을 경우
@@ -410,9 +413,8 @@ public class OpenAIService {
                 .max_tokens(40)
                 .messages(messages)
                 .build();
-        String jsonString = gson.toJson(requestDto);
 
-        String body = jsonString;
+        String body = gson.toJson(requestDto);
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         //HTTP 요청
@@ -422,7 +424,7 @@ public class OpenAIService {
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
                 .role(ASSISTANT)
-                .content(response.getBody().getChoices()[0].getMessage().getContent())
+                .content(Objects.requireNonNull(response.getBody()).getChoices()[0].getMessage().getContent())
                 .build();
 
         MultipartFile gptResponseFile = ttsService.useTTS(responseDto.getContent(), talkReqDto);
