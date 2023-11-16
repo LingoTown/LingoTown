@@ -60,8 +60,6 @@ public class OpenAIService {
     private final S3Service s3Service;
     private final TTSService ttsService;
 
-    private final static String ASSISTANT = "assistant";
-
     @Value("${OPEN_AI.URL}")
     private String gptUrl;
 
@@ -105,7 +103,7 @@ public class OpenAIService {
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                     .builder()
-                    .role(ASSISTANT)
+                    .role("assistant")
                     .content(concept)
                     .build();
 
@@ -146,7 +144,7 @@ public class OpenAIService {
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
-                .role(ASSISTANT)
+                .role("assistant")
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 
@@ -371,7 +369,7 @@ public class OpenAIService {
             // AI 역할부여
             OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                     .builder()
-                    .role(ASSISTANT)
+                    .role("assistant")
                     .content(concept)
                     .build();
 
@@ -381,7 +379,7 @@ public class OpenAIService {
             //이전 대화가 있을 경우 내용을 가져와서 추가
         } else {
             for(TalkDetail talkDetail : talkDetailList){
-                String role = talkDetail.getIsMember() ? "user" : ASSISTANT;
+                String role = talkDetail.getIsMember() ? "user" : "assistant";
 
                 OpenAIMessageDto messageDtoAI = OpenAIMessageDto
                         .builder()
@@ -421,7 +419,7 @@ public class OpenAIService {
         //현재 요청과 응답 캐싱
         OpenAIMessageDto responseDto = OpenAIMessageDto
                 .builder()
-                .role(ASSISTANT)
+                .role("assistant")
                 .content(response.getBody().getChoices()[0].getMessage().getContent())
                 .build();
 
