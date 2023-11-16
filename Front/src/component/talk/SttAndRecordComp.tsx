@@ -2,11 +2,13 @@ import 'regenerator-runtime';
 import { useEffect, useState, useRef } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { talking } from '../../api/Talk';
-import { talkingType } from '../../type/TalkType';
+import { talkDetailType, talkingType } from '../../type/TalkType';
 import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
 import { userAtom } from '../../atom/UserAtom';
 import { talkStateAtom } from '../../atom/TalkStateAtom';
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState, useSetRecoilState } from "recoil";
+import { talkHistoryAtom } from '../../atom/TalkHistoryAtom';
+import { getTalkList } from '../../api/Script';
 
 declare global {
   interface Window {
@@ -17,31 +19,79 @@ declare global {
 
 type STTAndRecordProps = {
   lang: string;
-  talkId: number;
 };
 
-export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
+export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang }) => {
 
-  const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
+  const setTalkHistoryList = useSetRecoilState(talkHistoryAtom)
+  const { transcript, resetTranscript, browserSupportsSpeechRecognition, listening } = useSpeechRecognition();
   const [stream, setStream] = useState<MediaStream | null>();
   const [media, setMedia] = useState<MediaRecorder | null>();
   const [source, setSource] = useState<MediaStreamAudioSourceNode | null>();
   const [analyser, setAnalyser] = useState<ScriptProcessorNode | null>();
-  const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
+  const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
   const talkState = useRecoilValue(talkStateAtom);
   const user = useRecoilValue(userAtom);
-  const isMounted = useRef({ offRec: false, onRec: false, reset: false });
+  const isMounted = useRef({ offRec: false, onRec: false, reset: false, finish: false, selectTopic: false });
   const flag = useRef<boolean>(true);
 
+  // 스크립트 변경
   useEffect(() => {
     if (flag.current) {
       setTalkBalloon(prev => ({ ...prev, sentence: transcript }));
     }
   }, [transcript]);
 
-  if (!browserSupportsSpeechRecognition) {
-    return <span>Browser doesn't support speech recognition.</span>;
-  }
+  // 녹음 시작
+  useEffect(() => {
+    if (isMounted.current.onRec) {
+      resetTranscript();
+      onRecAudio();
+      flag.current = true;
+    } else {
+      isMounted.current.onRec = true;
+    }
+  }, [talkState.onRec]);
+
+  // 서버로 음성 전송
+  useEffect(() => {
+    if (isMounted.current.offRec) {
+      offRecAudio();
+    } else {
+      isMounted.current.offRec = true;
+    }
+  }, [talkState.offRec]);
+
+  // 리셋
+  useEffect(() => {
+    if (isMounted.current.reset) {
+      stopMicrophoneAccess();
+      onRecAudio();
+    } else {
+      isMounted.current.reset = true;
+    }
+  }, [talkState.reset]);
+
+  // 연결 종료
+  useEffect(() => {
+    if (isMounted.current.finish) {
+      stopMicrophoneAccess();
+    } else {
+      isMounted.current.finish = true;
+    }
+  }, [talkState.finish]);
+
+  // 토픽 고르기
+  useEffect(() => {
+    if (isMounted.current.selectTopic) {
+      flag.current = false;
+    } else {
+      isMounted.current.selectTopic = true;
+    }
+  }, [talkState.selectTopic])
+
+  if (!browserSupportsSpeechRecognition)
+    return <></>;
 
   const onRecAudio = async () => {
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -69,8 +119,7 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
           mediaRecorder.stop();
           analyser.disconnect();
           audioCtx.createMediaStreamSource(stream).disconnect();
-          mediaRecorder.ondataavailable = function () {
-          };
+          mediaRecorder.ondataavailable = function () {};
         }
       };
     });
@@ -82,39 +131,64 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
     if (media && stream) {
       media.ondataavailable = function (e) {
         const sound = new File([e.data], "soundBlob", { lastModified: new Date().getTime(), type: "audio" });
+
         const data = new FormData();
         data.append("talkFile", sound);
-        data.append("talkId", String(talkId));
+        data.append("talkId", String(talkState.talkId));
         data.append("prompt", transcript);
+        data.append("language", String(localStorage.getItem("Language")));
+
         doTalking(data);
       };
-
-      stream.getAudioTracks().forEach(function (track) { track.stop() });
-      media.stop();
-      if (analyser && source) {
-        analyser.disconnect();
-        source.disconnect();
-      }
-
       resetTranscript();
-      SpeechRecognition.stopListening();
       stopMicrophoneAccess();
     }
   };
 
   const doTalking = async(param: FormData) => {
-    setTalkBalloon(prev => ({ ...prev, sentence: "Loading..." }));
+    setTalkBalloon(prev => ({ ...prev, isLoading:true }));
     flag.current = false;
     await talking(param, ({data}) => {
       const result = data.data as talkingType;
       setTalkBalloon(prev => ({
         ...prev,
         sentence: result.responseMessage,
-        audio: result.responseS3URL
+        prevSectence: result.responseMessage,
+        audio: result.responseS3URL,
+        isLoading: false,
+        isUser: false,
       }));
-      flag.current = true;
+      doGetTalkList(talkState.talkId);
     }, (error) => {
       console.log(error);
+
+      const gender = talkState.gender;
+      const nation = String(localStorage.getItem("Language"));
+      const file = nation + "_" + gender;
+      const errAudioLink = import.meta.env.VITE_S3_URL + "ErrorRecord/" + file + ".mp3"
+      let errSentence = "Sorry I'm busy... Maybe talk to you next time?";
+      if (nation == "FR") {
+        errSentence = "Désolé, je suis occupé. On se parle la prochaine fois?"
+      }
+
+      setTalkBalloon(prev => ({
+        ...prev,
+        sentence: errSentence,
+        prevSectence: errSentence,
+        audio: errAudioLink,
+        isLoading: false,
+        isUser: false,
+      }));
+    })
+    setTalkBalloon(prev => ({...prev, audioPlay: !talkBalloon.audioPlay }))
+  }
+
+  const doGetTalkList = async(talkId: number) => {
+    await getTalkList(talkId,({data}) => {
+      const result = data.data as talkDetailType[];
+      setTalkHistoryList([...result]);
+    }, (err) => {
+      console.log(err);
     })
   }
 
@@ -123,44 +197,26 @@ export const STTAndRecord: React.FC<STTAndRecordProps> = ({ lang, talkId }) => {
       stream.getAudioTracks().forEach(track => track.stop());
       setStream(null);
     }
-  
+
     if (media) {
       media.stop();
       setMedia(null);
     }
-    
-    if (analyser && source) {
+
+    if (analyser) {
       analyser.disconnect();
-      source.disconnect();
       setAnalyser(null);
+    }
+
+    if (source) {
+      source.disconnect();
       setSource(null);
     }
-  
-    SpeechRecognition.stopListening();
+
+    resetTranscript();
+    if (listening) {
+      SpeechRecognition.startListening({ language: lang });
+      SpeechRecognition.stopListening();
+    }
   };
-    
-  useEffect(() => {
-    if (isMounted.current.onRec) {
-      onRecAudio();
-    } else {
-      isMounted.current.onRec = true;
-    }
-  }, [talkState.onRec]);
-
-  useEffect(() => {
-    if (isMounted.current.offRec) {
-      offRecAudio();
-    } else {
-      isMounted.current.offRec = true;
-    }
-  }, [talkState.offRec]);
-
-  useEffect(() => {
-    if (isMounted.current.reset) {
-      stopMicrophoneAccess();
-    } else {
-      isMounted.current.reset = true;
-    }
-  }, [talkState.reset]);
-
 };

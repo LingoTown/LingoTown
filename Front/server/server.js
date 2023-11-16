@@ -4,7 +4,8 @@ const path = require('path');
 const app = express();
 
 app.use(express.json());
-var cors = require('cors');
+
+let cors = require('cors');
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -20,4 +21,3 @@ app.get('*', function (req, res) {
 });
   
 server.listen(3000)
-console.log("3000 port")

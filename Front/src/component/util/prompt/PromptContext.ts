@@ -5,7 +5,7 @@ type Type = {
 };
 
 const PromptContext = createContext<Type>({
-  prompt: () => new Promise((_, reject) => reject()),
+  prompt: () => new Promise((_, reject) => reject(new Error('Prompt Context function not implemented'))),
 });
 
 export default PromptContext;

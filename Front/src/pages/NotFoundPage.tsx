@@ -7,8 +7,12 @@ const AppNotFound = () => {
 
   return (
     <>
-      <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: 'url(https://fitsta-bucket.s3.ap-northeast-2.amazonaws.com/bgggg.PNG)' }}>
+      <div 
+        className="absolute inset-0 bg-black opacity-50"
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}  
+      >
+      </div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center" style={{ backgroundImage: `url('${import.meta.env.VITE_S3_URL}BackGround/WorldBackground.png')`, cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }}>
         <div className="flex items-center justify-center bg-gray-200 z-10 rounded">
           <div className="max-w-md shadow-lg rounded-lg p-10 ">
             <div className="text-center">
@@ -17,7 +21,8 @@ const AppNotFound = () => {
               <p className="text-gray-500 mb-6 font-semibold">죄송합니다. 요청하신 페이지를 찾을 수 없습니다.</p>
               <a 
                 onClick={() => { navigate("/") }}
-                className="text-center block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-10 py-2 rounded-full shadow-md cursor-pointer transition transform hover:scale-105"
+                style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}
+                className="text-center block w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold px-10 py-2 rounded-full shadow-md transition transform hover:scale-105"
               >
                 로그인페이지로 돌아가기
               </a>

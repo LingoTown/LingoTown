@@ -1,25 +1,51 @@
 import * as THREE from 'three';
-// import { useControls } from 'leva';
 import { useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, useAnimations, Circle } from "@react-three/drei";
-import { talkBalloonAtom } from "../../atom/TalkBalloonAtom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
 import { startTalk } from "../../api/Talk";
 import { startTalkType } from "../../type/TalkType";
 import { KeyPressed, AnimationAction, NpcInfo, CurrentNpc } from "./ThemeType";
 import { STTAndRecord } from '../talk/SttAndRecordComp';
-import { Restaurant } from "../../../public/map/restaurant/Restaurant";
-import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
-import { SetAction } from "./util/PlayerMoveUtil";
+import { Restaurant } from "../../../public/map/Restaurant";
 import { CircleCheck } from "./util/CircleCheckUtil";
 import { useCustomConfirm } from "../util/ModalUtil";
-import { PlayerMove } from './util/MSPlayerUtil';
+import { talkStateAtom, initialTalkState } from '../../atom/TalkStateAtom';
+import { talkBalloonAtom, initialTalkBalloon } from "../../atom/TalkBalloonAtom";
+import { Wall } from '../util/block/Wall';
+import { useCylinder } from '@react-three/cannon'
+import { Isabel } from '../../../public/name/restaurant/Isabel.tsx'
+import { Luke } from '../../../public/name/restaurant/Luke.tsx'
+import { Olivia } from '../../../public/name/restaurant/Olivia.tsx'
+import { loadingAtom } from '../../atom/LoadingAtom.ts';
+import { userAtom } from '../../atom/UserAtom.ts';
+import { HandleKeyDown, HandleKeyUp } from "./util/KeyboardUtil";
+import { PlayerMove, SetAction } from './util/PlayerMoveUtil';
 
 export const RestaurantComp: React.FC = () => {
+  
+  //wall
+  const container = [
+    { size: [15, 2, 38], position: [-5, -1.1, -5], wallKey: 'BF1', name: 'floor', mass:0},
+    { size: [15, 10, 3], position: [-5, 5, -20], wallKey: 'BW1', name: 'wall', mass:0},
+    { size: [3, 10, 35], position: [4, 5, -3], wallKey: 'RW1',  name: 'wall', mass:0},
+    { size: [15, 10, 3], position: [-4, 5, 15], wallKey: 'FW1', name: 'wall', mass:0},
+    { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0},
+    // 추가벽
+    { size: [3, 7, 15], position: [-0.4, 2, 6], wallKey: 'RW1',  name: 'wall', mass:0},
+    { size: [3, 7, 20], position: [1, 2, -10], wallKey: 'RW1',  name: 'wall', mass:0},
+  ];
+
   // player
-  const playerFile = useGLTF("./player/m_1.glb");
-  const playerRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const user = useRecoilValue(userAtom);
+  const playerFile = useGLTF(user.characterLink);
+  const [playerPosition, setPlayerPosition] = useState([-5.5, 0, 12]);
+  const [playerRotation, setPlayerRotation]= useState([0,3,0]);
+  const [playerRef, playerApi] = useCylinder(() => ({ 
+    position: [playerPosition[0], playerPosition[1], playerPosition[2]], 
+    rotation:[playerRotation[0], playerRotation[1], playerRotation[2]], 
+    args:[0.5,0,0.1], friction: 1, restitution: 0, allowSleep:true, mass: 0, 
+  }));
 
   // camera action
   const cameraOffset = useRef<THREE.Vector3>(new THREE.Vector3(0, 3, -4));
@@ -30,55 +56,84 @@ export const RestaurantComp: React.FC = () => {
   const lerpFactor = 0.04;
 
   // NPC
-  const fox = useGLTF("./npc/fox.glb");
-  const foxPosition = new THREE.Vector3(-3.44, 1.8, 2.33);
-  const foxRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
-  const foxCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  
-  const rabbit = useGLTF("./npc/rabbit.glb");
-  const rabbitPosition = new THREE.Vector3(-6.4, 1.8, 8.51);
-  const rabbitRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
-  const rabbitCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
-  
-  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, name: null, targetPosition:null, targetRotation:null });
+  const oliviaFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_17.glb");
+  const oliviaPosition = new THREE.Vector3(-7.5, 0.1, 2);
+  const oliviaCameraPosition = new THREE.Vector3(-5, 1, 2.0);
+  const oliviaCameraRotation = new THREE.Vector3(0, THREE.MathUtils.degToRad(90), 0);
+  const oliviaCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const oliviaAction = useRef<AnimationAction>();
+  const oliviaActions = useAnimations(oliviaFile.animations, oliviaFile.scene).actions;
+
+  const lukeFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/m_2.glb");
+  const lukePosition = new THREE.Vector3(-3, 0.1, -8);
+  const lukeCameraPosition = new THREE.Vector3(-3, 2, -5);
+  const lukeCameraRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const lukeCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const lukeAction = useRef<AnimationAction>();
+  const lukeActions = useAnimations(lukeFile.animations, lukeFile.scene).actions;
+
+  const isabelFile = useGLTF(import.meta.env.VITE_S3_URL + "NPC/f_13.glb");
+  const isabelPosition = new THREE.Vector3(-5, 0.1, 9);
+  const isabelCameraPosition = new THREE.Vector3(-5, 2, 12);
+  const isabelCameraRotation = new THREE.Vector3(THREE.MathUtils.degToRad(-30.34), 0, 0);
+  const isabelCircleRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null>(null);
+  const isabelAction = useRef<AnimationAction>();
+  const isabelActions = useAnimations(isabelFile.animations, isabelFile.scene).actions;
+
+  const currentNpc = useRef<CurrentNpc>({ id: 0, img: null, gender: "", name: "", targetPosition:null, targetRotation:null });
   const npcInfoList: NpcInfo[] = [
-    { id: 1, name: "Rabbit", targetPosition: rabbitPosition, targetRotation:rabbitRotation, ref: rabbitCircleRef },
-    { id: 2, name: "Fox", targetPosition: foxPosition, targetRotation:foxRotation, ref: foxCircleRef },
+    { id: 4, gender:"Man", name: "Luke", targetPosition: lukeCameraPosition, targetRotation:lukeCameraRotation, ref: lukeCircleRef },
+    { id: 33, gender:"Woman", name: "Olivia", targetPosition: oliviaCameraPosition, targetRotation:oliviaCameraRotation, ref: oliviaCircleRef },
+    { id: 26, gender:"Woman", name: "Isabel", targetPosition: isabelCameraPosition, targetRotation:isabelCameraRotation, ref: isabelCircleRef}
   ];
 
   // state
   const [isInsideCircle, setIsInsideCircle] = useState<boolean>(false);
-  const [talkId, setTalkId] = useState<number>(0);
   const [talkBalloon, setTalkBalloon] = useRecoilState(talkBalloonAtom);
+  const setTalkState = useSetRecoilState(talkStateAtom);
   const isMove = useRef(true);
+  const isModal = useRef(false);
+  const [loading, setLoading] = useRecoilState(loadingAtom);
 
   // value
   const CIRCLE_RADIUS = 3;
   const LANGUAGE = "en-US";
-  const SENTENCE = "Would you like to start a conversation with ";
+  const SENTENCE = "와(과) 이야기를 시작하시겠습니까";
 
   // function
   const customConfirm = useCustomConfirm();
-  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove);
-  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove);
+  const handleKeyDown = HandleKeyDown(SetAction, keysPressed, activeAction, actions, isMove, playerRef, isModal);
+  const handleKeyUp = HandleKeyUp(SetAction, keysPressed, activeAction, actions, isMove, playerRef);
   const animate = () => {
-    requestAnimationFrame(animate);
+    if (!isModal.current) {
+      requestAnimationFrame(animate);
+    }
     camera.position.lerp(currentNpc.current.targetPosition, lerpFactor);
     camera.rotation.x += (currentNpc.current.targetRotation.x - camera.rotation.x) * lerpFactor;
     camera.rotation.y += (currentNpc.current.targetRotation.y - camera.rotation.y) * lerpFactor;
     camera.rotation.z += (currentNpc.current.targetRotation.z - camera.rotation.z) * lerpFactor;
   }
 
-  useFrame(() => {
-    PlayerMove(playerRef, keysPressed, camera, cameraOffset, isMove);
+  useFrame((_state, deltaTime) => {
+    PlayerMove(playerRef, playerApi, keysPressed, camera, cameraOffset, container, setPlayerPosition, playerRotation, setPlayerRotation, isMove, deltaTime, activeAction, actions);
     CircleCheck(playerRef, npcInfoList, currentNpc, CIRCLE_RADIUS, isInsideCircle, setIsInsideCircle);
   });
 
   useEffect(() => {
-    SetAction('Idle', activeAction, actions);
+    // 유저 NPC 기본 포즈 설정
+    SetAction('Defeat', activeAction, actions, playerRef);
+    SetAction('Idle', oliviaAction, oliviaActions, null);
+    SetAction('Idle', lukeAction, lukeActions, null);
+    SetAction('Idle', isabelAction, isabelActions, null);
+
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
+
+    if(loading) setLoading(() => ({loading:false}));
+
     return () => {
+      setTalkBalloon(initialTalkBalloon);
+      setTalkState(initialTalkState);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
@@ -87,7 +142,8 @@ export const RestaurantComp: React.FC = () => {
   const doStartTalk = async(npcId: number) => {
     await startTalk(npcId, ({data}) => {
       const result = data.data as startTalkType;
-      setTalkId(result.talkId)
+      setTalkState(prevState => ({ ...prevState, talkId: result.talkId, gender: currentNpc.current.gender }));      
+      setTalkBalloon(prev => ({ ...prev, topicList: result.topicList, npc: currentNpc.current.name }));
     }, (error) => {
       console.log(error);
     }); 
@@ -95,14 +151,17 @@ export const RestaurantComp: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = async(event: KeyboardEvent) => {
-      if (event.code === 'Space' && isInsideCircle) {
+      if (talkBalloon.isModal || talkBalloon.isShow)
+        return
+      if ((event.key === 'a' || event.key === 'A') && isInsideCircle) {
         isMove.current = false;
         const npc = currentNpc.current?.name;
         if (npc != null) {
-          const flag = await customConfirm(npc + "", SENTENCE + npc + "?");
+          const flag = await customConfirm(npc + "", npc + SENTENCE + "?");
           if (flag) {
+            setTalkState(prevState => ({ ...prevState, finish: false, isToast: false }));
             animate();
-            setTalkBalloon(prev => ({ ...prev, isShow: true, profileImg: currentNpc.current.img }));
+            setTalkBalloon(prev => ({ ...prev, isShow: true }));
             await doStartTalk(currentNpc.current.id);
             return
           }
@@ -124,20 +183,47 @@ export const RestaurantComp: React.FC = () => {
     isMove.current = talkBalloon.isMove;
   }, [talkBalloon.isMove])
 
+  useEffect(() => {
+    isModal.current = talkBalloon.isModal;
+  }, [talkBalloon.isModal])
+
   return(
     <>
-      { talkBalloon.isShow? <STTAndRecord lang={LANGUAGE} talkId={talkId} /> : null }
-      <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+      {/* 벽 */}
+      <group>
+        { container.map((props, index) => <Wall key={index} {...props}/> ) }
+      </group>
+
+      {/* STT */}
+      <STTAndRecord lang={LANGUAGE} />
+
+      {/* NPC 이름 */}
+      <Isabel />
+      <Luke />
+      <Olivia />
+
+      {/* 배경, 조명 */}
       <Restaurant/>
       <Environment blur={1} background preset="sunset" />
-      <Circle ref={foxCircleRef} args={[3, 32]} position={[-3.4, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+
+      {/* Player */}
+      <primitive visible={!talkBalloon.isShow} scale={1} ref={playerRef} position={[-6.5, 0.1, 11]} rotation={[0, Math.PI, 0]} object={playerFile.scene}/>
+
+      {/* NPC */}
+      <Circle ref={oliviaCircleRef} args={[CIRCLE_RADIUS]} position={oliviaPosition} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="pink" emissive="#ff69b4" emissiveIntensity={5}  side={THREE.DoubleSide} transparent={true} opacity={0.3} />
       </Circle>
-      <primitive scale={0.6} position={[-3.4, 0.42, 0]} rotation={[0, 0, 0]} object={fox.scene}/>
-      <Circle ref={rabbitCircleRef} args={[3, 32]} position={[-6.4, 0.03, 7]} rotation={[-Math.PI / 2, 0, 0]} >
-        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.2} />
+      <primitive scale={1} position={oliviaPosition} rotation={[0, 1.5, 0]} object={oliviaFile.scene}/>
+
+      <Circle ref={lukeCircleRef} args={[CIRCLE_RADIUS]} position={lukePosition} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.3} />
       </Circle>
-      <primitive scale={0.6} position={[-6.4, 0.56, 7]} rotation={[0, 0, 0]} object={rabbit.scene} />
+      <primitive scale={1} position={lukePosition} rotation={[0, 0, 0]} object={lukeFile.scene} />
+
+      <Circle ref={isabelCircleRef} args={[CIRCLE_RADIUS]} position={isabelPosition} rotation={[-Math.PI / 2, 0, 0]} >
+        <meshStandardMaterial attach="material" color="wheat" emissive="wheat" emissiveIntensity={1}  side={THREE.DoubleSide} transparent={true} opacity={0.3} />
+      </Circle>
+      <primitive scale={1} position={isabelPosition} rotation={[0, 0, 0]} object={isabelFile.scene} />
     </>
   )
 } 
