@@ -163,12 +163,12 @@ const ScriptDetailComp = () => {
                   showCorr[index]?
                   <div >
                     <div style={{marginLeft: "100px"}} className='flex flex-col font-[30] ml-5 text-blue-100 p-1 px-3 border-[1px] border-blue-100 rounded-[7px]' >
-                      <div  className=' flex flex-row justify-between text-blue-200 mb-2'>
-                        <span style={{width: "300px"}}>&nbsp;총점 : {savedata[index]?.overallScore !== null && savedata[index]?.overallScore !== undefined ? `${savedata[index]?.overallScore}점` : '  0점'}</span>&nbsp;&nbsp;&nbsp;|
-                        <span style={{width: "400px"}}>&nbsp;&nbsp;&nbsp;유창성 : {savedata[index]?.fluencyScore !== null && savedata[index]?.fluencyScore !== undefined ? `${savedata[index]?.fluencyScore}점` : '  0점'}</span>&nbsp;&nbsp;&nbsp;|
-                        <span style={{width: "400px"}}>&nbsp;&nbsp;&nbsp;정확도 : {savedata[index]?.integrityScore !== null && savedata[index]?.integrityScore !== undefined ? `${savedata[index]?.integrityScore}점` : '  0점'}</span>&nbsp;&nbsp;|
-                        <span style={{width: "400px"}}>&nbsp;&nbsp;&nbsp;발음 : {savedata[index]?.pronunciationScore !== null && savedata[index]?.pronunciationScore !== undefined ? `${savedata[index]?.pronunciationScore}점` : '  0점'}</span>&nbsp;|
-                        <span style={{width: "400px"}}>&nbsp;&nbsp;&nbsp;강세 : {savedata[index]?.rhythmScore !== null && savedata[index]?.rhythmScore !== undefined ? `${savedata[index]?.rhythmScore}점` : '  0점'}</span>
+                      <div  className=' flex flex-row text-blue-200 mb-2'>
+                        <span>총점 : {savedata[index]?.overallScore !== null && savedata[index]?.overallScore !== undefined ? `${savedata[index]?.overallScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;유창성 : {savedata[index]?.fluencyScore !== null && savedata[index]?.fluencyScore !== undefined ? `${savedata[index]?.fluencyScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;정확도 : {savedata[index]?.integrityScore !== null && savedata[index]?.integrityScore !== undefined ? `${savedata[index]?.integrityScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;발음 : {savedata[index]?.pronunciationScore !== null && savedata[index]?.pronunciationScore !== undefined ? `${savedata[index]?.pronunciationScore}점` : '  0점'}</span>&nbsp;&nbsp;|
+                        <span>&nbsp;&nbsp;강세 : {savedata[index]?.rhythmScore !== null && savedata[index]?.rhythmScore !== undefined ? `${savedata[index]?.rhythmScore}점` : '  0점'}</span>
                       </div>
                       <div>[단어별 발음 평가] &nbsp; : &nbsp;빨간 단어는 점수가 낮은 단어입니다!</div>
                       <div className='flex flex-row mt-1'>
