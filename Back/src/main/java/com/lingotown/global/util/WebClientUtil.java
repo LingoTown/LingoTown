@@ -118,7 +118,6 @@ public class WebClientUtil {
                     .bodyToMono(String.class)
                     .block();
         } finally {
-            // Ensure the temporary file is deleted
             Files.deleteIfExists(tempFilePath);
         }
     }
