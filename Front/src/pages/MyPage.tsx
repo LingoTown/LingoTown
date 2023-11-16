@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from 'react-router-dom';
 import { userAtom, initialUser } from '../atom/UserAtom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { myPageNPCListType, CountryComp } from "../component/mypage/CountryComp";
 import { useCustomAlert, useCustomConfirm } from "../component/util/ModalUtil";
 import { talkListType } from "../type/TalkListType";
@@ -35,7 +35,7 @@ const MyPage = () => {
   const setTalkId = useSetRecoilState(talkIdAtom);
   const setLoading = useSetRecoilState(loadingAtom);
   const [user, setUser] = useRecoilState(userAtom);
-  const [visit, setVisit] = useRecoilState(tutorialAtom);
+  const visit = useRecoilValue(tutorialAtom);
   
   const logout = async() =>{
     setUser(initialUser)
@@ -46,7 +46,11 @@ const MyPage = () => {
   useEffect(()=> {
     doCallMyList();
   }, [])
-  
+
+  useEffect(() => {
+    setNick(user.nickname);
+  }, [user.nickname]);
+
   // list 국가별로 바꾸기 - npcid, talkcount
   const groupByCountry = (arr:myPageNPCType[]) => {
     return arr.reduce((arr:any, obj:any) => {
@@ -72,7 +76,7 @@ const MyPage = () => {
     const flag = await customConfirm("Notice", "회원 탈퇴하시겠습니까?")
     if (flag) {
       await deleteAccount(({}) => {
-        localStorage.removeItem("userAtom");
+        setUser(initialUser);
         navigate("/");
       }, (err) => {
         console.log(err);
@@ -186,7 +190,7 @@ const MyPage = () => {
                 {
                   nickEditMode?
                   <div>Name : &nbsp;
-                    <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" placeholder={user.nickname}/>
+                    <input onChange={(e) => setNick(e.target.value)} className="bg-transparent border-b outline-none" type="text" value={nick}/>
                     &nbsp;&nbsp;
                     <span 
                       onClick={doSaveNickname} 
@@ -214,13 +218,6 @@ const MyPage = () => {
                 
               </div>
               <div className="flex-1 mt-10 ml-20 font-['passero-one'] text-[1.8rem]" >
-                
-                <div className="h-[45px]">
-                  <span className='hover:text-[1.9rem]' onClick={()=>{setVisit({visit: false})}}
-                    style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }}>
-                    📖 Guide
-                  </span>
-                </div>
                 
                 <div className="h-[45px] mt-10">
                   <span className='hover:text-[1.9rem]' onClick={logout}

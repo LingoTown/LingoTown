@@ -7,14 +7,27 @@ import {
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { Suspense, lazy, useRef, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, lazy, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import * as THREE from "three";
 import background from "../../../public/background/background.png";
+import { userAtom } from "../../atom/UserAtom";
 import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
+import Loading from './util/Loading';
 import { TextUtil } from './util/TextUtil';
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../../atom/UserAtom";
+
+type CategoryComp = {
+  children: React.ReactNode;
+  texture: number;
+  name: string;
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
+  setHovered: Dispatch<SetStateAction<string>>;
+  enabled: boolean;
+  setEnabled: Dispatch<SetStateAction<boolean>>;
+  language: number;
+}
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -29,17 +42,7 @@ const Gallery = lazy(() => import('../../../public/smallmap/Gallery').then(modul
   return { default: module.Gallery }
 }));
 
-export const CategoryComp: React.FC<{
-  children: React.ReactNode;
-  texture: number;
-  name: string;
-  active: string | null;
-  setActive: (name: string | null) => void;
-  setHovered: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
-  language: number;
-}> = ({
+export const CategoryComp: React.FC<CategoryComp> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
 
@@ -61,25 +64,12 @@ export const CategoryComp: React.FC<{
     setLoading(false);
   };
 
-  const Loading: React.FC = () => {
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.crossOrigin = 'anonymous';
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.crossOrigin = 'anonymous';
 
-    const backgroundTexture = textureLoader.load(background);
+  const backgroundTexture = textureLoader.load(background);
 
-
-    return (
-      <group>
-        <mesh position={[0, 0, 0]}>
-          <planeGeometry args={[3.5, 2.5, 1]} />
-          <meshBasicMaterial map={backgroundTexture} />
-        </mesh>
-        <TextUtil x={0} y={0} z={0} size={0.2} color="white" name="Loading" />
-      </group>
-    )
-  };
-
-  const portalMaterial = useRef<PortalMaterialType | null>(null);
+  const portalMaterial = useRef<PortalMaterialType>(null);
 
   useFrame((_state, delta) => {
     if (portalMaterial.current !== null) {
@@ -125,7 +115,7 @@ export const CategoryComp: React.FC<{
         }}
         onPointerLeave={() => {
           if (!enabled && active !== name) {
-            setHovered(null);
+            setHovered("");
           }
         }}
       >
@@ -138,7 +128,7 @@ export const CategoryComp: React.FC<{
 
           {children}
 
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading backgroundTexture={backgroundTexture}/>}>
             {texture === 1 && <Park position={[-2, -1, -3]} rotation={[Math.PI / 50, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
             {texture === 2 && <EventHall position={[1.4, -2, 9]} rotation={[Math.PI / 80, Math.PI/2.5, 0]} onLoaded={() => handleLoad()} />}
             {texture === 3 && <Restaurant position={[2, -2.1, 1]} rotation={[-15*Math.PI/360, 0, 0]} onLoaded={() => handleLoad()} />}

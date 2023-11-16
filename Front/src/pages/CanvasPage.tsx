@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Canvas } from "@react-three/fiber";
 import { TalkBalloonComp } from "../component/talk/TalkBalloonComp";
 import { talkBalloonAtom } from "../atom/TalkBalloonAtom"
@@ -11,6 +11,7 @@ import Tutorial from "../component/tutorial/Tutorial";
 import { tutorialAtom } from "../atom/TutorialAtom";
 import toast, { Toaster } from 'react-hot-toast';
 import { talkStateAtom } from '../atom/TalkStateAtom';
+// import { OrbitControls } from '@react-three/drei';
 
 interface CanvasPage {
   theme: JSX.Element;
@@ -23,6 +24,7 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
   const tutorialRead = useRecoilValue(tutorialAtom);
   let visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
   const [talkState, setTalkState] = useRecoilState(talkStateAtom);
+  const [isSolved, setSolved] = useState<boolean>(false);
 
   useEffect(()=>{
     visited = localStorage.getItem('tutorialAtom')!=null?JSON.parse(localStorage.getItem('tutorialAtom')!):null;
@@ -64,13 +66,13 @@ export const CanvasPage: React.FC<CanvasPage> = (props: CanvasPage): JSX.Element
         loading.loading || talkBalloon.isShow?
         null
         :
-        <MapUtilComp />
+        <MapUtilComp isSolved={isSolved} setSolved={setSolved} />
       }
       <Canvas 
         style={{ zIndex:"-1", height:loading.loading?"0.01vh":"100vh", cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto`}}>
         <Physics defaultContactMaterial={{ friction: 0, restitution: 1 }} gravity={[0, -9.81, 0]}>
           {/* <Debug scale={1} color='red'> */}
-          {/* <OrbitControls/> */}
+            {/* <OrbitControls/> */}
             {props.theme}
           {/* </Debug> */}
         </Physics>

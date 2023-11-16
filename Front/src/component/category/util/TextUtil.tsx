@@ -1,13 +1,15 @@
 import { Text } from "@react-three/drei";
 
-export const TextUtil: React.FC<{
+type TextUtilProps = {
   x: number;
   y: number;
   z: number;
   size: number;
   color: string;
   name: string;
-}> = ({
+}
+
+export const TextUtil: React.FC<TextUtilProps> = ({
   x, y, z, size, color, name
 }) => {
   return (
