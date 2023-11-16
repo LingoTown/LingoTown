@@ -7,11 +7,11 @@ export type myPageNPCListType = {
   [key:string]: myPageNPCType[];
 }
 
-interface myListProps {
+interface MyListProps {
   myList : myPageNPCListType;
 }
 
-export const CountryComp = (props:myListProps & {onBoxClick : ()=>void} & {getTalkList : (npcId:number, npcName:string) => void}) => {
+export const CountryComp = (props:MyListProps & {onBoxClick : ()=>void} & {getTalkList : (npcId:number, npcName:string) => void}) => {
   const setNpcNum = useSetRecoilState(npcStateAtom);
   const {myList} = props
   const [openToggle, setToggle] = useState(Array(Object.keys(myList).length).fill(false));
@@ -36,7 +36,7 @@ export const CountryComp = (props:myListProps & {onBoxClick : ()=>void} & {getTa
 
   return (
     Object.entries(props.myList).map(([key, val], i:number) => (
-    <div key={i}>
+    <div key={key}>
       {/* 토글, 나라이름 */}
       {
         openToggle[i]?
@@ -61,11 +61,11 @@ export const CountryComp = (props:myListProps & {onBoxClick : ()=>void} & {getTa
       {/* NPC 리스트 */}
       {
         openBox[i]?
-        val.map((arr, i)=>(
+        val.map((arr)=>(
           <div 
             className="flex mx-5 mb-2 hover:bg-[#fff]/40 rounded-lg"
             style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto` }} 
-            key={i} 
+            key={arr.npcId} 
             onClick={() => {
               setNpcNum(arr.npcId);
               props.getTalkList(arr.npcId, arr.npcName);

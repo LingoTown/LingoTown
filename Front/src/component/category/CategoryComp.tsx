@@ -15,6 +15,7 @@ import { BorderedRoundedBox } from "./BorderRoundBox";
 import { TextUtil } from './util/TextUtil';
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../../atom/UserAtom";
+import Loading from './util/Loading';
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -65,19 +66,6 @@ export const CategoryComp: React.FC<{
   textureLoader.crossOrigin = 'anonymous';
 
   const backgroundTexture = textureLoader.load(background);
-
-  const Loading: React.FC = () => {
-
-    return (
-      <group>
-        <mesh position={[0, 0, 0]}>
-          <planeGeometry args={[3.5, 2.5, 1]} />
-          <meshBasicMaterial map={backgroundTexture} />
-        </mesh>
-        <TextUtil x={0} y={0} z={0} size={0.2} color="white" name="Loading" />
-      </group>
-    )
-  };
 
   const portalMaterial = useRef<PortalMaterialType | null>(null);
 
@@ -138,7 +126,7 @@ export const CategoryComp: React.FC<{
 
           {children}
 
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading backgroundTexture={backgroundTexture}/>}>
             {texture === 1 && <Park position={[-2, -1, -3]} rotation={[Math.PI / 50, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
             {texture === 2 && <EventHall position={[1.4, -2, 9]} rotation={[Math.PI / 80, Math.PI/2.5, 0]} onLoaded={() => handleLoad()} />}
             {texture === 3 && <Restaurant position={[2, -2.1, 1]} rotation={[-15*Math.PI/360, 0, 0]} onLoaded={() => handleLoad()} />}

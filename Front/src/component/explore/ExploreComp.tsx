@@ -26,8 +26,8 @@ export const ExploreComp: React.FC = () => {
     { size: [3, 10, 40], position: [-10, 5, 0], wallKey: 'LW1', name: 'wall', mass:0}, // left wall
 
     // 추가벽
-    { size: [3, 7, 15], position: [-0.4, 2, 6], wallKey: 'RW1',  name: 'wall', mass:0},
-    { size: [3, 7, 20], position: [1, 2, -10], wallKey: 'RW1',  name: 'wall', mass:0},
+    { size: [3, 7, 15], position: [-0.4, 2, 6], wallKey: 'RW2',  name: 'wall', mass:0},
+    { size: [3, 7, 20], position: [1, 2, -10], wallKey: 'RW3',  name: 'wall', mass:0},
   ];
 
   // player
@@ -131,6 +131,7 @@ export const ExploreComp: React.FC = () => {
         const npc = currentNpc.current?.name;
         if (npc != null) {
           const flag = await customConfirm(npc + "", npc + SENTENCE);
+
           if (flag)
             animate();
             setTalkBalloon(prev => ({ ...prev, isUser: !prev.isUser}));
@@ -155,7 +156,7 @@ export const ExploreComp: React.FC = () => {
   return(
     <>
       <group>
-        { container.map((props, index) => <Wall key={index} {...props}/> ) }
+        { container.map((props) => <Wall key={props.wallKey} {...props}/> ) }
       </group>
       <Luke />
       <Olivia />
