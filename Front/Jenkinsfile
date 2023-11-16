@@ -10,7 +10,7 @@ pipeline {
             steps {
                 script {
                     IMAGE_NAME_FE = "lingotown_front_image"
-                    CONTAINER_NAME_FE = "LingoTown_Front_Dev"
+                    CONTAINER_NAME_FE = "LingoTown_Front_Prod"
                     APPLICATION_ENV_PATH = "/usr/react"
                     PROJECT_DIR_FE = "Front"
                 }
@@ -39,6 +39,7 @@ pipeline {
                 }
             }
         }
+
 
         // 컨테이너 클리닝
         stage("Docker Container Cleaning") {

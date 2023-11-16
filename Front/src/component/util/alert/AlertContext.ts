@@ -5,7 +5,7 @@ type Type = {
 };
 
 const AlertContext = createContext<Type>({
-  alert: () => new Promise((_, reject) => reject()),
+  alert: () => new Promise((_, reject) => reject(new Error('Alert function not implemented'))),
 });
 
 export default AlertContext;

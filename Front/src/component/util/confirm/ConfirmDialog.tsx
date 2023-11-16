@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import CustomConfirm from './CustomConfirm';
 import ConfirmContext from './ConfirmContext';
 import { ConfirmType } from './ConfirmType';
@@ -23,8 +23,10 @@ const ConfirmDialog = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const contextValue = useMemo(() => ({ confirm }), []); // confirm 함수는 변경되지 않으므로 의존성 배열이 비어있습니다.
+
   return (
-    <ConfirmContext.Provider value={{ confirm }}>
+    <ConfirmContext.Provider value={contextValue}>
       {children}
       {state && (
         <CustomConfirm

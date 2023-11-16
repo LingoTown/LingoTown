@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import AlertContext from './AlertContext';
 import CustomAlert from './CustomAlert';
 import { AlertType } from './AlertType';
@@ -19,8 +19,10 @@ const AlertDialog = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const contextValue = useMemo(() => ({ alert }), []); // alert 함수는 변경되지 않으므로 의존성 배열이 비어있습니다.
+
   return (
-    <AlertContext.Provider value={{ alert }}>
+    <AlertContext.Provider value={contextValue}>
       {children}
       {state && <CustomAlert title={state.title} message={state.message} onClose={state.onClose} />}
     </AlertContext.Provider>

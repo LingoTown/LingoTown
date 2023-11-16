@@ -5,6 +5,7 @@ import { wallType } from '../../../type/WallType';
 export const Wall: React.FC<wallType> = ({
   size,
   position,
+  rotation,
   wallKey,
   name,
   mass,
@@ -12,6 +13,7 @@ export const Wall: React.FC<wallType> = ({
   const [ref]:any = useBox(() => ({
     args: size,
     position : position,
+    rotation: rotation,
     mass,
     friction: 1,    // Adjust the value as needed
     restitution: 0,  // Set to 0 to avoid bouncing
@@ -24,3 +26,5 @@ export const Wall: React.FC<wallType> = ({
     </mesh>
   );
 };
+
+// mass : 바닥이랑 벽은 0
