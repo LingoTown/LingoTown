@@ -106,7 +106,13 @@ export const NPCStage: React.FC<NPCStageProps> = ({
           <ambientLight intensity={0.5} />
           <Environment preset="sunset" />
 
-          <TextUtil x={-0.7} y={2.2} z={1} color="black" size={0.4} name={"뒤로 가기"} />
+          <RoundedBox
+            args={[1.6, 0.5, 0.001]}
+            position={[-0.7, 2.2, 1]}
+          >
+            <meshStandardMaterial attach="material" color={"white"} transparent={true} opacity={0.9} />
+            <TextUtil x={0} y={-0.05} z={0.002} color="black" size={0.4} name={"뒤로 가기"} />
+          </RoundedBox>
 
           {children}
 
