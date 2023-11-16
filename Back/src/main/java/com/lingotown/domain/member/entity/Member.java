@@ -92,6 +92,4 @@ public class Member extends BaseTimeEntity {
     public void tempRejoin() {
         this.deletedAt = null;
     }
-
-
 }

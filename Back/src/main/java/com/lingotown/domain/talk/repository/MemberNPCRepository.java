@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface MemberNPCRepository extends JpaRepository<MemberNPC, Long> {
 
-    @Query("select t from MemberNPC as mn join mn.talkList as t where mn.id=:memberNPCId and t.deletedAt is null and t.talkDetailList.size>0")
+    @Query("select t from MemberNPC as mn join mn.talkList as t where mn.id=:memberNPCId and t.deletedAt is null and t.talkDetailList.size>0 order by t.createdAt desc")
     List<Talk> findTalkList(@Param("memberNPCId") Long memberNPCId);
 
     Optional<MemberNPC> findByMemberIdAndNpcId(@Param("memberId") Long memberId, @Param("npcId") Long npcId);

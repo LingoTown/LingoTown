@@ -12,8 +12,6 @@ import com.lingotown.global.response.DataResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.List;
 
@@ -32,9 +30,14 @@ public class TalkController {
         return talkService.createTalk(principal, npcId);
     }
 
+//    @PostMapping(value = "", consumes = {"multipart/form-data"})
+//    public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
+//        return openAIService.askGPT(principal, talkReqDto);
+//    }
+
     @PostMapping(value = "", consumes = {"multipart/form-data"})
-    public DataResponse<CreateOpenAIResDto> askGPT(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
-        return openAIService.askGPT(principal, talkReqDto);
+    public DataResponse<CreateOpenAIResDto> askGPTSync(Principal principal, @ModelAttribute TalkReqDto talkReqDto) throws Exception {
+        return openAIService.askGPTSync(principal, talkReqDto);
     }
 
     @PostMapping("/topic")
@@ -98,11 +101,5 @@ public class TalkController {
     public DataResponse<List<ReadPronunciationScoreResDto>> readPronunciationEstimation(@PathVariable("talkId") Long talkId){
         return talkService.readPronunciationEstimation(talkId);
     }
-
-    @PostMapping("/test")
-    public String check(TalkReqDto talkReqDto) throws NoSuchAlgorithmException, IOException {
-        return openAIService.checkPronunciation(talkReqDto);
-    }
-
 
 }
