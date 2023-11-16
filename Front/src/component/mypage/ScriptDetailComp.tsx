@@ -127,7 +127,7 @@ const ScriptDetailComp = () => {
                   <div style={{width: "40px", display: "flex", alignItems: "center"}}>
                     {value.member ? (
                       <img 
-                        src={triangleStates[index] ? `${import.meta.env.VITE_S3_URL}Button/back.png` : `${import.meta.env.VITE_S3_URL}Button/click2.png`}
+                        src={(triangleStates[index] || showCorr[index]) ? `${import.meta.env.VITE_S3_URL}Button/back.png` : `${import.meta.env.VITE_S3_URL}Button/click2.png`}
                         width={"40"}
                         onClick={() => {toggleTriangle(index), handleCorrMode(value.talkDetailId, index)}}
                       />
@@ -147,7 +147,7 @@ const ScriptDetailComp = () => {
                     value.member?
                     <div className='m-1 mt-2 text-white font-[30] hover:text-blue-200'
                       style={{ fontSize: "25px", cursor: `url('https://b305finalproject.s3.ap-northeast-2.amazonaws.com/MousePointer/navigation_hover_small.png'), auto` }}
-                      onClick={()=>{ handleCorrMode(value.talkDetailId, index) }}
+                      onClick={()=>{ toggleTriangle(index), handleCorrMode(value.talkDetailId, index) }}
                     >
                       <span style={{color: "pink", fontWeight: "bold"}}>Me : </span>{value.content}
                     </div>

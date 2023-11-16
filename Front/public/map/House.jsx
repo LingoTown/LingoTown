@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/studio-office-interior-6e41320708f74a6ba
 Title: Studio Office Interior
 */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function House(props) {

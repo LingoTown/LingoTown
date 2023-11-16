@@ -7,8 +7,8 @@ Source: https://sketchfab.com/3d-models/restaurant-87beea0627ad41c2958ffdcf04204
 Title: Restaurant
 */
 
-import React, { useRef } from "react";
-import { useGLTF, useTexture } from "@react-three/drei";
+import React from "react";
+import { useGLTF } from "@react-three/drei";
 
 function Plane(props) {
   const [ref] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0], ...props }));
@@ -32,9 +32,7 @@ export function Bar(props) {
   const { nodes, materials } = useGLTF(
     import.meta.env.VITE_S3_URL + "Map/Bar/scene.gltf"
   );
-  // const textures = useTexture({
-  //   map:"./map/bar/textures/Material_30_baseColor.jpeg"
-  // })
+  
   return (
     <group {...props} dispose={null} scale={0.03}>
       {/* 영역 가림보 */}

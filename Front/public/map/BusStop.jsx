@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/gbus-bus-stop-ba4808305d8544eca08c0dcffd
 Title: Gbus Bus Stop
 */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function BusStop(props) {
