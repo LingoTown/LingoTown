@@ -19,6 +19,7 @@ import { userType } from "../type/UserType";
 import { userAtom } from "../atom/UserAtom";
 import { lockOffCharacter } from "../api/Character";
 import { useCustomAlert } from "../component/util/ModalUtil";
+import { isMobile } from 'react-device-detect';
 
 const Rows = () => {
   /* loading */
@@ -30,7 +31,7 @@ const Rows = () => {
     toast(sentence, {
       duration: 2000,
       icon: emoji,
-      style: { fontSize: "15px" },
+      style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
       iconTheme: { primary: '#000', secondary: '#fff' },
       ariaProps: { role: 'status', 'aria-live': 'polite' },
     });
@@ -46,7 +47,7 @@ const Rows = () => {
     } else if (language === "UK") {
       navigate("/theme?language=2");
     } else {
-      showToaster(destination + "행 운항 준비중 입니다.","✈️")
+      showToaster(destination + " 행 운항 준비중 입니다.","✈️")
     }
   }
 
@@ -115,8 +116,6 @@ const DeparturePage = () => {
     await getAllQuizList(({data}: any) => {
         const result = data.data as quizTypeForAtom[];
 
-        console.log(result)
-
         setQuiz(prev => ({
             ...prev, 
             quizList: result,
@@ -141,27 +140,31 @@ const DeparturePage = () => {
 
   /* 회원가입 날짜가 2023.11.14 이전일때 */
   const checkEnterDate = (user: userType) => {
-    const cutoffDate = new Date("2023-11-14");
+    const cutoffDate = new Date("2023-11-15");
     const userCreatedAt = new Date(user.createdAt);
 
-    if(userCreatedAt < cutoffDate && user.lockList[2].islocked) {
+    if(userCreatedAt < cutoffDate && user.lockList[12].islocked) {
       setUser({
         ...user,
         lockList: user.lockList.map(
-          (item, index) => (index === 2 ? { ...item, islocked: false } : item)
+          (item, index) => (index === 12 ? { ...item, islocked: false } : item)
         )
       });
 
-      characterLockOff(3);
-      customAlert("Notice", "1차 배포에 참가해주셔서 감사합니다! 3번 캐릭터가 잠금 해제 됩니다!");
+      characterLockOff(13);
+      customAlert("Notice", "2차 배포에 참가해주셔서 감사합니다! 2차 배포 기념 테니스 캐릭터를 잠금 해제 해드립니다!");
     }
   };
 
   useEffect(() => {
-    getQuizInfo();
-    fetchCharacterList();
-    fetchIntimacyInfo();
-    checkEnterDate(user);
+    if(isMobile) 
+      navigate('/mobile');
+    else {
+      getQuizInfo();
+      fetchCharacterList();
+      fetchIntimacyInfo();
+      checkEnterDate(user);
+    }
   }, [])
 
   // 캐릭터 변경 토스트 메세지
@@ -219,7 +222,7 @@ export const showToaster = (sentence:string, emoji:string) => {
   toast(sentence, {
     duration: 2000,
     icon: emoji,
-    style: { fontSize: "15px" },
+    style: { fontSize: "20px", fontFamily:"GabiaSolmee" },
     iconTheme: { primary: '#000', secondary: '#fff' },
     ariaProps: { role: 'status', 'aria-live': 'polite' },
   });

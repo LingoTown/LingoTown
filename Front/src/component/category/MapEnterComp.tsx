@@ -1,5 +1,5 @@
 import { RoundedBox } from '@react-three/drei';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { loadingAtom } from '../../atom/LoadingAtom';
@@ -7,51 +7,60 @@ import { userAtom } from '../../atom/UserAtom';
 import { useCustomAlert } from '../util/ModalUtil';
 import { TextUtil } from "./util/TextUtil";
 
-export const MapEnterComp: React.FC<{
+type MapEnterCompProps = {
   x: number;
   y: number;
   z: number;
   path: string;
   name: string;
-  active: string | null;
-  setHovered: (name: string | null) => void;
-  enabled: boolean | false;
-  language: number | 0;
-}> = ({
-  x, y, z, path, name, active, setHovered, enabled, language
-}) => {
+  active: string;
+  setHovered: Dispatch<SetStateAction<string>>;
+  enabled: boolean;
+  language: number;
+}
+
+export const MapEnterComp: React.FC<MapEnterCompProps> = ({ x, y, z, path, name, active, setHovered, enabled, language }) => {
+
   const navigate = useNavigate();
-  const user = useRecoilValue(userAtom);
 
   const text = useState(["입장", "잠금"])[0];
   const customAlert = useCustomAlert();
+  const user = useRecoilValue(userAtom);
 
   const [loading, setLoading] = useRecoilState(loadingAtom);
+
+  const isArtGallery = (name: string, language: number) => 
+    ((language === 0 || language === 2) && name !== "아트 갤러리") || 
+    (language === 1 && name === "아트 갤러리");
+
+  const handleClick = () => {
+    if (!enabled && active !== name) {
+      if (isArtGallery(name, language)) {
+        if (!loading.loading) setLoading(() => ({ loading: true }));
+        
+        navigate(`/${path}`);
+      } 
+      else 
+        customAlert(`${user.nickname}님`, "해당 테마는 프랑스로 출국하시면 이용하실 수 있습니다.");
+    }
+  };
+
+  // 포인터 이벤트 핸들러
+  const handlePointerEnter = () => {
+    if (!enabled && active !== name) setHovered(name);
+  };
+
+  const handlePointerLeave = () => {
+    if (!enabled && active !== name) setHovered("");
+  };
 
   return (
     <mesh
       name={name}
       position={[x, y, z]}
-      onClick={() => {
-        if (!enabled && active !== name) {
-          if (((language === 0 || language === 2) && name !== "아트 갤러리") || (language === 1 && name === "아트 갤러리")) {
-            if(!loading.loading) setLoading(() => ({loading:true}));
-            navigate(`/${path}`)
-          } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
-            customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
-          }
-        }
-      }}
-      onPointerEnter={() => {
-        if (!enabled && active !== name) {
-          setHovered(name);
-        }
-      }}
-      onPointerLeave={() => {
-        if (!enabled && active !== name) {
-          setHovered(null);
-        }
-      }}
+      onClick={handleClick}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
     >
       <RoundedBox
         args={[0.8, 0.25, 0.1]}

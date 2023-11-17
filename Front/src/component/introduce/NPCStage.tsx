@@ -8,22 +8,25 @@ import {
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import * as THREE from "three";
 import background from "../../../public/background/background.png";
+import { TextUtil } from "../category/util/TextUtil";
 
-export const NPCStage: React.FC<{
+type NPCStageProps = {
   children: React.ReactNode;
   texture: string;
   name: string;
   age: string;
   color: THREE.Color;
-  active: string | null;
-  setActive: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
-  setHovered: (name: string | null) => void;
-}> = ({
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
+  enabled: boolean;
+  setEnabled: Dispatch<SetStateAction<boolean>>;
+  setHovered: Dispatch<SetStateAction<string>>;
+};
+
+export const NPCStage: React.FC<NPCStageProps> = ({
   children, texture, name, age, color, active, setActive, enabled, setEnabled, setHovered, ...props
 }) => {
   const information = [
@@ -31,8 +34,8 @@ export const NPCStage: React.FC<{
     { "Sanha": "건강에 관심이 많다.\n\n런닝을 좋아하며, 스트레칭을 하는 습관이 있다.\n\n하얀색을 좋아하며, 하얀색 안경을 구매할까 생각중이다." },
     { "Marco": "축구 'Daejeon Hana Citizen' team의 주장\n\n오늘 'LingoTown' 유소년 축구대회 우승 파티가 있다.\n\n1년째 사귀고 있는 여자친구가 있다." },
     { "Bonnie": "'SSAFY' 고등학교 학생\n\n쇼핑을 좋아하며, 다이어트를 하고 있다.\n\n고등학교 졸업을 앞두고 있으며, Prom 파티를 준비하고 있다." },
-    { "Jaden": "'SAMSUNG’의 인사 팀장\n\n이번 SAMSUNG 공채 일정 담당을 맡았다.\n\n판타지 소설을 좋아한다.\n\n비오는 날씨를 좋아한다." },
-    { "Kevin": "'SAMSUNG' 의 모바일 프로젝트 발표회 사회자\n\n오늘 발표할 팀과 일정에 대한 정보를 가지고 있다.\n\n상금을 관리하고 있다.\n\n가족 중 쌍둥이가 있다." },
+    { "Jaden": "'SAMSUNG'의 인사 팀장\n\n이번 SAMSUNG 공채 일정 담당을 맡았다.\n\n판타지 소설을 좋아한다.\n\n비오는 날씨를 좋아한다." },
+    { "Kevin": "'SAMSUNG'의 모바일 프로젝트 발표회 사회자\n\n오늘 발표할 팀과 일정에 대한 정보를 가지고 있다.\n\n상금을 관리하고 있다.\n\n가족 중 쌍둥이가 있다." },
     { "Daen": "프로젝트 'Lingo'를 발표하는 발표자\n\n'SAMSUNG'의 신입사원\n\n외국어에 대한 관심이 많다.\n\n취업을 하고, 부모님 선물에 대해 고민하고 있다." },
     { "Olivia": "한국 전통 음식 레스토랑 'Lingo Mongo' 요리사.\n\n한국 사람이지만, 이 곳으로 이민 왔다.\n\n가장 자신있는 음식은 비빔밥이다." },
     { "Luke": "대학 방학이라 세계 여행하는 대학생\n\n부자라 봉사활동에 관심이 많다.\n\n한식을 좋아한다." },
@@ -81,7 +84,7 @@ export const NPCStage: React.FC<{
         scale={[0.5, 0.5, 0.1]}
         onClick={() => {
           if (!enabled && active !== name) {
-            setActive(active === name ? null : name);
+            setActive(active === name ? "" : name);
             setEnabled(true);
           }
         }}
@@ -92,7 +95,7 @@ export const NPCStage: React.FC<{
         }}
         onPointerLeave={() => {
           if (!enabled && active !== name) {
-            setHovered(null);
+            setHovered("");
           }
         }}
       >
@@ -103,12 +106,20 @@ export const NPCStage: React.FC<{
           <ambientLight intensity={0.5} />
           <Environment preset="sunset" />
 
+          <RoundedBox
+            args={[1.6, 0.5, 0.001]}
+            position={[-0.7, 2.2, 1]}
+          >
+            <meshStandardMaterial attach="material" color={"white"} transparent={true} opacity={0.9} />
+            <TextUtil x={0} y={-0.05} z={0.002} color="black" size={0.4} name={"뒤로 가기"} />
+          </RoundedBox>
+
           {children}
 
           <mesh
             onClick={() => {
               if (enabled && active === name) {
-                setActive(null);
+                setActive("");
                 setEnabled(false);
               }
             }}

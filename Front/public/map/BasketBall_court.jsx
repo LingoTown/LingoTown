@@ -7,7 +7,7 @@ Source: https://sketchfab.com/3d-models/basket-ball-court-65b160fdee7d42f8b0a7e9
 Title: BASKET BALL COURT
 */
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function BasketBall_court(props) {

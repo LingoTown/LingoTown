@@ -12,7 +12,6 @@ export function Bonnie(props:any) {
   const N2 = useRef<THREE.Mesh>(null);
   const I = useRef<THREE.Mesh>(null);
   const E = useRef<THREE.Mesh>(null);
-  // const refAE = useRef();
 
   // 매 프레임마다 실행될 콜백 함수입니다.
   useFrame(() => {

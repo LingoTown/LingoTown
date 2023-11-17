@@ -7,14 +7,27 @@ import {
 } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
-import { Suspense, lazy, useRef, useState } from "react";
+import { Dispatch, SetStateAction, Suspense, lazy, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 import * as THREE from "three";
 import background from "../../../public/background/background.png";
+import { userAtom } from "../../atom/UserAtom";
 import { useCustomAlert } from '../util/ModalUtil';
 import { BorderedRoundedBox } from "./BorderRoundBox";
+import Loading from './util/Loading';
 import { TextUtil } from './util/TextUtil';
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../../atom/UserAtom";
+
+type CategoryComp = {
+  children: React.ReactNode;
+  texture: number;
+  name: string;
+  active: string;
+  setActive: Dispatch<SetStateAction<string>>;
+  setHovered: Dispatch<SetStateAction<string>>;
+  enabled: boolean;
+  setEnabled: Dispatch<SetStateAction<boolean>>;
+  language: number;
+}
 
 const Park = lazy(() => import('../../../public/smallmap/Park').then(module => {
   return { default: module.Park }
@@ -29,20 +42,21 @@ const Gallery = lazy(() => import('../../../public/smallmap/Gallery').then(modul
   return { default: module.Gallery }
 }));
 
-export const CategoryComp: React.FC<{
-  children: React.ReactNode;
-  texture: number;
-  name: string;
-  active: string | null;
-  setActive: (name: string | null) => void;
-  setHovered: (name: string | null) => void;
-  enabled: boolean | false;
-  setEnabled: (name: boolean | false) => void;
-  language: number;
-}> = ({
+export const CategoryComp: React.FC<CategoryComp> = ({
   children, texture, name, active, setActive, setHovered, enabled, setEnabled, language, ...props
 }) => {
-  const text = useState(["미리보기", "잠금"])[0];
+
+  const params = new URLSearchParams(window.location.search);
+
+  const languageParam: string | null = params.get("language");
+
+  let lockMessage = "\n        프랑스로 출국하시면 \n         이용하실 수 있어요!";
+
+  if(languageParam == "1")
+    lockMessage = "\n                     미국이나 영국으로 \n           출국하시면 들어가실 수 있어요!"
+
+
+  const text = useState(["클릭하시면 맵을 미리 볼 수 있어요!", lockMessage])[0];
 
   const [isLoading, setLoading] = useState(true);
 
@@ -50,25 +64,12 @@ export const CategoryComp: React.FC<{
     setLoading(false);
   };
 
-  const Loading: React.FC = () => {
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.crossOrigin = 'anonymous';
+  const textureLoader = new THREE.TextureLoader();
+  textureLoader.crossOrigin = 'anonymous';
 
-    const backgroundTexture = textureLoader.load(background);
+  const backgroundTexture = textureLoader.load(background);
 
-
-    return (
-      <group>
-        <mesh position={[0, 0, 0]}>
-          <planeGeometry args={[3.5, 2.5, 1]} />
-          <meshBasicMaterial map={backgroundTexture} />
-        </mesh>
-        <TextUtil x={0} y={0} z={0} size={0.2} color="white" name="Loading" />
-      </group>
-    )
-  };
-
-  const portalMaterial = useRef<PortalMaterialType | null>(null);
+  const portalMaterial = useRef<PortalMaterialType>(null);
 
   useFrame((_state, delta) => {
     if (portalMaterial.current !== null) {
@@ -103,7 +104,7 @@ export const CategoryComp: React.FC<{
               setActive(name);
               setEnabled(true);
             } else if (((language === 0 || language === 2) && name === "아트 갤러리") || (language === 1 && name !== "아트 갤러리")) {
-              customAlert(user.nickname + "님", "해당 테마는 아직 사용하실 수 없습니다.");
+              customAlert(user.nickname + "님", "해당 테마는 미국 또는 영국으로 출국하시면 이용하실 수 있습니다.");
             }
           }
         }}
@@ -114,7 +115,7 @@ export const CategoryComp: React.FC<{
         }}
         onPointerLeave={() => {
           if (!enabled && active !== name) {
-            setHovered(null);
+            setHovered("");
           }
         }}
       >
@@ -127,7 +128,7 @@ export const CategoryComp: React.FC<{
 
           {children}
 
-          <Suspense fallback={<Loading />}>
+          <Suspense fallback={<Loading backgroundTexture={backgroundTexture}/>}>
             {texture === 1 && <Park position={[-2, -1, -3]} rotation={[Math.PI / 50, 270 * Math.PI / 180, 0]} onLoaded={() => handleLoad()} />}
             {texture === 2 && <EventHall position={[1.4, -2, 9]} rotation={[Math.PI / 80, Math.PI/2.5, 0]} onLoaded={() => handleLoad()} />}
             {texture === 3 && <Restaurant position={[2, -2.1, 1]} rotation={[-15*Math.PI/360, 0, 0]} onLoaded={() => handleLoad()} />}
@@ -143,8 +144,8 @@ export const CategoryComp: React.FC<{
             <primitive
               ref={lockRef}
               scale={0.05}
-              position-x={0.2}
-              position-y={-0.1}
+              position-x={0}
+              position-y={0.2}
               object={lock.scene.clone()}
             />
           </>

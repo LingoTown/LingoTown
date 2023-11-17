@@ -18,14 +18,16 @@ interface QuizCompProps {
   setIsOpenQuizModal: Dispatch<SetStateAction<boolean>>;
   translateList: boolean[];
   setTranslateList: Dispatch<SetStateAction<boolean[]>>;
+  isSolved: boolean | false;
+  setSolved: Dispatch<SetStateAction<boolean>>;
 }
 
 type resutltType = {
   result: boolean;
 };
 
-export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, setQuizLender, setIsOpenQuizModal, translateList, setTranslateList}) => {
- 
+export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, setQuizLender, setIsOpenQuizModal, translateList, setTranslateList, isSolved, setSolved}) => {
+
   const customPrompt = useCustomPrompt();
   const setTalkBalloon = useSetRecoilState(talkBalloonAtom);
   let [user, setUser] = useRecoilState(userAtom);
@@ -61,6 +63,7 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       if (result.result) {
         // QuizAtom 업데이트
         success(Number(quizId));
+        setSolved(!isSolved);
 
         showToaster("정답입니다😄", "✔️");
       } else {
@@ -197,7 +200,9 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
       <Toaster position="top-center" />
       {
         isOpenQuizModal?
-        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-20">
+        <div
+        style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_small.png'), auto` }} 
+          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity z-20">
           <div className="fixed inset-0 z-10 flex items-center justify-center">
             <div className="bg-[#fff]/80 p-2 rounded-xl w-2/3 max-w-6xl">
               <div className="border-[0.5px] border-white w-full rounded-lg p-1 px-3 flex flex-col items-center">
@@ -230,15 +235,19 @@ export const QuizComp: React.FC<QuizCompProps> = ({quizList, isOpenQuizModal, se
                         <button
                         style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
                           onClick={ (event) => toEng(event, index) }
-                          className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded shadow"
-                        >To Eng</button>
+                          className="bg-blue-900 hover:bg-blue-700 text-white py-1 px-2 rounded shadow"
+                        >원본</button>
                         :
                         <button 
                           style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
                           onClick={ (event) => toKor(event, index) }
-                          className="bg-green-700 hover:bg-green-700 text-white font-bold py-1 px-2 rounded shadow"
-                        >To Kor</button>
+                          className="bg-green-700 hover:bg-green-600 text-white py-1 px-2 rounded shadow"
+                        >번역</button>
                       }
+                      <button 
+                          style={{ cursor: `url('${import.meta.env.VITE_S3_URL}MousePointer/navigation_hover_small.png'), auto`, fontFamily: "GabiaSolmee", letterSpacing: '-0.1rem' }}
+                          className="bg-green-600 hover:bg-green-500 text-white ml-2 mr-2 py-1 px-2 rounded shadow"
+                        >제출</button>
                     </div>
                   ))
                 }

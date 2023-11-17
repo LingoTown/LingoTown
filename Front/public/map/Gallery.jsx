@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
@@ -125,7 +125,6 @@ export function Gallery(props) {
   const image1113A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1113(1).png");
   const image1114A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1114(1).jpeg");
   const image1116A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/image1116(1).jpg");
-
 
   useEffect(
     () => {
@@ -642,7 +641,7 @@ export function Gallery(props) {
           />
         </group>
 
-        {/* 1026B */}
+        {/* 1114A */}
 
         <group
           position={[1326.003, 184.435, 724.845]}
@@ -653,7 +652,7 @@ export function Gallery(props) {
             geometry={nodes.Art_Work_022_Art_022_0.geometry}
             position={[21.043, -17.072, 18.061]}
           >
-            <meshStandardMaterial map={image1113A} />
+            <meshStandardMaterial map={image1114A} />
           </mesh>
         </group>
         <group
@@ -1007,8 +1006,6 @@ export function Gallery(props) {
           />
         </group>
 
-        {/* 1114A */}
-
         <group
           position={[-1498.85, 184.435, 464.792]}
           rotation={[-Math.PI, 0, -Math.PI / 2]}
@@ -1016,10 +1013,9 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_033_Art_033_0.geometry}
-            // material={materials.Art_036}
             position={[21.043, -109.836, 5.478]}
           >
-            <meshStandardMaterial map={image1114A} />
+            <meshStandardMaterial map={image1113A} />
           </mesh>
         </group>
 
