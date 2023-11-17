@@ -122,6 +122,10 @@ export function Gallery(props) {
   const image1109A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1109(1).jpg");
   const image1110A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1110(1).jpg");
   const image1112A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1112(1).jpeg");
+  const image1113A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1113(1).png");
+  const image1114A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/1114(1).jpeg");
+  const image1116A = useLoader(TextureLoader, import.meta.env.VITE_S3_URL + "Picture/image1116(1).jpg");
+
 
   useEffect(
     () => {
@@ -649,7 +653,7 @@ export function Gallery(props) {
             geometry={nodes.Art_Work_022_Art_022_0.geometry}
             position={[21.043, -17.072, 18.061]}
           >
-            {/* <meshStandardMaterial map={} /> */}
+            <meshStandardMaterial map={image1113A} />
           </mesh>
         </group>
         <group
@@ -1003,7 +1007,7 @@ export function Gallery(props) {
           />
         </group>
 
-        {/*  */}
+        {/* 1114A */}
 
         <group
           position={[-1498.85, 184.435, 464.792]}
@@ -1012,12 +1016,12 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_033_Art_033_0.geometry}
-            material={materials.Art_036}
+            // material={materials.Art_036}
             position={[21.043, -109.836, 5.478]}
-          />
+          >
+            <meshStandardMaterial map={image1114A} />
+          </mesh>
         </group>
-
-        {/*  */}
 
         <group
           position={[-1498.85, 184.435, 473.166]}
@@ -1031,7 +1035,7 @@ export function Gallery(props) {
           />
         </group>
 
-        {/*  */}
+        {/* 1116A */}
         
         <group
           position={[-1766.328, 184.435, 464.792]}
@@ -1040,9 +1044,10 @@ export function Gallery(props) {
         >
           <mesh
             geometry={nodes.Art_Work_033_Art_033_0.geometry}
-            material={materials.Art_037}
             position={[21.043, -109.836, 5.478]}
-          />
+          >
+            <meshStandardMaterial map={image1116A} />
+          </mesh>
         </group>
         <group
           position={[-1766.328, 184.435, 473.166]}
